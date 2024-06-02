@@ -18,6 +18,17 @@ local battlefields =
         { bit, battlefieldIdInDatabase, requiredItemToTrade }
     },
 --]]
+
+    [xi.zone.BEARCLAW_PINNACLE] =
+    {
+        { 0,  640,    0 },   -- Flames of the Dead (PM5-3 U3)
+        { 1,  641,    0 },   -- Follow the White Rabbit (ENM)
+        { 2,  642,    0 },   -- When Hell Freezes Over (ENM)
+        { 3,  643,    0 },   -- Brothers (ENM)
+        { 4,  644,    0 },   -- Holy Cow (ENM)
+    --  { 5,    ?, 3454 },   -- Taurassic Park (HKC30)
+    },
+
     [xi.zone.BONEYARD_GULLY] =
     {
         { 0,  672,    0 },   -- Head Wind (PM5-3 U2)
@@ -322,6 +333,12 @@ local function checkReqs(player, npc, bfid, registrant)
                 player:getMissionStatus(xi.mission.log_id.COP, xi.mission.status.COP.ULMIA) == 8 and
                 npcId == getEntranceOffset(0)
         end,]]
+
+        [640] = function() -- PM5-3 U3: Flames for the Dead
+            return promathiaMission == xi.mission.id.cop.THREE_PATHS and
+                player:getMissionStatus(xi.mission.log_id.COP, xi.mission.status.COP.ULMIA) == 8 and
+                npcId == getEntranceOffset(0)
+        end,
 
         [641] = function() -- ENM: Follow the White Rabbit
             return player:hasKeyItem(xi.ki.ZEPHYR_FAN) and npcId == getEntranceOffset(2)
