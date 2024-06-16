@@ -34,6 +34,9 @@ zones[xi.zone.GRAND_PALACE_OF_HUXZOI] =
         TIME_RESTRICTION              = 7379, -- Time restriction: <number> [minute/minutes] (Earth time)
         QUASILUMIN_MAP_QUEST_OFFSET   = 7380, -- Warning. Chamber of Eventide accessed by unauthorized personnel, 4789209-980 increments previous.
         HOMEPOINT_SET                 = 7464, -- Home point set!
+
+        -- TODO: Shift IDs
+        PRESENCE_HAS_DRAWN            = 7362, -- Your presence has drawn unwanted attention!
     },
     mob =
     {

@@ -195,10 +195,6 @@ entity.onMobWeaponSkill = function(target, mob, skill)
 end
 
 entity.onMobDeath  = function(mob, player, optParams)
-    local missionVar = string.format('Mission[%d][%d]Status', xi.mission.log_id.COP, xi.mission.id.cop.A_FATE_DECIDED)
-    if player:getCharVar(missionVar) == 1 then
-        player:setCharVar(missionVar, 2)
-    end
 end
 
 return entity

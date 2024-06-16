@@ -1,6 +1,6 @@
 -----------------------------------
 -- Area: Uleguerand Range
---   NM: Father Frost
+--   NM: Geush Urvan
 -----------------------------------
 local ID = zones[xi.zone.ULEGUERAND_RANGE]
 -----------------------------------
@@ -12,6 +12,7 @@ entity.onMobInitialize = function(mob)
     mob:setMod(xi.mod.REGAIN, 400)
     mob:setSpeed((50 + xi.settings.map.MOB_SPEED_MOD) + 12)
     mob:setMobMod(xi.mobMod.MAGIC_COOL, 20)
+    mob:setMobMod(xi.mobMod.IDLE_DESPAWN, 1800)
 end
 
 entity.onMobSpawn = function(mob)

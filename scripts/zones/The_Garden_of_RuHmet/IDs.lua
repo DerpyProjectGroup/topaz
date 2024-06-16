@@ -34,6 +34,7 @@ zones[xi.zone.THE_GARDEN_OF_RUHMET] =
         MEMBERS_OF_YOUR_ALLIANCE      = 7372, -- Currently, # members of your alliance (including yourself) have clearance to enter the battlefield.
         TIME_LIMIT_FOR_THIS_BATTLE_IS = 7374, -- The time limit for this battle is <number> minutes.
         ENTERING_THE_BATTLEFIELD_FOR  = 7615, -- Entering the battlefield for [When Angels Fall/]!
+        YOU_MUST_MOVE_CLOSER          = 7623, -- You must move closer.
     },
 
     mob =

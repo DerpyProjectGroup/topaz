@@ -3,84 +3,99 @@
 -- Promathia 8-1
 -----------------------------------
 -- !addmission 6 800
--- Crystalline Field !pos .1 -10 -464 33
+-- _0x0 : !pos .1 -10 -464 33
+-- _0x1 : !pos 0 -6.250 -736.912 33
+-- _0x2 : !pos -683.709 -6.250 -222.142 33
+-- _0x3 : !pos 683.718 -6.250 -222.167 33
+-- _iya : !pos -20 0.1 -283 34
 -----------------------------------
 local altaieuID = zones[xi.zone.ALTAIEU]
-local palaceID  = zones[xi.zone.GRAND_PALACE_OF_HUXZOI]
+local huxoiID   = zones[xi.zone.GRAND_PALACE_OF_HUXZOI]
 -----------------------------------
 
 local mission = Mission:new(xi.mission.log_id.COP, xi.mission.id.cop.GARDEN_OF_ANTIQUITY)
 
-local antiquityVars =
-{
-    -- [crystalOffset] = { thisFightDone, thisCsAcquired, otherCrystal, otherCrystal2, firstCsParam, secondCsParam1, secondCsParam2 }
-    [0] = { 'SouthTower', 'SouthTowerCS', 1, 2, 0, 2, 1 }, -- !pos 0 -6.250 -736.912 33
-    [1] = { 'WestTower',  'WestTowerCS',  0, 2, 2, 1, 0 }, -- !pos -683.709 -6.250 -222.142 33
-    [2] = { 'EastTower',  'EastTowerCS',  0, 1, 1, 2, 0 }, -- !pos 683.718 -6.250 -222.167 33
-}
-
-local function rubiousCrystalOnTrigger(player, npc)
-    local crystalOffset  = npc:getID() - altaieuID.npc.RUBIOUS_CRYSTAL_BASE
-    local ruaernOffset   = altaieuID.mob.RUAERN_BASE + crystalOffset * 3
-    local cVar           = antiquityVars[crystalOffset]
-
-    -- check to see if all three aerns are killed for the tower
-    local thisFightDone  = mission:getVar(player, ruaernOffset) == 1 and
-                           mission:getVar(player, ruaernOffset + 1) == 1 and
-                           mission:getVar(player, ruaernOffset + 2) == 1
-    local thisCsAcquired = mission:getVar(player, cVar[2]) == 1
-
-    -- spawn ru'aerns
-    if not thisFightDone and not thisCsAcquired then
-        npcUtil.popFromQM(player, npc, { ruaernOffset, ruaernOffset + 1, ruaernOffset + 2 }, { hide = 0 } )
-        return mission:messageSpecial(altaieuID.text.OMINOUS_SHADOW)
-
-    -- post-fight CS
-    elseif not thisCsAcquired then
-        local otherTowerDone1 = mission:getVar(player, antiquityVars[cVar[3]][2]) == 1
-        local otherTowerDone2 = mission:getVar(player, antiquityVars[cVar[4]][2]) == 1
-        if otherTowerDone1 and otherTowerDone2 then
-            return mission:progressEvent(163) -- third CS
-        elseif otherTowerDone1 then
-            return mission:progressEvent(162, cVar[6]) -- second CS. param mentions remaining tower.
-        elseif otherTowerDone2 then
-            return mission:progressEvent(162, cVar[7]) -- second CS. param mentions remaining tower.
-        else
-            return mission:progressEvent(161, cVar[5]) -- first CS. param mentions current tower.
-        end
-
-    -- default dialog
-    else
-        return mission:messageSpecial(altaieuID.text.NOTHING_OF_INTEREST)
-    end
-end
-
-local function rubiousCrystalOnEventFinish(player, csid, option)
-    local crystalOffset = player:getEventTarget():getID() - altaieuID.npc.RUBIOUS_CRYSTAL_BASE
-    mission:setVar(player, antiquityVars[crystalOffset][2], 1)
-end
-
-local function checkTowerCsVars(player)
-    local status = 0
-    for _, cVar in pairs(antiquityVars) do
-        if mission:getVar(player, cVar[2]) == 1 then
-            status = status + 1
-        end
-    end
-    if status == 3 then
-        for _, cVar in pairs(antiquityVars) do
-            mission:setVar(player, cVar[1], 0)
-            mission:setVar(player, cVar[2], 0)
-        end
-    end
-    return status
-end
-
 mission.reward =
 {
-    item = xi.item.TAVNAZIAN_RING,
     nextMission = { xi.mission.log_id.COP, xi.mission.id.cop.A_FATE_DECIDED },
 }
+
+-- NOTE: Tower event parameters do not align with NPCs in the database.  This table
+-- maps to the expected parameter, and also is used to determine which bit is set
+-- in missionStatus.
+
+local towerOption =
+{
+    ['_0x1'] = 0,
+    ['_0x2'] = 2,
+    ['_0x3'] = 1,
+}
+
+local function setMissionStatusBit(player, bitNum)
+    local statusIndex   = bitNum == 0 and xi.mission.status.CID or xi.mission.status.RUBIOUS
+    local adjustedBit   = bitNum == 0 and 3 or bitNum - 1
+    local missionStatus = player:getMissionStatus(mission.areaId, statusIndex)
+
+    player:setMissionStatus(mission.areaId, utils.mask.setBit(missionStatus, adjustedBit, true), statusIndex)
+end
+
+local function getMissionStatusBit(player, bitNum)
+    local statusIndex   = bitNum == 0 and xi.mission.status.CID or xi.mission.status.RUBIOUS
+    local adjustedBit   = bitNum == 0 and 3 or bitNum - 1
+    local missionStatus = player:getMissionStatus(mission.areaId, statusIndex)
+
+    return utils.mask.getBit(missionStatus, adjustedBit)
+end
+
+local function getRubiousMask(player)
+    local rubiousMask = 0
+
+    for bitNum = 0, 3 do
+        if getMissionStatusBit(player, bitNum) then
+            rubiousMask = utils.mask.setBit(rubiousMask, bitNum, true)
+        end
+    end
+
+    return rubiousMask
+end
+
+local rubiousOnTrigger = function(player, npc)
+    local npcName    = npc:getName()
+    local nmDefeated = utils.mask.getBit(mission:getLocalVar(player, 'nmDefeated'), towerOption[npcName])
+    local nmOffset   = altaieuID.mob.RUAERN + (npc:getID() - altaieuID.npc.RUBIOUS_CRYSTAL) * 3
+
+    if
+        mission:getVar(player, 'Status') == 1 and
+        not getMissionStatusBit(player, towerOption[npcName])
+    then
+        if
+            not nmDefeated and
+            npcUtil.popFromQM(player, npc, { nmOffset, nmOffset + 1, nmOffset + 2 }, { hide = 0 })
+        then
+            for _, member in ipairs(player:getAlliance()) do
+                mission:setLocalVar(member, 'triggerNpc', npc:getID())
+                mission:setLocalVar(member, 'nmOffset', nmOffset)
+            end
+
+            return mission:messageSpecial(altaieuID.text.OMINOUS_SHADOW)
+        elseif nmDefeated then
+            setMissionStatusBit(player, towerOption[npcName])
+            local completedTowers = utils.mask.countBits(getRubiousMask(player), 3)
+
+            if completedTowers == 1 then
+                return mission:progressEvent(161, towerOption[npcName])
+            elseif completedTowers == 3 then
+                return mission:progressEvent(163)
+            else
+                for towerNum = 2, 0, -1 do
+                    if not getMissionStatusBit(player, towerNum) then
+                        return mission:progressEvent(162, towerNum)
+                    end
+                end
+            end
+        end
+    end
+end
 
 mission.sections =
 {
@@ -91,77 +106,59 @@ mission.sections =
 
         [xi.zone.ALTAIEU] =
         {
-            ['_0x0'] = -- Crystalline Field
+            ['_0x0'] =
             {
                 onTrigger = function(player, npc)
-                    if mission:getVar(player, 'Status') == 2 then
-                        return mission:progressEvent(100)
-                    elseif checkTowerCsVars(player) == 3 then
-                        mission:setVar(player, 'Status', 2)
-                        return mission:progressEvent(100)
-                    elseif mission:getVar(player, 'Status') == 0 then
+                    local missionStatus = mission:getVar(player, 'Status')
+
+                    if missionStatus == 0 then
                         return mission:progressEvent(164)
+                    elseif getRubiousMask(player) == 7 then
+                        return mission:progressEvent(100)
                     end
                 end,
             },
 
-            ['_0x1'] = -- South Tower
-            {
-                onTrigger = function(player, npc)
-                    if mission:getVar(player, 'Status') == 1 then
-                        return rubiousCrystalOnTrigger(player, npc)
-                    end
-                end,
-            },
-
-            ['_0x2'] = -- West Tower
-            {
-                onTrigger = function(player, npc)
-                    if mission:getVar(player, 'Status') == 1 then
-                        return rubiousCrystalOnTrigger(player, npc)
-                    end
-                end,
-            },
-
-            ['_0x3'] = -- East Tower
-            {
-                onTrigger = function(player, npc)
-                    if mission:getVar(player, 'Status') == 1 then
-                        return rubiousCrystalOnTrigger(player, npc)
-                    end
-                end,
-            },
+            ['_0x1'] = rubiousOnTrigger,
+            ['_0x2'] = rubiousOnTrigger,
+            ['_0x3'] = rubiousOnTrigger,
 
             ['Ruaern'] =
             {
                 onMobDeath = function(mob, player, optParams)
-                    if mission:getVar(player, 'Status') == 1 then
-                        mission:setVar(player, mob:getID(), 1)
+                    local nmOffset    = mission:getLocalVar(player, 'nmOffset')
+                    local numDefeated = mission:getLocalVar(player, 'numDefeated')
+
+                    if nmOffset > 0 then
+                        for nmId = nmOffset, nmOffset + 2 do
+                            if mob:getID() == nmId then
+                                numDefeated = numDefeated + 1
+                            end
+                        end
+
+                        if numDefeated == 3 then
+                            local npcObj      = GetNPCByID(mission:getLocalVar(player, 'triggerNpc'))
+                            local currentMask = mission:getLocalVar(player, 'nmDefeated')
+                            mission:setLocalVar(player, 'nmDefeated', utils.mask.setBit(currentMask, towerOption[npcObj:getName()], true))
+                            mission:setLocalVar(player, 'numDefeated', 0)
+                        else
+                            mission:setLocalVar(player, 'numDefeated', numDefeated)
+                        end
                     end
                 end,
             },
 
             onEventFinish =
             {
-                [100] = function(player, csid, option)
+                [100] = function(player, csid, option, npc)
+                    mission:setVar(player, 'Status', 2)
+
                     if option == 1 then
-                        player:setPos(-20, 0.624, -355, 191, 34) -- { R }
+                        player:setPos(-20, 0.624, -355, 191, 34)
                     end
                 end,
 
-                [161] = function(player, csid, option)
-                    rubiousCrystalOnEventFinish(player, csid, option)
-                end,
-
-                [162] = function(player, csid, option)
-                    rubiousCrystalOnEventFinish(player, csid, option)
-                end,
-
-                [163] = function(player, csid, option)
-                    rubiousCrystalOnEventFinish(player, csid, option)
-                end,
-
-                [164] = function(player, csid, option)
+                [164] = function(player, csid, option, npc)
                     mission:setVar(player, 'Status', 1)
                 end,
             },
@@ -169,42 +166,40 @@ mission.sections =
 
         [xi.zone.GRAND_PALACE_OF_HUXZOI] =
         {
-            ['_iya'] = -- Gate of the Gods
+            ['_iya'] =
             {
                 onTrigger = function(player, npc)
                     if mission:getVar(player, 'Status') == 2 then
                         return mission:progressEvent(1)
                     else
-                        return mission:messageSpecial(palaceID.text.PORTAL_DOES_NOT_RESPOND)
+                        -- TODO: Is this default until another condition is met? Verify
+                        return mission:messageSpecial(huxoiID.text.DOES_NOT_RESPOND):setPriority(1000)
                     end
                 end,
             },
 
-            ['_iyb'] = -- East Particle Gate
+            ['_iyb'] =
             {
                 onTrigger = function(player, npc)
-                    return mission:messageSpecial(palaceID.text.GATE_DOES_NOT_RESPOND)
-                end,
-            },
-
-            ['_iyc'] = -- West Particle Gate
-            {
-                onTrigger = function(player, npc)
-                    return mission:messageSpecial(palaceID.text.GATE_DOES_NOT_RESPOND)
+                    if mission:getVar(player, 'Status') == 3 then
+                        return mission:progressEvent(2)
+                    end
                 end,
             },
 
             onEventFinish =
             {
-                [1] = function(player, csid, option)
-                    if player:getFreeSlotsCount() == 0 then
-                        mission:messageSpecial(palaceID.text.ITEM_CANNOT_BE_OBTAINED, xi.item.TAVNAZIAN_RING)
-                    else
-                        mission:complete(player)
+                [1] = function(player, csid, option, npc)
+                    if npcUtil.giveItem(player, xi.item.TAVNAZIAN_RING) then
+                        mission:setVar(player, 'Status', 3)
                     end
                 end,
+
+                [2] = function(player, csid, option, npc)
+                    mission:complete(player)
+                end,
             },
-        }
+        },
     },
 
     {
@@ -214,18 +209,13 @@ mission.sections =
 
         [xi.zone.ALTAIEU] =
         {
-            ['_0x0'] = -- Crystalline Field
-            {
-                onTrigger = function(player, npc)
-                    return mission:event(100)
-                end,
-            },
+            ['_0x0'] = mission:progressEvent(100),
 
             onEventFinish =
             {
-                [100] = function(player, csid, option)
+                [100] = function(player, csid, option, npc)
                     if option == 1 then
-                        player:setPos(-20, 0.624, -355, 191, 34) -- { R }
+                        player:setPos(-20, 0.624, -355, 191, 34)
                     end
                 end,
             },

@@ -3,8 +3,6 @@
 --  NPC: cermet portal
 -- !pos 420 0 401 34
 -----------------------------------
-local ID = zones[xi.zone.GRAND_PALACE_OF_HUXZOI]
------------------------------------
 local entity = {}
 
 entity.onTrade = function(player, npc, trade)

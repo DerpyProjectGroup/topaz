@@ -6,6 +6,10 @@ mixins = { require('scripts/mixins/families/antlion_ambush') }
 -----------------------------------
 local entity = {}
 
+entity.onMobInitialize = function(mob)
+    mob:setMobMod(xi.mobMod.IDLE_DESPAWN, 180)
+end
+
 entity.onMobWeaponSkill = function(player, mob, skill)
     --Sets entire party enmity CE/VE to 0.
     local alliance = player:getAlliance() -- Gets member pointers for alliance

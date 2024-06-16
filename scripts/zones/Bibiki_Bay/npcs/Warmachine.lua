@@ -3,8 +3,6 @@
 --  NPC: Warmachine
 -- !pos -345.236 -3.188 -976.563 4
 -----------------------------------
-local ID = zones[xi.zone.BIBIKI_BAY]
------------------------------------
 local entity = {}
 
 entity.onTrade = function(player, npc, trade)

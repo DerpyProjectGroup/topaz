@@ -3,7 +3,9 @@
 -- Promathia 8-2
 -----------------------------------
 -- !addmission 6 818
--- Grand Palace of Hu'Xzoi Particle Gate (!pos 1 0.1 -320 34)
+-- _iyq : !pos 420 0 401 34
+-----------------------------------
+local huxoiID = zones[xi.zone.GRAND_PALACE_OF_HUXZOI]
 -----------------------------------
 
 local mission = Mission:new(xi.mission.log_id.COP, xi.mission.id.cop.A_FATE_DECIDED)
@@ -22,111 +24,36 @@ mission.sections =
 
         [xi.zone.GRAND_PALACE_OF_HUXZOI] =
         {
-
-            ['_iya'] = -- Gate of the Gods
+            ['_iyq'] =
             {
                 onTrigger = function(player, npc)
-                    return mission:messageSpecial(zones[npc:getZoneID()].text.PORTAL_DOES_NOT_RESPOND)
-                end,
-            },
+                    local missionStatus = mission:getVar(player, 'Status')
 
-            ['_iyb'] = -- East Particle Gate
-            {
-                onTrigger = function(player, npc)
-                    if mission:getVar(player, 'Status') == 0 then
-                        return mission:progressEvent(2)
-                    else
-                        return mission:progressEvent(56)
-                    end
-                end,
-            },
-
-            ['_iyc'] = -- West Partical Gate
-            {
-                onTrigger = function(player, npc)
-                    return mission:messageSpecial(zones[npc:getZoneID()].text.GATE_DOES_NOT_RESPOND)
-                end,
-            },
-
-            ['_iyq'] = -- Cermet Portal
-            {
-                onTrigger = function(player,npc)
-                    if mission:getVar(player, 'Status') == 1 and not GetMobByID(zones[npc:getZoneID()].mob.IXGHRAH):isSpawned() then
-                        return SpawnMob(zones[npc:getZoneID()].mob.IXGHRAH):updateClaim(player)
-                    elseif mission:getVar(player, 'Status') == 2 then
+                    if
+                        missionStatus == 0 and
+                        not GetMobByID(huxoiID.mob.IXGHRAH):isSpawned()
+                    then
+                        SpawnMob(huxoiID.mob.IXGHRAH):updateClaim(player)
+                        return mission:messageSpecial(huxoiID.text.PRESENCE_HAS_DRAWN)
+                    elseif missionStatus == 1 then
                         return mission:progressEvent(3)
                     end
                 end,
             },
 
-            ['_0y0'] =
+            ['Ixghrah'] =
             {
-                onTrigger = function(player, npc)
-                    return mission:event(173)
-                end,
-            },
-
-            onEventFinish =
-            {
-                [2] = function(player, csid, option)
-                    mission:setVar(player, 'Status', 1)
-                end,
-
-                [3] = function(player, csid, option)
-                    mission:complete(player)
-                end,
-            },
-        }
-    },
-
-    {
-        check = function(player, currentMission, missionStatus, vars)
-            return player:hasCompletedMission(mission.areaId, mission.missionId)
-        end,
-
-        [xi.zone.GRAND_PALACE_OF_HUXZOI] =
-        {
-            ['_iya'] = -- Gate of the Gods
-            {
-                onTrigger = function(player, npc)
-                    return mission:event(52)
-                end,
-            },
-
-            ['_iyb'] = -- East Particle Gate
-            {
-                onTrigger = function(player, npc)
-                    return mission:event(56)
-                end,
-            },
-
-            ['_iyc'] = -- West Particle Gate
-            {
-                onTrigger = function(player, npc)
-                    return mission:event(172)
-                end,
-            },
-
-            ['_iyq'] = -- Cermet Portal
-            {
-                onTrigger = function(player,npc)
-                    return mission:messageSpecial(zones[npc:getZoneID()].text.PORTAL_DOES_NOT_RESPOND)
-                end,
-            },
-
-            ['_0y0'] =
-            {
-                onTrigger = function(player, npc)
-                    return mission:event(173)
-                end,
-            },
-
-            onEventFinish =
-            {
-                [52] = function(player, csid, option)
-                    if option == 1 then
-                        player:setPos(-419.995, 0, 248.483, 191, xi.zone.THE_GARDEN_OF_RUHMET)
+                onMobDeath = function(mob, player, optParams)
+                    if mission:getVar(player, 'Status') == 0 then
+                        mission:setVar(player, 'Status', 1)
                     end
+                end
+            },
+
+            onEventFinish =
+            {
+                [3] = function(player, csid, option, npc)
+                    mission:complete(player)
                 end,
             },
         },

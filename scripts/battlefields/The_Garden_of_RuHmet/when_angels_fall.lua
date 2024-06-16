@@ -25,13 +25,6 @@ local content = BattlefieldMission:new({
 })
 
 function content:onEventFinishWin(player, csid, option, npc)
-    if
-        player:getCurrentMission(xi.mission.log_id.COP) == xi.mission.id.cop.WHEN_ANGELS_FALL and
-        player:getCharVar('Mission[6][828]Status') == 4
-    then
-        player:setCharVar('Mission[6][828]Status', 5)
-    end
-
     player:setPos(420, 0, 445, 192)
 end
 

@@ -3,8 +3,6 @@
 --  NPC: Marble Bridge Eatery (Door)
 -- !pos -96.6 -0.2 92.3 244
 -----------------------------------
-local ID = zones[xi.zone.UPPER_JEUNO]
------------------------------------
 local entity = {}
 
 entity.onTrade = function(player, npc, trade)

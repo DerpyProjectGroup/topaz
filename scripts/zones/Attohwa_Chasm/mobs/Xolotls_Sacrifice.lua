@@ -5,6 +5,10 @@
 -----------------------------------
 local entity = {}
 
+entity.onMobSpawn = function(mob)
+    mob:setMobMod(xi.mobMod.SUPERLINK, 32)
+end
+
 entity.onMobRoam = function(mob)
     local hour = VanadielHour()
 

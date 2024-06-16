@@ -2,8 +2,6 @@
 -- Area: The Garden of Ru'Hmet
 --  NPC: particle gate
 -----------------------------------
-local ID = zones[xi.zone.THE_GARDEN_OF_RUHMET]
------------------------------------
 local entity = {}
 
 entity.onTrade = function(player, npc, trade)

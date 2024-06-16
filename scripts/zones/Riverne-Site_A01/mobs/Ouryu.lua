@@ -30,7 +30,7 @@ entity.onMobSpawn = function(mob)
     mob:setMod(xi.mod.MATT, 0) -- Damage output does not show any MATT bonus
     mob:setMod(xi.mod.REFRESH, 200)
     mob:setMobMod(xi.mobMod.ADD_EFFECT, 1)
-    mob:setMobMod(xi.mobMod.DRAW_IN, 1)
+    mob:setMobMod(xi.mobMod.DRAW_IN, 15)
     mob:setMobMod(xi.mobMod.DRAW_IN_CUSTOM_RANGE, 15)
     mob:setMobMod(xi.mobMod.DRAW_IN_FRONT, 1)
 

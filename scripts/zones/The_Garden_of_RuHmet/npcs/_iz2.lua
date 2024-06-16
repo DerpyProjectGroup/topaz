@@ -3,8 +3,6 @@
 --  NPC: _iz2 (Ebon_Panel)
 -- !pos 422.351 -5.180 -100.000 35 | Hume Tower
 -----------------------------------
-local ID = zones[xi.zone.THE_GARDEN_OF_RUHMET]
------------------------------------
 local entity = {}
 
 entity.onTrade = function(player, npc, trade)

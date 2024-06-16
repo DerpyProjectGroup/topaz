@@ -8,6 +8,7 @@ mixins = { require('scripts/mixins/fomor_hate') }
 local entity = {}
 
 entity.onMobInitialize = function(mob)
+    mob:setMobMod(xi.mobMod.IDLE_DESPAWN, 900)
     mob:addListener("ITEM_DROPS", "ITEM_DROPS_GRATION", function(mobArg, loot)
         loot:addItemFixed(xi.item.TATAMI_SHIELD, mob:getLocalVar("DropRate"))
     end)

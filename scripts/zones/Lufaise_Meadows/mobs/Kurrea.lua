@@ -19,6 +19,10 @@ local buffs = -- Buff, potency, messageID
     {    xi.effect.DEFENSE_DOWN, 100,   ID.text.KURREA_GREEN},
 }
 
+entity.onMobInitialize = function(mob)
+    mob:setMobMod(xi.mobMod.IDLE_DESPAWN, 120)
+end
+
 entity.onMobSpawn = function(mob)
     mob:setLocalVar('[CastTime]ID_208', 1)
     mob:setMobMod(xi.mobMod.NO_STANDBACK, 1)

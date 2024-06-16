@@ -29,7 +29,7 @@ quest.sections =
                 or
                 -- On Dawn, but past 'the boss'
                 (player:getCurrentMission(xi.mission.log_id.COP) == xi.mission.id.cop.DAWN and
-                player:getCharVar('Mission[6][840]Status') >= 3)
+                xi.mission.getVar(player, xi.mission.log_id.COP, xi.mission.id.cop.DAWN, 'Status') >= 2)
                 or
                 -- Past Dawn
                 player:getCurrentMission(xi.mission.log_id.COP) > xi.mission.id.cop.DAWN

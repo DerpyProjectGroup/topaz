@@ -2,99 +2,40 @@
 -- Dawn
 -- Promathia 8-4
 -----------------------------------
--- !addmission 6 840
--- Zone Into Al'Taieu
------------------------------------
-require('scripts/globals/interaction/mission')
-require('scripts/globals/missions')
-require('scripts/globals/npc_util')
-require('scripts/globals/teleports')
-
-require('scripts/globals/utils')
-
+-- !addmission 6 828
+-- Hinaree      : !pos -301.535 -10.199 97.698 230
+-- Chipmy-Popmy : !pos -183.02 -2.835 73.905 240
+-- Warmachine   : !pos -345.236 -3.188 -976.563 4
+-- Cid          : !pos -12 -12 1 237
+-- _6s1         : !pos -96.6 -0.2 92.3 244
+-- _0qa         : !pos 111 -41 41 26
+-- TODO: Add additional section to complete mission that aligns with Apocalypse Nigh
 -----------------------------------
 
 local mission = Mission:new(xi.mission.log_id.COP, xi.mission.id.cop.DAWN)
 
-mission.reward =
-{
-    nextMission = xi.mission.id.cop.THE_LAST_VERSE,
-}
+mission.reward = {}
 
-local additionalCS =
-{
-    'TenzenCS',
-    'ChebukkisCS',
-    'ShikareesCS',
-    'JabbosCS',
-    'LouveranceCS',
-}
-
-local checkAdditionalCS = function(player)
-    local csCount = 0
-    for _, cs in pairs(additionalCS) do
-        if mission:getVar(player, cs) == 1 then
-            csCount = csCount + 1
-        end
-    end
-
-    if csCount == 5 then
-        for _, cs in pairs(additionalCS) do
-            mission:setVar(player, cs, 0)
-        end
-    end
-
-    return csCount
-end
-
-local rings =
+local ringItems =
 {
     xi.item.RAJAS_RING,
     xi.item.SATTVA_RING,
     xi.item.TAMAS_RING,
 }
 
-local ringCheck = function(player)
-    for _, ring in pairs(rings) do
-        if player:hasItem(ring) then
-            return true
-        end
-    end
-
-    return false
-end
-
-local updateRingEvent = function(player, csid, option)
+local ringOnEventUpdate = function(player, csid, option, npc)
     if option == 4 then
-        player:updateEvent(rings[1], rings[2], rings[3])
+        player:updateEvent(unpack(ringItems))
     end
 end
 
-local ringFunction = function(player)
-    local ringsTaken = mission:getVar(player, 'Rings')
-    local currentDay = tonumber(os.date('%j'))
-    local lastObtained = mission:getVar(player, 'Obtained')
-
-    if ringsTaken == 0 then
-        return mission:progressEvent(84, rings)
-    elseif ringsTaken == 1 then -- No Wait for 1st Throw
-        return mission:progressEvent(204, rings)
-    elseif ringsTaken > 1 and (currentDay - lastObtained) >= 28 then -- 28 Day Wait for New Ring
-        return mission:progressEvent(204, rings)
-    end
-end
-
-local giveRings = function(player, csid, option)
-    if option >= 5 and option <= 7 then
-        if player:getFreeSlotsCount() == 0 then
-            return mission:messageSpecial(zones[player:getZoneID()].text.ITEM_CANNOT_BE_OBTAINED, rings[option - 4])
-        else
-            local ringsTaken = mission:getVar(player, 'Rings')
-            mission:setVar(player, 'Rings', ringsTaken + 1)
-            mission:setVar(player, 'Obtained', tonumber(os.date('%j')))
-            player:addItem(rings[option - 4])
-            return mission:messageSpecial(zones[player:getZoneID()].text.ITEM_OBTAINED, rings[option - 4])
-        end
+local ringOnEventFinish = function(player, csid, option, npc)
+    if
+        option >= 5 and
+        option <= 7 and
+        npcUtil.giveItem(player, ringItems[option - 4])
+    then
+        mission:setVar(player, 'firstRing', 0)
     end
 end
 
@@ -102,36 +43,48 @@ mission.sections =
 {
     {
         check = function(player, currentMission, missionStatus, vars)
+            return currentMission >= mission.missionId
+        end,
+
+        [xi.zone.THE_GARDEN_OF_RUHMET] =
+        {
+            ['_0zy'] =
+            {
+                onTrigger = function(player, npc)
+                    if player:getZPos() <= 360 then
+                        return mission:progressEvent(140)
+                    else
+                        return mission:progressEvent(141)
+                    end
+                end,
+            },
+        },
+    },
+
+    {
+        check = function(player, currentMission, missionStatus, vars)
             return currentMission == mission.missionId
         end,
 
-        [xi.zone.ALTAIEU] =
+        [xi.zone.EMPYREAL_PARADOX] =
         {
             onZoneIn =
             {
                 function(player, prevZone)
-                    if mission:getVar(player, 'Status') < 1 then
-                        return 167
+                    local missionStatus = mission:getVar(player, 'Status')
+
+                    if missionStatus == 2 then
+                        return 6
+                    elseif missionStatus == 3 then
+                        return 3
                     end
                 end,
             },
 
-            onEventFinish =
-            {
-                [167] = function(player, csid, option)
-                    mission:setVar(player, 'Status', 1)
-                    player:delKeyItem(xi.ki.MYSTERIOUS_AMULET_PRISHE)
-                    return player:messageSpecial(zones[player:getZoneID()].text.RETURN_AMULET_TO_PRISHE, xi.ki.MYSTERIOUS_AMULET)
-                end,
-            },
-        },
-
-        [xi.zone.EMPYREAL_PARADOX] =
-        {
-            ['Transcendental_Radiance'] =
+            ['TR_Entrance'] =
             {
                 onTrigger = function(player, npc)
-                    if mission:getVar(player, 'Status') == 1 then
+                    if mission:getVar(player, 'Status') == 0 then
                         return mission:progressEvent(2)
                     end
                 end,
@@ -139,227 +92,30 @@ mission.sections =
 
             onEventFinish =
             {
-                [2] = function(player, csid, option)
-                    mission:setVar(player, 'Status', 2)
+                [2] = function(player, csid, option, npc)
+                    mission:setVar(player, 'Status', 1)
                 end,
 
-                [3] = function(player, csid, option)
-                    if mission:getVar(player, 'Status') < 4 then
-                        mission:setVar(player, 'Status', 4)
-                    end
+                [3] = function(player, csid, option, npc)
+                    npcUtil.giveKeyItem(player, xi.ki.TEAR_OF_ALTANA)
+                    mission:setVar(player, 'Timer', 1, JstMidnight())
+                    mission:setVar(player, 'Option', 31)
+                    mission:setVar(player, 'Status', 4)
+                    player:setPos(0.18, -10, -470.43, 63, xi.zone.ALTAIEU)
                 end,
 
-                [6] = function(player, csid, option)
-                    player:setPos(539, 0, -593, 192)
-                    player:addTitle(xi.title.AVERTER_OF_THE_APOCALYPSE)
-                    if not player:hasKeyItem(xi.ki.TEAR_OF_ALTANA) then
-                        npcUtil.giveKeyItem(player, xi.ki.TEAR_OF_ALTANA)
-                    end
-
-                    if mission:getVar(player, 'Status') < 3 then
-                        mission:setVar(player, 'Wait', getMidnight())
-                        mission:setVar(player, 'Status', 3)
-                    end
-
-                    return mission:progressEvent(3)
+                [6] = function(player, csid, option, npc)
+                    mission:setVar(player, 'Status', 3)
+                    player:setPos(540, 0, -514, 63, xi.zone.EMPYREAL_PARADOX)
                 end,
-            },
-        },
 
-        [xi.zone.METALWORKS] =
-        {
-
-            ['Cid'] =
-            {
-                onTrigger = function(player, npc)
+                [32001] = function(player, csid, option, npc)
                     if
-                        mission:getVar(player, 'Status') == 4 and
-                        mission:getVar(player, 'Wait') < os.time() and
-                        mission:getVar(player, 'TenzenCS') < 1
+                        mission:getVar(player, 'Status') == 1 and
+                        player:getLocalVar('battlefieldWin') == xi.battlefield.id.DAWN
                     then
-                        return mission:progressEvent(897)
+                        mission:setVar(player, 'Status', 2)
                     end
-                end,
-            },
-
-            onEventFinish =
-            {
-                [897] = function(player, csid, option)
-                    mission:setVar(player, 'TenzenCS', 1)
-                end,
-            },
-        },
-
-        [xi.zone.OLDTON_MOVALPOLOS] =
-        {
-            onZoneIn =
-            {
-                function(player, prevZone)
-                    if
-                        mission:getVar(player, 'Status') == 4 and
-                        mission:getVar(player, 'Wait') < os.time() and
-                        mission:getVar(player, 'JabbosCS') < 1
-                    then
-                        return 57
-                    end
-                end,
-            },
-
-            onEventFinish =
-            {
-                [57] = function(player, csid, option)
-                    mission:setVar(player, 'JabbosCS', 1)
-                end,
-            },
-        },
-
-        [xi.zone.MHAURA] =
-        {
-            onZoneIn =
-            {
-                function(player, prevZone)
-                    if
-                        mission:getVar(player, 'Status') == 4 and
-                        mission:getVar(player, 'ShikareesCS') < 1
-                    then
-                        return 322
-                    end
-                end,
-            },
-
-            onEventFinish =
-            {
-                [322] = function(player, csid, option)
-                    mission:setVar(player, 'ShikareesCS', 1)
-                    -- Used for Requiem of Sin Quest
-                    player:setCharVar('Quest[4][83]conquestRequiem', NextConquestTally())
-                end,
-            },
-        },
-
-        [xi.zone.SOUTHERN_SAN_DORIA] =
-        {
-            ['Hinaree'] =
-            {
-                onTrigger = function(player, npc)
-                    if
-                        mission:getVar(player, 'Status') == 4 and
-                        mission:getVar(player, 'Wait') < os.time() and
-                        mission:getVar(player, 'LouveranceCS') < 1
-                    then
-                        return mission:progressEvent(757)
-                    end
-                end,
-            },
-
-            onTriggerAreaEnter =
-            {
-                [1] = function(player, triggerArea)
-                    if
-                        mission:getVar(player, 'Status') == 4 and
-                        mission:getVar(player, 'Wait') < os.time() and
-                        mission:getVar(player, 'LouveranceCS') == 2
-                    then
-                        return mission:progressEvent(758)
-                    end
-                end,
-            },
-
-            onEventFinish =
-            {
-                [757] = function(player, csid, option)
-                    mission:setVar(player, 'LouveranceCS', 3)
-                end,
-
-                [758] = function(player, csid, option)
-                    mission:setVar(player, 'LouveranceCS', 1)
-                end,
-            }
-
-        },
-
-        [xi.zone.ULEGUERAND_RANGE] =
-        {
-            onZoneIn =
-            {
-                function(player, prevZone)
-                    if
-                        mission:getVar(player, 'Status') == 4 and
-                        mission:getVar(player, 'Wait') < os.time() and
-                        mission:getVar(player, 'LouveranceCS') == 3
-                    then
-                        return 17
-                    end
-                end,
-            },
-
-            onEventFinish =
-            {
-                [17] = function(player, npc)
-                    mission:setVar(player, 'LouveranceCS', 2)
-                end,
-            },
-        },
-
-        [xi.zone.PORT_WINDURST] =
-        {
-            ['Chipmy-Popmy'] =
-            {
-                onTrigger = function(player, npc)
-                    if
-                        mission:getVar(player, 'Status') == 4 and
-                        mission:getVar(player, 'Wait') < os.time() and
-                        mission:getVar(player, 'ChebukkisCS') < 1
-                    then
-                        return mission:progressEvent(619)
-                    end
-                end,
-            },
-
-            onEventFinish =
-            {
-                [619] = function(player, npc)
-                    mission:setVar(player, 'ChebukkisCS', 2)
-                end,
-            },
-        },
-
-        [xi.zone.BIBIKI_BAY] =
-        {
-            ['Warmachine'] =
-            {
-                onTrigger = function(player, npc)
-                    local coloredDrop = 4258 + math.random(0, 7)
-                    if
-                        mission:getVar(player, 'Status') == 4 and
-                        mission:getVar(player, 'Wait') < os.time() and
-                        mission:getVar(player, 'ChebukkisCS') == 2
-                    then
-                        if player:getFreeSlotsCount() == 0 then
-                            if mission:getVar(player, 'ColoredDrop') < 4258 then
-                                mission:setVar(player, 'ColoredDrop', coloredDrop)
-                            end
-
-                            return mission:messageSpecial(zones[npc:getZoneID()].text.ITEM_CANNOT_BE_OBTAINED, coloredDrop)
-                        else
-                            if mission:getVar(player, 'ColoredDrop') < 4258 then
-                                mission:setVar(player, 'ColoredDrop', coloredDrop)
-                            end
-
-                            return mission:progressEvent(43)
-                        end
-                    end
-                end,
-            },
-
-            onEventFinish =
-            {
-                [43] = function(player, csid, option)
-                    local coloredDrop = mission:getVar(player, 'ColoredDrop')
-                    mission:setVar(player, 'ChebukkisCS', 1)
-                    mission:setVar(player, 'coloredDrop', 0)
-                    player:addItem(coloredDrop)
-                    return mission:messageSpecial(zones[player:getZoneID()].text.ITEM_OBTAINED, coloredDrop)
                 end,
             },
         },
@@ -369,7 +125,10 @@ mission.sections =
             onTriggerAreaEnter =
             {
                 [1] = function(player, triggerArea)
-                    if mission:getVar(player, 'Status') == 4 and checkAdditionalCS(player) == 5 then
+                    if
+                        mission:getVar(player, 'Status') == 4 and
+                        mission:getVar(player, 'Option') == 0
+                    then
                         return mission:progressEvent(122)
                     end
                 end,
@@ -377,7 +136,7 @@ mission.sections =
 
             onEventFinish =
             {
-                [122] = function(player, csid, option)
+                [122] = function(player, csid, option, npc)
                     mission:setVar(player, 'Status', 5)
                 end,
             },
@@ -390,35 +149,15 @@ mission.sections =
                 onTrigger = function(player, npc)
                     if mission:getVar(player, 'Status') == 5 then
                         return mission:progressEvent(129)
-                    elseif mission:getVar(player, 'Status') > 5 and not ringCheck(player) then
-                        return ringFunction(player)
                     end
-                end,
-            },
-
-            onEventUpdate =
-            {
-                [84] = function(player, csid, option)
-                    return updateRingEvent(player, csid, option)
-                end,
-
-                [204] = function(player, csid, option)
-                    return updateRingEvent(player, csid, option)
                 end,
             },
 
             onEventFinish =
             {
-                [84] = function(player, csid, option)
-                    return giveRings(player, csid, option)
-                end,
-
-                [129] = function(player, csid, option)
+                [129] = function(player, csid, option, npc)
                     mission:setVar(player, 'Status', 6)
-                end,
-
-                [204] = function(player, csid, option)
-                    return giveRings(player, csid, option)
+                    mission:setVar(player, 'firstRing', 1)
                 end,
             },
         },
@@ -436,7 +175,7 @@ mission.sections =
 
             onEventFinish =
             {
-                [543] = function(player, csid, option)
+                [543] = function(player, csid, option, npc)
                     mission:setVar(player, 'Status', 7)
                 end,
             },
@@ -455,17 +194,219 @@ mission.sections =
 
             onEventFinish =
             {
-                [116] = function(player, csid, option)
+                [116] = function(player, csid, option, npc)
+                    player:addTitle(xi.title.BANISHER_OF_EMPTINESS)
                     mission:setVar(player, 'Status', 8)
-                    return player:addTitle(xi.title.BANISHER_OF_EMPTINESS)
                 end,
             },
         },
     },
 
+    -- Final Cutscenes - Louverance (Bit 0)
     {
         check = function(player, currentMission, missionStatus, vars)
-            return player:hasCompletedMission(mission.areaId, mission.missionId)
+            return currentMission == mission.missionId and
+                vars.Status == 4 and
+                vars.Timer == 0 and
+                utils.mask.getBit(vars.Option, 0)
+        end,
+
+        [xi.zone.SOUTHERN_SAN_DORIA] =
+        {
+            onTriggerAreaEnter =
+            {
+                [1] = function(player, triggerArea)
+                    if mission:getVar(player, 'LProg') == 2 then
+                        return mission:progressEvent(758)
+                    end
+                end,
+            },
+
+            ['Hinaree'] =
+            {
+                onTrigger = function(player, npc)
+                    if mission:getVar(player, 'LProg') == 0 then
+                        return mission:progressEvent(757)
+                    end
+                end,
+            },
+
+            onEventFinish =
+            {
+                [757] = function(player, csid, option, npc)
+                    mission:setVar(player, 'LProg', 1)
+                end,
+
+                [758] = function(player, csid, option, npc)
+                    mission:setVar(player, 'Option', utils.mask.setBit(mission:getVar(player, 'Option'), 0, false))
+                end,
+            },
+        },
+
+        [xi.zone.ULEGUERAND_RANGE] =
+        {
+            onZoneIn =
+            {
+                function(player, prevZone)
+                    if mission:getVar(player, 'LProg') == 1 then
+                        return 17
+                    end
+                end,
+            },
+
+            onEventFinish =
+            {
+                [17] = function(player, csid, option, npc)
+                    mission:setVar(player, 'LProg', 2)
+                end,
+            },
+        },
+    },
+
+    -- Final Cutscenes - Chebukkis (Bit 1)
+    {
+        check = function(player, currentMission, missionStatus, vars)
+            return currentMission == mission.missionId and
+                vars.Status == 4 and
+                vars.Timer == 0 and
+                (utils.mask.getBit(vars.Option, 1) or vars.coloredDropId > 0)
+        end,
+
+        [xi.zone.PORT_WINDURST] =
+        {
+            ['Chipmy-Popmy'] =
+            {
+                onTrigger = function(player, npc)
+                    if mission:getVar(player, 'CProg') == 0 then
+                        return mission:progressEvent(619)
+                    end
+                end,
+            },
+
+            onEventFinish =
+            {
+                [619] = function(player, csid, option, npc)
+                    mission:setVar(player, 'CProg', 1)
+                end,
+            },
+        },
+
+        [xi.zone.BIBIKI_BAY] =
+        {
+            ['Warmachine'] =
+            {
+                onTrigger = function(player, npc)
+                    local coloredDropId = mission:getVar(player, 'coloredDropId')
+
+                    if
+                        coloredDropId > 0 and
+                        npcUtil.giveItem(player, coloredDropId)
+                    then
+                        mission:setVar(player, 'coloredDropId', 0)
+                    elseif mission:getVar(player, 'CProg') == 1 then
+                        return mission:progressEvent(43)
+                    end
+                end,
+            },
+
+            onEventFinish =
+            {
+                [43] = function(player, csid, option, npc)
+                    local coloredDropId = xi.item.RED_DROP + math.random(0, 7)
+
+                    if not npcUtil.giveItem(player, coloredDropId) then
+                        mission:setVar(player, 'coloredDropId', coloredDropId)
+                    end
+
+                    mission:setVar(player, 'Option', utils.mask.setBit(mission:getVar(player, 'Option'), 1, false))
+                end,
+            },
+        },
+    },
+
+    -- Final Cutscenes - Shikarees (Bit 2)
+    {
+        check = function(player, currentMission, missionStatus, vars)
+            return currentMission == mission.missionId and
+                vars.Status == 4 and
+                vars.Timer == 0 and
+                utils.mask.getBit(vars.Option, 2)
+        end,
+
+        [xi.zone.MHAURA] =
+        {
+            onZoneIn =
+            {
+                function(player, prevZone)
+                    return 322
+                end,
+            },
+
+            onEventFinish =
+            {
+                [322] = function(player, csid, option, npc)
+                    mission:setVar(player, 'Option', utils.mask.setBit(mission:getVar(player, 'Option'), 2, false))
+                end,
+            },
+        },
+    },
+
+    -- Final Cutscenes - Jabbos (Bit 3)
+    {
+        check = function(player, currentMission, missionStatus, vars)
+            return currentMission == mission.missionId and
+                vars.Status == 4 and
+                vars.Timer == 0 and
+                utils.mask.getBit(vars.Option, 3)
+        end,
+
+        [xi.zone.OLDTON_MOVALPOLOS] =
+        {
+            onZoneIn =
+            {
+                function(player, prevZone)
+                    return 57
+                end,
+            },
+
+            onEventFinish =
+            {
+                [57] = function(player, csid, option, npc)
+                    mission:setVar(player, 'Option', utils.mask.setBit(mission:getVar(player, 'Option'), 3, false))
+                end,
+            },
+        },
+    },
+
+    -- Final Cutscenes - Tenzen (Bit 4)
+    {
+        check = function(player, currentMission, missionStatus, vars)
+            return currentMission == mission.missionId and
+                vars.Status == 4 and
+                vars.Timer == 0 and
+                utils.mask.getBit(vars.Option, 4)
+        end,
+
+        [xi.zone.METALWORKS] =
+        {
+            ['Cid'] = mission:progressEvent(897),
+
+            onEventFinish =
+            {
+                [897] = function(player, csid, option, npc)
+                    mission:setVar(player, 'Option', utils.mask.setBit(mission:getVar(player, 'Option'), 4, false))
+                end,
+            },
+        },
+    },
+
+    -- Ring granting or replacement
+    {
+        check = function(player, currentMission, missionStatus, vars)
+            return ((currentMission == mission.missionId and
+                vars.Status >= 6) or
+                player:hasCompletedMission(mission.areaId, mission.missionId)) and
+                vars.Timer == 0
         end,
 
         [xi.zone.UPPER_JEUNO] =
@@ -473,36 +414,27 @@ mission.sections =
             ['_6s1'] =
             {
                 onTrigger = function(player, npc)
-                    if mission:getVar(player, 'Status') > 5 and not ringCheck(player) then
-                        return ringFunction(player)
+                    for _, itemId in ipairs(ringItems) do
+                        if player:hasItem(itemId) then
+                            return
+                        end
                     end
+
+                    local eventId = mission:getVar(player, 'firstRing') == 1 and 84 or 204
+                    return mission:progressEvent(eventId)
                 end,
             },
 
             onEventUpdate =
             {
-                [84] = function(player, csid, option)
-                    return updateRingEvent(player, csid, option)
-                end,
-
-                [204] = function(player, csid, option)
-                    return updateRingEvent(player, csid, option)
-                end,
+                [84]  = ringOnEventUpdate,
+                [204] = ringOnEventUpdate,
             },
 
             onEventFinish =
             {
-                [84] = function(player, csid, option)
-                    return giveRings(player, csid, option)
-                end,
-
-                [129] = function(player, csid, option)
-                    mission:setVar(player, 'Status', 6)
-                end,
-
-                [204] = function(player, csid, option)
-                    return giveRings(player, csid, option)
-                end,
+                [84]  = ringOnEventFinish,
+                [204] = ringOnEventFinish,
             },
         },
     },

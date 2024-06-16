@@ -2,13 +2,9 @@
 -- Area: Stellar Fulcrum
 --  NPC: Qe'Lov Gate
 -----------------------------------
-require('scripts/globals/bcnm')
-require('scripts/globals/missions')
------------------------------------
 local entity = {}
 
 entity.onTrade = function(player, npc, trade)
-    xi.bcnm.onTrade(player, npc, trade)
 end
 
 entity.onTrigger = function(player, npc)

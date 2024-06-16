@@ -26705,6 +26705,10 @@ INSERT INTO `mob_droplist` VALUES (3298,4,0,1000,866,0);          -- Handful Of 
 -- ZoneID:  89 - Vasiliceratops
 INSERT INTO `mob_droplist` VALUES (3299,0,0,1000,18508,@UNCOMMON); -- Lyft Voulge (Uncommon, 10%)
 
+-- ZoneID: 254 - Peak Pugil
+INSERT INTO `mob_droplist` VALUES (3300,0,0,1000,3270,@RARE); -- High-Quality Pugil Scale
+INSERT INTO `mob_droplist` VALUES (3300,0,0,1000,868,@VCOMMON); -- Pugil Scales
+
 -- ZoneID: 187 - Xuu Bhoqa the Enigma
 INSERT INTO `mob_droplist` VALUES (4000,0,0,1000,11671,@COMMON);  -- Oneiros Ring (15.0%)
 INSERT INTO `mob_droplist` VALUES (4000,0,0,1000,3415,@ALWAYS);   -- Fiendish Tome Chapter 12

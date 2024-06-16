@@ -19,6 +19,10 @@ local dots =
     xi.effect.POISON,
 }
 
+entity.onMobInitialize = function(mob)
+    mob:setMobMod(xi.mobMod.IDLE_DESPAWN, 120)
+end
+
 entity.onMobSpawn = function(mob)
     mob:setLocalVar('holyTimer', os.time() + 30)
     mob:setMobMod(xi.mobMod.IDLE_DESPAWN, 300)
