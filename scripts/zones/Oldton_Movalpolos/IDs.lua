@@ -11,6 +11,7 @@ zones[xi.zone.OLDTON_MOVALPOLOS] =
         ITEM_OBTAINED                 = 6390, -- Obtained: <item>.
         GIL_OBTAINED                  = 6391, -- Obtained <number> gil.
         KEYITEM_OBTAINED              = 6393, -- Obtained key item: <keyitem>.
+        KEYITEM_LOST                  = 6394, -- Key item lost: <keyitem>.
         FELLOW_MESSAGE_OFFSET         = 6419, -- I'm ready. I suppose.
         CARRIED_OVER_POINTS           = 7001, -- You have carried over <number> login point[/s].
         LOGIN_CAMPAIGN_UNDERWAY       = 7002, -- The [/January/February/March/April/May/June/July/August/September/October/November/December] <number> Login Campaign is currently underway!
@@ -29,9 +30,13 @@ zones[xi.zone.OLDTON_MOVALPOLOS] =
         BRAKOBRIK_3                   = 7727, -- Good, good. You being smart. Very, very clever.
         BRAKOBRIK_4                   = 7730, -- When Brakobrik realizes that you already possess the item he is trying to give you, he refuses to give you another one.
         RAKOROK_DIALOGUE              = 7734, -- Nsy pipul. Gattohre! I bisynw!
+
+        -- TODO: Shift IDs
+        WAS_TAKEN_FROM_YOU            = 7748, -- The Dawn Talisman was taken from you...
     },
     mob =
     {
+        BUGALLUG          = GetFirstID('Bugallug'),
         BUGBEAR_STRONGMAN = GetTableOfIDs('Bugbear_Strongman'),
         GOBLIN_WOLFMAN    = GetFirstID('Goblin_Wolfman'),
         BUGALLUG          = 16822456,

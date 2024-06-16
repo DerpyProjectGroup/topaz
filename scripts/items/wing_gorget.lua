@@ -5,7 +5,7 @@
 -----------------------------------
 local itemObject = {}
 
-itemObject.onItemCheck = function(target)
+itemObject.onItemCheck = function(target, item, param, caster)
     local effect = target:getStatusEffect(xi.effect.REGAIN)
     if effect ~= nil and effect:getItemSourceID() == xi.item.WING_GORGET then
         target:delStatusEffect(xi.effect.REGAIN)

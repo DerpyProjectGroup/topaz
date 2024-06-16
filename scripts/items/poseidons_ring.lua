@@ -5,7 +5,7 @@
 -----------------------------------
 local itemObject = {}
 
-itemObject.onItemCheck = function(target, user)
+itemObject.onItemCheck = function(target, item, param, caster)
     local result = 0
     if target:hasPet() then
         result = xi.msg.basic.ALREADY_HAS_A_PET

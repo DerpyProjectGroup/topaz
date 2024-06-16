@@ -1,15 +1,9 @@
 -----------------------------------
 -- The Gustaberg Tour
 -----------------------------------
--- Log ID: 1, Quest ID: 45
--- Gerbaum : !pos 183 630 -15
------------------------------------
-
-require('scripts/globals/npc_util')
-require('scripts/globals/quests')
-
-
-require('scripts/globals/interaction/quest')
+-- Log ID      : 1, Quest ID: 45
+-- Izabele     : !pos -43.9 -10 -2.4 237
+-- Hunting Bear: !pos -235.7 40 424.5 106
 -----------------------------------
 
 local quest = Quest:new(xi.questLog.BASTOK, xi.quest.id.bastok.THE_GUSTABERG_TOUR)
@@ -36,9 +30,7 @@ quest.sections =
             onEventFinish =
             {
                 [745] = function(player, csid, option, npc)
-                    if option == 0 then
-                        quest:begin(player)
-                    end
+                    quest:begin(player)
                 end,
             },
         },

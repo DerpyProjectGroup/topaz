@@ -1078,7 +1078,7 @@ namespace mobutils
         PMob->SetDespawnTime(0s);
 
         // Stop early if this is a new battlefield
-        if (PMob->PBattlefield != nullptr && PMob->PBattlefield->isInteraction())
+        if (PMob->PBattlefield != nullptr)
         {
             return;
         }

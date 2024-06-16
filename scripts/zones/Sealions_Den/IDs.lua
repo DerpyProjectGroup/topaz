@@ -23,12 +23,19 @@ zones[xi.zone.SEALIONS_DEN] =
         MAKKI_CHEBUKKI_OFFSET         = 7928, -- Samurai Sky Pirate Power!
         KUKKI_CHEBUKKI_OFFSET         = 7933, -- What? Nooo!
         CHERUKIKI_OFFSET              = 7939, -- We're doomed!
+
+        -- TODO Shift IDs
+        TIME_IN_THE_BATTLEFIELD_IS_UP = 7065, -- Your time in the battlefield is up! Now exiting...
+        PARTY_MEMBERS_ARE_ENGAGED     = 7080, -- The battlefield where your party members are engaged in combat is locked. Access is denied.
+        MEMBERS_OF_YOUR_PARTY         = 7371, -- Currently, # members of your party (including yourself) have clearance to enter the battlefield.
+        MEMBERS_OF_YOUR_ALLIANCE      = 7372, -- Currently, # members of your alliance (including yourself) have clearance to enter the battlefield.
+        TIME_LIMIT_FOR_THIS_BATTLE_IS = 7374, -- The time limit for this battle is <number> minutes.
+        ENTERING_THE_BATTLEFIELD_FOR  = 7596, -- Entering the battlefield for [One to Be Feared/The Warrior's Path/The Warrior's Path/One to Be Feared]!
     },
     mob =
     {
-        ONE_TO_BE_FEARED_OFFSET = GetFirstID('Mammet-22_Zeta'),
-        OMEGA_OFFSET            = GetFirstID('Omega'),
-        WARRIORS_PATH_OFFSET    = GetFirstID('Tenzen'),
+        MAMMET_22_ZETA = GetFirstID('Mammet-22_Zeta'),
+        TENZEN         = GetFirstID('Tenzen'),
     },
     npc =
     {

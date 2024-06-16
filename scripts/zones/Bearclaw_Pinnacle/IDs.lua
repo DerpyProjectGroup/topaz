@@ -38,8 +38,7 @@ zones[xi.zone.BEARCLAW_PINNACLE] =
     },
     npc =
     {
-        -- ENTRANCE_OFFSET = GetFirstID('Wind_Pillar_1'),
-        ENTRANCE_OFFSET = GetFirstID('Wind_Pillar'),
+        ENTRANCE_OFFSET = GetFirstID('Wind_Pillar_1'),
     },
 }
 

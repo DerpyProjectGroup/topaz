@@ -31,7 +31,7 @@ end
 
 entity.onMobEngage = function(mob, target)
     local bcnmAllies = mob:getBattlefield():getAllies()
-    for i, v in pairs(bcnmAllies) do
+    for _, v in pairs(bcnmAllies) do
         if v:getName() == 'Prishe' then
             if not v:getTarget() then
                 v:entityAnimationPacket('prov')
@@ -40,6 +40,7 @@ entity.onMobEngage = function(mob, target)
             end
         else
             v:addEnmity(mob, 0, 1)
+            v:updateEnmity(mob)
         end
     end
 
@@ -54,9 +55,10 @@ entity.onMobFight = function(mob, target)
 
     -- Engage Prishe and Selh'teus
     local bcnmAllies = mob:getBattlefield():getAllies()
-    for i, v in pairs(bcnmAllies) do
+    for _, v in pairs(bcnmAllies) do
         if not v:getTarget() then
             v:addEnmity(mob, 0, 1)
+            v:updateEnmity(mob)
         end
     end
 

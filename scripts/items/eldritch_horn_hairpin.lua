@@ -6,7 +6,7 @@
 -----------------------------------
 local itemObject = {}
 
-itemObject.onItemCheck = function(target)
+itemObject.onItemCheck = function(target, item, param, caster)
     if target:getStatusEffect(xi.effect.ENCHANTMENT, nil, xi.item.ELDRITCH_HORN_HAIRPIN) ~= nil then
         target:delStatusEffect(xi.effect.ENCHANTMENT, nil, xi.item.ELDRITCH_HORN_HAIRPIN)
     end

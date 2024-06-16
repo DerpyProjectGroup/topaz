@@ -9,7 +9,7 @@
 -----------------------------------
 local itemObject = {}
 
-itemObject.onItemCheck = function(target)
+itemObject.onItemCheck = function(target, item, param, caster)
     local effect = target:getStatusEffect(xi.effect.VIT_BOOST)
     if effect ~= nil and effect:getItemSourceID() == xi.item.MEMENTO_MUFFLER then
         target:delStatusEffect(xi.effect.VIT_BOOST)

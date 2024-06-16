@@ -22,12 +22,22 @@ zones[xi.zone.FULL_MOON_FOUNTAIN] =
         PLAY_TIME_IS_OVER             = 7765, -- Play time is over! Powers of dark mana, answer my call!
         YOU_SHOULD_BE_THANKFUL        = 7766, -- You should be thankful. I'll give you a shortaru trip back to the hell you came from!
         DONT_GIVE_UP                  = 7767, -- Don't give up, adventurer! You are Windurst's guiding star, our beacon of hope!
+        MEMBERS_OF_YOUR_PARTY         = 7630, -- Currently, # members of your party (including yourself) have clearance to enter the battlefield.
+        MEMBERS_OF_YOUR_ALLIANCE      = 7631, -- Currently, # members of your alliance (including yourself) have clearance to enter the battlefield.
+        TIME_LIMIT_FOR_THIS_BATTLE_IS = 7633, -- The time limit for this battle is <number> minutes.
 
+
+        -- TODO: Shift IDs
         NO_BATTLEFIELD_ENTRY          = 7342, -- A strong magical force is whirling up from the platform.
+
+        TIME_IN_THE_BATTLEFIELD_IS_UP = 7320, -- Your time in the battlefield is up! Now exiting...
+        PARTY_MEMBERS_ARE_ENGAGED     = 7335, -- The battlefield where your party members are engaged in combat is locked. Access is denied.
+        ENTERING_THE_BATTLEFIELD_FOR  = 7763, -- Entering the battlefield for [The Moonlit Path/Moon Reading/Waking the Beast/Battaru Royale/The Moonlit Path/Waking the Beast]!
     },
     mob =
     {
-        MOON_READING_OFFSET = GetFirstID('Ace_of_Cups'),
+        FENRIR_PRIME = GetFirstID('Fenrir_Prime'),
+        ACE_OF_CUPS  = GetFirstID('Ace_of_Cups'),
         CARBUNCLE_PRIME_WTB = GetFirstID('Carbuncle_Prime'),
     },
     npc =

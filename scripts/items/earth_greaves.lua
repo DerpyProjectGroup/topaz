@@ -8,7 +8,7 @@
 -----------------------------------------
 local itemObject = {}
 
-itemObject.onItemCheck = function(target)
+itemObject.onItemCheck = function(target, item, param, caster)
     if not target:getPet() then
         return xi.msg.basic.REQUIRES_A_PET, 0
     else

@@ -6,7 +6,7 @@
 -----------------------------------
 local itemObject = {}
 
-itemObject.onItemCheck = function(target)
+itemObject.onItemCheck = function(target, item, param, caster)
     local effect = target:getStatusEffect(xi.effect.ENMITY_DOWN)
     if effect ~= nil and effect:getItemSourceID() == xi.item.PACIFIST_RING then
         target:delStatusEffect(xi.effect.ENMITY_DOWN)

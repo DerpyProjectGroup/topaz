@@ -5,7 +5,7 @@
 -----------------------------------------
 local itemObject = {}
 
-itemObject.onItemCheck = function(target)
+itemObject.onItemCheck = function(target, item, param, caster)
     if
         target:getFellow() ~= nil or
         target:hasStatusEffect(xi.effect.LEVEL_RESTRICTION) or

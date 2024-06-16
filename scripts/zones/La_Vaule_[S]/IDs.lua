@@ -23,11 +23,17 @@ zones[xi.zone.LA_VAULE_S] =
         THE_PARTY_WILL_BE_REMOVED     = 8039, -- If all party members' HP are still zero after # minute[/s], the party will be removed from the battlefield.
         GATHERED_DAWNDROPS_LIGHT      = 8347, -- The gathered dawndrops unleash a brilliant light, melding together to form <keyitem>!
         RETRACED_ALL_JUNCTIONS        = 8348, -- You have retraced all junctions of eventualities. Hasten back to where Cait Sith and Lilisette await.
+
+        -- TODO: Shift IDs
+
+        TIME_IN_THE_BATTLEFIELD_IS_UP = 7687, -- Your time in the battlefield is up! Now exiting...
+        PARTY_MEMBERS_ARE_ENGAGED     = 7702, -- The battlefield where your party members are engaged in combat is locked. Access is denied.
     },
     mob =
     {
-        HAWKEYED_DNATBAT = GetFirstID('Hawkeyed_Dnatbat'),
         ASHMAKER_GOTBLUT = GetFirstID('Ashmaker_Gotblut'),
+        HAWKEYED_DNATBAT = GetFirstID('Hawkeyed_Dnatbat'),
+        GALARHIGG        = GetFirstID('Galarhigg'),
     },
     npc =
     {

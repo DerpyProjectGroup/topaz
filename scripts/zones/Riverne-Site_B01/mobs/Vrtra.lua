@@ -51,15 +51,15 @@ entity.onMobFight = function(mob, target)
         mob:setLocalVar('spawnTime', spawnTime)
     end
 
-    if
+    --[[if
         threeSecTick > twohourTime and
         mob:checkDistance(target) < 17 and
         mob:canUseAbilities()
     then -- Spams Charm in bv2 version every 5s
         mob:setLocalVar('skill_tp', mob:getTP())
         mob:useMobAbility(710)
-        mob:setLocalVar('twohourTime', threeSecTick + math.random(1, 2))
-    elseif threeSecTick > spawnTime + 10 then
+        mob:setLocalVar('twohourTime', threeSecTick + math.random(1, 2))]]
+    if threeSecTick > spawnTime + 10 then
         local mobId = mob:getID()
 
         for _, offset in ipairs(offsets) do

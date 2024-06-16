@@ -455,7 +455,7 @@ void CZone::LoadZoneSettings()
                                "zone.zonetype,"
                                "bcnm.name "
                                "FROM zone_settings AS zone "
-                               "LEFT JOIN bcnm_info AS bcnm "
+                               "LEFT JOIN bcnm_records AS bcnm "
                                "USING (zoneid) "
                                "WHERE zoneid = %u "
                                "LIMIT 1";
@@ -1201,6 +1201,14 @@ void CZone::CharZoneOut(CCharEntity* PChar)
     if (PChar->PTreasurePool != nullptr) // TODO: Condition for eliminating problems with MobHouse, we need to solve it once and for all!
     {
         PChar->PTreasurePool->DelMember(PChar);
+    }
+
+    // If zone-wide treasure pool but no players in zone then destroy current pool and create new pool
+    // this prevents loot from staying in zone pool after the last player leaves the zone
+    if (m_TreasurePool && m_TreasurePool->GetPoolType() == TREASUREPOOL_ZONE && m_zoneEntities->CharListEmpty())
+    {
+        destroy(m_TreasurePool);
+        m_TreasurePool = new CTreasurePool(TREASUREPOOL_ZONE);
     }
 
     PChar->ClearTrusts(); // trusts don't survive zone lines

@@ -5,7 +5,7 @@
 -----------------------------------
 local itemObject = {}
 
-itemObject.onItemCheck = function(target)
+itemObject.onItemCheck = function(target, item, param, caster)
     if target:getStatusEffect(xi.effect.ENCHANTMENT, nil, xi.item.BREATH_MANTLE) ~= nil then
         target:delStatusEffect(xi.effect.ENCHANTMENT, nil, xi.item.BREATH_MANTLE)
     end

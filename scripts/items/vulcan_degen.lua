@@ -9,7 +9,7 @@
 -----------------------------------
 local itemObject = {}
 
-itemObject.onItemCheck = function(target)
+itemObject.onItemCheck = function(target, item, param, caster)
     local effect = target:getStatusEffect(xi.effect.ENFIRE)
     if effect ~= nil and effect:getItemSourceID() == xi.item.VULCAN_DEGEN then
         target:delStatusEffect(xi.effect.ENFIRE)
