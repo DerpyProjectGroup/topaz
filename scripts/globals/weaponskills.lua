@@ -1257,11 +1257,11 @@ xi.weaponskills.takeWeaponskillDamage = function(defender, attacker, wsParams, p
         wsResults.extraHitsLanded = 0
     end
 
-    finaldmg = defender:takeWeaponskillDamage(attacker, finaldmg, attack.type, attack.damageType, attack.slot, primaryMsg, wsResults.tpHitsLanded * attackerTPMult, (wsResults.extraHitsLanded * 10) + wsResults.bonusTP, targetTPMult)
+    finaldmg = defender:takeWeaponskillDamage(attacker, finaldmg, attack.type, attack.damageType, attack.slot, primaryMsg, wsResults.tpHitsLanded * attackerTPMult, (wsResults.extraHitsLanded * 10) + wsResults.bonusTP, targetTPMult) * xi.settings.main.WEAPON_SKILL_POWER
 
     if wsResults.tpHitsLanded + wsResults.extraHitsLanded > 0 then
         if finaldmg >= 0 then
-            finaldmg = finaldmg * xi.settings.main.WEAPON_SKILL_POWER
+            finaldmg = finaldmg
             action:param(defender:getID(), math.abs(finaldmg))
             -- print('Final Damage')
             -- print(finaldmg)
