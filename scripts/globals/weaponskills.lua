@@ -648,10 +648,18 @@ xi.weaponskills.calculateRawWSDmg = function(attacker, target, wsID, tp, action,
         -- Add DEX/AGI bonus to first hit if THF main and valid Sneak/Trick Attack
         if calcParams.sneakApplicable then
             finaldmg = finaldmg + calcParams.pdif * attacker:getStat(xi.mod.DEX) * (1 + attacker:getMod(xi.mod.SNEAK_ATK_DEX) / 100) * (1 + attacker:getMod(xi.mod.AUGMENTS_SA) / 100)
+            if calcParams.pdif == nil then
+                print(attacker:getName())
+                print('PDIF returned nil')
+            end
         end
 
         if calcParams.trickApplicable then
             finaldmg = finaldmg + calcParams.pdif * attacker:getStat(xi.mod.AGI) * (1 + attacker:getMod(xi.mod.TRICK_ATK_AGI) / 100) * (1 + attacker:getMod(xi.mod.AUGMENTS_TA) / 100)
+            if calcParams.pdif == nil then
+                print(attacker:getName())
+                print('PDIF returned nil')
+            end
         end
     end
 
@@ -913,7 +921,9 @@ xi.weaponskills.doPhysicalWeaponskill = function(attacker, target, wsID, wsParam
         finaldmg = finaldmg * 0.45
     end
 
-    finaldmg            = finaldmg * xi.settings.main.WEAPON_SKILL_POWER -- Add server bonus
+    finaldmg            = finaldmg --* xi.settings.main.WEAPON_SKILL_POWER -- Add server bonus
+    -- print('Final Damage Weaponskills')
+    -- print(finaldmg)
     calcParams.finalDmg = finaldmg
     finaldmg            = xi.weaponskills.takeWeaponskillDamage(target, attacker, wsParams, primaryMsg, attack, calcParams, action)
 
@@ -1012,7 +1022,7 @@ xi.weaponskills.doRangedWeaponskill = function(attacker, target, wsID, wsParams,
         finaldmg = finaldmg * 0.45
     end
 
-    finaldmg = finaldmg * xi.settings.main.WEAPON_SKILL_POWER -- Add server bonus
+    finaldmg = finaldmg -- * xi.settings.main.WEAPON_SKILL_POWER -- Add server bonus
 
     -- If target has damage cap modifier, damage can not exceed value.
     if target:getMod(xi.mod.DMGRANGE_CAP) > 0 and finaldmg > target:getMod(xi.mod.DMGRANGE_CAP) then
@@ -1160,7 +1170,7 @@ xi.weaponskills.doMagicWeaponskill = function(attacker, target, wsID, wsParams, 
         dmg = utils.oneforall(target, dmg)
         dmg = utils.stoneskin(target, dmg)
 
-        dmg = dmg * xi.settings.main.WEAPON_SKILL_POWER -- Add server bonus
+        dmg = dmg -- * xi.settings.main.WEAPON_SKILL_POWER -- Add server bonus
     else
         calcParams.shadowsAbsorbed = 1
     end
@@ -1251,7 +1261,10 @@ xi.weaponskills.takeWeaponskillDamage = function(defender, attacker, wsParams, p
 
     if wsResults.tpHitsLanded + wsResults.extraHitsLanded > 0 then
         if finaldmg >= 0 then
+            finaldmg = finaldmg * xi.settings.main.WEAPON_SKILL_POWER
             action:param(defender:getID(), math.abs(finaldmg))
+            -- print('Final Damage')
+            -- print(finaldmg)
         end
     end
 
