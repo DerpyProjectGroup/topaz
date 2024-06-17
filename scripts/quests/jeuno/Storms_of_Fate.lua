@@ -2,40 +2,44 @@
 -- Storms of Fate
 -----------------------------------
 -- Log ID: 3, Quest ID: 86
--- Rulude: !pos -0.3 3.0 23.1 243
------------------------------------
-require('scripts/globals/npc_util')
-require('scripts/globals/quests')
-
-require('scripts/globals/interaction/quest')
+-- _0p2                  : !pos -259 -30 276 25
+-- Unstable_Displacement : !pos -612.800 1.750 693.190 29
 -----------------------------------
 
 local quest = Quest:new(xi.questLog.JEUNO, xi.quest.id.jeuno.STORMS_OF_FATE)
+
+quest.reward = {}
 
 quest.sections =
 {
     {
         check = function(player, status, vars)
             return status == xi.questStatus.QUEST_AVAILABLE and
-            player:getCurrentMission(xi.mission.log_id.COP) >= xi.mission.id.cop.DAWN and
-            player:getCharVar('Mission[6][840]Status') >= 8
+                player:getCurrentMission(xi.mission.log_id.COP) == xi.mission.id.cop.DAWN and
+                xi.mission.getVar(player, xi.mission.log_id.COP, xi.mission.id.cop.DAWN, 'Status') == 8 and
+                not quest:getMustZone(player)
         end,
 
         [xi.zone.RULUDE_GARDENS] =
         {
             onTriggerAreaEnter =
             {
-                [1] = function(player, region)
-                    if player:getCharVar('Mission[6][840]Status') == 8 then
-                        return quest:progressEvent(142)
-                    end
+                [1] = function(player, triggerArea)
+                    return quest:progressEvent(142)
                 end,
             },
 
             onEventFinish =
             {
                 [142] = function(player, csid, option, npc)
-                    quest:begin(player)
+                    if option == 1 then
+                        quest:begin(player)
+                    else
+                        -- TODO: There may be an alternate event or parameters passed if this quest was
+                        -- initially declined.  This mustZone is a placeholder only, and needs verification.
+
+                        quest:setMustZone(player)
+                    end
                 end,
             },
         },
@@ -51,8 +55,8 @@ quest.sections =
             ['_0p2'] =
             {
                 onTrigger = function(player, npc)
-                    if quest:getVar(player, 'Status') == 0 then
-                        return quest:event(559)
+                    if quest:getVar(player, 'Prog') == 0 then
+                        return quest:progressEvent(559)
                     end
                 end,
             },
@@ -60,7 +64,7 @@ quest.sections =
             onEventFinish =
             {
                 [559] = function(player, csid, option, npc)
-                    quest:setVar(player, 'Status', 1)
+                    quest:setVar(player, 'Prog', 1)
                 end,
             },
         },
@@ -70,8 +74,8 @@ quest.sections =
             ['Unstable_Displacement'] =
             {
                 onTrigger = function(player, npc)
-                    if quest:getVar(player, 'Status') == 1 then
-                        return quest:event(1)
+                    if quest:getVar(player, 'Prog') == 1 then
+                        return quest:progressEvent(1)
                     end
                 end,
             },
@@ -79,7 +83,17 @@ quest.sections =
             onEventFinish =
             {
                 [1] = function(player, csid, option, npc)
-                    quest:setVar(player, 'Status', 2)
+                    quest:setVar(player, 'Prog', 2)
+                end,
+
+                [32001] = function(player, csid, option, npc)
+                    if
+                        player:getLocalVar('battlefieldWin') == xi.battlefield.id.STORMS_OF_FATE and
+                        quest:getVar(player, 'Prog') == 2
+                    then
+                        npcUtil.giveKeyItem(player, xi.ki.WHISPER_OF_THE_WYRMKING)
+                        quest:setVar(player, 'Prog', 3)
+                    end
                 end,
             },
         },
@@ -88,8 +102,8 @@ quest.sections =
         {
             onTriggerAreaEnter =
             {
-                [1] = function(player, region)
-                    if quest:getVar(player, 'Status') == 3 then
+                [1] = function(player, triggerArea)
+                    if quest:getVar(player, 'Prog') == 3 then
                         return quest:progressEvent(143)
                     end
                 end,
@@ -98,12 +112,13 @@ quest.sections =
             onEventFinish =
             {
                 [143] = function(player, csid, option, npc)
-                    quest:complete(player)
-                    player:setCharVar('StormsOfFateWait', NextConquestTally())
+                    if quest:complete(player) then
+                        xi.quest.setVar(player, xi.questLog.JEUNO, xi.quest.id.jeuno.SHADOWS_OF_THE_DEPARTED, 'Timer', VanadielUniqueDay() + 1)
+                    end
                 end,
             },
         },
-    }
+    },
 }
 
 return quest

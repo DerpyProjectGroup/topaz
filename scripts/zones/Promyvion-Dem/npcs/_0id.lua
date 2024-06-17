@@ -2,8 +2,6 @@
 -- Area: Promyvion Dem
 --  NPC: Memory Flux 4th floor
 -----------------------------------
-local ID = zones[xi.zone.PROMYVION_DEM]
------------------------------------
 local entity = {}
 
 entity.onTrigger = function(player, npc)

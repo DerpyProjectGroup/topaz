@@ -31,9 +31,6 @@ zoneObject.onEventUpdate = function(player, csid, option, npc)
 end
 
 zoneObject.onEventFinish = function(player, csid, option, npc)
-    if csid == 29 then
-        player:setCharVar('ApocalypseNigh', 2)
-    end
 end
 
 return zoneObject
