@@ -14,7 +14,7 @@ commandObj.cmdprops =
 }
 
 local getHelmType = function(zoneID)
-    for k, v in pairs(xi.helm.type) do
+    for k, v in pairs(xi.helmType) do
         if xi.helm.helmInfo[v].zone[zoneID] then
             return v
         end
