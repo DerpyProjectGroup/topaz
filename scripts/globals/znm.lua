@@ -12,7 +12,7 @@ require('scripts/globals/npc_util')
 require('scripts/globals/pankration')
 require('scripts/globals/utils')
 -----------------------------------
-
+local ID = zones[xi.zone.AHT_URHGAN_WHITEGATE]
 ---------------------------------------------------------------------------------
 local FAUNA_LIMIT = 10000 -- Zeni handed out per Fauna (NM)
 local SUBJECT_OF_INTEREST_LIMIT = 20000 -- Zeni handed out per SubjectsOfInterest
