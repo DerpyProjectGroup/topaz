@@ -887,6 +887,7 @@ xi.item =
     SNARLED_FRAGMENT                    = 1583,
     MYSTERIAL_FRAGMENT                  = 1584,
     ETHEREAL_FRAGMENT                   = 1585,
+    TITANICTUS_SHELL                    = 1586,
     SHARD_OF_NECROPSYCHE                = 1589,
     SPRIG_OF_HOLY_BASIL                 = 1590,
     HIGH_QUALITY_COEURL_HIDE            = 1591,
