@@ -19,6 +19,10 @@ zones[xi.zone.OPEN_SEA_ROUTE_TO_MHAURA] =
         ON_WAY_TO_MHAURA              = 7319, -- We are on our way to Mhaura. We should arrive in [less than an hour/about 1 hour/about 2 hours/about 3 hours/about 4 hours/about 5 hours/about 6 hours/about 7 hours] (# [minute/minutes] in Earth time).
         DOCKING_IN_MHAURA             = 7320, -- We are now docking in Mhaura.
         PASHI_MACCALEH_SHOP_DIALOG    = 7323, -- Step right up for the best fishing gear in these parts!
+
+        -- TODO Sift IDs
+        NEARING_MHAURA                = 7321, -- We are nearing Mhaura.
+        ARRIVING_SOON_MHAURA          = 7324, -- We are on our way to Mhaura. We will be arriving soon.
     },
     mob =
     {

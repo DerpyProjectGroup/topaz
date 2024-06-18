@@ -30,8 +30,7 @@ zones[xi.zone.ALTAIEU] =
     mob =
     {
         EUVHIS_OFFSET      = GetFirstID('Aweuvhi'),
-        RUAERN_OFFSET      = GetFirstID('Ruaern'),
-        RUAERN_BASE        = 16912829, -- Used by ASB IF Missions. Adapt to RUAERN_OFFSET at some point.
+        RUAERN             = GetFirstID('Ruaern'),
         JAILER_OF_HOPE     = GetFirstID('Jailer_of_Hope'),
         JAILER_OF_JUSTICE  = GetFirstID('Jailer_of_Justice'),
         JAILER_OF_PRUDENCE = GetFirstID('Jailer_of_Prudence'),
@@ -42,8 +41,7 @@ zones[xi.zone.ALTAIEU] =
     },
     npc =
     {
-        RUBIOUS_CRYSTAL_OFFSET    = GetFirstID('_0x1'),
-        RUBIOUS_CRYSTAL_BASE      = GetFirstID('_0x1'), -- From ASB, adding for compatability till LSB converts missions to IF
+        RUBIOUS_CRYSTAL           = GetFirstID('_0x1'),
         AURORAL_UPDRAFT_OFFSET    = GetFirstID('Auroral_Updraft'),
         SWIRLING_VORTEX_OFFSET    = GetFirstID('Swirling_Vortex'),
         DIMENSIONAL_PORTAL_OFFSET = GetFirstID('Dimensional_Portal'),

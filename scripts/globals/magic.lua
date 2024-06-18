@@ -774,6 +774,97 @@ function addBonusesAbility(caster, ele, target, dmg, params)
     return dmg
 end
 
+function addBonusesAbilityWeaponSkill(caster, ele, target, dmg, params)
+    local affinityBonus = AffinityBonusDmg(caster, ele)
+    dmg = math.floor(dmg * affinityBonus)
+
+    local magicDefense = getElementalDamageReduction(target, ele)
+    dmg = math.floor(dmg * magicDefense)
+
+    local dayWeatherBonus = 1.00
+    local weather = caster:getWeather()
+
+    if math.random() < 0.33 or caster:getMod(elementalObi[ele]) >= 1 then
+        if weather == xi.magic.singleWeatherStrong[ele] then
+            if caster:getMod(xi.mod.IRIDESCENCE) >= 1 then
+                dayWeatherBonus = dayWeatherBonus + 0.10
+            end
+
+            dayWeatherBonus = dayWeatherBonus + 0.10
+        elseif caster:getWeather() == xi.magic.singleWeatherWeak[ele] then
+            dayWeatherBonus = dayWeatherBonus - 0.10
+        elseif weather == xi.magic.doubleWeatherStrong[ele] then
+            if caster:getMod(xi.mod.IRIDESCENCE) >= 1 then
+                dayWeatherBonus = dayWeatherBonus + 0.10
+            end
+
+            dayWeatherBonus = dayWeatherBonus + 0.25
+        elseif weather == xi.magic.doubleWeatherWeak[ele] then
+            dayWeatherBonus = dayWeatherBonus - 0.25
+        end
+    end
+
+    local dayElement = VanadielDayElement()
+    if dayElement == ele then
+        dayWeatherBonus = dayWeatherBonus + caster:getMod(xi.mod.DAY_NUKE_BONUS) / 100 -- sorc. tonban(+1)/zodiac ring
+        if math.random() < 0.33 or caster:getMod(elementalObi[ele]) >= 1 then
+            dayWeatherBonus = dayWeatherBonus + 0.10
+        end
+    elseif dayElement == elementDescendant[ele] then
+        if math.random() < 0.33 or caster:getMod(elementalObi[ele]) >= 1 then
+            dayWeatherBonus = dayWeatherBonus - 0.10
+        end
+    end
+
+    dayWeatherBonus = math.min(dayWeatherBonus, 1.4)
+
+    dmg = math.floor(dmg * dayWeatherBonus)
+
+    local mab = 1
+    local mdefBarBonus = 0
+    local eleATT = 0
+
+    if
+        ele >= xi.element.FIRE and
+        ele <= xi.element.WATER and
+        target:hasStatusEffect(xi.magic.barSpell[ele])
+    then -- bar- spell magic defense bonus
+        mdefBarBonus = target:getStatusEffect(xi.magic.barSpell[ele]):getSubPower()
+    end
+
+    if ele == xi.element.FIRE then
+        eleATT = eleATT + caster:getMod(xi.mod.FIREATT) + caster:getMerit(xi.merit.FIRE_MAGIC_POTENCY)
+    elseif ele == xi.element.ICE then
+        eleATT = eleATT + caster:getMod(xi.mod.ICEATT) + caster:getMerit(xi.merit.ICE_MAGIC_POTENCY)
+    elseif ele == xi.element.WIND then
+        eleATT = eleATT + caster:getMod(xi.mod.WINDATT) + caster:getMerit(xi.merit.WIND_MAGIC_POTENCY)
+    elseif ele == xi.element.EARTH then
+        eleATT = eleATT + caster:getMod(xi.mod.EARTHATT) + caster:getMerit(xi.merit.WIND_MAGIC_POTENCY)
+    elseif ele == xi.element.THUNDER then
+        eleATT = eleATT + caster:getMod(xi.mod.THUNDERATT) + caster:getMerit(xi.merit.LIGHTNING_MAGIC_POTENCY)
+    elseif ele == xi.element.WATER then
+        eleATT = eleATT + caster:getMod(xi.mod.WATERATT) + caster:getMerit(xi.merit.WATER_MAGIC_POTENCY)
+    elseif ele == xi.element.LIGHT then
+        eleATT = eleATT + caster:getMod(xi.mod.LIGHTATT)
+    elseif ele == xi.element.DARK then
+        eleATT = eleATT + caster:getMod(xi.mod.DARKATT)
+    end
+
+    if params ~= nil and params.bonusmab ~= nil and params.includemab then
+        mab = (100 + ((caster:getMod(xi.mod.MATT) + eleATT) * 2) + params.bonusmab) / (100 + target:getMod(xi.mod.MDEF) + mdefBarBonus)
+    elseif params == nil or (params ~= nil and params.includemab) then
+        mab = (100 + ((caster:getMod(xi.mod.MATT) + eleATT) * 2)) / (100 + target:getMod(xi.mod.MDEF) + mdefBarBonus)
+    end
+
+    if mab < 0 then
+        mab = 0
+    end
+
+    dmg = math.floor(dmg * mab)
+
+    return dmg
+end
+
 -- get elemental damage reduction
 function getElementalDamageReduction(target, element)
     local defense = 1

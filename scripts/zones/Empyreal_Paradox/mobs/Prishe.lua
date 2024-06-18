@@ -24,11 +24,12 @@ entity.onMobSpawn = function(mob)
 end
 
 entity.onMobRoam = function(mob)
-    -- Need to multiply getArea by 2 due to the two Promathia versions
+    local promathia = ID.mob.PROMATHIA + (mob:getBattlefield():getArea() - 1) * 2
+    --[[ Need to multiply getArea by 2 due to the two Promathia versions
     local promathia = ID.mob.PROMATHIA_OFFSET + (mob:getBattlefield():getArea() * 2)
     if not GetMobByID(promathia):isAlive() then
         promathia = promathia + 1
-    end
+    end]]
 
     local wait = mob:getLocalVar('wait')
     local ready = mob:getLocalVar('ready')
@@ -47,6 +48,7 @@ entity.onMobRoam = function(mob)
         mob:setLocalVar('wait', 0)
     elseif ready > 0 then
         mob:addEnmity(GetMobByID(ready), 0, 1)
+        mob:updateEnmity()
     else
         mob:setLocalVar('wait', wait + 3)
     end

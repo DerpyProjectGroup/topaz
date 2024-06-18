@@ -32,7 +32,7 @@ end
 --    make it back to the Diabolos floor area.
 
 entity.onMobSpawn = function(mob)
-    local dBase = ID.mob.DIABOLOS_OFFSET
+    local dBase = ID.mob.DIABOLOS
     local dPrimeBase = dBase + 27
 
     -- Only add these for the CoP Diabolos NOT Prime
@@ -132,8 +132,6 @@ entity.onMobWeaponSkill = function(target, mob, skill)
 end
 
 entity.onMobDeath = function(mob, player, optParams)
-    -- Win happens on death instead of despawn
-    mob:getBattlefield():win()
 end
 
 return entity

@@ -13,7 +13,7 @@ abilityObject.onPetAbility = function(target, pet, petskill, summoner, action)
     -- Damage
     local damage = 10 + pet:getMainLvl() * 2
 
-    damage = xi.mobskills.mobMagicalMove(pet, target, petskill, damage.dmg, xi.element.FIRE, 1, xi.mobskills.magicalTpBonus.NO_EFFECT, 0)
+    damage = xi.mobskills.mobMagicalMove(pet, target, petskill, damage, xi.element.DARK, 1, xi.mobskills.magicalTpBonus.NO_EFFECT, 0)
     damage = xi.mobskills.mobAddBonuses(pet, target, damage.dmg, xi.element.DARK, petskill)
     damage = xi.summon.avatarFinalAdjustments(damage, pet, petskill, target, xi.attackType.MAGICAL, xi.damageType.DARK, 1)
 
@@ -25,6 +25,9 @@ abilityObject.onPetAbility = function(target, pet, petskill, summoner, action)
             target:addStatusEffect(xi.effect.WEIGHT, 50, 0, 120 * resist)
         end
     end
+
+    target:takeDamage(damage, pet, xi.attackType.MAGICAL, xi.damageType.DARK)
+    target:updateEnmityFromDamage(pet, damage)
 
     return damage
 end

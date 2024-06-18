@@ -12,7 +12,7 @@ require('scripts/globals/npc_util')
 require('scripts/globals/pankration')
 require('scripts/globals/utils')
 -----------------------------------
-
+local ID = zones[xi.zone.AHT_URHGAN_WHITEGATE]
 ---------------------------------------------------------------------------------
 local FAUNA_LIMIT = 10000 -- Zeni handed out per Fauna (NM)
 local SUBJECT_OF_INTEREST_LIMIT = 20000 -- Zeni handed out per SubjectsOfInterest
@@ -338,18 +338,18 @@ end
 -----------------------------------
 xi.znm.soultrapper = xi.znm.soultrapper or {}
 
-xi.znm.soultrapper.onItemCheck = function(target, user)
+xi.znm.soultrapper.onItemCheck = function(target, item, param, caster)
     -- Target checks.
     if
         target == nil or -- Players can use a macro to bypass the client side targeting restriction.
         not target:isMob() or
-        not user:isFacing(target)
+        not caster:isFacing(target)
     then
         return xi.msg.basic.ITEM_UNABLE_TO_USE
     end
 
     -- Equipment checks.
-    local id = user:getEquipID(xi.slot.AMMO)
+    local id = caster:getEquipID(xi.slot.AMMO)
     if
         id ~= xi.item.BLANK_SOUL_PLATE and
         id ~= xi.item.BLANK_HIGH_SPEED_SOUL_PLATE
@@ -358,7 +358,7 @@ xi.znm.soultrapper.onItemCheck = function(target, user)
     end
 
     -- Inventory checks.
-    if user:getFreeSlotsCount() == 0 then
+    if caster:getFreeSlotsCount() == 0 then
         return xi.msg.basic.FULL_INVENTORY
     end
 

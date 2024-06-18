@@ -19,13 +19,13 @@ weaponskillObject.onUseWeaponSkill = function(player, target, wsID, tp, primary,
     params.str_wsc = 0.16
 
     if xi.settings.main.USE_ADOULIN_WEAPON_SKILL_CHANGES then
-        params.ftpMod = { 1.15, 2.0, 3.0 }
+        params.ftpMod     = { 1.15, 1.50, 2.0 }
         -- params.ftpMod = { 3.0, 4.25, 7.0 }
-        params.str_wsc = 0.6
-        params.agi_wsc = 0.25
-        params.hybridWS = true
-        params.ele = xi.element.LIGHT
-        params.skill = xi.skill.ARCHERY
+        params.str_wsc    = 0.6
+        params.agi_wsc    = 0.25
+        params.hybridWS   = true
+        params.ele        = xi.element.LIGHT
+        params.skill      = xi.skill.ARCHERY
         params.includemab = true
     end
 

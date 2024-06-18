@@ -6,7 +6,7 @@
 -----------------------------------
 local itemObject = {}
 
-itemObject.onItemCheck = function(target)
+itemObject.onItemCheck = function(target, item, param, caster)
     local effect = target:getStatusEffect(xi.effect.ARCANE_CIRCLE)
     if effect ~= nil and effect:getItemSourceID() == xi.item.MESSHIKIMARU then
         target:delStatusEffect(xi.effect.ARCANE_CIRCLE)

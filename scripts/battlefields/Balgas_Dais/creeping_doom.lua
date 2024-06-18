@@ -78,7 +78,7 @@ content.loot =
     {
         quantity = 2,
         { item = xi.item.NONE,                   weight = 300 }, -- nothing
-        { item = xi.item.AMBER_STONE,            weight =  50 }, -- amber_stone
+        { item = xi.item.AMBER,                  weight =  50 }, -- amber
         { item = xi.item.CHUNK_OF_DARKSTEEL_ORE, weight =  50 }, -- chunk_of_darksteel_ore
         { item = xi.item.ELM_LOG,                weight =  50 }, -- elm_log
         { item = xi.item.IRON_INGOT,             weight =  50 }, -- iron_ingot

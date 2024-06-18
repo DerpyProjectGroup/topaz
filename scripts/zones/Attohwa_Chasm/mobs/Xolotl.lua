@@ -6,6 +6,8 @@ local ID = zones[xi.zone.ATTOHWA_CHASM]
 local entity = {}
 
 entity.onMobSpawn = function(mob)
+    mob:setRespawnTime(0, true)
+    mob:setMobMod(xi.mobMod.SUPERLINK, 32)
     mob:setLocalVar('xolotlDead', 0)
 end
 

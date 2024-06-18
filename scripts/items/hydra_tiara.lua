@@ -8,7 +8,7 @@
 -----------------------------------
 local itemObject = {}
 
-itemObject.onItemCheck = function(target)
+itemObject.onItemCheck = function(target, item, param, caster)
     local effect = target:getStatusEffect(xi.effect.POTENCY)
     if effect ~= nil and effect:getItemSourceID() == xi.item.HYDRA_TIARA then
         target:delStatusEffect(xi.effect.POTENCY)

@@ -21,11 +21,20 @@ zones[xi.zone.EMPYREAL_PARADOX] =
         PRISHE_TEXT                   = 7698, -- You're about to learn how strong the will to live makes us!
         SELHTEUS_TEXT                 = 7711, -- The...Emptiness... Is this...how it was meant...to be...?
         PROMATHIA_TEXT                = 7714, -- Give thyself to the apathy within...
-        QM_TEXT                       = 7812, -- The air before you appears warped and distorted...
+        AIR_WARPED_AND_DISTORTED      = 7812, -- The air before you appears warped and distorted...
+
+        -- TODO Shift IDs
+        TIME_IN_THE_BATTLEFIELD_IS_UP = 7065, -- Your time in the battlefield is up! Now exiting...
+        PARTY_MEMBERS_ARE_ENGAGED     = 7080, -- The battlefield where your party members are engaged in combat is locked. Access is denied.
+        MEMBERS_OF_YOUR_PARTY         = 7371, -- Currently, # members of your party (including yourself) have clearance to enter the battlefield.
+        MEMBERS_OF_YOUR_ALLIANCE      = 7372, -- Currently, # members of your alliance (including yourself) have clearance to enter the battlefield.
+        TIME_LIMIT_FOR_THIS_BATTLE_IS = 7374, -- The time limit for this battle is <number> minutes.
+        ENTERING_THE_BATTLEFIELD_FOR  = 7596, -- Entering the battlefield for [Dawn/Apocalypse Nigh/Both Paths Taken/Dawn/The Winds of Time/Sealed Fate]!
     },
     mob =
     {
-        PROMATHIA_OFFSET = GetFirstID('Promathia'),
+        KAMLANAUT = GetFirstID('Kamlanaut'),
+        PROMATHIA = GetFirstID('Promathia'),
     },
     npc =
     {

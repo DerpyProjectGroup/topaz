@@ -6,7 +6,7 @@
 -----------------------------------
 local itemObject = {}
 
-itemObject.onItemCheck = function(target)
+itemObject.onItemCheck = function(target, item, param, caster)
     if target:getStatusEffect(xi.effect.ENCHANTMENT, nil, xi.item.ENTHRALLING_BROCADE_OBI) ~= nil then
         target:delStatusEffect(xi.effect.ENCHANTMENT, nil, xi.item.ENTHRALLING_BROCADE_OBI)
     end

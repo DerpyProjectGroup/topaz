@@ -83,7 +83,6 @@ entity.onAdditionalEffect = function(mob, target, damage)
 end
 
 entity.onMobDeath = function(mob, player, optParams)
-    player:addTitle(xi.title.MIST_MELTER)
 end
 
 return entity

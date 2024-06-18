@@ -20,9 +20,21 @@ zones[xi.zone.MONARCH_LINN] =
         THE_PARTY_WILL_BE_REMOVED     = 7458, -- If all party members' HP are still zero after # minute[/s], the party will be removed from the battlefield.
         KI_TORN                       = 7466, -- The <keyItem> is torn from your hands and sucked into the spatial displacement!
         CONQUEST_BASE                 = 7475, -- Tallying conquest results...
+
+        -- TODO: Shift IDs
+        TIME_IN_THE_BATTLEFIELD_IS_UP = 7106, -- Your time in the battlefield is up! Now exiting...
+        PARTY_MEMBERS_ARE_ENGAGED     = 7121, -- The battlefield where your party members are engaged in combat is locked. Access is denied.
+        MEMBERS_OF_YOUR_PARTY         = 7412, -- Currently, # members of your party (including yourself) have clearance to enter the battlefield.
+        MEMBERS_OF_YOUR_ALLIANCE      = 7413, -- Currently, # members of your alliance (including yourself) have clearance to enter the battlefield.
+        TIME_LIMIT_FOR_THIS_BATTLE_IS = 7415, -- The time limit for this battle is <number> minutes.
+        ENTERING_THE_BATTLEFIELD_FOR  = 7638, -- Entering the battlefield for [Ancient Vows/The Savage/Fire in the Sky/Bad Seed/Bugard in the Clouds/Beloved of the Atlantes/Uninvited Guests/Nest of Nightmares/The Savage]!
     },
     mob =
     {
+        MAMMET_19_EPSILON = GetFirstID('Mammet-19_Epsilon'),
+        OURYU             = GetFirstID('Ouryu'),
+        WATCH_HIPPOGRYPH  = GetFirstID('Watch_Hippogryph'),
+        MAMMET_800_OFFSET = GetFirstID('Mammet-800'),
         MAMMET_800 =
         {
             16904233,

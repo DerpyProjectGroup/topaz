@@ -8,7 +8,7 @@
 -----------------------------------
 local itemObject = {}
 
-itemObject.onItemCheck = function(target)
+itemObject.onItemCheck = function(target, item, param, caster)
     local effect = target:getStatusEffect(xi.effect.ENLIGHT)
     if effect ~= nil and effect:getItemSourceID() == xi.item.HALLOWED_SWORD then
         target:delStatusEffect(xi.effect.ENLIGHT)

@@ -6,6 +6,10 @@ mixins = { require('scripts/mixins/job_special') }
 -----------------------------------
 local entity = {}
 
+entity.onMobInitialize = function(mob)
+    mob:setMobMod(xi.mobMod.IDLE_DESPAWN, 180)
+end
+
 local pets = {288, 289, 290, 291, 291}
 
 entity.onMobFight = function(mob, target)

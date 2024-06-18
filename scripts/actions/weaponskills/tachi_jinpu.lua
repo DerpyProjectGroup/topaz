@@ -17,16 +17,17 @@ weaponskillObject.onUseWeaponSkill = function(player, target, wsID, tp, primary,
     local params = {}
     params.numHits = 2
     params.ftpMod = { 1.0, 1.0, 1.0 }
-    params.str_wsc = 0.4
+    -- params.str_wsc = 0.4
     params.hybridWS = true
     params.includemab = true
     params.ele = xi.element.WIND
     params.skill = xi.skill.GREAT_KATANA
 
     if xi.settings.main.USE_ADOULIN_WEAPON_SKILL_CHANGES then
-        params.ftpMod = { 1.00, 1.50, 1.75 }
+        params.multiHitfTP = true
+        params.ftpMod = { 0.90, 1.40, 2.00 }
         -- params.ftpMod = { 0.5, 0.75, 1.0 }
-        params.str_wsc = 0.3
+        params.agi_wsc = 0.65
         params.int_wsc = 0.3
     end
 

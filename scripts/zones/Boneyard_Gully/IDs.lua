@@ -58,9 +58,15 @@ zones[xi.zone.BONEYARD_GULLY] =
     },
     mob =
     {
+        PARATA        = GetFirstID('Parata'),
+        SHIKAREE_Z    = GetFirstID('Shikaree_Z'),
+        TUCHULCHA     = GetFirstID('Tuchulcha'),
+        GWYN_AP_KNUDD = GetFirstID('Gwyn_Ap_Knudd'),
+
         SHIKAREE_HEADWIND_START = 16809985,
         SHIKAREE_HEADWIND_END   = 16809997,
     },
+
     npc =
     {
     },
@@ -124,6 +130,7 @@ zones[xi.zone.BONEYARD_GULLY] =
             },
         },
     },
+
     shellWeDance =
     {
         [1] =

@@ -1,5 +1,11 @@
-local ID = require('scripts/zones/The_Garden_of_RuHmet/IDs')
+local ID = zones[xi.zone.THE_GARDEN_OF_RUHMET]
 
 return {
-    ['_0zs'] = { messageSpecial = ID.text.PORTAL_WONT_OPEN },
+    ['_0zs']              = { messageSpecial = ID.text.PORTAL_WONT_OPEN },
+    ['_0zt']              = { messageSpecial = ID.text.PORTAL_SEALED },
+    ['_iz2']              = { messageSpecial = ID.text.NO_NEED_INVESTIGATE },
+    ['Ebon_Panel_Elvaan'] = { messageSpecial = ID.text.NO_NEED_INVESTIGATE },
+    ['Ebon_Panel_Taru']   = { messageSpecial = ID.text.NO_NEED_INVESTIGATE },
+    ['Ebon_Panel_Mithra'] = { messageSpecial = ID.text.NO_NEED_INVESTIGATE },
+    ['Ebon_Panel_Galka']  = { messageSpecial = ID.text.NO_NEED_INVESTIGATE },
 }

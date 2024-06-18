@@ -1,7 +1,6 @@
 -----------------------------------
 -- Zone: AlTaieu (33)
 -----------------------------------
-local ID = zones[xi.zone.ALTAIEU]
 require('scripts/globals/exp_controller')
 -----------------------------------
 local zoneObject = {}
@@ -23,6 +22,8 @@ zoneObject.onZoneIn = function(player, prevZone)
     then
         player:setPos(-25, -1 , -620 , 33)
     end
+
+    return cs
 end
 
 zoneObject.onTriggerAreaEnter = function(player, triggerArea)

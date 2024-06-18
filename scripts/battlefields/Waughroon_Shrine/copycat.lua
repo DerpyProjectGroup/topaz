@@ -46,8 +46,8 @@ content.loot =
     {
         { item = xi.item.ATTILAS_EARRING, weight = 250 },
         { item = xi.item.DURANDAL,        weight = 250 },
-        { item = xi.item.HOPLITES_HARPE,   weight = 250 },
-        { item = xi.item.SORROWFUL_HARPE,  weight = 250 },
+        { item = xi.item.HOPLITES_HARPE,  weight = 250 },
+        { item = xi.item.SORROWFUL_HARP,  weight = 250 },
     },
 
     {

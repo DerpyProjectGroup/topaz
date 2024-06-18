@@ -5,7 +5,7 @@
 -----------------------------------
 local itemObject = {}
 
-itemObject.onItemCheck = function(target)
+itemObject.onItemCheck = function(target, item, param, caster)
     local effect = target:getStatusEffect(xi.effect.INVISIBLE)
     if effect ~= nil and effect:getItemSourceID() == xi.item.INVISIBLE_MANTLE then
         target:delStatusEffect(xi.effect.INVISIBLE)

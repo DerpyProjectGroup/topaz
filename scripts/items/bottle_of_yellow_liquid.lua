@@ -6,7 +6,7 @@
 -----------------------------------
 local itemObject = {}
 
-itemObject.onItemCheck = function(target)
+itemObject.onItemCheck = function(target, item, param, caster)
     local result = 0
 
     -- TODO: Can this ONLY be used on Mammet types?

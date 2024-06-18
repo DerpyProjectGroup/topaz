@@ -27,9 +27,18 @@ zones[xi.zone.RIVERNE_SITE_B01] =
         BAHAMUT_TAUNT                 = 7676, -- Children of Vana'diel, what do you think to accomplish by fighting for your lives? You know your efforts are futile, yet still you resist...
         HOMEPOINT_SET                 = 7712, -- Home point set!
         UNITY_WANTED_BATTLE_INTERACT  = 7770, -- Those who have accepted % must pay # Unity accolades to participate. The content for this Wanted battle is #. [Ready to begin?/You do not have the appropriate object set, so your rewards will be limited.]
+
+        -- TODO Shift IDs
+        TIME_IN_THE_BATTLEFIELD_IS_UP = 7224, -- Your time in the battlefield is up! Now exiting...
+        PARTY_MEMBERS_ARE_ENGAGED     = 7239, -- The battlefield where your party members are engaged in combat is locked. Access is denied.
+        MEMBERS_OF_YOUR_PARTY         = 7530, -- Currently, # members of your party (including yourself) have clearance to enter the battlefield.
+        MEMBERS_OF_YOUR_ALLIANCE      = 7531, -- Currently, # members of your alliance (including yourself) have clearance to enter the battlefield.
+        TIME_LIMIT_FOR_THIS_BATTLE_IS = 7533, -- The time limit for this battle is <number> minutes.
+        ENTERING_THE_BATTLEFIELD_FOR  = 7596, -- Entering the battlefield for [Storms of Fate/The Wyrmking Descends]!
     },
     mob =
     {
+        BAHAMUT          = GetFirstID('Bahamut'),
         IMDUGUD          = GetFirstID('Imdugud'),
         UNSTABLE_CLUSTER = GetFirstID('Unstable_Cluster'),
         BOROKA           = 16896131,

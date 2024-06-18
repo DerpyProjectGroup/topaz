@@ -20,6 +20,10 @@ zones[xi.zone.SILVER_SEA_ROUTE_TO_NASHMAU] =
         NEARING_NASHMAU               = 7318, -- We are nearing Nashmau.
         JIDWAHN_SHOP_DIALOG           = 7320, -- Would you care for some items to use on your travels?
         ON_WAY_TO_NASHMAU             = 7321, -- We are on our way to Nashmau. We will be arriving soon.
+
+        -- TODO Shift IDs
+        ON_WAY_TO_NASHMAU             = 7316, -- We are on our way to Nashmau. We should arrive in [less than an hour/about 1 hour/about 2 hours/about 3 hours/about 4 hours/about 5 hours/about 6 hours/about 7 hours] (# [minute/minutes] in Earth time).
+        ARRIVING_SOON_NASHMAU         = 7321, -- We are on our way to Nashmau. We will be arriving soon.
     },
     mob =
     {

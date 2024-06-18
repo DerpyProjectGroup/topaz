@@ -5,6 +5,7 @@
 local entity = {}
 
 entity.onMobInitialize = function(mob)
+    mob:setMobMod(xi.mobMod.IDLE_DESPAWN, 180)
     mob:addMod(xi.mod.DOUBLE_ATTACK, 10)
     mob:addMod(xi.mod.REGAIN, 50)
 end

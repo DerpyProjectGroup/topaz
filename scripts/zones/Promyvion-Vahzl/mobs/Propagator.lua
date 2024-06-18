@@ -8,6 +8,10 @@ mixins = { require('scripts/mixins/families/empty_terroanima') }
 
 local entity = {}
 
+entity.onMobInitialize = function(mob)
+    mob:setMobMod(xi.mobMod.IDLE_DESPAWN, 240)
+end
+
 entity.onMobSpawn = function(mob)
     mob:setLocalVar('maxBabies', 2)
     mob:addMod(xi.mod.TRIPLE_ATTACK, 10)

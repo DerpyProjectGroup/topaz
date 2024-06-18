@@ -3,63 +3,59 @@
 -- Promathia 8-3
 -----------------------------------
 -- !addmission 6 828
--- Zone into Garden of Ru'Hmet
+-- _iz2              : !pos 422.351 -5.180 -100.000 35
+-- Ebon_Panel_Mithra : !pos 100.000 -5.180 -337.661 35
+-- Ebon_Panel_Elvaan : !pos 740.000 -5.180 -342.352 35
+-- Ebon_Panel_Taru   : !pos 257.650 -5.180 -699.999 35
+-- Ebon_Panel_Galka  : !pos 577.648 -5.180 -700.000 35
+-- _0z0              : !pos 420 -2.05 400 35
 -----------------------------------
-require('scripts/globals/interaction/mission')
-require('scripts/globals/missions')
-require('scripts/globals/npc_util')
-require('scripts/globals/teleports')
-
-require('scripts/globals/utils')
-
+local altaieuID = zones[xi.zone.ALTAIEU]
+local ruhmetID  = zones[xi.zone.THE_GARDEN_OF_RUHMET]
 -----------------------------------
 
 local mission = Mission:new(xi.mission.log_id.COP, xi.mission.id.cop.WHEN_ANGELS_FALL)
-
-local ebonData =
-{
-    -- [race] = { xPos1, xPos2, EventID, KI },
-    [xi.race.HUME_F] = { 421, 423, 120, xi.ki.LIGHT_OF_VAHZL },
-    [xi.race.HUME_M] = { 421, 423, 120, xi.ki.LIGHT_OF_VAHZL },
-    [xi.race.ELVAAN_F] = { 739, 741, 121, xi.ki.LIGHT_OF_MEA },
-    [xi.race.ELVAAN_M] = { 739, 741, 121, xi.ki.LIGHT_OF_MEA },
-    [xi.race.GALKA] = { 576, 578, 122, xi.ki.LIGHT_OF_ALTAIEU },
-    [xi.race.TARU_F] = { 256, 258, 123, xi.ki.LIGHT_OF_HOLLA },
-    [xi.race.TARU_M] = { 256, 258, 123, xi.ki.LIGHT_OF_HOLLA },
-    [xi.race.MITHRA] = { 99, 101, 124, xi.ki.LIGHT_OF_DEM },
-}
-
-local ebonOnTrigger = function(player, npc)
-    if mission:getVar(player, 'Status') == 1 then
-        return mission:progressEvent(202)
-    elseif mission:getVar(player, 'Status') == 2 then
-        local xPos = npc:getXPos()
-        local playerRace = player:getRace()
-        for race, val in pairs(ebonData) do
-            if playerRace == race and (xPos > val[1] and xPos < val[2]) then
-                return mission:progressEvent(120)
-            end
-        end
-
-        return mission:messageSpecial(zones[npc:getZoneID()].text.NO_NEED_INVESTIGATE)
-    else
-        return mission:messageSpecial(zones[npc:getZoneID()].text.NO_NEED_INVESTIGATE)
-    end
-end
-
-local ebonOnEventFinish = function(player, csid, option)
-    if option == 1 then
-        mission:setVar(player, 'Status', 3)
-        player:addTitle(xi.title.WARRIOR_OF_THE_CRYSTAL)
-        player:addKeyItem(ebonData[player:getRace()][4])
-        return mission:messageSpecial(zones[player:getZoneID()].text.KEYITEM_OBTAINED, ebonData[player:getRace()][4])
-    end
-end
 
 mission.reward =
 {
     nextMission = { xi.mission.log_id.COP, xi.mission.id.cop.DAWN },
 }
+
+local ebonPanel =
+{
+    ['_iz2']              = { 1, 120, xi.ki.LIGHT_OF_VAHZL   },
+    ['Ebon_Panel_Elvaan'] = { 2, 121, xi.ki.LIGHT_OF_MEA     },
+    ['Ebon_Panel_Taru']   = { 3, 123, xi.ki.LIGHT_OF_HOLLA   },
+    ['Ebon_Panel_Mithra'] = { 4, 124, xi.ki.LIGHT_OF_DEM     },
+    ['Ebon_Panel_Galka']  = { 5, 122, xi.ki.LIGHT_OF_ALTAIEU },
+}
+
+local ebonPanelOnTrigger = function(player, npc)
+    local missionStatus = mission:getVar(player, 'Status')
+
+    if missionStatus == 1 then
+        return mission:progressEvent(202)
+    elseif missionStatus == 2 then
+        local basicRace = player:getRace() <= xi.race.MITHRA and math.ceil(player:getRace() / 2) or 5
+        local panelData = ebonPanel[npc:getName()]
+
+        if basicRace == panelData[1] then
+            if player:checkDistance(npc) <= 1.8 then
+                return mission:progressEvent(panelData[2])
+            else
+                return mission:messageSpecial(ruhmetID.text.YOU_MUST_MOVE_CLOSER)
+            end
+        end
+    end
+end
+
+local ebonPanelOnEventFinish = function(player, csid, option, npc)
+    if option == 1 then
+        npcUtil.giveKeyItem(player, ebonPanel[npc:getName()][3])
+        player:addTitle(xi.title.WARRIOR_OF_THE_CRYSTAL)
+        mission:setVar(player, 'Status', 3)
+    end
+end
 
 mission.sections =
 {
@@ -73,20 +69,32 @@ mission.sections =
             onZoneIn =
             {
                 function(player, prevZone)
-                    if mission:getVar(player, 'Status') < 1 then
+                    if mission:getVar(player, 'Status') == 0 then
                         return 201
                     end
-                end
-            },
-
-            ['Ebon_Panel'] = -- Ebon Panels
-            {
-                onTrigger = function(player, npc)
-                    return ebonOnTrigger(player, npc)
                 end,
             },
 
-            ['_0zt'] = -- Luminous Convergence
+            ['_iz2']              = ebonPanelOnTrigger,
+            ['Ebon_Panel_Elvaan'] = ebonPanelOnTrigger,
+            ['Ebon_Panel_Taru']   = ebonPanelOnTrigger,
+            ['Ebon_Panel_Mithra'] = ebonPanelOnTrigger,
+            ['Ebon_Panel_Galka']  = ebonPanelOnTrigger,
+
+            ['_0z0'] =
+            {
+                onTrigger = function(player, npc)
+                    local missionStatus = mission:getVar(player, 'Status')
+
+                    if missionStatus == 3 then
+                        return mission:progressEvent(203)
+                    elseif missionStatus == 5 then
+                        return mission:event(205)
+                    end
+                end,
+            },
+
+            ['_0zt'] =
             {
                 onTrigger = function(player, npc)
                     if mission:getVar(player, 'Status') == 5 then
@@ -95,211 +103,94 @@ mission.sections =
                 end,
             },
 
-            ['_0z0'] = -- BCNM Entrance
-            {
-                onTrigger = function(player, npc)
-                    if
-                        mission:getVar(player, 'Status') == 3 and
-                        player:hasKeyItem(xi.ki.BRAND_OF_TWILIGHT) and
-                        player:hasKeyItem(xi.ki.BRAND_OF_DAWN)
-                    then
-                        return mission:progressEvent(203)
-                    elseif mission:getVar(player, 'Status') == 5 then
-                        return mission:progressEvent(205)
-                    end
-                end,
-            },
-
-            ['_0zv'] = -- Particle Gate (Brand of Twilight)
-            {
-                onTrigger = function(player, npc)
-                    if
-                        not player:hasKeyItem(xi.ki.BRAND_OF_TWILIGHT) and
-                        mission:getVar(player, 'Status') >= 3 and
-                        mission:getVar(player, 'Status') <= 4
-                    then
-                        return mission:progressEvent(111)
-                    else
-                        return mission:messageSpecial(zones[npc:getZoneID()].text.NO_NEED_INVESTIGATE)
-                    end
-                end,
-            },
-
-            ['_0zu'] = -- Particle Gate (Brand of Dawn)
-            {
-                onTrigger = function(player, npc)
-                    if
-                        not player:hasKeyItem(xi.ki.BRAND_OF_DAWN) and
-                        mission:getVar(player, 'Status') >= 3 and
-                        mission:getVar(player, 'Status') <= 4
-                    then
-                        return mission:progressEvent(110)
-                    else
-                        return mission:messageSpecial(zones[npc:getZoneID()].text.NO_NEED_INVESTIGATE)
-                    end
-                end,
-            },
-
-            ['_0zy'] = -- Cermet Portal
-            {
-                onTrigger = function(player, npc)
-                    if player:getZPos() <= 360 then
-                        return mission:messageSpecial(zones[npc:getZoneID()].text.PORTAL_SEALED)
-                    else
-                        return mission:event(139)
-                    end
-                end,
-            },
-
-            onEventFinish =
-            {
-                [111] = function(player, csid, option)
-                    if option == 1 then
-                        player:addKeyItem(xi.ki.BRAND_OF_TWILIGHT)
-                        return mission:messageSpecial(zones[player:getZoneID()].text.KEYITEM_OBTAINED, xi.ki.BRAND_OF_TWILIGHT)
-                    end
-                end,
-
-                [110] = function(player, csid, option)
-                    if option == 1 then
-                        player:addKeyItem(xi.ki.BRAND_OF_DAWN)
-                        return mission:messageSpecial(zones[player:getZoneID()].text.KEYITEM_OBTAINED, xi.ki.BRAND_OF_DAWN)
-                    end
-                end,
-
-                [120] = function(player, csid, option)
-                    return ebonOnEventFinish(player, csid, option)
-                end,
-
-                [121] = function(player, csid, option)
-                    return ebonOnEventFinish(player, csid, option)
-                end,
-
-                [122] = function(player, csid, option)
-                    return ebonOnEventFinish(player, csid, option)
-                end,
-
-                [123] = function(player, csid, option)
-                    return ebonOnEventFinish(player, csid, option)
-                end,
-
-                [124] = function(player, csid, option)
-                    return ebonOnEventFinish(player, csid, option)
-                end,
-
-                [201] = function(player, csid, option)
-                    mission:setVar(player, 'Status', 1)
-                    player:addKeyItem(xi.ki.MYSTERIOUS_AMULET)
-                    player:setCharVar('Ru-Hmet-TP', 0)
-                    return mission:messageSpecial(zones[player:getZoneID()].text.KEYITEM_OBTAINED, xi.ki.MYSTERIOUS_AMULET)
-                end,
-
-                [202] = function(player, csid, option)
-                    mission:setVar(player, 'Status', 2)
-                end,
-
-                [203] = function(player, csid, option)
-                    mission:setVar(player, 'Status', 4)
-                end,
-
-                [204] = function(player, csid, option)
-                    mission:complete(player)
-                end,
-
-                [32001] = function(player, csid, option)
-                    if mission:getVar(player, 'Status') == 4 then
-                        mission:setVar(player, 'Status', 5)
-                    end
-                end
-            }
-        },
-    },
-
-    {
-        check = function(player, currentMission, missionStatus, vars)
-            return player:hasCompletedMission(mission.areaId, mission.missionId)
-        end,
-
-        [xi.zone.THE_GARDEN_OF_RUHMET] =
-        {
-            ['_0zs'] =
-            {
-                onTrigger = function(player, npc)
-                    return mission:event(112)
-                end,
-            },
-
-            ['_0zy'] = -- Cermet Portal
-            {
-                onTrigger = function(player, npc)
-                    if player:getZPos() <= 360 then
-                        return mission:event(140)
-                    else
-                        return mission:event(141)
-                    end
-                end,
-            },
-
-            ['Ebon_Panel'] = -- Ebon Panels
-            {
-                onTrigger = function(player, npc)
-                    return mission:messageSpecial(zones[npc:getZoneID()].text.NO_NEED_INVESTIGATE)
-                end,
-            },
-
-            ['_0zv'] = -- Particle Gate (Brand of Twilight)
-            {
-                onTrigger = function(player, npc)
-                    if not player:hasKeyItem(xi.ki.BRAND_OF_TWILIGHT) then
-                        return mission:progressEvent(111)
-                    else
-                        return mission:messageSpecial(zones[npc:getZoneID()].text.NO_NEED_INVESTIGATE)
-                    end
-                end,
-            },
-
-            ['_0zu'] = -- Particle Gate (Brand of Dawn)
+            ['_0zu'] =
             {
                 onTrigger = function(player, npc)
                     if not player:hasKeyItem(xi.ki.BRAND_OF_DAWN) then
                         return mission:progressEvent(110)
-                    else
-                        return mission:messageSpecial(zones[npc:getZoneID()].text.NO_NEED_INVESTIGATE)
                     end
                 end,
             },
 
-            ['_0zt'] = -- Luminous Convergence
+            ['_0zv'] =
             {
                 onTrigger = function(player, npc)
-                    return mission:messageSpecial(zones[npc:getZoneID()].text.NO_NEED_INVESTIGATE)
+                    if not player:hasKeyItem(xi.ki.BRAND_OF_TWILIGHT) then
+                        return mission:progressEvent(111)
+                    end
                 end,
             },
 
             onEventFinish =
             {
-                [111] = function(player, csid, option)
+                [110] = function(player, csid, option, npc)
                     if option == 1 then
-                        player:addKeyItem(xi.ki.BRAND_OF_TWILIGHT)
-                        return mission:messageSpecial(zones[player:getZoneID()].text.KEYITEM_OBTAINED, xi.ki.BRAND_OF_TWILIGHT)
+                        npcUtil.giveKeyItem(player, xi.ki.BRAND_OF_DAWN)
                     end
                 end,
 
-                [110] = function(player, csid, option)
+                [111] = function(player, csid, option, npc)
                     if option == 1 then
-                        player:addKeyItem(xi.ki.BRAND_OF_DAWN)
-                        return mission:messageSpecial(zones[player:getZoneID()].text.KEYITEM_OBTAINED, xi.ki.BRAND_OF_DAWN)
+                        npcUtil.giveKeyItem(player, xi.ki.BRAND_OF_TWILIGHT)
                     end
                 end,
 
-                [112] = function(player, csid, option)
-                    if option == 1 then
-                        player:setPos(-20, 0, -355, 192, xi.zone.GRAND_PALACE_OF_HUXZOI)
+                [120] = ebonPanelOnEventFinish,
+                [121] = ebonPanelOnEventFinish,
+                [122] = ebonPanelOnEventFinish,
+                [123] = ebonPanelOnEventFinish,
+                [124] = ebonPanelOnEventFinish,
+
+                [201] = function(player, csid, option, npc)
+                    npcUtil.giveKeyItem(player, xi.ki.MYSTERIOUS_AMULET_PRISHE)
+                    mission:setVar(player, 'Status', 1)
+                end,
+
+                [202] = function(player, csid, option, npc)
+                    mission:setVar(player, 'Status', 2)
+                end,
+
+                [203] = function(player, csid, option, npc)
+                    mission:setVar(player, 'Status', 4)
+                end,
+
+                [204] = function(player, csid, option, npc)
+                    mission:setVar(player, 'Status', 6)
+                end,
+
+                [32001] = function(player, csid, option, npc)
+                    -- NOTE: Moving the player for this event is handled in the battlefield script.
+
+                    if
+                        player:getLocalVar('battlefieldWin') == xi.battlefield.id.WHEN_ANGELS_FALL and
+                        mission:getVar(player, 'Status') == 4
+                    then
+                        mission:setVar(player, 'Status', 5)
                     end
                 end,
             },
         },
 
+        [xi.zone.ALTAIEU] =
+        {
+            onZoneIn =
+            {
+                function(player, prevZone)
+                    if mission:getVar(player, 'Status') == 6 then
+                        return 165
+                    end
+                end,
+            },
+
+            onEventFinish =
+            {
+                [165] = function(player, csid, option, npc)
+                    player:delKeyItem(xi.ki.MYSTERIOUS_AMULET_PRISHE)
+                    player:messageSpecial(altaieuID.text.RETURN_AMULET_TO_PRISHE, xi.ki.MYSTERIOUS_AMULET)
+                    mission:complete(player)
+                end,
+            },
+        },
     },
 }
 

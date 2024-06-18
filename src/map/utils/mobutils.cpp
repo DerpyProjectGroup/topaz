@@ -912,6 +912,10 @@ namespace mobutils
                 {
                     PMob->defaultMobMod(MOBMOD_SPECIAL_SKILL, 1123);
                 }
+                else if (PMob->m_Family == 358) // Dyna-Kindred
+                {
+                    PMob->defaultMobMod(MOBMOD_SPECIAL_SKILL, 1146);
+                }
                 else if (PMob->m_Family == 246) // Trolls
                 {
                     // Trolls love cannons, but they take a second to shoot
@@ -936,11 +940,6 @@ namespace mobutils
                     PMob->defaultMobMod(MOBMOD_SPECIAL_SKILL, 1388);
                     PMob->defaultMobMod(MOBMOD_SPECIAL_COOL, 12);
                 }
-                else if (PMob->m_Family != 335) // exclude NIN Maat
-                {
-                    PMob->defaultMobMod(MOBMOD_SPECIAL_SKILL, 272);
-                    PMob->defaultMobMod(MOBMOD_SPECIAL_COOL, 12);
-                }
                 else if (PMob->m_Family == 337) // Dyna-Quadav
                 {
                     PMob->defaultMobMod(MOBMOD_SPECIAL_SKILL, 1123);
@@ -948,6 +947,11 @@ namespace mobutils
                 else if (PMob->m_Family == 358) // Dyna-Kindred
                 {
                     PMob->defaultMobMod(MOBMOD_SPECIAL_SKILL, 1146);
+                }
+                else if (PMob->m_Family != 335) // exclude NIN Maat
+                {
+                    PMob->defaultMobMod(MOBMOD_SPECIAL_SKILL, 272);
+                    PMob->defaultMobMod(MOBMOD_SPECIAL_COOL, 12);
                 }
 
                 PMob->defaultMobMod(MOBMOD_HP_STANDBACK, 70);
@@ -1078,7 +1082,7 @@ namespace mobutils
         PMob->SetDespawnTime(0s);
 
         // Stop early if this is a new battlefield
-        if (PMob->PBattlefield != nullptr && PMob->PBattlefield->isInteraction())
+        if (PMob->PBattlefield != nullptr)
         {
             return;
         }

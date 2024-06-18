@@ -5,7 +5,7 @@
 -----------------------------------
 local itemObject = {}
 
-itemObject.onItemCheck = function(target)
+itemObject.onItemCheck = function(target, item, param, caster)
     local effect = target:getStatusEffect(xi.effect.REFRESH)
     if effect ~= nil and effect:getItemSourceID() == xi.item.HYDRA_DOUBLET then
         target:delStatusEffect(xi.effect.REFRESH)

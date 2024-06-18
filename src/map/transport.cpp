@@ -373,7 +373,11 @@ void CTransportHandler::TransportTimer()
                 if (zoneId == ZONE_SHIP_BOUND_FOR_MHAURA ||
                     zoneId == ZONE_SHIP_BOUND_FOR_MHAURA_PIRATES ||
                     zoneId == ZONE_SHIP_BOUND_FOR_SELBINA ||
-                    zoneId == ZONE_SHIP_BOUND_FOR_SELBINA_PIRATES)
+                    zoneId == ZONE_SHIP_BOUND_FOR_SELBINA_PIRATES ||
+                    zoneId == ZONE_SILVER_SEA_ROUTE_TO_AL_ZAHBI ||
+                    zoneId == ZONE_SILVER_SEA_ROUTE_TO_NASHMAU ||
+                    zoneId == ZONE_OPEN_SEA_ROUTE_TO_AL_ZAHBI ||
+                    zoneId == ZONE_OPEN_SEA_ROUTE_TO_MHAURA)
                 {
                     zoneIterator->voyageZone->SetZoneAnimLength(940);
                 }

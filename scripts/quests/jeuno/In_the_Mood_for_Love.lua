@@ -2,15 +2,8 @@
 -- In the Mood for Love
 -----------------------------------
 -- Log ID: 3, Quest ID: 69
--- Odasel  !pos -58 -6 -111
--- Matoaka !pos -37 -6 -122
------------------------------------
-
-require('scripts/globals/quests')
-
-require('scripts/globals/missions')
-
-require('scripts/globals/interaction/quest')
+-- Odasel  !pos -58 -6 -111 245
+-- Matoaka !pos -37 -6 -122 245
 -----------------------------------
 local quest = Quest:new(xi.questLog.JEUNO, xi.quest.id.jeuno.IN_THE_MOOD_FOR_LOVE)
 
@@ -32,7 +25,7 @@ quest.sections =
 
         [xi.zone.LOWER_JEUNO] =
         {
-            ['Odasel'] = quest:progressEvent(10035, { [1] = xi.item.CHAMELEON_DIAMOND }),
+            ['Odasel'] = quest:progressEvent(10035, 0, xi.item.CHAMELEON_DIAMOND),
 
             onEventFinish =
             {
@@ -53,12 +46,12 @@ quest.sections =
             ['Odasel'] =
             {
                 onTrigger = function(player, npc)
-                    return quest:event(10037, { [1] = xi.item.CHAMELEON_DIAMOND })
+                    return quest:event(10037, 0, xi.item.CHAMELEON_DIAMOND)
                 end,
 
                 onTrade = function(player, npc, trade)
                     if npcUtil.tradeHasExactly(trade, xi.item.CHAMELEON_DIAMOND) then
-                        return quest:progressEvent(10036, { [1] = xi.item.CHAMELEON_DIAMOND })
+                        return quest:progressEvent(10036, 0, xi.item.CHAMELEON_DIAMOND)
                     end
                 end,
             },

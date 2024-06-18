@@ -1,8 +1,6 @@
 -----------------------------------
 -- Zone: RuLude_Gardens (243)
 -----------------------------------
-local ID = zones[xi.zone.RULUDE_GARDENS]
------------------------------------
 local zoneObject = {}
 
 zoneObject.onInitialize = function(zone)

@@ -362,11 +362,11 @@ xi.helm.helmInfo =
                     {  420, xi.item.BAG_OF_CACTUS_STEMS         },
                     {  420, xi.item.HIGH_QUALITY_SCORPION_SHELL },
                     {  420, xi.item.RED_ROCK                    },
-                    {   30,  1771 }, -- Dragon Bone +
-                    {   10,   883 }, -- Behemoth Horn +
-                    {    5,  1458 }, -- Mammoth Tusk +
-                    {    6,  1518 }, -- Collosal Skull +
-                    {    4,  1463 }, -- Chronss Tooth + TODO: Convert to item list
+                    {   75,  1771 }, -- Dragon Bone +
+                    {   75,   883 }, -- Behemoth Horn +
+                    {   50,  1458 }, -- Mammoth Tusk +
+                    {   60,  1518 }, -- Collosal Skull +
+                    {   40,  1463 }, -- Chronss Tooth + TODO: Convert to item list
                 },
 
                 points =
@@ -392,11 +392,11 @@ xi.helm.helmInfo =
                     {  290, xi.item.SCORPION_SHELL },
                     {  240, xi.item.TURTLE_SHELL   },
                     {  190, xi.item.SACK_OF_SILICA },
-                    {   10,  1771 }, -- Dragon Bone +
-                    {   7,    883 }, -- Behemoth Horn +
-                    {   5,   1458 }, -- Mammoth Tusk +
-                    {   6,   1518 }, -- Collosal Skull +
-                    {   4,   1463 }, -- Chronss Tooth +
+                    {   50,  1771  }, -- Dragon Bone +
+                    {   70,    883 }, -- Behemoth Horn +
+                    {   50,   1458 }, -- Mammoth Tusk +
+                    {   60,   1518 }, -- Collosal Skull +
+                    {   40,   1463 }, -- Chronss Tooth +
                 },
 
                 points =
@@ -427,7 +427,7 @@ xi.helm.helmInfo =
                     { 2130, xi.item.CHUNK_OF_ROCK_SALT     },
                     { 1700, xi.item.SEASHELL               },
                     {  430, xi.item.CRAB_SHELL             },
-                    { 1490, xi.item.FISH_SCALES            },
+                    { 1490, xi.item.HANDFUL_OF_FISH_SCALES },
                     { 2130, xi.item.LUGWORM                },
                     { 1060, xi.item.SHELL_BUG              },
                     {  100, xi.item.CORAL_FRAGMENT         },
@@ -435,10 +435,10 @@ xi.helm.helmInfo =
                     {  430, xi.item.TURTLE_SHELL           },
                     {  100, xi.item.BAG_OF_GRAIN_SEEDS     },
                     {  640, xi.item.HELMET_MOLE            },
-                    {   10,  1311 }, -- oxblood +
-                    {   15,  1312 }, -- angelskin +
-                    {   75,  1586 }, -- titanictus shell +
-                    {    6,  1521 }, -- Slime Juice
+                    {   50, xi.item.PIECE_OF_OXBLOOD       }, -- +
+                    {   50, xi.item.PIECE_OF_ANGEL_SKIN    }, -- +
+                    {   75, xi.item.TITANICTUS_SHELL       }, -- +
+                    {   50, xi.item.VIAL_OF_SLIME_JUICE    }, -- +
                 },
 
                 points =
@@ -470,10 +470,10 @@ xi.helm.helmInfo =
                     {  470, xi.item.SACK_OF_SILICA },
                     {  430,   885 }, -- Turtle Shell +
                     {  100,  1586 }, -- titanicus shell +
-                    {    5,  1458 }, -- Mammoth Tusk +
-                    {    6,  1518 }, -- Collosal Skull +
-                    {    4,  1463 }, -- Chronss Tooth +
-                    {    6,  1521 }, -- Slime Juice
+                    {   50,  1458 }, -- Mammoth Tusk +
+                    {   60,  1518 }, -- Collosal Skull +
+                    {   40,  1463 }, -- Chronss Tooth +
+                    {   60,  1521 }, -- Slime Juice
                 },
 
                 points =
@@ -734,7 +734,7 @@ xi.helm.helmInfo =
                     {  580, xi.item.BAG_OF_FRUIT_SEEDS },
                     {  910, xi.item.YEW_LOG            },
                     {  410, xi.item.RONFAURE_CHESTNUT  },
-                    {    5, xi.item.LANCEWOOD_LOG      }, -- +
+                    {   50, xi.item.LANCEWOOD_LOG      }, -- +
                 },
 
                 points =
@@ -779,7 +779,7 @@ xi.helm.helmInfo =
                     {  580, xi.item.ACORN         },
                     {  550, xi.item.DRYAD_ROOT    },
                     {   60, xi.item.OAK_LOG       },
-                    {    7, xi.item.LANCEWOOD_LOG }, -- +
+                    {   25, xi.item.LANCEWOOD_LOG }, -- +
                 },
 
                 points =
@@ -1047,7 +1047,7 @@ xi.helm.helmInfo =
                     {   70, xi.item.RED_ROCK               },
                     {   50, xi.item.CHUNK_OF_WOOTZ_ORE     }, -- +
                     {   55, xi.item.CHUNK_OF_RELIC_STEEL   }, -- +
-                    {    5, xi.item.KOH_I_NOOR             }, -- +
+                    {   50, xi.item.KOH_I_NOOR             }, -- +
                 },
 
                 points =

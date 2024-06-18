@@ -145,7 +145,7 @@ m.onTrade = function(player, npc, trade, helmType)
         local full  = (player:getFreeSlotsCount() == 0) and 1 or 0
 
         if os.time() > lastTrade + 3 then
-            player:sendEmote(npc, xi.helm.helmInfo[helmType].animation, xi.emoteMode.MOTION)
+            player:sendEmote(npc, xi.helm.helmInfo[helmType].animation, xi.emoteMode.MOTION, true)
             player:selfEmote(npc, xi.helm.helmInfo[helmType].animation, xi.emoteMode.MOTION)
 
             if full == 1 then

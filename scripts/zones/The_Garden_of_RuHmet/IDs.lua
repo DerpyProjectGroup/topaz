@@ -26,6 +26,15 @@ zones[xi.zone.THE_GARDEN_OF_RUHMET] =
         MENACING_CREATURES            = 7770, -- Menacing creatures appear out of nowhere!
         SHEER_ANIMOSITY               = 7771, -- <name> is enveloped in sheer animosity!
         HOMEPOINT_SET                 = 7776, -- Home point set!
+
+        -- TODO Shift IDs
+        TIME_IN_THE_BATTLEFIELD_IS_UP = 7065, -- Your time in the battlefield is up! Now exiting...
+        PARTY_MEMBERS_ARE_ENGAGED     = 7080, -- The battlefield where your party members are engaged in combat is locked. Access is denied.
+        MEMBERS_OF_YOUR_PARTY         = 7371, -- Currently, # members of your party (including yourself) have clearance to enter the battlefield.
+        MEMBERS_OF_YOUR_ALLIANCE      = 7372, -- Currently, # members of your alliance (including yourself) have clearance to enter the battlefield.
+        TIME_LIMIT_FOR_THIS_BATTLE_IS = 7374, -- The time limit for this battle is <number> minutes.
+        ENTERING_THE_BATTLEFIELD_FOR  = 7615, -- Entering the battlefield for [When Angels Fall/]!
+        YOU_MUST_MOVE_CLOSER          = 7623, -- You must move closer.
     },
 
     mob =
@@ -76,7 +85,9 @@ zones[xi.zone.THE_GARDEN_OF_RUHMET] =
         IXAERN_DRK              = GetFirstID('Ixaern_DRK'),
         JAILER_OF_FAITH         = GetFirstID('Jailer_of_Faith'),
         IXAERN_DRG              = GetFirstID('Ixaern_DRG'),
+        IXAERN_DRG              = GetFirstID('Ixaern_DRG'),
         IXZDEI_BASE             = GetFirstID('Ixzdei_RDM'),
+        IXZDEI_RDM              = GetFirstID('Ixzdei_RDM'),
         QNZDEI_OFFSET           = GetFirstID('Qnzdei'),
 
         QNZDEI_GROUP_1 =

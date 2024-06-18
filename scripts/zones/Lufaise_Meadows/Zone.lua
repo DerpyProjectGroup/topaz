@@ -79,4 +79,16 @@ zoneObject.onZoneWeatherChange = function(weather)
     end
 end
 
+zoneObject.onTriggerAreaEnter = function(player, triggerArea)
+end
+
+zoneObject.onTriggerAreaLeave = function(player, triggerArea)
+end
+
+zoneObject.onEventUpdate = function(player, csid, option, npc)
+end
+
+zoneObject.onEventFinish = function(player, csid, option, npc)
+end
+
 return zoneObject
