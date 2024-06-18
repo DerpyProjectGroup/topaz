@@ -23,9 +23,9 @@ weaponskillObject.onUseWeaponSkill = function(player, target, wsID, tp, primary,
     params.ignoredDefense = { 0.0, 0.35, 0.5 }
 
     if xi.settings.main.USE_ADOULIN_WEAPON_SKILL_CHANGES then
-        params.ftpMod = { 1.5, 1.5, 1.5 }
+        params.ftpMod = { 2.0, 2.0, 2.0 }
         params.str_wsc = 0.4 params.agi_wsc = 0.5
-        params.ignoredDefense = { 0.25, 0.50, 0.75 }
+        params.ignoredDefense = { 0.5, 0.75, 1.0 }
     end
 
     local damage, criticalHit, tpHits, extraHits = xi.weaponskills.doRangedWeaponskill(player, target, wsID, params, tp, action, primary)
