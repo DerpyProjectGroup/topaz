@@ -1035,6 +1035,7 @@ xi.mod =
     --                       = 2042, -- Empty Slot
     BANISH_POTENCY           = 2043, -- % Increase to Banish SDT debuff effect potency.
     YAEGASUMI_BONUS          = 2044, -- % Increase to weaponskill damage. Calculated after WSD modifiers.
+    SENGIKORI_DEBUFF         = 2045, -- % Increase to closing skillchain damage and magic bursts. Applied to defender.
     -- IF YOU ADD ANY NEW MODIFIER HERE, ADD IT IN src/map/modifier.h ASWELL!
 
     -- The spares take care of finding the next ID to use so long as we don't forget to list IDs that have been freed up by refactoring.

@@ -1325,6 +1325,13 @@ xi.weaponskills.takeWeaponskillDamage = function(defender, attacker, wsParams, p
         defender:updateEnmityFromDamage(enmityEntity, finaldmg * enmityMult)
     end
 
+    if attacker:hasStatusEffect(xi.effect.SENGIKORI) then
+        if finaldmg > 0 then
+            defender:setMod(xi.mod.SENGIKORI_DEBUFF, 25) -- Apply Debuff to target.
+            attacker:delStatusEffect(xi.effect.SENGIKORI)
+        end
+    end
+
     if finaldmg > 0 then
         -- Pack the weaponskill ID in the top 8 bits of this variable which is utilized
         -- in OnMobDeath in luautils.  Max WSID is 255.
