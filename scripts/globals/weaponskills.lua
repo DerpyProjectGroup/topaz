@@ -347,17 +347,17 @@ local function getRangedHitRate(attacker, target, bonus)
     acc = acc + bonus
 
     if attacker:getMainLvl() > target:getMainLvl() then -- acc bonus
-        acc = acc + (attacker:getMainLvl() - target:getMainLvl()) * 4
+        acc = acc + (attacker:getMainLvl() - target:getMainLvl()) * 2
     elseif attacker:getMainLvl() < target:getMainLvl() then -- acc penalty
-        acc = acc - (target:getMainLvl() - attacker:getMainLvl()) * 4
+        acc = acc - (target:getMainLvl() - attacker:getMainLvl()) * 1.5
     end
 
     local hitdiff = (acc - eva) / 2 -- no need to check if eva is hier or lower than acc it will be negative if eva is higher and positive if acc is higher
     local hitrate = (75 + hitdiff) / 100
 
     -- Applying hitrate caps
-    hitrate = utils.clamp(hitrate, 0.2, 0.95)
-
+    hitrate = utils.clamp(hitrate, 0.2, 0.98)
+    print(hitrate)
     return hitrate
 end
 
@@ -429,6 +429,7 @@ local function getSingleHitDamage(attacker, target, dmg, ftp, wsParams, calcPara
         attacker:setLocalVar('[criticalHitsLanded]', criticalHitsLanded + 1)
     else
         calcParams.pdif = xi.weaponskills.generatePdif(calcParams.cratio[1], calcParams.cratio[2], true)
+        -- calcParams.pdif = xi.combat.physical.calculateMeleePDIF(attacker, target, xi.skill.GREAT_AXE, 1, isCritical, applyLevelCorrection, false, ftp, true, xi.slot.MAIN)
     end
 
     -- finaldmg = (dmg + consumeManaBonus(attacker)) * ftp * calcParams.pdif
@@ -901,7 +902,7 @@ xi.weaponskills.doPhysicalWeaponskill = function(attacker, target, wsID, wsParam
         calcParams.bonusAcc = calcParams.bonusAcc - accLost
     end
 
-    calcParams.firstHitRate = xi.weaponskills.getHitRate(attacker, target, calcParams.bonusAcc + 100)
+    calcParams.firstHitRate = xi.weaponskills.getHitRate(attacker, target, calcParams.bonusAcc + 125)
     calcParams.hitRate      = xi.weaponskills.getHitRate(attacker, target, calcParams.bonusAcc)
     calcParams.skillType    = attack.weaponType
 
@@ -1021,7 +1022,7 @@ xi.weaponskills.doRangedWeaponskill = function(attacker, target, wsID, wsParams,
         calcParams.bonusAcc = calcParams.bonusAcc - accLost
     end
 
-    calcParams.hitRate = getRangedHitRate(attacker, target, calcParams.bonusAcc)
+    calcParams.hitRate = getRangedHitRate(attacker, target, calcParams.bonusAcc + 10)
 
     -- Send our params off to calculate our raw WS damage, hits landed, and shadows absorbed
     calcParams = xi.weaponskills.calculateRawWSDmg(attacker, target, wsID, tp, action, wsParams, calcParams)
@@ -1402,11 +1403,11 @@ xi.weaponskills.getHitRate = function(attacker, target, bonus)
 
     -- Accuracy Bonus
     if attacker:getMainLvl() > target:getMainLvl() then
-        acc = acc + (attacker:getMainLvl() - target:getMainLvl()) * 4
+        acc = acc + (attacker:getMainLvl() - target:getMainLvl()) * 2
 
     -- Accuracy Penalty
     elseif attacker:getMainLvl() < target:getMainLvl() then
-        acc = acc - (target:getMainLvl() - attacker:getMainLvl()) * 4
+        acc = acc - (target:getMainLvl() - attacker:getMainLvl()) * 1.5
     end
 
     local hitdiff = (acc - eva) / 2
@@ -1414,7 +1415,7 @@ xi.weaponskills.getHitRate = function(attacker, target, bonus)
 
     -- Applying hitrate caps
     hitrate = utils.clamp(hitrate, 0.2, 0.98)
-
+    print(hitrate)
     return hitrate
 end
 
