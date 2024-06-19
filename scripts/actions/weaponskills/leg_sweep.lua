@@ -29,7 +29,7 @@ weaponskillObject.onUseWeaponSkill = function(player, target, wsID, tp, primary,
     local chance = (tp-1000) * applyResistanceAddEffect(player, target, xi.element.THUNDER, 0) > math.random() * 150
     if damage > 0 and chance then
         if not target:hasStatusEffect(xi.effect.STUN) and not target:hasImmunity(xi.immunity.STUN) then
-            local duration = 4 * applyResistanceAddEffect(player, target, xi.element.THUNDER, 0)
+            local duration = 5 * applyResistanceAddEffect(player, target, xi.element.THUNDER, 0)
             target:addStatusEffect(xi.effect.STUN, 1, 0, duration)
             player:messagePublic(xi.msg.basic.SKILL_ENFEEB, target, wsID, xi.effect.STUN)
         end

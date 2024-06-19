@@ -35,6 +35,7 @@ zones[xi.zone.BEARCLAW_PINNACLE] =
     mob =
     {
         SNOLL_TZAR_OFFSET = GetFirstID('Snoll_Tzar'),
+        SNOW_DEVIL        = GetFirstID('Snow_Devil'),
     },
     npc =
     {

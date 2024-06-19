@@ -702,22 +702,30 @@ end
 
 xi.combat.physical.canParry = function(defender, attacker)
     local canParry = false
+    local mainWeapon = defender:getEquippedItem(xi.slot.MAIN)
 
     if
         defender:isFacing(attacker) and
         defender:isEngaged()
     then
         if defender:isPC() and defender:getSkillRank(xi.skill.PARRY) > 0 then
-            local mainWeapon = defender:getEquippedItem(xi.slot.MAIN)
             if mainWeapon then
                 canParry = mainWeapon:getSkillType() ~= xi.skill.HAND_TO_HAND
             end
         elseif
+            not defender:hasPreventActionEffect() and
             defender:isMob() or
             defender:isPet() or
             defender:isTrust()
         then
             canParry = defender:getMobMod(xi.mobMod.CAN_PARRY) > 0
+            if
+                defender:isMob() and
+                defender:getMainJob() == xi.job.MNK or
+                defender:getMainJob() == xi.job.PUP
+            then
+                canParry = false
+            end
         end
     end
 
@@ -748,7 +756,11 @@ xi.combat.physical.calculateParryRate = function(defender, attacker)
     local attackerDex = attacker:getStat(xi.mod.DEX)
     local defenderAgi = defender:getStat(xi.mod.AGI)
 
-    parryRate = utils.clamp(((parrySkill * 0.1 + (defenderAgi - attackerDex) * 0.125 + 10.0) * levelDiffMult), 5, 25)
+    if attacker:isPC() and defender:isMob() then
+        parryRate = utils.clamp(((parrySkill * 0.1 + (defenderAgi - (attackerDex * 1.5)) * 0.125 + 10.0) * levelDiffMult), 2, 30)
+    else
+        parryRate = utils.clamp(((parrySkill * 0.1 + (defenderAgi - attackerDex) * 0.125 + 10.0) * levelDiffMult), 5, 25)
+    end
 
     -- Issekigan grants parry rate bonus
     -- from best available data if you already capped out at 25% parry it grants another 25% bonus for ~50% parry rate
@@ -775,6 +787,7 @@ xi.combat.physical.canGuard = function(defender, attacker)
             local mainWeapon = defender:getEquippedItem(xi.slot.MAIN)
             canGuard = (not mainWeapon) or mainWeapon:getSkillType() == xi.skill.HAND_TO_HAND
         elseif
+            not defender:hasPreventActionEffect() and
             defender:isMob() or
             defender:isPet() or
             defender:isTrust()
@@ -938,6 +951,9 @@ xi.combat.physical.handleBlock = function(defender, attacker, damage)
         else
             damage = math.floor(damage * 0.5)
         end
+        local hitsBlocked          = attacker:getLocalVar('[attacksBlocked]')
+        local hitsBlockedIncrement = 0
+        attacker:setLocalVar('[attacksBlocked]', hitsBlocked + 1)
     end
 
     return damage
@@ -970,12 +986,13 @@ xi.combat.physical.isGuarded = function(defender, attacker)
         xi.combat.physical.calculateGuardRate(defender, attacker) > math.random(100)
     then
         guarded = true
+        -- handle tactical guard
+        if defender:hasTrait(xi.trait.TACTICAL_GUARD) then
+            defender:addTP(defender:getMod(xi.mod.TACTICAL_GUARD))
+        end
+
         if defender:isPC() then
             defender:trySkillUp(xi.skill.GUARD, attacker:getMainLvl())
-            -- handle tactical guard
-            if defender:hasTrait(xi.trait.TACTICAL_GUARD) then
-                defender:addTP(defender:getMod(xi.mod.TACTICAL_GUARD))
-            end
         end
     end
 

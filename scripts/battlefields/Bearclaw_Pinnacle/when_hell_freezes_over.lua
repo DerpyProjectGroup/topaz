@@ -18,13 +18,79 @@ local content = Battlefield:new({
     exitNpc          = 'Wind_Pillar_Exit',
     requiredKeyItems = { xi.ki.ZEPHYR_FAN, message = ID.text.ZEPHYR_RIPS },
     grantXP          = 3500,
+    armouryCrates =
+    {
+        ID.mob.SNOW_DEVIL + 6,
+        ID.mob.SNOW_DEVIL + 14,
+        ID.mob.SNOW_DEVIL + 22,
+    },
 })
 
 function content:setupBattlefield(battlefield)
     battlefield:setLocalVar('adds', 2)
 end
 
+local handleDeath = function(battlefield, mob)
+    if
+        battlefield:getLocalVar('wave') >= 3
+    then
+        content:handleAllMonstersDefeated(battlefield, mob)
+    end
+end
+
 content:addEssentialMobs({ 'Snow_Devil' })
+
+content.groups =
+{
+    {
+        mobIds =
+        {
+            {
+                ID.mob.SNOW_DEVIL,
+                ID.mob.SNOW_DEVIL + 1,
+                ID.mob.SNOW_DEVIL + 2,
+            },
+
+            {
+                ID.mob.SNOW_DEVIL + 8,
+                ID.mob.SNOW_DEVIL + 9,
+                ID.mob.SNOW_DEVIL + 10,
+            },
+
+            {
+                ID.mob.SNOW_DEVIL + 16,
+                ID.mob.SNOW_DEVIL + 17,
+                ID.mob.SNOW_DEVIL + 18,
+            },
+        },
+        death = handleDeath,
+    },
+
+    {
+        mobIds =
+        {
+            {
+                ID.mob.SNOW_DEVIL + 3,
+                ID.mob.SNOW_DEVIL + 4,
+                ID.mob.SNOW_DEVIL + 5,
+            },
+
+            {
+                ID.mob.SNOW_DEVIL + 11,
+                ID.mob.SNOW_DEVIL + 12,
+                ID.mob.SNOW_DEVIL + 13,
+            },
+
+            {
+                ID.mob.SNOW_DEVIL + 19,
+                ID.mob.SNOW_DEVIL + 20,
+                ID.mob.SNOW_DEVIL + 21,
+            },
+        },
+        spawned  = false,
+        death = handleDeath,
+    },
+}
 
 content.loot =
 {

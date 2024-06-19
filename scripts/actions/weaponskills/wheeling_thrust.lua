@@ -19,7 +19,7 @@ weaponskillObject.onUseWeaponSkill = function(player, target, wsID, tp, primary,
     params.ftpMod = { 1.75, 2, 2.25 }
     params.str_wsc = 0.5
     -- Defense ignored is 50%, 75%, 100% (50% at 100 TP is accurate, other values are guesses)
-    params.ignoredDefense = { 0.5, 0.75, 1.0 }
+    params.ignoredDefense = { 0.5, 0.65, 0.80 }
 
     if xi.settings.main.USE_ADOULIN_WEAPON_SKILL_CHANGES then
         params.str_wsc = 0.8

@@ -515,7 +515,7 @@ void CZone::LoadNavMesh()
 
 void CZone::LoadZoneLos()
 {
-    if (GetTypeMask() & ZONE_TYPE::CITY || (m_miscMask & MISC_LOS_OFF))
+    if (GetTypeMask() & ZONE_TYPE::CITY || GetTypeMask() & ZONE_TYPE::DYNAMIS || (m_miscMask & MISC_LOS_OFF))
     {
         // Skip cities and zones with line of sight turned off
         return;
