@@ -443,103 +443,102 @@ INSERT INTO `mob_pool_mods` VALUES (4083,368,30,0); -- REGAIN: 30
 INSERT INTO `mob_pool_mods` VALUES (4083,370,1,0);  -- REGEN: 1
 
 -- Vanguard_Armorer
-INSERT INTO `mob_pool_mods` VALUES (4136,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4136,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguard_Assassin
-INSERT INTO `mob_pool_mods` VALUES (4137,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4137,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguard_Backstabber
-INSERT INTO `mob_pool_mods` VALUES (4138,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4138,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguard_Beasttender
-INSERT INTO `mob_pool_mods` VALUES (4139,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4139,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguard_Bugler
-INSERT INTO `mob_pool_mods` VALUES (4140,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4140,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguard_Chanter
-INSERT INTO `mob_pool_mods` VALUES (4141,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4141,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguard_Defender
-INSERT INTO `mob_pool_mods` VALUES (4143,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4143,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguard_Drakekeeper
-INSERT INTO `mob_pool_mods` VALUES (4146,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4146,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguard_Enchanter
-INSERT INTO `mob_pool_mods` VALUES (4147,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4147,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguard_Exemplar
-INSERT INTO `mob_pool_mods` VALUES (4148,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4148,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguard_Footsoldier
-INSERT INTO `mob_pool_mods` VALUES (4150,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4150,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguard_Grappler
-INSERT INTO `mob_pool_mods` VALUES (4151,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4151,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguard_Gutslasher
-INSERT INTO `mob_pool_mods` VALUES (4152,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4152,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguard_Hatamoto
-INSERT INTO `mob_pool_mods` VALUES (4153,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4153,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguard_Hawker
-INSERT INTO `mob_pool_mods` VALUES (4154,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4154,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguard_Hitman
-INSERT INTO `mob_pool_mods` VALUES (4155,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4155,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguard_Impaler
-INSERT INTO `mob_pool_mods` VALUES (4156,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4156,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguard_Inciter
-INSERT INTO `mob_pool_mods` VALUES (4157,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4157,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguard_Kusa
-INSERT INTO `mob_pool_mods` VALUES (4158,75,3,1); -- CAN_PARRY: 3
-
+INSERT INTO `mob_pool_mods` VALUES (4158,75,5,1); -- CAN_PARRY: 5
 -- Vanguard_Liberator
-INSERT INTO `mob_pool_mods` VALUES (4159,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4159,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguard_Maestro
-INSERT INTO `mob_pool_mods` VALUES (4160,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4160,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguard_Minstrel
-INSERT INTO `mob_pool_mods` VALUES (4164,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4164,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguard_Neckchopper
-INSERT INTO `mob_pool_mods` VALUES (4165,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4165,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguard_Ogresoother
-INSERT INTO `mob_pool_mods` VALUES (4167,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4167,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguard_Partisan
-INSERT INTO `mob_pool_mods` VALUES (4169,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4169,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguard_Pathfinder
-INSERT INTO `mob_pool_mods` VALUES (4170,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4170,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguard_Persecutor
-INSERT INTO `mob_pool_mods` VALUES (4171,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4171,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguard_Pillager
-INSERT INTO `mob_pool_mods` VALUES (4172,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4172,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguard_Protector
-INSERT INTO `mob_pool_mods` VALUES (4177,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4177,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguard_Purloiner
-INSERT INTO `mob_pool_mods` VALUES (4178,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4178,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguard_Ronin
-INSERT INTO `mob_pool_mods` VALUES (4179,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4179,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguard_Skirmisher
-INSERT INTO `mob_pool_mods` VALUES (4183,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4183,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguard_Smithy
-INSERT INTO `mob_pool_mods` VALUES (4184,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4184,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguards Crow
 INSERT INTO `mob_pool_mods` VALUES (4186,34,20,1);  -- MAGIC_COOL: 20
@@ -562,28 +561,28 @@ INSERT INTO `mob_pool_mods` VALUES (4189,35,0,1);   -- STANDBACK_COOL: 0
 INSERT INTO `mob_pool_mods` VALUES (4189,244,15,0); -- SILENCERES: 15
 
 -- Vanguard_Tinkerer
-INSERT INTO `mob_pool_mods` VALUES (4192,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4192,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguard_Trooper
-INSERT INTO `mob_pool_mods` VALUES (4193,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4193,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguard_Vexer
-INSERT INTO `mob_pool_mods` VALUES (4195,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4195,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguard_Vigilante
-INSERT INTO `mob_pool_mods` VALUES (4196,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4196,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguard_Vindicator
-INSERT INTO `mob_pool_mods` VALUES (4197,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4197,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguard_Visionary
-INSERT INTO `mob_pool_mods` VALUES (4198,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4198,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguard_Welldigger
-INSERT INTO `mob_pool_mods` VALUES (4199,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4199,75,5,1); -- CAN_PARRY: 5
 
 -- Vanguard_Dragontamer
-INSERT INTO `mob_pool_mods` VALUES (4649,75,3,1); -- CAN_PARRY: 3
+INSERT INTO `mob_pool_mods` VALUES (4649,75,5,1); -- CAN_PARRY: 5
 
 -- Variable Hare
 INSERT INTO `mob_pool_mods` VALUES (4204,28,10,1); -- EXP_BONUS: 10

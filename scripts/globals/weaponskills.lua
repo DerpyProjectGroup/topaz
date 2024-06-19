@@ -387,6 +387,8 @@ local function getSingleHitDamage(attacker, target, dmg, ftp, wsParams, calcPara
         not calcParams.guaranteedHit and
         xi.combat.physical.isParried(target, attacker)
     then
+        local hitsParried          = attacker:getLocalVar('[attacksParried]')
+        attacker:setLocalVar('[attacksParried]', hitsParried + 1)
         -- parried logic
         return finaldmg, calcParams
     end
@@ -407,6 +409,8 @@ local function getSingleHitDamage(attacker, target, dmg, ftp, wsParams, calcPara
         not calcParams.guaranteedHit and
         xi.combat.physical.isGuarded(target, attacker)
     then
+        local hitsGuarded          = attacker:getLocalVar('[attacksGuarded]')
+        attacker:setLocalVar('[attacksGuarded]', hitsGuarded + 1)
         -- guarded logic
         return finaldmg, calcParams
     end
@@ -947,6 +951,24 @@ xi.weaponskills.doPhysicalWeaponskill = function(attacker, target, wsID, wsParam
         attacker:setLocalVar('[criticalHitsLanded]', 0)
     end
 
+    local hitsParried = attacker:getLocalVar('[attacksParried]')
+    if hitsParried > 0 then
+        attacker:printToPlayer(string.format('The %s parried [%s ] hits!', target:getName(), hitsParried), xi.msg.channel.SYSTEM_3) -- Debug to see modifier of each hit in a weapon skill.
+        attacker:setLocalVar('[attacksParried]', 0)
+    end
+
+    local hitsGuarded = attacker:getLocalVar('[attacksGuarded]')
+    if hitsGuarded > 0 then
+        attacker:printToPlayer(string.format('The %s guarded [%s ] hits!', target:getName(), hitsGuarded), xi.msg.channel.SYSTEM_3) -- Debug to see modifier of each hit in a weapon skill.
+        attacker:setLocalVar('[attacksGuarded]', 0)
+    end
+
+    local hitsBlocked = attacker:getLocalVar('[attacksBlocked]')
+    if hitsBlocked > 0 then
+        attacker:printToPlayer(string.format('The %s blocked [%s ] hits!', target:getName(), hitsBlocked), xi.msg.channel.SYSTEM_3) -- Debug to see modifier of each hit in a weapon skill.
+        attacker:setLocalVar('[attacksBlocked]', 0)
+    end
+
     attacker:delStatusEffect(xi.effect.CONSUME_MANA)
 
     return finaldmg, calcParams.criticalHit, calcParams.tpHitsLanded, calcParams.extraHitsLanded, calcParams.shadowsAbsorbed
@@ -1391,7 +1413,7 @@ xi.weaponskills.getHitRate = function(attacker, target, bonus)
     local hitrate = (75 + hitdiff) / 100
 
     -- Applying hitrate caps
-    hitrate = utils.clamp(hitrate, 0.2, 0.95)
+    hitrate = utils.clamp(hitrate, 0.2, 0.98)
 
     return hitrate
 end

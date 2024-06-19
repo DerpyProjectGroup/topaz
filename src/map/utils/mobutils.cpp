@@ -735,10 +735,12 @@ namespace mobutils
         {
             PMob->addModifier(Mod::PARRY, GetBaseSkill(PMob, PMob->getMobMod(MOBMOD_CAN_PARRY)));
         }
-        else if (PMob->isInDynamis()) // Mobs in Dyna Can Parry
-        {
-            PMob->addModifier(Mod::PARRY, GetBaseSkill(PMob, 3)); // Base Parry for all mobs is Rank C
-        }
+
+        // This is now handled in sql mob_pool_mods
+        //else if (PMob->isInDynamis()) // Mobs in Dyna Can Parry
+        //{
+        //    PMob->addModifier(Mod::PARRY, GetBaseSkill(PMob, 3)); // Base Parry for all mobs is Rank C
+        //}
 
         // natural magic evasion
         PMob->addModifier(Mod::MEVA, GetMagicEvasion(PMob));
