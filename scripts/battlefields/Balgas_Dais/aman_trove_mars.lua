@@ -5,38 +5,27 @@
 local balgasID = zones[xi.zone.BALGAS_DAIS]
 -----------------------------------
 
+-- NOTE: This ties the successful and usable registration of this content to whether or not the setting is enabled.
+-- NOTE: This is NOT hot-reloadable.
+local entryNpc = 'NON_EXISTENT_NPC'
+if xi.settings.main.ENABLE_AMAN_TROVE == 1 then
+    ---@diagnostic disable-next-line: cast-local-type
+    entryNpc = 'BC_Entrance'
+end
+
 local content = Battlefield:new({
     zoneId           = xi.zone.BALGAS_DAIS,
     battlefieldId    = xi.battlefield.id.AMAN_TROVE_MARS_BALGAS_DAIS,
     maxPlayers       = 6,
     timeLimit        = utils.minutes(30),
     index            = 24,
-    entryNpc         = 'BC_Entrance',
+    entryNpc         = entryNpc,
     exitNpc          = 'Burning_Circle',
     requiredItems    = { xi.item.MARS_ORB, wearMessage = balgasID.text.A_CRACK_HAS_FORMED, wornMessage = balgasID.text.ORB_IS_CRACKED },
 })
 
-local terminalCoffers =
-{
-    balgasID.npc.TERMINAL_COFFER,
-    balgasID.npc.TERMINAL_COFFER + 11,
-    balgasID.npc.TERMINAL_COFFER + 22,
-}
-
-function content:battlefieldSetup(battlefield)
-    local battleArea     = battlefield:getArea()
-    local terminalCoffer = GetNPCByID(terminalCoffers[battleArea])
-
-    terminalCoffer:setStatus(xi.status.NORMAL)
-    terminalCoffer:setUntargetable(false)
-
-    -- TODO: Make necessary terminal coffer listener
-    -- for handling opening, setting win state, and spitting out loot.
-
-    -- Chest Mobs below currently display as mobs and should have green names and
-    -- also be triggerable.
-
-    print("Battlefield Setup Called")
+function content:setupBattlefield(battlefield)
+    xi.amanTrove.setupBattlefield(battlefield)
 end
 
 content.groups =
