@@ -64,7 +64,6 @@
 #include "modifier.h"
 #include "notoriety_container.h"
 #include "packets/char_abilities.h"
-#include "packets/char_recast.h"
 #include "packets/char_sync.h"
 #include "packets/char_recast.h"
 #include "packets/lock_on.h"
@@ -693,12 +692,12 @@ namespace battleutils
         WEATHER strongWeatherDouble[8] = { WEATHER_HEAT_WAVE, WEATHER_BLIZZARDS, WEATHER_GALES, WEATHER_SAND_STORM,
                                            WEATHER_THUNDERSTORMS, WEATHER_SQUALL, WEATHER_STELLAR_GLARE, WEATHER_DARKNESS };
         WEATHER weakWeatherSingle[8]   = { WEATHER_RAIN, WEATHER_HOT_SPELL, WEATHER_SNOW, WEATHER_WIND,
-                                           WEATHER_DUST_STORM, WEATHER_THUNDER, WEATHER_GLOOM, WEATHER_AURORAS };
+                                         WEATHER_DUST_STORM, WEATHER_THUNDER, WEATHER_GLOOM, WEATHER_AURORAS };
         WEATHER weakWeatherDouble[8]   = { WEATHER_SQUALL, WEATHER_HEAT_WAVE, WEATHER_BLIZZARDS, WEATHER_GALES,
-                                           WEATHER_SAND_STORM, WEATHER_THUNDERSTORMS, WEATHER_DARKNESS, WEATHER_STELLAR_GLARE };
+                                         WEATHER_SAND_STORM, WEATHER_THUNDERSTORMS, WEATHER_DARKNESS, WEATHER_STELLAR_GLARE };
         uint32  obi[8]                 = { 15435, 15436, 15437, 15438, 15439, 15440, 15441, 15442 };
         Mod     resistarray[8]         = { Mod::FIRE_MEVA, Mod::ICE_MEVA, Mod::WIND_MEVA, Mod::EARTH_MEVA,
-                                           Mod::THUNDER_MEVA, Mod::WATER_MEVA, Mod::LIGHT_MEVA, Mod::DARK_MEVA };
+                               Mod::THUNDER_MEVA, Mod::WATER_MEVA, Mod::LIGHT_MEVA, Mod::DARK_MEVA };
         bool    obiBonus               = false;
 
         double half      = (double)(PDefender->getMod(resistarray[element - 1])) / 100;
@@ -2076,7 +2075,7 @@ namespace battleutils
         CItemWeapon* PWeapon = GetEntityWeapon(PDefender, SLOT_MAIN);
         if (((PDefender->objtype == TYPE_PC && PWeapon != nullptr && PWeapon->getID() != 0 && PWeapon->getID() != 65535 && PWeapon->getSkillType() != SKILL_HAND_TO_HAND)) ||
             (PDefender->objtype == TYPE_MOB && PDefender->m_EcoSystem == ECOSYSTEM::BEASTMAN && (JOBS_WITH_PARRY_SKILL.count(PDefender->GetMJob()) > 0 || JOBS_WITH_PARRY_SKILL.count(PDefender->GetSJob()) > 0) && PDefender->isInDynamis()) &&
-            PDefender->PAI->IsEngaged())
+                PDefender->PAI->IsEngaged())
         {
             // http://wiki.ffxiclopedia.org/wiki/Talk:Parrying_Skill
             // {(Parry Skill x .125) + ([Player Agi - Enemy Dex] x .125)} x Diff
@@ -3693,7 +3692,7 @@ namespace battleutils
         return (xirand::GetRandomNumber(100) < KillerEffect);
     }
 
-        /************************************************************************
+    /************************************************************************
      *                                                                       *
      *  Checks if the tandem case is valid                                   *
      *  Used for Tandem Strike and tbd for Tandem Blow                       *
@@ -3875,13 +3874,24 @@ namespace battleutils
         {
             // No effect exists, apply an effect using the weaponskill ID as the power with a tier of 0.
             PDefender->StatusEffectContainer->AddStatusEffect(new CStatusEffect(EFFECT_SKILLCHAIN, 0, combined_properties, 0, 10, 0, 0, 0));
+
+            if (PDefender->GetLocalVar("Sengikori_SC") == 0 && (PDefender->getMod(Mod::SENGIKORI_DEBUFF) <= 0))
+            {
+                // There is no skillchain active yet. Defender has no Debuff. We will flag this weaponskill in preparation for MB bonus.
+                PDefender->SetLocalVar("Sengikori_SC", 1);
+            }
+            else if (PDefender->GetLocalVar("Sengikori_SC") == 0 && (PDefender->getMod(Mod::SENGIKORI_DEBUFF) > 0))
+            {
+                // There is no skillchain active yet. We used Sengikori first, then weaponskill, so we flag it for bonus skillchain damage.
+                PDefender->SetLocalVar("Sengikori_SC", 2);
+            }
+
             return SUBEFFECT_NONE;
         }
         else
         {
             std::list<SKILLCHAIN_ELEMENT> resonanceProperties;
             std::list<SKILLCHAIN_ELEMENT> skillProperties = { (SKILLCHAIN_ELEMENT)primary, (SKILLCHAIN_ELEMENT)secondary, (SKILLCHAIN_ELEMENT)tertiary };
-
             // Chainbound active on target
             if (PCBEffect)
             {
@@ -3908,6 +3918,12 @@ namespace battleutils
                 PDefender->StatusEffectContainer->AddStatusEffect(new CStatusEffect(EFFECT_SKILLCHAIN, 0, combined_properties, 0, 10, 0, 0, 0));
                 PDefender->StatusEffectContainer->DelStatusEffect(EFFECT_CHAINBOUND);
                 PSCEffect = PDefender->StatusEffectContainer->GetStatusEffect(EFFECT_SKILLCHAIN, 0);
+
+                // We used Konzen-Ittai + Sengikori. This defaults us to a magic burst bonus state.
+                if ((PDefender->GetLocalVar("Sengikori_SC") == 0) && (PDefender->getMod(Mod::SENGIKORI_DEBUFF) > 0))
+                {
+                    PDefender->SetLocalVar("Sengikori_SC", 3);
+                }
             }
             // Previous effect exists
             else if (PSCEffect && PSCEffect->GetStartTime() + 3s < server_clock::now())
@@ -3928,6 +3944,12 @@ namespace battleutils
                     resonanceProperties.emplace_back((SKILLCHAIN_ELEMENT)((properties >> 4) & 0b1111));
                     resonanceProperties.emplace_back((SKILLCHAIN_ELEMENT)((properties >> 8) & 0b1111));
                     skillchain = FormSkillchain(resonanceProperties, skillProperties);
+
+                    // If "Sengikori_SC" was set to 1 above (Weaponskill used without Sengikori), set "Sengikori_SC" to 3 to enable MB bonus.
+                    if (PDefender->GetLocalVar("Sengikori_SC") == 1 && (PDefender->getMod(Mod::SENGIKORI_DEBUFF) > 0))
+                    {
+                        PDefender->SetLocalVar("Sengikori_SC", 3);
+                    }
                 }
                 else
                 {
@@ -4187,10 +4209,11 @@ namespace battleutils
             damage = (int32)(damage * (1.f + PChar->PMeritPoints->GetMeritValue(MERIT_INNIN_EFFECT, PChar) / 100.f));
         }
 
-        if (PDefender->getMod(Mod::SENGIKORI_DEBUFF) > 0 && chainCount == 1) // Only applies to initial opening SC
+        if (PDefender->getMod(Mod::SENGIKORI_DEBUFF) > 0 && PDefender->GetLocalVar("Sengikori_SC") == 2) // Only applies to initial opening SC
         {
             damage = (int32)(damage * (1.f + PDefender->getMod(Mod::SENGIKORI_DEBUFF) / 100.f));
             PDefender->setModifier(Mod::SENGIKORI_DEBUFF, 0); // Consume the effect
+            PDefender->SetLocalVar("Sengikori_SC", 0);
         }
 
         damage = damage * (10000 - resistance) / 10000;
@@ -5276,8 +5299,8 @@ namespace battleutils
             damage = -damage;
         }
         // Handle damage nullification.
-        else if (xirand::GetRandomNumber(100) < PDefender->getMod(Mod::NULL_DAMAGE) || // All damage.
-            xirand::GetRandomNumber(100) < PDefender->getMod(Mod::NULL_BREATH_DAMAGE)) // Breath damage.
+        else if (xirand::GetRandomNumber(100) < PDefender->getMod(Mod::NULL_DAMAGE) ||      // All damage.
+                 xirand::GetRandomNumber(100) < PDefender->getMod(Mod::NULL_BREATH_DAMAGE)) // Breath damage.
         {
             damage = 0;
         }
@@ -5297,7 +5320,7 @@ namespace battleutils
     int32 MagicDmgTaken(CBattleEntity* PDefender, int32 damage, ELEMENT element)
     {
         Mod absorb[8]    = { Mod::FIRE_ABSORB, Mod::ICE_ABSORB, Mod::WIND_ABSORB, Mod::EARTH_ABSORB,
-                             Mod::LTNG_ABSORB, Mod::WATER_ABSORB, Mod::LIGHT_ABSORB, Mod::DARK_ABSORB };
+                          Mod::LTNG_ABSORB, Mod::WATER_ABSORB, Mod::LIGHT_ABSORB, Mod::DARK_ABSORB };
         Mod nullarray[8] = { Mod::FIRE_NULL, Mod::ICE_NULL, Mod::WIND_NULL, Mod::EARTH_NULL, Mod::LTNG_NULL, Mod::WATER_NULL, Mod::LIGHT_NULL, Mod::DARK_NULL };
 
         DAMAGE_TYPE damageType = (DAMAGE_TYPE)((uint8)DAMAGE_TYPE::ELEMENTAL + (uint8)element);

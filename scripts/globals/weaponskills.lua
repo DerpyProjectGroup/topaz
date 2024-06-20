@@ -1327,8 +1327,9 @@ xi.weaponskills.takeWeaponskillDamage = function(defender, attacker, wsParams, p
 
     if attacker:hasStatusEffect(xi.effect.SENGIKORI) then
         if finaldmg > 0 then
-            defender:setMod(xi.mod.SENGIKORI_DEBUFF, 25) -- Apply Debuff to target.
-            attacker:delStatusEffect(xi.effect.SENGIKORI)
+            defender:setMod(xi.mod.SENGIKORI_DEBUFF, 25)  -- Apply Debuff to target.
+            attacker:setLocalVar('Sengikori_SC', 0)       -- Set Initial Variable
+            attacker:delStatusEffect(xi.effect.SENGIKORI) -- Consume status effect.
         end
     end
 

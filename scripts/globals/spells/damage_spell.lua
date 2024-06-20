@@ -512,11 +512,12 @@ xi.spells.damage.calculateIfMagicBurst = function(target, spellElement)
         magicBurst = 1.25 + (0.1 * skillchainCount) + rankBonus
 
         if
-            skillchainCount > 1 and
+            target:getLocalVar('Sengikori_SC') == 3 and
             target:getMod(xi.mod.SENGIKORI_DEBUFF) > 0
         then
             magicBurst = magicBurst + (target:getMod(xi.mod.SENGIKORI_DEBUFF) / 100)
             target:setMod(xi.mod.SENGIKORI_DEBUFF, 0) -- Consume the "Effect" upon magic burst.
+            target:setLocalVar('Sengikori_SC', 0)
         end
     end
 
