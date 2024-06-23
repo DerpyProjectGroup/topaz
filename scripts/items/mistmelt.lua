@@ -8,7 +8,7 @@
 -----------------------------------
 local itemObject = {}
 
-itemObject.onItemCheck = function(target, player)
+itemObject.onItemCheck = function(target, item, param, caster)
     local result = 0
 
     if target:getName() ~= 'Ouryu' then

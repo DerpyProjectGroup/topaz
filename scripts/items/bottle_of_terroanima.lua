@@ -5,7 +5,7 @@
 -----------------------------------
 local itemObject = {}
 
-itemObject.onItemCheck = function(target, player)
+itemObject.onItemCheck = function(target, item, param, caster)
     local result = 0
     if target:getEcosystem() ~= xi.ecosystem.EMPTY then
         result = xi.msg.basic.ITEM_UNABLE_TO_USE
