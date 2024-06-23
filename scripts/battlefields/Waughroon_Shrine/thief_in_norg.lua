@@ -22,7 +22,6 @@ local content = BattlefieldQuest:new({
     requiredValue = 6,
 })
 
-
 content.groups =
 {
     {

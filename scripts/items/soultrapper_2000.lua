@@ -4,7 +4,7 @@
 local itemObject = {}
 
 itemObject.onItemCheck = function(target, item, param, caster)
-    return xi.znm.soultrapper.onItemCheck(target, user)
+    return xi.znm.soultrapper.onItemCheck(target, item, param, caster)
 end
 
 itemObject.onItemUse = function(target, user, item)
