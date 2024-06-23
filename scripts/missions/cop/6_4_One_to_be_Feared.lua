@@ -49,6 +49,15 @@ mission.sections =
 
         [xi.zone.SEALIONS_DEN] =
         {
+            ['_0w0'] =
+            {
+                onTrigger = function(player, npc)
+                    if mission:getVar(player, 'Status') == 2 then
+                        return mission:progressEvent(31)
+                    end
+                end,
+            },
+
             ['Sueleen'] =
             {
                 onTrigger = function(player, npc)
@@ -84,6 +93,10 @@ mission.sections =
             {
                 [15] = function(player, csid, option, npc)
                     mission:setVar(player, 'Status', 2)
+                end,
+
+                [31] = function(player, csid, option, npc)
+                    mission:setVar(player, 'Status', 3)
                 end,
 
                 [33] = function(player, csid, option, npc)
