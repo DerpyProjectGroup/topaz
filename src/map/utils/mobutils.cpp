@@ -736,6 +736,11 @@ namespace mobutils
             PMob->addModifier(Mod::PARRY, GetBaseSkill(PMob, PMob->getMobMod(MOBMOD_CAN_PARRY)));
         }
 
+        if (PMob->getMobMod(MOBMOD_CAN_SHIELD_BLOCK) > 0)
+        {
+            PMob->addModifier(Mod::SHIELD, GetBaseSkill(PMob, PMob->getMobMod(MOBMOD_CAN_SHIELD_BLOCK)));
+        }
+
         // This is now handled in sql mob_pool_mods
         //else if (PMob->isInDynamis()) // Mobs in Dyna Can Parry
         //{
