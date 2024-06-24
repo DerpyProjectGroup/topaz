@@ -16097,6 +16097,29 @@ void CLuaBaseEntity::setMobLevel(uint8 level)
 }
 
 /************************************************************************
+ *  Function: setMobSLevel()
+ *  Purpose : Updates the monsters level and recalculates stats
+ *  Example : mob:setMobLevel(125)
+ *  Notes   : CalculateStats will refill mobs hp/mp as well
+ ************************************************************************/
+
+void CLuaBaseEntity::setMobSLevel(uint8 level)
+{
+    if (m_PBaseEntity->objtype != TYPE_MOB)
+    {
+        ShowWarning("Attempting to set mob level for invalid entity type (%s, %d).", m_PBaseEntity->getName(), level);
+        return;
+    }
+
+    if (auto* PMob = dynamic_cast<CMobEntity*>(m_PBaseEntity))
+    {
+        PMob->SetSLevel(level);
+        mobutils::CalculateMobStats(PMob);
+        mobutils::GetAvailableSpells(PMob);
+    }
+}
+
+/************************************************************************
  *  Function: getEcosystem()
  *  Purpose : Returns integer value of system associated with an Entity
  *  Example : if pet:getEcosystem() ~= xi.ecosystem.AVATAR then -- Not an avatar
@@ -19135,6 +19158,7 @@ void CLuaBaseEntity::Register()
 
     // Mob Entity-Specific
     SOL_REGISTER("setMobLevel", CLuaBaseEntity::setMobLevel);
+    SOL_REGISTER("setMobSLevel", CLuaBaseEntity::setMobSLevel);
     SOL_REGISTER("getEcosystem", CLuaBaseEntity::getEcosystem);
     SOL_REGISTER("getSuperFamily", CLuaBaseEntity::getSuperFamily);
     SOL_REGISTER("getFamily", CLuaBaseEntity::getFamily);

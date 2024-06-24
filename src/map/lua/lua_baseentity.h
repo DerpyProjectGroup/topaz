@@ -813,6 +813,7 @@ public:
 
     // Mob Entity-Specific
     void   setMobLevel(uint8 level);
+    void   setMobSLevel(uint8 level);
     uint8  getEcosystem();
     uint16 getSuperFamily();
     uint16 getFamily();
