@@ -267,12 +267,16 @@ void CBattlefield::ApplyLevelRestrictions(CCharEntity* PChar) const
     {
         cap += settings::get<int8>("map.BATTLE_CAP_TWEAK"); // We wait till here to do this because we don't want to modify uncapped battles.
 
+
         // Check if it's a mission and if config setting applies.
         if (!settings::get<bool>("map.LV_CAP_MISSION_BCNM") && m_isMission == 1)
         {
             cap = settings::get<uint8>("main.MAX_LEVEL"); // Cap to server max level to strip buffs - this is the retail diff between uncapped and capped to max lv.
         }
-
+        if (PChar->GetLocalVar("Cactuar_BCNM_Party_Level") > 0)
+        {
+            cap = PChar->GetLocalVar("Cactuar_BCNM_Party_Level");
+        }
         PChar->StatusEffectContainer->DelStatusEffectsByFlag(EFFECTFLAG_DISPELABLE, true);
         PChar->StatusEffectContainer->AddStatusEffect(new CStatusEffect(EFFECT_LEVEL_RESTRICTION, EFFECT_LEVEL_RESTRICTION, cap, 0, 0));
     }
@@ -318,10 +322,11 @@ bool CBattlefield::InsertEntity(CBaseEntity* PEntity, bool enter, BATTLEFIELDMOB
             CCharEntity* PChar = static_cast<CCharEntity*>(PEntity);
             if (enter)
             {
-                ApplyLevelRestrictions(PChar);
+                //ApplyLevelRestrictions(PChar);
                 m_EnteredPlayers.emplace(PEntity->id);
                 PChar->ClearTrusts();
                 luautils::OnBattlefieldEnter(PChar, this);
+                ApplyLevelRestrictions(PChar);
 
                 if (m_showTimer)
                 {

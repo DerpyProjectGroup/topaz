@@ -460,6 +460,7 @@ function Battlefield:new(data)
     obj.title            = data.title
     obj.grantXP          = data.grantXP
     obj.levelCap         = data.levelCap or 0
+    obj.originalLevelCap = data.originalLevelCap or 0
     obj.allowSubjob      = (data.allowSubjob == nil or data.allowSubjob) or false
     obj.allowTrusts      = data.allowTrusts and data.allowTrusts or false
     obj.hasWipeGrace     = (data.hasWipeGrace == nil or data.hasWipeGrace) or false
@@ -472,6 +473,7 @@ function Battlefield:new(data)
     obj.lossEventParams  = data.lossEventParams or {}
     obj.armouryCrates    = data.armouryCrates or false
     obj.experimental     = data.experimental or false
+    obj.levelScaled      = data.levelScaled or false
     obj.allowedAreas     = data.allowedAreas
 
     obj.sections = obj.sections or { { [obj.zoneId] = {} } }
@@ -938,6 +940,10 @@ function Battlefield:onEventFinishWin(player, csid, option, npc)
         player:addGil(self.grantGil)
         player:messageSpecial(ID.text.GIL_OBTAINED, self.grantGil)
     end
+
+    player:setLocalVar('Cactuar_BCNM_Party_Level', 0)
+    player:setLocalVar('Cactuar_BCNM_Level', 0)
+    self:setLocalVar(player, 'CS', 0)
 end
 
 function Battlefield.onExitTrigger(player, npc)
@@ -955,11 +961,17 @@ function Battlefield:onExitEventUpdate(player, csid, option, npc)
 end
 
 function Battlefield:onEventFinishLeave(player, csid, option, npc)
+    player:setLocalVar('Cactuar_BCNM_Party_Level', 0)
+    player:setLocalVar('Cactuar_BCNM_Level', 0)
+    self:setLocalVar(player, 'CS', 0)
     player:leaveBattlefield(1)
 end
 
 function Battlefield:onEventFinishExit(player, csid, option, npc)
     if option == 4 and player:getBattlefield() then
+        player:setLocalVar('Cactuar_BCNM_Party_Level', 0)
+        player:setLocalVar('Cactuar_BCNM_Level', 0)
+        self:setLocalVar(player, 'CS', 0)
         player:leaveBattlefield(1)
     end
 end
@@ -1145,6 +1157,67 @@ function Battlefield:onBattlefieldEnter(player, battlefield)
 
     if self.experimental then
         player:printToPlayer('This battlefield has been marked as experimental.  Enemy levels have increased!', xi.msg.channel.NS_SHOUT)
+    end
+
+    if self.levelScaled then
+        local battlefieldMobs    = battlefield:getMobs(true, true)
+        local highestPlayerLevel = self.originalLevelCap
+        local originalLevelCap   = self.originalLevelCap
+        local levelIncrease      = 0
+        local registrantsParty   = player:getParty()
+        local BCNM_Level_Sync    = player:getLocalVar('Cactuar_BCNM_Level')
+        player:printToPlayer('This battlefield has been marked as level scaled.  Enemy levels have increased!', xi.msg.channel.NS_SHOUT)
+        if player:getID() == initiatorId then -- This block only executes on the player who initializes the battlefield.
+            if                                           -- Handle mob scaling if players have decided to scale down to another member's instance with a command.
+                BCNM_Level_Sync > 0 and                  -- We store a players command as a localVar. If above 0 then proceed, else exit.
+                BCNM_Level_Sync > self.originalLevelCap  -- If the value is greater than the original level cap, then proceed else exit. This is so we don't set below the minimum level.
+            then
+                battlefield:setLocalVar('LevelCapAdjustment', BCNM_Level_Sync) -- We set the battlefield localVar with the value the initializer input. This will be distributed to the party later.
+                player:setLocalVar('Cactuar_BCNM_Party_Level', battlefield:getLocalVar('LevelCapAdjustment'))
+
+                if battlefield:getLocalVar('LevelCapAdjustment') > originalLevelCap then             -- This is the difference between the new value and the original BCNM level cap. Used for mob scaling.
+                    levelIncrease = battlefield:getLocalVar('LevelCapAdjustment') - originalLevelCap -- Gets level scaling for mobs. Will never go below original BCNM cap level. Scale range original level cap <-> player max level. 
+                end
+
+                for _, mobObj in ipairs(battlefieldMobs) do -- Adjust the mob levels
+                    local originalLevel = mobObj:getMainLvl()
+                    mobObj:setMobLevel(originalLevel + levelIncrease)
+                    mobObj:setMobSLevel(originalLevel + levelIncrease)
+                end
+            elseif BCNM_Level_Sync == 0 then   
+                -- Iterate through each member in the party to find the highest level
+                for _, member in ipairs(registrantsParty) do
+                    local memberLevel = member:getMainLvl()
+                    if memberLevel > highestPlayerLevel then
+                        highestPlayerLevel = memberLevel
+                    end
+                end
+                -- Output the highest level found
+                -- print("The highest player level in the party is:", highestPlayerLevel)
+        
+                if highestPlayerLevel > originalLevelCap then
+                    levelIncrease = highestPlayerLevel - originalLevelCap
+                end
+        
+                for _, mobObj in ipairs(battlefieldMobs) do
+                    local originalLevel = mobObj:getMainLvl()
+                    mobObj:setMobLevel(originalLevel + levelIncrease)
+                    mobObj:setMobSLevel(originalLevel + levelIncrease)
+                end
+            end
+        end
+
+        -- Checks for non initiator party members
+        if battlefield:getLocalVar('LevelCapAdjustment') > 0 then
+            for _, partyPlayer in ipairs(registrantsParty) do
+                if
+                    partyPlayer:getZoneID() == player:getZoneID() and
+                    partyPlayer:hasStatusEffect(xi.effect.BATTLEFIELD)
+                then
+                    player:setLocalVar('Cactuar_BCNM_Party_Level', battlefield:getLocalVar('LevelCapAdjustment'))
+                end
+            end
+        end
     end
 
     self:battlefieldEntry(player, battlefield)
