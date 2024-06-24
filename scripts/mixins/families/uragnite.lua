@@ -59,7 +59,7 @@ local function shellTimer(mob)
     local timeToShell = mob:getLocalVar('[uragnite]shellTimer')
 
     -- mob:isMobType check due to Shell We Dance ENM. Those uragnites do not enter their shell except through damage
-    if os.time() > timeToShell and mob:getAnimationSub() == 0 and not mob:isFollowingPath() and not mob:isMobType(xi.mobskills.mobType.BATTLEFIELD) then
+    if os.time() > timeToShell and mob:getAnimationSub() == 0 and not mob:isFollowingPath() and not mob:isMobType(xi.mobType.BATTLEFIELD) then
         enterShell(mob)
 
         local timeInShell = math.random(mob:getLocalVar('[uragnite]timeInShellMin'), mob:getLocalVar('[uragnite]timeInShellMax'))

@@ -25,11 +25,14 @@ local content = Battlefield:new({
 
     grantXP = 2000,
 
-    experimental = true,
+    -- experimental = true,
 })
 
 -- TODO: Needs additional cleanup and mixin work (previous comment).  Examine
 -- mob spawn handling and move hardcoded IDs to this script or the mob and read as necessary.
+
+content:addEssentialMobs({ 'Nepionic_Bladmall', 'Nepionic_Parata' })
+content.groups[1].spawned = false
 
 content:addEssentialMobs({ 'Parata', 'Bladmall' })
 

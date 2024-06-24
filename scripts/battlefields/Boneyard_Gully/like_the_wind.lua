@@ -17,7 +17,7 @@ local content = Battlefield:new({
 
     grantXP = 2000,
 
-    experimental = true,
+    -- experimental = true,
 })
 
 -- TODO: Race Runner has a constant movement mechanic and different hate rules that need

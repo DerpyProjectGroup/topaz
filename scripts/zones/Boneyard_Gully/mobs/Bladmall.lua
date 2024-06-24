@@ -9,14 +9,19 @@ mixins = {require('scripts/mixins/families/uragnite')}
 local entity = {}
 
 entity.onMobSpawn = function(mob)
+    mob:setMobMod(xi.mobMod.HP_STANDBACK, 1)
+    mob:setMod(xi.mod.MDEF, 50)
+    mob:addImmunity(xi.immunity.BIND)
+    mob:addImmunity(xi.immunity.SLEEP)
+    mob:addImmunity(xi.immunity.SILENCE)
+    mob:addImmunity(xi.immunity.GRAVITY)
 end
 
 entity.onMobFight = function(mob, target)
-    local hpp         = mob:getHPP()
-    local battlefield = mob:getBattlefield()
-    local bfID        = battlefield:getArea()
-    local adds        = mob:getLocalVar('adds')
-    local petID       = 0
+    local hpp   = mob:getHPP()
+    local bfID  = mob:getBattlefield():getArea()
+    local adds  = mob:getLocalVar('adds')
+    local petID = 0
 
     -- Pet #1 spawn at 95% hp or less
     if hpp <= 95 and adds == 0 then
@@ -39,7 +44,6 @@ entity.onMobFight = function(mob, target)
     -- If we have spawned a pet
     if petID ~= 0 then
         local pet = SpawnMob(petID)
-        battlefield:insertEntity(pet:getTargID(), false, true)
         pet:updateEnmity(target)
 
         local pos = mob:getPos()
@@ -49,7 +53,8 @@ end
 
 entity.onMobDeath = function(mob, player, optParams)
     -- Adds die with parent
-    if optParams.isKiller then
+    if mob:getLocalVar('despawnedAdds') == 0 then
+        mob:setLocalVar('despawnedAdds', 1)
         local bfID = mob:getBattlefield():getArea()
         for _, petId in ipairs(ID.shellWeDance[bfID].BLADMALL_PET_IDS) do
             local pet = GetMobByID(petId)
