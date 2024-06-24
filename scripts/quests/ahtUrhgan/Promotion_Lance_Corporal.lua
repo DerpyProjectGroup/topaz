@@ -137,7 +137,7 @@ quest.sections =
                         player:hasKeyItem(xi.ki.EMPTY_TEST_TUBE_5) and
                         not player:hasKeyItem(xi.ki.TEST_TUBE_5)
                     then
-                        return quest:progressEvent(5)
+                        return quest:progressEvent(10)
                     end
                 end,
             },
