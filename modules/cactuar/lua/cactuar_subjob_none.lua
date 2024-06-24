@@ -54,7 +54,7 @@ page1 =
                 playerArg:printToPlayer('MogMog: You can disable your subjob but in exchange, you will get increased base attributes. Worry not kupo, you can always change it back in your mog house.', xi.msg.channel.NS_SAY)
                 npc:lookAt(player:getPos())
                 npc:timer(10000, function(npcArg)
-                    npcArg:setRotation(m.zone[zoneId].npc.r)
+                    npcArg:setRotation(114)
                 end)
                 npc:timer(1500, function(npcArg)
                     playerArg:printToPlayer('MogMog: Aside from speaking to me, you may now also use the "!sjlock" command to channel your inner strength with one job.', xi.msg.channel.NS_SAY)
