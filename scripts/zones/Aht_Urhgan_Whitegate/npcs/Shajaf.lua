@@ -4,11 +4,33 @@
 -----------------------------------
 local entity = {}
 
+local wildcatBadges = {
+    xi.ki.PSC_WILDCAT_BADGE,
+    xi.ki.PFC_WILDCAT_BADGE,
+    xi.ki.SP_WILDCAT_BADGE,
+    xi.ki.LC_WILDCAT_BADGE,
+    xi.ki.C_WILDCAT_BADGE,
+    xi.ki.S_WILDCAT_BADGE,
+    xi.ki.SM_WILDCAT_BADGE,
+    xi.ki.CS_WILDCAT_BADGE,
+    xi.ki.SL_WILDCAT_BADGE,
+    xi.ki.FL_WILDCAT_BADGE,
+    xi.ki.CAPTAIN_WILDCAT_BADGE
+}
+
 entity.onTrade = function(player, npc, trade)
 end
 
 entity.onTrigger = function(player, npc)
     local imperialStanding = player:getCurrency('imperial_standing')
+
+    local hasBadge = false
+    for _, badge in ipairs(wildcatBadges) do
+        if player:hasKeyItem(badge) then
+            hasBadge = true
+            break
+        end
+    end
 
     -- ISNM accepted but not completed. TODO: Check if KIs expire aswell.
     if
@@ -22,7 +44,7 @@ entity.onTrigger = function(player, npc)
         player:startEvent(163)
 
     -- Can purchuase KI.
-    elseif player:hasKeyItem(xi.ki.PSC_WILDCAT_BADGE) then
+    elseif hasBadge then
         player:startEvent(160, imperialStanding, 1)
 
     -- Default.
