@@ -1,27 +1,23 @@
 -----------------------------------
--- Area: Carpenters' Landing
---  NPC: Cofisephe
--- Type: Phanauet Channel Barge Ticket Vendor
--- !pos 210.327 -3.885 -532.511 2
+-- Area: Phanauet Channel
+--  NPC: Eunirange
+-- !pos 5.945 -3.75 13.612 1
 -----------------------------------
-local ID = zones[xi.zone.CARPENTERS_LANDING]
-require('scripts/globals/barge')
+local ID = zones[xi.zone.PHANAUET_CHANNEL]
 -----------------------------------
 local entity = {}
-local eventId = 31
 
 entity.onTrade = function(player, npc, trade)
 end
 
 entity.onTrigger = function(player, npc)
-    xi.barge.ticketshopOnTrigger(player, eventId)
+    player:showText(npc, ID.text.ARE_WE_THERE_YET)
 end
 
 entity.onEventUpdate = function(player, csid, option, npc)
 end
 
 entity.onEventFinish = function(player, csid, option, npc)
-    xi.barge.ticketshopOnEventFinish(player, csid, option)
 end
 
 return entity
