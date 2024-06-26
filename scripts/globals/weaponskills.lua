@@ -357,7 +357,7 @@ local function getRangedHitRate(attacker, target, bonus)
 
     -- Applying hitrate caps
     hitrate = utils.clamp(hitrate, 0.2, 0.98)
-    print(hitrate)
+    --print(hitrate)
     return hitrate
 end
 
@@ -1423,7 +1423,7 @@ xi.weaponskills.getHitRate = function(attacker, target, bonus)
 
     -- Applying hitrate caps
     hitrate = utils.clamp(hitrate, 0.2, 0.98)
-    print(hitrate)
+    -- print(hitrate)
     return hitrate
 end
 
