@@ -14,7 +14,7 @@ itemObject.onItemCheck = function(target, item, param, caster)
 
     if (target:getID() >= ID.mob.SHIKAREE_HEADWIND_START or target:getID() <= ID.mob.SHIKAREE_HEADWIND_END) then
         result = 0
-    elseif target:checkDistance(player) > 10 then
+    elseif target:checkDistance(caster) > 10 then
         result = xi.msg.basic.TOO_FAR_AWAY
     end
 

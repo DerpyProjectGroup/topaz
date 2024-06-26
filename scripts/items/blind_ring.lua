@@ -11,7 +11,7 @@ local itemObject = {}
 
 itemObject.onItemCheck = function(target, item, param, caster)
     local result = 0
-    if (target:checkDistance(player) > 10) then
+    if (target:checkDistance(caster) > 10) then
         result = xi.msg.basic.TOO_FAR_AWAY
     end
     return result
