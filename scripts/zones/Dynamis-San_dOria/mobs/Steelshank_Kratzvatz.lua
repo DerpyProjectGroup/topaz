@@ -14,12 +14,12 @@ entity.onMobInitialize = function(mob)
     mob:setMobMod(xi.mobMod.HP_SCALE, 1500)
 end
 
-entity.onMobInitialize = function(mob)
+entity.onMobSpawn = function(mob)
     xi.mix.jobSpecial.config(mob, {
         between = 75,
         specials =
         {
-            { id = xi.jsa.INVINCIBLE, cooldown = 0 , hpp = 100 },
+            { id = xi.jsa.INVINCIBLE, cooldown = 0, hpp = 100 },
             { id = xi.jsa.FAMILIAR,
               hpp = 100,
               cooldown = 0,

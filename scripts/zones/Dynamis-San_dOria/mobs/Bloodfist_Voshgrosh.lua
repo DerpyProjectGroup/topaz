@@ -11,6 +11,10 @@ mixins =
 local entity = {}
 
 entity.onMobInitialize = function(mob)
+    mob:setMobMod(xi.mobMod.HP_SCALE, 1000)
+end
+
+entity.onMobSpawn = function(mob)
     xi.mix.jobSpecial.config(mob, {
         between = 75,
         specials =
@@ -19,7 +23,6 @@ entity.onMobInitialize = function(mob)
             { id = xi.jsa.BLOOD_WEAPON, cooldown = 0, hpp = 100 },
         },
     })
-    mob:setMobMod(xi.mobMod.HP_SCALE, 1000)
 end
 
 entity.onMobFight = function(mob, target)
