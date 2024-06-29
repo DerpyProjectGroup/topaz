@@ -810,8 +810,30 @@ local function getExtensions(player)
 end
 
 xi.dynamis.procMonster = function(mob, player)
+    local twoHourAbility =
+    {
+        xi.effect.MIGHTY_STRIKES,
+        xi.effect.HUNDRED_FISTS,
+        xi.effect.MANAFONT,
+        xi.effect.CHAINSPELL,
+        xi.effect.PERFECT_DODGE,
+        xi.effect.INVINCIBLE,
+        xi.effect.BLOOD_WEAPON,
+        xi.effect.SOUL_VOICE,
+    }
+
+    local twoHourActive = false
+    for _, ability in ipairs(twoHourAbility) do
+        if mob:hasStatusEffect(ability) then
+            twoHourActive = true
+            break
+        end
+    end
+
     if player and player:getAllegiance() == 1 then
-        local master = player:getMaster()
+        local master         = player:getMaster()
+        local specialAbilities = mob:getLocalVar('[jobSpecial]numAbilities')
+
         if master then
             player = master
         end
@@ -826,10 +848,35 @@ xi.dynamis.procMonster = function(mob, player)
                 mob:setLocalVar('dynamis_proc', 3)
                 mob:addStatusEffect(xi.effect.TERROR, 0, 0, 30)
                 mob:weaknessTrigger(2)
+                if
+                    mob:isMobType(xi.mobType.NOTORIOUS) and
+                    mob:getLocalVar('[jobSpecial]ability_2') ~= 0
+                then
+                    local chance = 50
+                    if math.random(0, 100) <= chance then
+                        mob:setLocalVar('[jobSpecial]ability_2', 0)
+                    else
+                        mob:setLocalVar('[jobSpecial]ability_1', 0)
+                    end
+                else
+                    mob:setLocalVar('[jobSpecial]chance', 0)
+                    mob:setLocalVar('[jobSpecial]numAbilities', 0)
+                end
+
+                if twoHourActive then
+                    for _, ability in ipairs(twoHourAbility) do
+                        mob:delStatusEffect(ability)
+                    end
+                end
             elseif extensions == 4 then
                 mob:setLocalVar('dynamis_proc', 2)
                 mob:addStatusEffect(xi.effect.TERROR, 0, 0, 30)
                 mob:weaknessTrigger(1)
+                if twoHourActive then
+                    for _, ability in ipairs(twoHourAbility) do
+                        mob:delStatusEffect(ability)
+                    end
+                end
             elseif extensions == 3 then
                 mob:setLocalVar('dynamis_proc', 1)
                 mob:addStatusEffect(xi.effect.TERROR, 0, 0, 30)
