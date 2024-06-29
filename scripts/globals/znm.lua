@@ -377,36 +377,36 @@ xi.znm.soultrapper.getZeniValue = function(target, user, item)
 
     local zeni = 0
     -- no claim  = little to no zeni
-    if not target:isPet() or hpp == 100 then
+    if target:isPet() or hpp == 100 then
         zeni = math.random(1,5)
     else
         -- base for small size mobs
-        zeni = 16 
+        zeni = 30
         -- large model mobs get a bonus, possibly up to 50 but based on working backwards from known subjects (Genbu, Aw'euvhi, etc it appears to be 2.5x)
         if (modelSize > 0) then
-            zeni = zeni * 2.5
+            zeni = zeni * 3
         end
 
         -- Level Component
         if (targetLevel > 75) then
-            zeni = zeni + (targetLevel - 75)
+            zeni = zeni + ((targetLevel - 75) * 3)
         end
 
         -- NM/Rarity Component -- appears to be very substantial, outweighing even SubjectsOfInterest partial matches
         if isNM then
             local nmBonus = 0
             if (modelSize > 0) then
-                nmBonus = 30
+                nmBonus = 50
             else
                 -- seems that small NMs get a bit bigger bonus, perhaps to offset the low base to begin with
-                nmBonus = 40
+                nmBonus = 60
             end
             zeni = zeni + nmBonus
 
             if isBeingIrresponsible then
                 -- what are you doing taking pictures? you are in a battle?!
                 -- proto-omega, salvalge bosses, etc all give more points than would be expected
-                zeni = zeni + 20
+                zeni = zeni + 35
             end
         end
 
@@ -425,8 +425,10 @@ xi.znm.soultrapper.getZeniValue = function(target, user, item)
             zeni = zeni * 0.25
         elseif (hpp > 25) then
             zeni = zeni * 0.50
-        elseif (hpp > 5) then
+        elseif (hpp > 15) then
             zeni = zeni * 0.75
+        elseif (hpp > 5) then
+            zeni = zeni * 1.00
         end
 
         -- Bonus for HS Soul Plate
