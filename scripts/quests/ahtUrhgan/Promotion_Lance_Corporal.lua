@@ -201,7 +201,7 @@ quest.sections =
                     if
                         quest:getVar(player, 'Stage') <= VanadielUniqueDay() and
                         quest:getVar(player, 'Prog') == 3 and
-                        quest:getMustZone(player)
+                        not quest:getMustZone(player)
                     then
                         return quest:progressEvent(5031, { text_table = 0 })
                     end
@@ -216,7 +216,7 @@ quest.sections =
                     if score == 1 then
                         quest.reward.item = xi.item.IMPERIAL_GOLD_PIECE
                     elseif score == 2 then
-                        quest.reward.item = { xi.item.IMPERIAL_GOLD_PIECE, 2 }
+                        quest.reward.item = { xi.item.IMPERIAL_GOLD_PIECE, xi.item.IMPERIAL_GOLD_PIECE }
                     end
 
                     if quest:complete(player) then
