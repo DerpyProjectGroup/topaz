@@ -16,6 +16,13 @@ local krtID = zones[xi.zone.KING_RANPERRES_TOMB]
 
 local mission = Mission:new(xi.mission.log_id.SANDORIA, xi.mission.id.sandoria.RANPERRES_FINAL_REST)
 
+local ranparresRestTable =
+{
+    krtID.mob.CORRUPTED_YORGOS,
+    krtID.mob.CORRUPTED_SOFFEIL,
+    krtID.mob.CORRUPTED_ULBRIG,
+}
+
 mission.reward =
 {
     rank = 7,
@@ -118,7 +125,7 @@ mission.sections =
 
                     if
                         missionStatus == 1 and
-                        npcUtil.popFromQM(player, npc, krtID.mob.RANPERRES_REST_MOBS, { claim = true, hide = 0, })
+                        npcUtil.popFromQM(player, npc, ranparresRestTable, { hide = 0, })
                     then
                         return mission:messageSpecial(krtID.text.SENSE_SOMETHING_EVIL)
 
