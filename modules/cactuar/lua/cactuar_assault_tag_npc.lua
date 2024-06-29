@@ -1,5 +1,5 @@
 -----------------------------------
--- Adds Dynamis currency exchange/bank NPCs in Southern Sandora, Bastok Mines, Windurst Woods.
+-- Adds Assault ID Tag Purchase NPC
 -----------------------------------
 require('modules/module_utils')
 -----------------------------------
@@ -48,7 +48,6 @@ menu =
     options = {},
 }
 
--- Currency Catagory Menu
 page1 =
 {
     {   
@@ -69,7 +68,6 @@ page1 =
     },
 }
 
- -- Sandoria Currency Denominations
 page2 =
 {
     {
@@ -86,6 +84,7 @@ page2 =
                 playerArg:printToPlayer('Singing Owl: You seem to have '.. tagStock ..' Tags stored already. Make sure you use some first before buying more. ', xi.msg.channel.NS_SAY)
             else
                 playerArg:setMerits(currentMerits - cost)
+                playerArg:addCurrency('id_tags', 1)
                 playerArg:printToPlayer('You purchased 1 Imperial Army I.D Tag.', xi.msg.channel.SYSTEM_3)
                 playerArg:printToPlayer('You now have '.. currentMerits ..' Merits.', xi.msg.channel.SYSTEM_3)
                 npc:sendNpcEmote(player, xi.emote.POINT, xi.emoteMode.MOTION)
