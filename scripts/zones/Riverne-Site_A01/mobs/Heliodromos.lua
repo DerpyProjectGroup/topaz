@@ -35,7 +35,7 @@ end
 
 entity.onMobEngage = function(mob, target)
     for i = 1, 3 do
-        GetMobByID(ID.mob.HELIODROMOS[i]):updateEnmity(target)
+        GetMobByID(ID.mob.HELIODROMOS_OFFSET[i]):updateEnmity(target)
     end
 end
 
