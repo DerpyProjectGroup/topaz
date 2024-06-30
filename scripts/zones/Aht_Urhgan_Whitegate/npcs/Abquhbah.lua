@@ -22,7 +22,7 @@ entity.onTrigger = function(player, npc)
     elseif promotion >= 19 then
         rank = 4
     end
-
+    player:printToPlayer('You currently have '.. promotion ..'/25 promotion points.', xi.msg.channel.SYSTEM_3)
     player:startEvent(255, rank)
 end
 
