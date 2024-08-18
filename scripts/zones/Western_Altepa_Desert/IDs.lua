@@ -81,8 +81,8 @@ zones[xi.zone.WESTERN_ALTEPA_DESERT] =
     },
     npc =
     {
-        ALTEPA_GATE       = 17289748,
-        PEDDLESTOX        = 17289773,
+        ALTEPA_GATE       = GetFirstID('_3h0'),
+        PEDDLESTOX        = GetFirstID('Peddlestox'),
         BEASTMEN_TREASURE_OFFSET = GetFirstID('qm3'),
     },
 }
