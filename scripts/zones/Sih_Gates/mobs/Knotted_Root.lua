@@ -1,6 +1,6 @@
 -----------------------------------
--- Area: Ceizak Battlegrounds
--- NPC: Root
+-- Area: Sih Gates
+-- NPC: Knotted Root
 -----------------------------------
 
 local entity = {}

@@ -18,9 +18,54 @@ zones[xi.zone.DHO_GATES] =
     },
     mob =
     {
+        REIVE_MOB_OFFSET = GetFirstID('Knotted_Root'),
     },
     npc =
     {
+        REIVE_COLLISION_OFFSET = GetFirstID('_7k0'),
+    },
+    reive =
+    {
+        [1] =
+        {
+            mob =
+            {
+                17891336,
+                17891337,
+                17891338,
+                17891339,
+            },
+            obstacles =
+            {
+                17891334,
+                17891335,
+            },
+            collision =
+            {
+                17891699,
+                17891700,
+            },
+        },
+        [2] =
+        {
+            mob =
+            {
+                17891342,
+                17891343,
+                17891344,
+                17891345,
+            },
+            obstacles =
+            {
+                17891340,
+                17891341,
+            },
+            collision =
+            {
+                17891701,
+                17891702,
+            },
+        },
     },
 }
 

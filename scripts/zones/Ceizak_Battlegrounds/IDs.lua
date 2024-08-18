@@ -32,9 +32,11 @@ zones[xi.zone.CEIZAK_BATTLEGROUNDS] =
     },
     mob =
     {
+        REIVE_MOB_OFFSET = GetFirstID('Knotted_Root'),
     },
     npc =
     {
+        REIVE_COLLISION_OFFSET = GetFirstID('_790'),
     },
     reive =
     {
@@ -51,14 +53,91 @@ zones[xi.zone.CEIZAK_BATTLEGROUNDS] =
             -- Knotted Vines
             obstacles =
             {
-                --17846624,
+                17846624,
                 17846625,
-                --17846626,
+                17846626,
             },
             collision =
             {
                 17846760,
                 17846761,
+            },
+        },
+        -- Lightfoot Lapinion G-8
+        [2] =
+        {
+            mob =
+            {
+                17846643,
+                17846644,
+                17846645,
+                17846646,
+                17846647,
+                17846648,
+            },
+            -- Knotted Vines
+            obstacles =
+            {
+                17846640,
+                17846641,
+                17846642,
+            },
+            collision =
+            {
+                17846762,
+                17846763,
+            },
+        },
+
+        -- Lavender Twytherim G-9
+        [3] =
+        {
+            mob =
+            {
+                17846634,
+                17846635,
+                17846636,
+                17846637,
+                17846638,
+                17846639,
+            },
+            -- Knotted Vines
+            obstacles =
+            {
+                17846631,
+                17846632,
+                17846633,
+            },
+            collision =
+            {
+                17846764,
+                17846765,
+            },
+        },
+
+        -- Floodplain Spider (F-7)
+        [4] =
+        {
+            mob =
+            {
+                17846652,
+                17846653,
+                17846654,
+                17846655,
+                17846656,
+                17846657,
+            },
+            -- Knotted Roots
+            obstacles =
+            {
+                17846649,
+                17846650,
+                17846651,
+            },
+            collision =
+            {
+                17846766,
+                17846767,
             },
         },
     },

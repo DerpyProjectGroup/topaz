@@ -33,9 +33,222 @@ zones[xi.zone.FORET_DE_HENNETIEL] =
     },
     mob =
     {
+        REIVE_MOB_OFFSET = GetFirstID('Broadleaf_Palm'),
     },
     npc =
     {
+        REIVE_COLLISION_OFFSET = GetFirstID('_7a0'),
+    },
+    reive =
+    {
+        -- Craklaw & Primrose Jagil E-8
+        [1] =
+        {
+            mob =
+            {
+                17850744,
+                17850745,
+                17850746,
+            },
+            -- Broadleaf Palm
+            obstacles =
+            {
+                17850743,
+            },
+            collision =
+            {
+                17850886,
+                17850887,
+            },
+        },
+        -- Cinder Crab & Blood Toad ?-?
+        [2] =
+        {
+            mob =
+            {
+                17850748,
+                17850749,
+                17850750,
+            },
+            -- Broadleaf Palm
+            obstacles =
+            {
+                17850747,
+            },
+            collision =
+            {
+                17850884,
+                17850885,
+            },
+        },
+
+        -- Cinder Crab & Blood Toad ?-?
+        [3] =
+        {
+            mob =
+            {
+                17850752,
+                17850753,
+                17850754,
+            },
+            -- Broadleaf Palm
+            obstacles =
+            {
+                17850751,
+            },
+            collision =
+            {
+                17850882,
+                17850883,
+            },
+        },
+
+        -- Cinder Crab & Blood Toad ?-?
+        [4] =
+        {
+            mob =
+            {
+                17850756,
+                17850757,
+                17850758,
+            },
+            -- Broadleaf Palm
+            obstacles =
+            {
+                17850755,
+            },
+            collision =
+            {
+                17850880,
+                17850881,
+            },
+        },
+
+        -- Cinder Crab & Blood Toad ?-?
+        [5] =
+        {
+            mob =
+            {
+                17850760,
+                17850761,
+                17850762,
+            },
+            -- Broadleaf Palm
+            obstacles =
+            {
+                17850759,
+            },
+            collision =
+            {
+                17850894,
+                17850895,
+            },
+        },
+
+        -- Primrose Jagil & Wetlands Orobon ?-?
+        [6] =
+        {
+            mob =
+            {
+                17850764,
+                17850765,
+                17850766,
+            },
+            -- Broadleaf Palm
+            obstacles =
+            {
+                17850763,
+            },
+            collision =
+            {
+                17850892,
+                17850893,
+            },
+        },
+
+        -- Primrose Jagil & Wetlands Orobon ?-?
+        [7] =
+        {
+            mob =
+            {
+                17850768,
+                17850769,
+                17850770,
+            },
+            -- Broadleaf Palm
+            obstacles =
+            {
+                17850767,
+            },
+            collision =
+            {
+                17850890,
+                17850891,
+            },
+        },
+
+        -- Primrose Jagil & Wetlands Orobon ?-?
+        [8] =
+        {
+            mob =
+            {
+                17850772,
+                17850773,
+                17850774,
+            },
+            -- Broadleaf Palm
+            obstacles =
+            {
+                17850771,
+            },
+            collision =
+            {
+                17850888,
+                17850889,
+            },
+        },
+
+        -- Primrose Jagil & Wetlands Orobon ?-?
+        [9] =
+        {
+            mob =
+            {
+                17850776,
+                17850777,
+                17850778,
+            },
+            -- Broadleaf Palm
+            obstacles =
+            {
+                17850775,
+            },
+            collision =
+            {
+                17850878,
+                17850879,
+            },
+        },
+
+        -- Primrose Jagil & Wetlands Orobon ?-?
+        [10] =
+        {
+            mob =
+            {
+                17850780,
+                17850781,
+                17850782,
+            },
+            -- Broadleaf Palm
+            obstacles =
+            {
+                17850779,
+            },
+            collision =
+            {
+                17850876,
+                17850877,
+            },
+        },
     },
 }
 

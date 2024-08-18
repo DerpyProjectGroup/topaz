@@ -1,6 +1,6 @@
 -----------------------------------
--- Area: Ceizak Battlegrounds
--- NPC: Root
+-- Area: Yorcia Weald
+-- NPC: Gnarled Rampart
 -----------------------------------
 
 local entity = {}

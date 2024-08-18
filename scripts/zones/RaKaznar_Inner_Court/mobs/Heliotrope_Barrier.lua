@@ -1,6 +1,6 @@
 -----------------------------------
--- Area: Ceizak Battlegrounds
--- NPC: Root
+-- Area: RaKaznar Inner Court
+-- NPC: Heliotrope Barrier
 -----------------------------------
 
 local entity = {}

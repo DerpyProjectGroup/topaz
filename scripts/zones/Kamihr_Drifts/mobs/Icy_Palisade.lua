@@ -1,6 +1,6 @@
 -----------------------------------
--- Area: Ceizak Battlegrounds
--- NPC: Root
+-- Area: Kamihr Drifts
+-- NPC: Icy Palisade
 -----------------------------------
 
 local entity = {}

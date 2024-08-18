@@ -1,6 +1,6 @@
 -----------------------------------
--- Area: Ceizak Battlegrounds
--- NPC: Root
+-- Area: Cirdas Caverns
+-- NPC: Knotted Root
 -----------------------------------
 
 local entity = {}

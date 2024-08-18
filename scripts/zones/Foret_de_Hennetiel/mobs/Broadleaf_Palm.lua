@@ -1,6 +1,6 @@
 -----------------------------------
--- Area: Ceizak Battlegrounds
--- NPC: Root
+-- Area: Foret De Hennetiel
+-- NPC: Broadleaf Palm
 -----------------------------------
 
 local entity = {}

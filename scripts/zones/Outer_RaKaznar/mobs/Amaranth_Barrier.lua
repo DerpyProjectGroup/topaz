@@ -1,6 +1,6 @@
 -----------------------------------
--- Area: Ceizak Battlegrounds
--- NPC: Root
+-- Area: Outer RaKaznar
+-- NPC: Amaranth Barrier
 -----------------------------------
 
 local entity = {}

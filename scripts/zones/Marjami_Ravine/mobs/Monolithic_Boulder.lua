@@ -1,6 +1,6 @@
 -----------------------------------
--- Area: Ceizak Battlegrounds
--- NPC: Root
+-- Area: Marjami Ravine
+-- NPC: Monolithic Boulder
 -----------------------------------
 
 local entity = {}

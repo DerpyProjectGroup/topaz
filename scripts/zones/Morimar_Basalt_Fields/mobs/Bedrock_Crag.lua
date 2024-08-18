@@ -1,5 +1,5 @@
 -----------------------------------
--- Area: Ceizak Battlegrounds
+-- Area: Morimar Basalt Fields
 -- NPC: Root
 -----------------------------------
 
