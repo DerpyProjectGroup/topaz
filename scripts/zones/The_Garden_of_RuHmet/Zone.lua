@@ -111,6 +111,7 @@ zoneObject.onConquestUpdate = function(zone, updatetype, influence, owner, ranki
 end
 
 zoneObject.onZoneIn = function(player, prevZone)
+    local cs = -1
     if
         player:getXPos() == 0 and
         player:getYPos() == 0 and
@@ -120,6 +121,7 @@ zoneObject.onZoneIn = function(player, prevZone)
     end
 
     player:setCharVar('Ru-Hmet-TP', 0)
+    return cs
 end
 
 local teleportEventsByArea =
@@ -210,7 +212,6 @@ zoneObject.onEventFinish = function(player, csid, option, npc)
         end
     elseif (csid > 149 and csid < 184) or csid == 102 or csid == 103 or csid == 101 then
         player:setCharVar('Ru-Hmet-TP', 0)
-        player:setPos(420, 0, 398, 68)
     end
 end
 
