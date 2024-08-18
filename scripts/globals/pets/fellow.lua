@@ -592,7 +592,8 @@ entity.onMobSpawn = function(mob)
 end
 
 entity.onTrigger = function(player, mob)
-    local ID = zones[xi.zone.player:getZoneID()]
+    local zoneID        = player:getZoneID()
+    local ID            = zones[xi.zone.zoneID]
     local personality   = xi.fellow_utils.checkPersonality(mob)
     if personality > 5 then
         personality = personality - 1
@@ -615,7 +616,8 @@ end
 
 entity.onMobRoam = function(mob)
     local master        = mob:getMaster()
-    local ID = zones[xi.zone.player:getZoneID()]
+    local zoneID        = master:getZoneID()  -- Assuming master has a method getZoneID()
+    local ID            = zones[xi.zones.zoneID]
     local personality   = xi.fellow_utils.checkPersonality(mob)
     local fellowType    = master:getFellowValue('job')
     local maxTime       = master:getFellowValue('maxTime')
@@ -721,7 +723,8 @@ entity.onMobFight = function(mob, target)
         return
     end
 
-    local ID = zones[xi.zone.player:getZoneID()]
+    local zoneID        = player:getZoneID()
+    local ID            = zones[xi.zone.zoneID]
     local personality   = xi.fellow_utils.checkPersonality(mob)
     local fellowType    = master:getFellowValue('job')
     local maxTime       = master:getFellowValue('maxTime')
@@ -922,7 +925,8 @@ end
 entity.onMobDeath = function(mob)
     local master = GetPlayerByID(mob:getLocalVar('masterID'))
     if master ~= nil then
-        local ID = zones[xi.zone.player:getZoneID()]
+        local zoneID        = master:getZoneID()
+        local ID            = zones[xi.zone.zoneID]
         local bf = master:getBattlefield()
         if bf ~= nil then
             if bf:getID() == 37 then -- mirror mirror

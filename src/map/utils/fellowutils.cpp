@@ -1294,7 +1294,11 @@ namespace fellowutils
 
     void AttackTarget(CBattleEntity* PMaster, CBattleEntity* PTarget)
     {
-        // XI_DEBUG_BREAK_IF(((CCharEntity*)PMaster)->m_PFellow == nullptr);
+        if (((CCharEntity*)PMaster)->m_PFellow == nullptr)
+        {
+            ShowWarning("fellowutils::AttackTarget() - Null fellow passed to function.");
+            return;
+        }
 
         CBattleEntity* PFellow = ((CCharEntity*)PMaster)->m_PFellow;
         if (!PFellow->StatusEffectContainer->HasPreventActionEffect())
@@ -1305,7 +1309,11 @@ namespace fellowutils
 
     void RetreatToMaster(CBattleEntity* PMaster)
     {
-        // XI_DEBUG_BREAK_IF(((CCharEntity*)PMaster)->m_PFellow == nullptr);
+        if (((CCharEntity*)PMaster)->m_PFellow == nullptr)
+        {
+            ShowWarning("fellowutils::AttackTarget() - Null fellow passed to function.");
+            return;
+        }
 
         CBattleEntity* PFellow = ((CCharEntity*)PMaster)->m_PFellow;
         if (!PFellow->StatusEffectContainer->HasPreventActionEffect())

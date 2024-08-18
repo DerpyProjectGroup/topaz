@@ -15337,8 +15337,11 @@ void CLuaBaseEntity::setPetName(uint8 pType, uint16 value, sol::object const& ar
 
 void CLuaBaseEntity::spawnFellow(uint8 fellowId)
 {
-    // XI_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
-    // XI_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
+    if (m_PBaseEntity == nullptr || m_PBaseEntity->objtype != TYPE_PC)
+    {
+        ShowWarning("Invalid Entity (Entity: %s) calling function.", m_PBaseEntity->getName());
+        return;
+    }
 
     fellowutils::SpawnFellow((CCharEntity*)m_PBaseEntity, fellowId, false);
 }
@@ -15352,8 +15355,11 @@ void CLuaBaseEntity::spawnFellow(uint8 fellowId)
 
 void CLuaBaseEntity::despawnFellow()
 {
-    // XI_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
-    // XI_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
+    if (m_PBaseEntity == nullptr || m_PBaseEntity->objtype != TYPE_PC)
+    {
+        ShowWarning("Invalid Entity (Entity: %s) calling function.", m_PBaseEntity->getName());
+        return;
+    }
 
     CCharEntity* PChar   = (CCharEntity*)m_PBaseEntity;
     CBaseEntity* PFellow = (CBaseEntity*)PChar->m_PFellow;
@@ -15373,8 +15379,6 @@ void CLuaBaseEntity::despawnFellow()
 
 std::optional<CLuaBaseEntity> CLuaBaseEntity::getFellow()
 {
-    // XI_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
-    // XI_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
 
     if (((CCharEntity*)m_PBaseEntity)->m_PFellow != nullptr)
     {
@@ -15393,8 +15397,11 @@ std::optional<CLuaBaseEntity> CLuaBaseEntity::getFellow()
 
 void CLuaBaseEntity::triggerFellowChat(uint8 chatType)
 {
-    // XI_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
-    // XI_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
+    if (m_PBaseEntity == nullptr || m_PBaseEntity->objtype != TYPE_PC)
+    {
+        ShowWarning("Invalid Entity (Entity: %s) calling function.", m_PBaseEntity->getName());
+        return;
+    }
 
     fellowutils::TriggerFellowChat(static_cast<CCharEntity*>(m_PBaseEntity), chatType);
 }
@@ -15408,8 +15415,11 @@ void CLuaBaseEntity::triggerFellowChat(uint8 chatType)
 
 void CLuaBaseEntity::fellowAttack(CLuaBaseEntity* PEntity)
 {
-    // XI_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
-    // XI_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
+    if (m_PBaseEntity == nullptr || m_PBaseEntity->objtype != TYPE_PC)
+    {
+        ShowWarning("Invalid Entity (Entity: %s) calling function.", m_PBaseEntity->getName());
+        return;
+    }
 
     CFellowEntity* PFellow = ((CCharEntity*)m_PBaseEntity)->m_PFellow;
 
@@ -15428,8 +15438,11 @@ void CLuaBaseEntity::fellowAttack(CLuaBaseEntity* PEntity)
 
 void CLuaBaseEntity::fellowRetreat()
 {
-    // XI_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
-    // XI_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
+    if (m_PBaseEntity == nullptr || m_PBaseEntity->objtype != TYPE_PC)
+    {
+        ShowWarning("Invalid Entity (Entity: %s) calling function.", m_PBaseEntity->getName());
+        return;
+    }
 
     CFellowEntity* PFellow = ((CCharEntity*)m_PBaseEntity)->m_PFellow;
 
@@ -15448,8 +15461,11 @@ void CLuaBaseEntity::fellowRetreat()
 
 int32 CLuaBaseEntity::getFellowValue(std::string const& option)
 {
-    // XI_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
-    // XI_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
+    if (m_PBaseEntity == nullptr || m_PBaseEntity->objtype != TYPE_PC)
+    {
+        ShowWarning("Invalid Entity (Entity: %s) calling function.", m_PBaseEntity->getName());
+        return 0;
+    }
 
     const char* Query = "SELECT %s FROM char_fellow WHERE charid = %u;";
     int32       ret   = _sql->Query(Query, option, m_PBaseEntity->id);
@@ -15471,8 +15487,11 @@ int32 CLuaBaseEntity::getFellowValue(std::string const& option)
 
 void CLuaBaseEntity::setFellowValue(std::string const& option, int32 value)
 {
-    // XI_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
-    // XI_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
+    if (m_PBaseEntity == nullptr || m_PBaseEntity->objtype != TYPE_PC)
+    {
+        ShowWarning("Invalid Entity (Entity: %s) calling function.", m_PBaseEntity->getName());
+        return;
+    }
 
     if (strcmp(option.c_str(), "bond") == 0)
     {
@@ -15499,8 +15518,11 @@ void CLuaBaseEntity::setFellowValue(std::string const& option, int32 value)
 
 void CLuaBaseEntity::delFellowValue()
 {
-    // XI_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
-    // XI_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
+    if (m_PBaseEntity == nullptr || m_PBaseEntity->objtype != TYPE_PC)
+    {
+        ShowWarning("Invalid Entity (Entity: %s) calling function.", m_PBaseEntity->getName());
+        return;
+    }
 
     const char* Query = "DELETE FROM char_fellow WHERE charId = %u LIMIT 1";
     _sql->Query(Query, "DELETE FROM char_fellow WHERE charId = %u LIMIT 1", m_PBaseEntity->id);
