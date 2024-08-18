@@ -14,8 +14,8 @@ require('scripts/globals/utils')
 -----------------------------------
 local ID = zones[xi.zone.AHT_URHGAN_WHITEGATE]
 ---------------------------------------------------------------------------------
-local FAUNA_LIMIT = 10000 -- Zeni handed out per Fauna (NM)
-local SUBJECT_OF_INTEREST_LIMIT = 20000 -- Zeni handed out per SubjectsOfInterest
+local FAUNA_LIMIT = 25000 -- Zeni handed out per Fauna (NM)
+local SUBJECT_OF_INTEREST_LIMIT = 50000 -- Zeni handed out per SubjectsOfInterest
 ---------------------------------------------------------------------------------
 
 local trophies =
@@ -448,7 +448,7 @@ xi.znm.soultrapper.getZeniValue = function(target, user, item)
         end
         -- Sanitize Zeni
         zeni = math.floor(zeni) -- Remove any floating point information
-        zeni = utils.clamp(zeni, 1, 100)
+        zeni = utils.clamp(zeni, 1, 1000)
     end
     
     if (showDebugMessage) then
@@ -619,27 +619,27 @@ local function calculateZeniBonus(plateData)
 
     if (GetServerVariable('[ZNM]SubjectsOfInterest') == subOfInterestMatch) then
         isCurrentSubjectsOfInterest = true
-        zeni = zeni + 100 -- 50
-        percBonus = percBonus + 45 -- 35
+        zeni = zeni + 250
+        percBonus = percBonus + 50
     end
 
     if (GetServerVariable('[ZNM]Ecosystem') == ecosystem) then
         isCurrentEcoSytem = true
-        zeni = zeni + 50 -- 25
-        percBonus = percBonus + 35 -- 25
+        zeni = zeni + 100
+        percBonus = percBonus + 25
     end
 
     if (GetServerVariable('[ZNM]Fauna') == faunaMatch) then
         isCurrentFauna = true
-        zeni = zeni + 100 -- 50
-        percBonus = percBonus + 60 -- 50
+        zeni = zeni + 500
+        percBonus = percBonus + 100
     end
 
     -- Add a little randomness
-    zeni = zeni + math.random(-5, 5)
+    zeni = zeni + math.random(-10, 10)
     -- clamp - highest reports in era are ~100ish
     -- WINGSCUSTOM include a percentage bonus for matching fauna/SoI/Ecosystem
-    zeni = utils.clamp(zeni, 1, 105) * (1 + (percBonus / 100))
+    zeni = utils.clamp(zeni, 1, 1000) * (1 + (percBonus / 100))
 
     -- Sanitize Zeni
     zeni = math.floor(zeni) -- Remove any floating point information
@@ -674,7 +674,7 @@ xi.znm.sanraku.onTrade = function(player, npc, trade)
         if (isCurrentFauna) then
             updateFaunaLimit(zeni)
         end
-        player:startEvent(910, 9000, 1500, 255)
+        player:startEvent(910, zeni)
     else
         -- taken from sanraku.lua
         znm = -1
