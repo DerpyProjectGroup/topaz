@@ -220,7 +220,7 @@ CCharUpdatePacket::CCharUpdatePacket(CCharEntity* PChar)
     packet.UniqueNo      = PChar->id;
     packet.server_status = PChar->isInEvent() ? static_cast<uint8>(ANIMATION_EVENT) : PChar->animation;
 
-    if (PChar->m_PFellow != nullptr)
+    if (PChar->m_PFellow != nullptr) // TODO: Convert to new packet flag system - Umeboshi.
     {
         ref<uint16>(0x48) = PChar->m_PFellow->targid;
         ref<uint8>(0x38) |= 0x80; // initiate fellow menu system
