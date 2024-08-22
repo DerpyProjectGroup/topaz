@@ -13826,7 +13826,7 @@ INSERT INTO `item_equipment` VALUES (27876,'iuitl_vest_+1',99,119,2458912,256,0,
 INSERT INTO `item_equipment` VALUES (27877,'gende._bilaut_+1',99,119,524820,265,0,0,32,0,0,0);
 INSERT INTO `item_equipment` VALUES (27878,'hagondes_coat_+1',99,119,1622040,262,0,0,32,0,0,0);
 INSERT INTO `item_equipment` VALUES (27879,'overalls',1,0,4194303,366,0,0,32,128,0,0);
-INSERT INTO `item_equipment` VALUES (27880,'overalls',1,0,4194303,366,0,0,32,128,0,0);
+INSERT INTO `item_equipment` VALUES (27880,'overalls',1,0,4194303,367,0,0,32,128,0,0);
 INSERT INTO `item_equipment` VALUES (27881,'outrider_mail',99,117,6593,5,0,0,32,0,0,0);
 INSERT INTO `item_equipment` VALUES (27882,'espial_gambison',99,117,3662710,23,0,0,32,0,0,0);
 INSERT INTO `item_equipment` VALUES (27883,'wayfarer_robe',99,117,4179646,20,0,0,32,0,0,0);
