@@ -269,6 +269,58 @@ xi.reives.zoneData =
         },
     },
 
+    [xi.zone.DHO_GATES] =
+    {
+        reiveObjRespawnTime = 3600, -- 60 minutes
+        reiveMobRespawnTime = 300,  -- 5 minutes
+        reive =
+        {
+            -- !pos -60 -9.9 73.8 272
+            [1] =
+            {
+                mob =
+                {
+                    DHO_GATES_ID.mob.REIVE_MOB_OFFSET + 2,
+                    DHO_GATES_ID.mob.REIVE_MOB_OFFSET + 3,
+                    DHO_GATES_ID.mob.REIVE_MOB_OFFSET + 4,
+                    DHO_GATES_ID.mob.REIVE_MOB_OFFSET + 5,
+                },
+                obstacles =
+                {
+                    DHO_GATES_ID.mob.REIVE_MOB_OFFSET,
+                    DHO_GATES_ID.mob.REIVE_MOB_OFFSET + 1,
+                },
+                collision =
+                {
+                    DHO_GATES_ID.npc.REIVE_COLLISION_OFFSET,
+                    DHO_GATES_ID.npc.REIVE_COLLISION_OFFSET + 1,
+                },
+            },
+
+            -- !pos -154 -20 300.9 272
+            [2] =
+            {
+                mob =
+                {
+                    DHO_GATES_ID.mob.REIVE_MOB_OFFSET + 8,
+                    DHO_GATES_ID.mob.REIVE_MOB_OFFSET + 9,
+                    DHO_GATES_ID.mob.REIVE_MOB_OFFSET + 10,
+                    DHO_GATES_ID.mob.REIVE_MOB_OFFSET + 11,
+                },
+                obstacles =
+                {
+                    DHO_GATES_ID.mob.REIVE_MOB_OFFSET + 6,
+                    DHO_GATES_ID.mob.REIVE_MOB_OFFSET + 7,
+                },
+                collision =
+                {
+                    DHO_GATES_ID.npc.REIVE_COLLISION_OFFSET + 2,
+                    DHO_GATES_ID.npc.REIVE_COLLISION_OFFSET + 3,
+                },
+            },
+        },
+    },
+
     [xi.zone.FORET_DE_HENNETIEL] =
     {
         reiveObjRespawnTime = 3600, -- 60 minutes
@@ -471,6 +523,254 @@ xi.reives.zoneData =
                 {
                     FORET_DE_HENNETIEL_ID.npc.REIVE_COLLISION_OFFSET,
                     FORET_DE_HENNETIEL_ID.npc.REIVE_COLLISION_OFFSET + 1,
+                },
+            },
+        },
+    },
+
+    [xi.zone.KAMIHR_DRIFTS] =
+    {
+        reiveObjRespawnTime = 3600, -- 60 minutes
+        reiveMobRespawnTime = 300,  -- 5 minutes
+        reive =
+        {
+            -- !pos 114.7 40 -269.3 267
+            [1] =
+            {
+                mob =
+                {
+                    KAMIHR_DRIFTS_ID.mob.REIVE_MOB_OFFSET + 2,
+                    KAMIHR_DRIFTS_ID.mob.REIVE_MOB_OFFSET + 3,
+                    KAMIHR_DRIFTS_ID.mob.REIVE_MOB_OFFSET + 4,
+                    KAMIHR_DRIFTS_ID.mob.REIVE_MOB_OFFSET + 5,
+                },
+                obstacles =
+                {
+                    KAMIHR_DRIFTS_ID.mob.REIVE_MOB_OFFSET,
+                    KAMIHR_DRIFTS_ID.mob.REIVE_MOB_OFFSET + 1,
+                },
+                collision =
+                {
+                    KAMIHR_DRIFTS_ID.npc.REIVE_COLLISION_OFFSET,
+                },
+            },
+
+            -- !pos 246 40 -110 267
+            [2] =
+            {
+                mob =
+                {
+                    KAMIHR_DRIFTS_ID.mob.REIVE_MOB_OFFSET + 8,
+                    KAMIHR_DRIFTS_ID.mob.REIVE_MOB_OFFSET + 9,
+                    KAMIHR_DRIFTS_ID.mob.REIVE_MOB_OFFSET + 10,
+                    KAMIHR_DRIFTS_ID.mob.REIVE_MOB_OFFSET + 11,
+                },
+                obstacles =
+                {
+                    KAMIHR_DRIFTS_ID.mob.REIVE_MOB_OFFSET + 6,
+                    KAMIHR_DRIFTS_ID.mob.REIVE_MOB_OFFSET + 7,
+                },
+                collision =
+                {
+                    KAMIHR_DRIFTS_ID.npc.REIVE_COLLISION_OFFSET + 1,
+                },
+            },
+
+            -- !pos -34 20 11 267
+            [3] =
+            {
+                mob =
+                {
+                    KAMIHR_DRIFTS_ID.mob.REIVE_MOB_OFFSET + 14,
+                    KAMIHR_DRIFTS_ID.mob.REIVE_MOB_OFFSET + 15,
+                    KAMIHR_DRIFTS_ID.mob.REIVE_MOB_OFFSET + 16,
+                    KAMIHR_DRIFTS_ID.mob.REIVE_MOB_OFFSET + 17,
+                },
+                obstacles =
+                {
+                    KAMIHR_DRIFTS_ID.mob.REIVE_MOB_OFFSET + 12,
+                    KAMIHR_DRIFTS_ID.mob.REIVE_MOB_OFFSET + 13,
+                },
+                collision =
+                {
+                    KAMIHR_DRIFTS_ID.npc.REIVE_COLLISION_OFFSET + 2,
+                },
+            },
+
+            -- !pos -354 0.2 269.4 267
+            [4] =
+            {
+                mob =
+                {
+                    KAMIHR_DRIFTS_ID.mob.REIVE_MOB_OFFSET + 20,
+                    KAMIHR_DRIFTS_ID.mob.REIVE_MOB_OFFSET + 21,
+                    KAMIHR_DRIFTS_ID.mob.REIVE_MOB_OFFSET + 22,
+                    KAMIHR_DRIFTS_ID.mob.REIVE_MOB_OFFSET + 23,
+                },
+                obstacles =
+                {
+                    KAMIHR_DRIFTS_ID.mob.REIVE_MOB_OFFSET + 18,
+                    KAMIHR_DRIFTS_ID.mob.REIVE_MOB_OFFSET + 19,
+                },
+                collision =
+                {
+                    KAMIHR_DRIFTS_ID.npc.REIVE_COLLISION_OFFSET + 3,
+                },
+            },
+        },
+    },
+
+    [xi.zone.MARJAMI_RAVINE] =
+    {
+        reiveObjRespawnTime = 3600, -- 60 minutes
+        reiveMobRespawnTime = 300,  -- 5 minutes
+        reive =
+        {
+
+            -- !pos 339 -41.6 -18 266
+            [1] =
+            {
+                mob =
+                {
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET,
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 1,
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 2,
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 3,
+                },
+                obstacles =
+                {
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 4,
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 5,
+                },
+                collision =
+                {
+                    MARJAMI_RAVINE_ID.npc.REIVE_COLLISION_OFFSET,
+                },
+            },
+
+            -- !pos 218 -21.6 60 266
+            [2] =
+            {
+                mob =
+                {
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 8,
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 9,
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 10,
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 11,
+                },
+                obstacles =
+                {
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 6,
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 7,
+                },
+                collision =
+                {
+                    MARJAMI_RAVINE_ID.npc.REIVE_COLLISION_OFFSET + 1,
+                },
+            },
+
+            -- !pos 180 -1.6 -138 266
+            [3] =
+            {
+                mob =
+                {
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 14,
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 15,
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 16,
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 17,
+                },
+                obstacles =
+                {
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 12,
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 13,
+                },
+                collision =
+                {
+                    MARJAMI_RAVINE_ID.npc.REIVE_COLLISION_OFFSET + 2,
+                },
+            },
+
+            -- !pos 102 38 -180 266
+            [4] =
+            {
+                mob =
+                {
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 20,
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 21,
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 22,
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 23,
+                },
+                obstacles =
+                {
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 18,
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 19,
+                },
+                collision =
+                {
+                    MARJAMI_RAVINE_ID.npc.REIVE_COLLISION_OFFSET + 3,
+                },
+            },
+
+            -- !pos -98 38 -140 266
+            [5] =
+            {
+                mob =
+                {
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 26,
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 27,
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 28,
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 29,
+                },
+                obstacles =
+                {
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 24,
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 25,
+                },
+                collision =
+                {
+                    MARJAMI_RAVINE_ID.npc.REIVE_COLLISION_OFFSET + 4,
+                },
+            },
+
+            -- !pos -178 -2.4 -60 266
+            [6] =
+            {
+                mob =
+                {
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 32,
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 33,
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 34,
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 35,
+                },
+                obstacles =
+                {
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 30,
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 31,
+                },
+                collision =
+                {
+                    MARJAMI_RAVINE_ID.npc.REIVE_COLLISION_OFFSET + 5,
+                },
+            },
+
+            -- !pos -298 -22.4 100 266
+            [7] =
+            {
+                mob =
+                {
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 38,
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 39,
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 40,
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 41,
+                },
+                obstacles =
+                {
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 36,
+                    MARJAMI_RAVINE_ID.mob.REIVE_MOB_OFFSET + 37,
+                },
+                collision =
+                {
+                    MARJAMI_RAVINE_ID.npc.REIVE_COLLISION_OFFSET + 6,
                 },
             },
         },
