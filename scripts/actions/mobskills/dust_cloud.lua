@@ -10,21 +10,21 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
+    local damage = mob:getWeaponDmg() * 2
     local duration = 120
 
     if mob:getMainLvl() < 10 then
         duration = duration / 2
     end
 
-    local dmgmod = 1
-    local info   = xi.mobskills.mobMagicalMove(mob, target, skill, mob:getWeaponDmg(), xi.element.EARTH, dmgmod, xi.mobskills.magicalTpBonus.MAB_BONUS, 0, 0, 1.75, 2, 2.25)
-    local dmg    = xi.mobskills.mobFinalAdjustments(info.dmg, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.EARTH, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
-    target:takeDamage(dmg, mob, xi.attackType.MAGICAL, xi.damageType.EARTH)
-    xi.mobskills.handleMobBurstMsg(mob, target, skill, xi.element.EARTH)
+    damage = xi.mobskills.mobMagicalMove(mob, target, skill, damage, xi.element.EARTH, 1, xi.mobskills.magicalTpBonus.MAB_BONUS, 0, 0, 1.75, 2, 2.25)
+    damage = xi.mobskills.mobFinalAdjustments(damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.EARTH, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
 
+    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.EARTH)
+    xi.mobskills.handleMobBurstMsg(mob, target, skill, xi.element.EARTH)
     xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.BLINDNESS, 15, 0, duration)
 
-    return dmg
+    return damage
 end
 
 return mobskillObject

@@ -4,7 +4,7 @@
 -- Description: Charms all targets in an area of effect, that are facing the Lamia.
 -- Type: Enfeebling
 -- Utsusemi/Blink absorb: Ignores shadows
--- Range: 15' radial
+-- Range: 12' radial
 -- Notes: Used only by Lamia NM's, particularly in Besieged.
 -----------------------------------
 local mobskillObject = {}
@@ -14,29 +14,21 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-
-    local typeEffect = xi.effect.CHARM_I
     local power = 0
 
-    if not target:isPC() then
+    if not target:isPC() or not target:isFacing(mob) then
         skill:setMsg(xi.msg.basic.SKILL_MISS)
-        return typeEffect
+        return xi.effect.CHARM_I
     end
 
-    if target:isFacing(mob) then
-        local msg = xi.mobskills.mobStatusEffectMove(mob, target, typeEffect, power, 3, 60)
-        if msg == xi.msg.basic.SKILL_ENFEEB_IS then
-            mob:charm(target)
-        end
-    else
-        msg = xi.msg.basic.SKILL_MISS
+    local msg = xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.CHARM_I, power, 3, 45)
+    if msg == xi.msg.basic.SKILL_ENFEEB_IS then
+        mob:charm(target)
     end
-
 
     skill:setMsg(msg)
 
-    return typeEffect
-    
+    return xi.effect.CHARM_I
 end
 
 return mobskillObject

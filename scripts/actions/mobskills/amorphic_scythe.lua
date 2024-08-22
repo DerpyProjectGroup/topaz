@@ -1,14 +1,10 @@
 -----------------------------------
---  Amorphic Scythe
+-- Amorphic Scythe
 --
---  Description: Delivers a front conal multi hit attack.
---  Type: Physical
---  Utsusemi/Blink absorb: 2-3 shadows
---  Range: Unknown
---  Notes:
------------------------------------
-
-
+-- Description: Strikes all targets in front.
+-- Type: Physical
+-- Utsusemi/Blink absorb: 2 shadows
+-- Range: Front Conal
 -----------------------------------
 local mobskillObject = {}
 

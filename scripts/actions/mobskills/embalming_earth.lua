@@ -8,14 +8,15 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local dmgmod = 6
+    local damage   = mob:getWeaponDmg() * 6
+    local dmgmod   = 1
     local power    = 33
     local duration = 120
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, mob:getWeaponDmg(), xi.element.EARTH, dmgmod, xi.mobskills.magicalTpBonus.NO_EFFECT, 1)
-    local dmg = xi.mobskills.mobFinalAdjustments(info.dmg, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.EARTH, xi.mobskills.shadowBehavior.WIPE_SHADOWS)
+    damage = xi.mobskills.mobMagicalMove(mob, target, skill, damage, xi.element.EARTH, dmgmod, xi.mobskills.magicalTpBonus.NO_EFFECT, 1)
+    damage = xi.mobskills.mobFinalAdjustments(damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.EARTH, xi.mobskills.shadowBehavior.WIPE_SHADOWS)
     xi.mobskills.mobPhysicalStatusEffectMove(mob, target, skill, xi.effect.SLOW, power, 0, duration)
-    target:takeDamage(dmg, mob, xi.attackType.MAGICAL, xi.damageType.EARTH)
-    return dmg
+    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.EARTH)
+    return damage
 end
 
 return mobskillObject

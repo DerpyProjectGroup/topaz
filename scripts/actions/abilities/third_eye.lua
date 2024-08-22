@@ -8,6 +8,13 @@
 local abilityObject = {}
 
 abilityObject.onAbilityCheck = function(player, target, ability)
+    if
+        player:hasStatusEffect(xi.effect.SEIGAN) and
+        player:isWeaponTwoHanded()
+    then
+        ability:setRecast(ability:getRecast() / 2)
+    end
+
     return 0, 0
 end
 

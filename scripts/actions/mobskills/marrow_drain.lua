@@ -13,24 +13,22 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    if mob:getID() == 16945320 then -- Stringes
-        local dmgmod = 3.5 * (math.random(90, 110) / 100)
-        local info = xi.mobskills.mobMagicalMove(mob, target, skill, mob:getWeaponDmg() * 2.3, xi.element.DARK, dmgmod, xi.mobskills.magicalTpBonus.MAB_BONUS, 1)
-        local dmg = xi.mobskills.mobFinalAdjustments(info.dmg, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.DARK, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
-        skill:setMsg(xi.mobskills.mobPhysicalDrainMove(mob, target, skill, xi.mobskills.drainType.HP, dmg))
-
-        return dmg
-
-    else
-        local dmgmod = 1
-        local info = xi.mobskills.mobMagicalMove(mob, target, skill, mob:getWeaponDmg() * 2.3, xi.element.DARK, dmgmod, xi.mobskills.magicalTpBonus.MAB_BONUS, 1)
-        local dmg = xi.mobskills.mobFinalAdjustments(info.dmg, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.DARK, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
-    
-        skill:setMsg(xi.mobskills.mobPhysicalDrainMove(mob, target, skill, xi.mobskills.drainType.MP, dmg))
-
-        return dmg
-
+    local damage = math.floor(mob:getWeaponDmg() * 2.3)
+    local dmgmod = 1
+    if mob:getName() == 'Stringes' then
+        dmgmod = 3.5 * (math.random(90, 110) / 100)
     end
+
+    damage = xi.mobskills.mobMagicalMove(mob, target, skill, damage, xi.element.DARK, dmgmod, xi.mobskills.magicalTpBonus.MAB_BONUS, 1)
+    damage = xi.mobskills.mobFinalAdjustments(damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.DARK, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
+
+    if mob:getName() == 'Stringes' then
+        skill:setMsg(xi.mobskills.mobPhysicalDrainMove(mob, target, skill, xi.mobskills.drainType.HP, damage))
+    else
+        skill:setMsg(xi.mobskills.mobPhysicalDrainMove(mob, target, skill, xi.mobskills.drainType.MP, damage))
+    end
+
+    return damage
 end
 
 return mobskillObject

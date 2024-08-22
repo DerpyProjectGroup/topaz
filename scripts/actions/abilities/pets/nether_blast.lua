@@ -14,7 +14,7 @@ abilityObject.onPetAbility = function(target, pet, petskill, summoner, action)
     local ignoreresist = true
 
     damage = xi.mobskills.mobMagicalMove(pet, target, petskill, damage, xi.element.DARK, 1, xi.mobskills.magicalTpBonus.NO_EFFECT, 0, ignoreresist)
-    damage = xi.mobskills.mobAddBonuses(pet, target, damage.dmg, xi.element.DARK, petskill)
+    damage = xi.mobskills.mobAddBonuses(pet, target, damage, xi.element.DARK, petskill)
     damage = xi.summon.avatarFinalAdjustments(damage, pet, petskill, target, xi.attackType.MAGICAL, xi.damageType.DARK, 1)
 
     target:takeDamage(damage, pet, xi.attackType.BREATH, xi.damageType.DARK)

@@ -1,7 +1,6 @@
 -----------------------------------
--- Area: Open Sea Route to Mhaura
---   NM: Gugru Orobon
--- Note: Fished up
+-- Area: Open Sea route to Mhaura
+--  Mob: Gugru Orobon
 -----------------------------------
 mixins = { require('scripts/mixins/families/orobon') }
 -----------------------------------

@@ -759,7 +759,7 @@ namespace fellowutils
         PFellow->addModifier(Mod::WSACC, 25);
         PFellow->addModifier(Mod::DEFP, 50);
         PFellow->addModifier(Mod::ALL_WSDMG_FIRST_HIT, 25);
-        PFellow->addModifier(Mod::ENEMYCRITRATE, -25);
+        PFellow->addModifier(Mod::CRITICAL_HIT_EVASION, 25);
 
         PFellow->health.tp = 0;
         PFellow->UpdateHealth();

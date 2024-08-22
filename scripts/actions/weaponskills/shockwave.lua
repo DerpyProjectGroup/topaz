@@ -20,7 +20,7 @@ weaponskillObject.onUseWeaponSkill = function(player, target, wsID, tp, primary,
     params.str_wsc = 0.3 params.mnd_wsc = 0.3
     local damage, criticalHit, tpHits, extraHits = xi.weaponskills.doPhysicalWeaponskill(player, target, wsID, params, tp, action, primary, taChar)
 
-    if damage > 0 and not target:hasStatusEffect(xi.effect.SLEEP_I) and not target:hasImmunity(xi.immunity.SLEEP) then
+    if damage > 0 and not target:hasStatusEffect(xi.effect.SLEEP_I) and not target:hasImmunity(xi.immunity.DARK_SLEEP) then
         local duration = (tp / 1000 * 60) * applyResistanceAddEffect(player, target, xi.element.DARK, 0)
         target:addStatusEffect(xi.effect.SLEEP_I, 1, 0, duration)
         player:messagePublic(xi.msg.basic.SKILL_ENFEEB, target, wsID, xi.effect.SLEEP_I)

@@ -1,16 +1,8 @@
 -----------------------------------
----Frog Chorus
--- Family: Porrogo
--- Description: Charms target and transforms them into a frog.
+-- Frog Chorus
+-- Description: Charms all targets in an area of effect and transforms them into frogs.
 -- Type: Enfeebling
--- Utsusemi/Blink absorb: N/A
--- Range: Radial
--- Notes: Only used by certain Poroggo NMs.
------------------------------------
-
-
-
-
+-- Utsusemi/Blink absorb: Ignores shadows
 -----------------------------------
 local mobskillObject = {}
 
@@ -19,24 +11,20 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local typeEffect = xi.effect.CHARM_I
-    local power = 0
-
     if not target:isPC() then
         skill:setMsg(xi.msg.basic.SKILL_MISS)
-        return typeEffect
+        return xi.effect.CHARM_I
     end
 
-    local msg = xi.mobskills.mobStatusEffectMove(mob, target, typeEffect, power, 3, 60)
+    local msg = xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.CHARM_I, 0, 3, 60)
     if msg == xi.msg.basic.SKILL_ENFEEB_IS then
-        target:addStatusEffect(xi.effect.COSTUME_II, 2239, 0, 60) -- 1812 alternate froggo costume but doesnt seem to work!
         mob:charm(target)
-        mob:resetEnmity(target)
+        target:addStatusEffect(xi.effect.COSTUME, 1812, 0, 60)
     end
 
     skill:setMsg(msg)
 
-    return typeEffect
+    return xi.effect.CHARM_I
 end
 
 return mobskillObject

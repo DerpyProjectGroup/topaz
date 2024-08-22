@@ -959,6 +959,13 @@ INSERT INTO `mob_family_mods` VALUES (481,42,989,1); -- TELEPORT_END: 989
 -- Astral Flow Pet
 INSERT INTO `mob_family_mods` VALUES (495,56,-1,1); -- HP_STANDBACK: -1
 
+-- Apkallu
+INSERT INTO `mob_family_mods` VALUES (27,4,5,1); -- SIGHT_RANGE: 5
+
+-- Flan
+INSERT INTO `mob_family_mods` VALUES (112,56,-1,1); -- HP_STANDBACK: -1
+INSERT INTO `mob_family_mods` VALUES (112,69,1,1);  -- NO_LINK: 1
+
 -- Cockatrice (Ziz)
 INSERT INTO `mob_family_mods` VALUES (512,1,-10,0); -- DEF: -10
 INSERT INTO `mob_family_mods` VALUES (512,29,-1,0); -- MDEF: -10

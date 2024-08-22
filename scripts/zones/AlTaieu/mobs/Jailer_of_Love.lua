@@ -129,7 +129,7 @@ entity.onMobSpawn = function(mob)
     mob:setMod(xi.mod.DEF, 620)
     mob:setMod(xi.mod.EVA, 328)
 
-    mob:addImmunity(xi.immunity.SLEEP)
+    mob:addImmunity(xi.immunity.DARK_SLEEP)
     mob:addImmunity(xi.immunity.GRAVITY)
     mob:addImmunity(xi.immunity.BIND)
     mob:addImmunity(xi.immunity.STUN)

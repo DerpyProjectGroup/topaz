@@ -21,18 +21,18 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local dmgmod = 4
-
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, mob:getWeaponDmg(), xi.element.NONE, dmgmod, xi.mobskills.magicalTpBonus.TP_NO_EFFECT)
-    local dmg = xi.mobskills.mobFinalAdjustments(info.dmg, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.NONE, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
-    target:takeDamage(dmg, mob, xi.attackType.MAGICAL, xi.damageType.ELEMENTAL)
+    local damage = mob:getWeaponDmg() * 4
+    local dmgmod = 1
+    damage = xi.mobskills.mobMagicalMove(mob, target, skill, damage, xi.element.NONE, dmgmod, xi.mobskills.magicalTpBonus.TP_NO_EFFECT)
+    damage = xi.mobskills.mobFinalAdjustments(damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.NONE, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
+    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.ELEMENTAL)
 
     local typeEffect1 = xi.effect.PETRIFICATION
     local typeEffect2 = xi.effect.BLINDNESS
     xi.mobskills.mobStatusEffectMove(mob, target, typeEffect1, 1, 0, 30)
     xi.mobskills.mobStatusEffectMove(mob, target, typeEffect2, 15, 0, 60)
 
-    return dmg
+    return damage
 end
 
 return mobskillObject

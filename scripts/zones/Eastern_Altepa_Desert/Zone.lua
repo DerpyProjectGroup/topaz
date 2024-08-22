@@ -7,10 +7,6 @@ require('scripts/missions/amk/helpers')
 -----------------------------------
 local zoneObject = {}
 
-zoneObject.onChocoboDig = function(player, precheck)
-    return xi.chocoboDig.start(player, precheck)
-end
-
 zoneObject.onInitialize = function(zone)
      -- NM Persistence
      xi.mob.nmTODPersistCache(zone, ID.mob.NANDI)

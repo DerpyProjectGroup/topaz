@@ -1,8 +1,6 @@
 -----------------------------------
--- Area: Open Sea Route to Mhaura
---   NM: Northern Piranu
--- Note: Fished up
---       Need capture for proper model ID
+-- Area: Open Sea route to Mhaura
+--  Mob: Northern Piranu
 -----------------------------------
 mixins = { require('scripts/mixins/families/orobon') }
 -----------------------------------

@@ -17,10 +17,10 @@ mobskillObject.onMobWeaponSkill = function(target, mob, skill)
     local tpEffect2      = xi.mobskills.physicalTpBonus.CRIT_VARIES
     local crit           = 0.25
     local attmod         = 1
-    local info           = xi.mobskills.mobPhysicalMove(mob, target, skill, numhits, accmod, dmgmod, tpEffect1, 1.1, 1.25, 1.45, tpEffect2, 1, 2, 3, crit, attmod)
-    local dmg            = xi.mobskills.mobFinalAdjustments(info.dmg, mob, skill, target, xi.attackType.PHYSICAL, xi.damageType.H2H, info.hitslanded)
+    local info = xi.mobskills.mobPhysicalMove(mob, target, skill, numhits, accmod, dmgmod, tpEffect1, 1.1, 1.25, 1.45, tpEffect2, 1, 2, 3, crit, attmod)
+    local dmg = xi.mobskills.mobFinalAdjustments(info.dmg, mob, skill, target, xi.attackType.PHYSICAL, xi.damageType.HTH, info.hitslanded)
 
-    target:takeDamage(dmg, mob, xi.attackType.PHYSICAL, xi.damageType.H2H)
+    target:takeDamage(dmg, mob, xi.attackType.PHYSICAL, xi.damageType.HTH)
     return dmg
 end
 

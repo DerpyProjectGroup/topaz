@@ -35,6 +35,7 @@ zones[xi.zone.HALVUNG] =
     },
     mob =
     {
+        WAMOURA_OFFSET         = GetTableOfIDs('Wamoura'),
         BIG_BOMB               = GetFirstID('Big_Bomb'),
         GURFURLUR_THE_MENACING = GetFirstID('Gurfurlur_the_Menacing'),
         DEXTROSE               = GetFirstID('Dextrose'),

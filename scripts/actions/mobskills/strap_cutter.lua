@@ -9,20 +9,48 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
--- todo make a random for which gear to remove and how many pieces
-    --local remove = 0xFFFF
-    local numberToBlock = math.random(3,5) -- bg-wiki claims 3-5
-    local equipmentToBlock = 0
-    -- Need a list that corresponds to the range from xi.slot.MAIN to xi.slot.BACK - but mutable without consequence
-    local equipmentSlots = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}
-    for i=1, numberToBlock do
-        index = math.random(#equipmentSlots)
-        slot = equipmentSlots[index]
-        table.remove(equipmentSlots, index)
-        target:unequipItem(slot)
-        equipmentToBlock = equipmentToBlock + bit.lshift(1, slot)
+    if not target:isPC() then
+        skill:setMsg(xi.msg.basic.SKILL_NO_EFFECT)
+        return
     end
-    target:addStatusEffectEx(xi.effect.ENCUMBRANCE_I, xi.effect.ENCUMBRANCE_I, equipmentToBlock, 0, 60)
+
+    local slots = {}
+    for slot = xi.slot.MAIN, xi.slot.BACK do
+        table.insert(slots, slot)
+    end
+
+    local total = math.random(3, 5)
+    local amount = 0
+    local power = 0
+    slots = utils.shuffle(slots)
+    for _, slot in pairs(slots) do
+        if target:hasSlotEquipped(slot) then
+            target:unequipItem(slot)
+            if slot == xi.slot.MAIN then
+                target:unequipItem(xi.slot.SUB)
+            end
+
+            power = bit.bor(power, bit.lshift(1, slot))
+            amount = amount + 1
+            if amount >= total then
+                break
+            end
+        end
+    end
+
+    if amount == 0 then
+        skill:setMsg(xi.msg.basic.SKILL_NO_EFFECT)
+        return
+    end
+
+    local encumbrance = target:getStatusEffect(xi.effect.ENCUMBRANCE_I)
+    if encumbrance then
+        power = bit.bor(encumbrance:getPower(), power)
+        target:delStatusEffectSilent(xi.effect.ENCUMBRANCE_I)
+    end
+
+    target:addStatusEffectEx(xi.effect.ENCUMBRANCE_I, xi.effect.ENCUMBRANCE_I, power, 0, 60)
+    skill:setMsg(xi.msg.basic.USES)
 end
 
 return mobskillObject

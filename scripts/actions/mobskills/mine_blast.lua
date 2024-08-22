@@ -9,8 +9,11 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local dmgmod = 20
+
+    -- TODO: Shift Proof This
+    local baseDamage = mob:getWeaponDmg()
     local wDmgMultiplier = 5
+    local dmgmod = 20
     local NYZUL_ISLE_INVESTIGATION_QIQIRN_MINE = 17092962
 
     -- mine blast is being used to take out walls in lebros excavation duty
@@ -29,20 +32,21 @@ mobskillObject.onMobWeaponSkill = function(target, mob, skill)
         end
     end
 
-    local baseDmg = mob:getWeaponDmg()*wDmgMultiplier
-
     if (mob:getID() >= 17072173 and mob:getID() <= 17072177) then -- Cheese Hoarder Gigiroon
         dmgmod = 1
         -- Cheese's bombs do flat dmg pre-shell and barfira (500 or 100)
-        baseDmg = mob:getLocalVar('MineDamage')
+        baseDamage = mob:getLocalVar('MineDamage')
     end
 
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, mob:getWeaponDmg() * 5, xi.element.FIRE, dmgmod, xi.mobskills.magicalTpBonus.NO_EFFECT)
+    local damage = baseDamage * wDmgMultiplier
 
-    local dmg = xi.mobskills.mobFinalAdjustments(info.dmg, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.FIRE, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
+    damage = xi.mobskills.mobMagicalMove(mob, target, skill, damage, xi.element.FIRE, dmgmod, xi.mobskills.magicalTpBonus.NO_EFFECT)
+    damage = xi.mobskills.mobFinalAdjustments(damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.FIRE, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
+
+    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.FIRE)
     mob:setHP(0)
-    target:takeDamage(dmg, mob, xi.attackType.MAGICAL, xi.damageType.FIRE)
-    return dmg
+
+    return damage
 end
 
 return mobskillObject

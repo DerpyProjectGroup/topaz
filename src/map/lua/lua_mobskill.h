@@ -54,6 +54,7 @@ public:
     auto   getSkillchainProps() -> std::tuple<uint8, uint8, uint8>;
     void   setSkillchainProps(uint8 prop1, uint8 prop2, uint8 prop3);
     uint16 getMsg();
+    auto   getTargets() -> sol::table;
     uint16 getTotalTargets();
     void   setAnimationID(uint16 animID);
     void   setKnockBack(uint8 knockback);

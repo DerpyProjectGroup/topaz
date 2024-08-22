@@ -2,22 +2,17 @@
 -- A Bitter Past
 -----------------------------------
 -- Log ID: 4, Quest ID: 66
--- Frescheque : !pos 18 -36 12
--- Raminey    : !pos 82 -35 50
--- Equette    : !pos 3 -22 -17
--- ???        : !pos 58 -7 27
+-- Frescheque : !pos 18 -36 12 26
+-- Raminey    : !pos 82 -35 50 26
+-- Equette    : !pos 3 -22 -17 26
+-- ???        : !pos 58 -7 27 24
 -----------------------------------
-
-
-require('scripts/globals/npc_util')
-require('scripts/globals/quests')
-
-
-require('scripts/globals/interaction/quest')
+local lufaiseID = zones[xi.zone.LUFAISE_MEADOWS]
 -----------------------------------
 local ID = zones[xi.zone.LUFAISE_MEADOWS]
 -----------------------------------
 local quest = Quest:new(xi.questLog.OTHER_AREAS, xi.quest.id.otherAreas.A_BITTER_PAST)
+local orcNM = lufaiseID.mob.BLACKBONE_FRAZDIZ
 
 quest.reward =
 {
@@ -99,21 +94,42 @@ quest.sections =
             ['qm_bitter_past'] =
             {
                 onTrigger = function(player, npc)
-                    if quest:getVar(player, 'Prog') == 2 and npcUtil.popFromQM(player, npc, ID.mob.BITTER_PAST_MOBS, {claim = true, hide = 0}) then
-                        return quest:message(ID.text.SENSE_OF_FOREBODING)
-
-                    elseif not player:hasKeyItem(xi.ki.TINY_WRISTLET) then
-                        player:addKeyItem(xi.ki.TINY_WRISTLET)
-                        return quest:messageSpecial(ID.text.KEYITEM_OBTAINED, xi.ki.TINY_WRISTLET)
+                    if
+                        quest:getVar(player, 'Prog') == 2 and
+                        quest:getVar(player, 'nmKilled') ~= 1 and
+                        npcUtil.popFromQM(player, npc, { orcNM, orcNM + 1 }, { claim = true, hide = 0 })
+                    then
+                        return quest:messageText(lufaiseID.text.SENSE_OF_FOREBODING)
+                    elseif
+                        quest:getVar(player, 'nmKilled') == 1 and
+                        not player:hasKeyItem(xi.ki.TINY_WRISTLET)
+                    then
+                        npcUtil.giveKeyItem(player, xi.ki.TINY_WRISTLET)
+                        return quest:noAction()
                     end
                 end,
             },
 
-            ['Splinterspine_Grukjuk'] =
+            ['Blackbone_Frazdiz'] =
             {
                 onMobDeath = function(mob, player)
-                    if quest:getVar(player, 'Prog') == 2 then
-                        quest:setVar(player, 'Prog', 3)
+                    if
+                        quest:getVar(player, 'Prog') == 2 and
+                        GetMobByID(orcNM + 1):isDead()
+                    then
+                        quest:setVar(player, 'nmKilled', 1)
+                    end
+                end,
+            },
+
+            ['Rainbringer_Yjatvot'] =
+            {
+                onMobDeath = function(mob, player)
+                    if
+                        quest:getVar(player, 'Prog') == 2 and
+                        GetMobByID(orcNM):isDead()
+                    then
+                        quest:setVar(player, 'nmKilled', 1)
                     end
                 end,
             },
@@ -122,7 +138,7 @@ quest.sections =
 
     {
         check = function(player, status, vars)
-            return status == xi.questStatus.QUEST_COMPLETED
+            return status == xi.questStaus.QUEST_COMPLETED
         end,
 
         [xi.zone.TAVNAZIAN_SAFEHOLD] =
@@ -130,18 +146,7 @@ quest.sections =
             ['Equette'] =
             {
                 onTrigger = function(player, npc)
-                    if quest:getVar(player, 'Prog') == 0 then
-                        return quest:progressEvent(155)
-                    end
-                end,
-            },
-
-            ['Frescheque'] = quest:event(157):replaceDefault(),
-
-            onEventFinish =
-            {
-                [155] = function(player, csid, option, npc)
-                    quest:setVar(player, 'Prog', 1)
+                    return quest:event(155):importantOnce()
                 end,
             },
         },

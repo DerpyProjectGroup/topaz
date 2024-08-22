@@ -412,6 +412,9 @@ xi.summon.avatarFinalAdjustments = function(dmg, mob, skill, target, skilltype, 
         target:handleAfflatusMiseryDamage(dmg)
     end
 
+    -- Check if the mob has a damage cap
+    dmg = target:checkDamageCap(dmg)
+
     return dmg
 end
 

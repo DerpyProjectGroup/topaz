@@ -32,9 +32,9 @@ quest.sections =
             {
                 onTrigger = function(player, npc)
                     if quest:getVar(player, 'Prog') == 2 then
-                        return quest:progressEvent(70, xi.item.SLICE_OF_DHALMEL_MEAT)
+                        quest:progressEvent(70, xi.item.SLICE_OF_DHALMEL_MEAT)
                     elseif quest:getVar(player, 'Prog') > 2 then
-                        return quest:progressEvent(71, xi.item.SLICE_OF_DHALMEL_MEAT)
+                        quest:progressEvent(71, xi.item.SLICE_OF_DHALMEL_MEAT)
                     end
                 end,
             },
@@ -43,9 +43,9 @@ quest.sections =
             {
                 onTrigger = function(player, npc)
                     if quest:getVar(player, 'Prog') == 1 then
-                        return quest:progressEvent(60)
+                        quest:progressEvent(60)
                     elseif quest:getVar(player, 'Prog') > 1 then
-                        return quest:event(68)
+                        quest:event(68)
                     end
                 end,
             },

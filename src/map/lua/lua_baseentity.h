@@ -140,6 +140,8 @@ public:
     void  continuePath();                                                          // resumes previous pathfind if it was paused
     float checkDistance(sol::variadic_args va);                                    // Check Distance and returns distance number
     void  wait(sol::object const& milliseconds);                                   // make the npc wait a number of ms and then back into roam
+    void  follow(CLuaBaseEntity* target, uint8 followType);                        // makes an npc follow or runaway from another target
+    void  unfollow();                                                              // makes an npc stop following
     // int32 WarpTo(lua_Stat* L);           // warp to the given point -- These don't exist, breaking them just in case someone uncomments
     // int32 RoamAround(lua_Stat* L);       // pick a random point to walk to
     // int32 LimitDistance(lua_Stat* L);    // limits the current path distance to given max distance
@@ -256,6 +258,7 @@ public:
     void setEquipBlock(uint16 equipBlock);
     void lockEquipSlot(uint8 slot);
     void unlockEquipSlot(uint8 slot);
+    bool hasSlotEquipped(uint8 slot);
 
     int8  getShieldSize();
     int16 getShieldDefense();
@@ -650,7 +653,8 @@ public:
     bool   canGainStatusEffect(uint16 effect, sol::object const& powerObj);
     bool   hasStatusEffect(uint16 StatusID, sol::object const& SubType);
     uint16 hasStatusEffectByFlag(uint16 StatusID);
-    uint8  countEffect(uint16 StatusID); // Gets the number of effects of a specific type on the player
+    uint8  countEffect(uint16 StatusID);     // Gets the number of effects of a specific type on the entity
+    uint8  countEffectWithFlag(uint32 flag); // Gets the number of effects with a flag on the entity
 
     bool   delStatusEffect(uint16 StatusID, sol::object const& SubType, sol::object const& ItemSourceID); // Removes Status Effect
     void   delStatusEffectsByFlag(uint32 flag, sol::object const& silent);                                // Removes Status Effects by Flag
@@ -735,6 +739,7 @@ public:
 
     int32 takeSpellDamage(CLuaBaseEntity* caster, CLuaSpell* spell, int32 damage, uint8 atkType, uint8 dmgType);
     int32 takeSwipeLungeDamage(CLuaBaseEntity* caster, int32 damage, uint8 atkType, uint8 dmgType);
+    int32 checkDamageCap(int32 damage);
 
     // Pets and Automations
     void spawnPet(sol::object const& arg0);
@@ -822,6 +827,7 @@ public:
     bool   isNM();
 
     uint8  getModelSize();
+    void   setMeleeRange(float range);
     void   setMobFlags(uint32 flags, sol::object const& mobId); // Used to manipulate the mob's flags, such as changing size.
     uint32 getMobFlags();
 

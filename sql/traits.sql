@@ -177,11 +177,11 @@ INSERT INTO `traits` VALUES (24,'clear mind',4,96,6,71,18,'ABYSSEA',0);
 INSERT INTO `traits` VALUES (24,'clear mind',4,96,6,295,3,'ABYSSEA',0);
 INSERT INTO `traits` VALUES (109,'occult acumen',4,25,1,902,25,NULL,0); -- BLM Level 25 Mod:25
 INSERT INTO `traits` VALUES (109,'occult acumen',4,50,2,902,50,NULL,0); -- BLM Level 45 Mod:50
-INSERT INTO `traits` VALUES (110,'mag. burst bonus',4,45,1,487,5,NULL,0);
-INSERT INTO `traits` VALUES (110,'mag. burst bonus',4,58,2,487,7,NULL,0);
-INSERT INTO `traits` VALUES (110,'mag. burst bonus',4,71,3,487,9,NULL,0);
-INSERT INTO `traits` VALUES (110,'mag. burst bonus',4,84,4,487,11,'ABYSSEA',0);
-INSERT INTO `traits` VALUES (110,'mag. burst bonus',4,97,5,487,13,'ABYSSEA',0);
+INSERT INTO `traits` VALUES (110,'mag. burst bonus',4,45,1,274,5,NULL,0);
+INSERT INTO `traits` VALUES (110,'mag. burst bonus',4,58,2,274,7,NULL,0);
+INSERT INTO `traits` VALUES (110,'mag. burst bonus',4,71,3,274,9,NULL,0);
+INSERT INTO `traits` VALUES (110,'mag. burst bonus',4,84,4,274,11,'ABYSSEA',0);
+INSERT INTO `traits` VALUES (110,'mag. burst bonus',4,97,5,274,13,'ABYSSEA',0);
 INSERT INTO `traits` VALUES (112,'elemental celerity',4,50,1,901,10,NULL,0);
 INSERT INTO `traits` VALUES (112,'elemental celerity',4,60,2,901,15,NULL,0);
 INSERT INTO `traits` VALUES (112,'elemental celerity',4,70,3,901,20,NULL,0);
@@ -215,8 +215,8 @@ INSERT INTO `traits` VALUES (53,'resist petrify',5,30,2,246,15,NULL,0);
 INSERT INTO `traits` VALUES (53,'resist petrify',5,50,3,246,20,NULL,0);
 INSERT INTO `traits` VALUES (53,'resist petrify',5,70,4,246,25,NULL,0);
 INSERT INTO `traits` VALUES (53,'resist petrify',5,81,5,246,30,'ABYSSEA',0);
-INSERT INTO `traits` VALUES (110,'mag. burst bonus',5,85,1,487,5,'ABYSSEA',0);
-INSERT INTO `traits` VALUES (110,'mag. burst bonus',5,95,2,487,7,'ABYSSEA',0);
+INSERT INTO `traits` VALUES (110,'mag. burst bonus',5,85,1,274,5,'ABYSSEA',0);
+INSERT INTO `traits` VALUES (110,'mag. burst bonus',5,95,2,274,7,'ABYSSEA',0);
 INSERT INTO `traits` VALUES (114,'tranquil heart',5,26,1,0,0,NULL,0);
 
 -- Thief
@@ -484,8 +484,8 @@ INSERT INTO `traits` VALUES (100,'tactical parry',13,87,2,486,30,'ABYSSEA',0);
 INSERT INTO `traits` VALUES (100,'tactical parry',13,97,3,486,40,'ABYSSEA',0);
 INSERT INTO `traits` VALUES (106,'skillchain bonus',13,70,1,174,8,NULL,0);
 INSERT INTO `traits` VALUES (106,'skillchain bonus',13,95,2,174,12,'ABYSSEA',0);
-INSERT INTO `traits` VALUES (110,'mag. burst bonus',13,50,1,487,5,NULL,0);
-INSERT INTO `traits` VALUES (110,'mag. burst bonus',13,70,2,487,7,NULL,0);
+INSERT INTO `traits` VALUES (110,'mag. burst bonus',13,50,1,274,5,NULL,0);
+INSERT INTO `traits` VALUES (110,'mag. burst bonus',13,70,2,274,7,NULL,0);
 INSERT INTO `traits` VALUES (123,'daken',13,25,1,911,20,NULL,0);
 INSERT INTO `traits` VALUES (123,'daken',13,40,2,911,25,NULL,0);
 INSERT INTO `traits` VALUES (123,'daken',13,55,3,911,30,NULL,0);
@@ -680,9 +680,9 @@ INSERT INTO `traits` VALUES (97,'stormsurge',20,75,1,0,0,'WOTG',0);
 INSERT INTO `traits` VALUES (109,'occult acumen',20,25,1,902,25,NULL,0); -- SCH Level 25 Mod:25
 INSERT INTO `traits` VALUES (109,'occult acumen',20,45,2,902,50,NULL,0); -- SCH Level 45 Mod:50
 INSERT INTO `traits` VALUES (109,'occult acumen',20,65,3,902,75,NULL,0); -- SCH Level 65 Mod:75
-INSERT INTO `traits` VALUES (110,'mag. burst bonus',20,79,1,487,5,'ABYSSEA',0);
-INSERT INTO `traits` VALUES (110,'mag. burst bonus',20,89,2,487,7,'ABYSSEA',0);
-INSERT INTO `traits` VALUES (110,'mag. burst bonus',20,99,3,487,9,'ABYSSEA',0);
+INSERT INTO `traits` VALUES (110,'mag. burst bonus',20,79,1,274,5,'ABYSSEA',0);
+INSERT INTO `traits` VALUES (110,'mag. burst bonus',20,89,2,274,7,'ABYSSEA',0);
+INSERT INTO `traits` VALUES (110,'mag. burst bonus',20,99,3,274,9,'ABYSSEA',0);
 INSERT INTO `traits` VALUES (114,'tranquil heart',20,30,1,0,0,'ABYSSEA',0);
 
 -- Geomancer

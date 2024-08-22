@@ -1,10 +1,8 @@
 -----------------------------------
--- Frog Cheer
--- Increases magical attack and grants Elemental Seal xi.effect.
------------------------------------
-
-
-
+-- Providence
+-- Description: Grants additional spells.
+-- Type: Enfeebling
+-- Utsusemi/Blink absorb: Ignores shadows
 -----------------------------------
 local mobskillObject = {}
 
@@ -40,6 +38,8 @@ mobskillObject.onMobWeaponSkill = function(target, mob, skill)
     mob:setMod(xi.mod.UFASTCAST, mob:getLocalVar('fastCastMod'))
     end)
     skill:setMsg(xi.msg.basic.USES)
+
+    return 0
 end
 
 return mobskillObject

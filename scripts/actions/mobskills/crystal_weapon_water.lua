@@ -14,23 +14,25 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
+    local damage = mob:getWeaponDmg() * 3
     local dmgmod = 1
 
     if mob:getName() == 'Lost_Suttung' then
         dmgmod = 3
     end
-    
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, mob:getWeaponDmg() * 3, xi.element.WATER, dmgmod, xi.mobskills.magicalTpBonus.MAB_BONUS, 1)
-    local dmg = xi.mobskills.mobFinalAdjustments(info.dmg, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.WATER, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
-    target:takeDamage(dmg, mob, xi.attackType.MAGICAL, xi.damageType.WATER)
+
+    damage = xi.mobskills.mobMagicalMove(mob, target, skill, damage, xi.element.WATER, dmgmod, xi.mobskills.magicalTpBonus.MAB_BONUS, 1)
+    damage = xi.mobskills.mobFinalAdjustments(damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.WATER, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
+
+    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.WATER)
 
     if mob:getName() == 'Suttung' or mob:getName() == 'Lost_Suttung' then
-        if dmg > 0 then
+        if damage > 0 then
             xi.mobskills.mobPhysicalStatusEffectMove(mob, target, skill, xi.effect.POISON, 10, 0, 30)
         end
     end
 
-    return dmg
+    return damage
 end
 
 return mobskillObject

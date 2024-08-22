@@ -15,6 +15,8 @@ entity.onMobSpawn = function(mob)
     mob:setMobAbilityEnabled(true)
     mob:setMobSkillAttack(5368)
     mob:setMobMod(xi.mobMod.BREATH_ATTACK_LINEAR, 1)
+    mob:addImmunity(xi.immunity.LIGHT_SLEEP)
+    mob:addImmunity(xi.immunity.DARK_SLEEP)
 end
 
 entity.onMobWeaponSkillPrepare = function(mob, target)

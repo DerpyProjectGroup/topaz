@@ -4,35 +4,11 @@
 -- Type: Standard Merchant
 -- Starts and Finishes Quest: Tenshodo Membership
 -- !pos 16 0 -5 245
------------------------------------
-local lowerJeunoID = zones[xi.zone.LOWER_JEUNO]
+-- TODO Enum shop items
 -----------------------------------
 local entity = {}
 
 entity.onTrade = function(player, npc, trade)
-    local astralCovenantCD = player:getCharVar('[ENM]AstralCovenant')
-
-    if
-        npcUtil.tradeHas(trade, xi.item.FLORID_STONE) and
-        player:hasKeyItem(xi.ki.PSOXJA_PASS) and
-        astralCovenantCD < os.time()
-    then
-        player:startEvent(10047, 1782)
-        player:confirmTrade()
-
-    elseif
-        trade:getItemQty(xi.item.TENSHODO_INVITE) > 0 and
-        player:getQuestStatus(xi.questLog.JEUNO, xi.quest.id.jeuno.TENSHODO_MEMBERSHIP) ~= xi.questStatus.QUEST_COMPLETED
-    then
-        if player:getFreeSlotsCount() > 0 then
-            if npcUtil.tradeHas(trade, xi.item.TENSHODO_INVITE) then
-                -- Finish Quest: Tenshodo Membership (Invitation)
-                player:startEvent(108)
-            end
-        else
-            player:messageSpecial(lowerJeunoID.text.ITEM_CANNOT_BE_OBTAINED, xi.item.TENSHODO_INVITE)
-        end
-    end
 end
 
 entity.onTrigger = function(player, npc)
@@ -68,11 +44,6 @@ entity.onEventFinish = function(player, csid, option, npc)
         }
 
         xi.shop.general(player, stock, xi.fameArea.NORG)
-
-    elseif csid == 108 then -- Umeboshi TODO: "Is this needed? Check in quest's lua later to confirm."
-        player:completeQuest(xi.questLog.JEUNO, xi.quest.id.jeuno.TENSHODO_MEMBERSHIP)
-        npcUtil.giveKeyItem(player, xi.ki.TENSHODO_MEMBERS_CARD)
-        player:setTitle(xi.title.TENSHODO_MEMBER)
 
     elseif csid == 10047 then
         player:setCharVar('[ENM]AstralCovenant', VanadielTime() + (xi.settings.main.ENM_COOLDOWN * 3600)) -- Current time + (ENM_COOLDOWN*1hr in seconds)

@@ -7,7 +7,7 @@ mixins = { require('scripts/mixins/families/ziz') }
 local entity = {}
 
 entity.onMobSpawn = function(mob)
-    mob:addImmunity(xi.immunity.SLEEP)
+    mob:addImmunity(xi.immunity.DARK_SLEEP)
     mob:setMod(xi.mod.REGAIN, 350)
 end
 

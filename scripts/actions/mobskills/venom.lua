@@ -14,7 +14,8 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local power = math.max(1, (mob:getMainLvl() - 3) / 2)
+    local damage = math.floor(mob:getWeaponDmg() * 1.5)
+    local power  = math.floor(mob:getMainLvl() / 6 + 1)
     local duration = 60
     local master = mob:getMaster()
     local skillID = skill:getID()
@@ -30,13 +31,13 @@ mobskillObject.onMobWeaponSkill = function(target, mob, skill)
         power = 50
     end
 
+    damage = xi.mobskills.mobMagicalMove(mob, target, skill, damage, xi.element.WATER, 1, xi.mobskills.magicalTpBonus.NO_EFFECT, 0, 0, 1.5, 1.75, 2)
+    damage = xi.mobskills.mobFinalAdjustments(damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.WATER, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
+
+    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.WATER)
     xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.POISON, power, 3, duration)
 
-    local dmgmod = 1
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, mob:getWeaponDmg() * 1.5, xi.element.WATER, dmgmod, xi.mobskills.magicalTpBonus.NO_EFFECT, 0, 0, 1.5, 1.75, 2)
-    local dmg = xi.mobskills.mobFinalAdjustments(info.dmg, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.WATER, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
-    target:takeDamage(dmg, mob, xi.attackType.MAGICAL, xi.damageType.WATER)
-    return dmg
+    return damage
 end
 
 return mobskillObject

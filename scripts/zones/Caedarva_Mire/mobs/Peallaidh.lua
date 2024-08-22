@@ -5,7 +5,7 @@
 local entity = {}
 
 entity.onMobSpawn = function(mob)
-    mob:addImmunity(xi.immunity.SLEEP)
+    mob:addImmunity(xi.immunity.DARK_SLEEP)
     mob:setMod(xi.mod.STORETP, 50) -- Value an approximation. Precise values needed
 end
 

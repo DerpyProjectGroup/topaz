@@ -15,6 +15,7 @@ return {
     ['Equette']          = { event = 162 },
     ['Evindigar']        = { event = 361 },
     ['Ferchinne']        = { event = 240 },
+    ['Frescheque']       = { event = 158 },
     ['Fouagine']         = { event = 338 },
     ['Frescheque']       = { event = 157 },
     ['Geuselibel']       = { event = 328 },

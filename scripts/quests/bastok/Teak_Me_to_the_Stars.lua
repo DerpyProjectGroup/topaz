@@ -5,19 +5,13 @@
 -- Raibaht : !gotoid 17748012
 -----------------------------------
 
-
-require('scripts/globals/quests')
-
-require('scripts/globals/interaction/quest')
------------------------------------
-
 local quest = Quest:new(xi.questLog.BASTOK, xi.quest.id.bastok.TEAK_ME_TO_THE_STARS)
 
 quest.reward =
 {
     fame     = 30,
     fameArea = xi.fameArea.BASTOK,
-    gil = 2100,
+    gil      = 2100,
 }
 
 quest.sections =
@@ -30,7 +24,14 @@ quest.sections =
 
         [xi.zone.METALWORKS] =
         {
-            ['Raibaht'] = quest:progressEvent(864),
+            onTrigger = function(player, npc)
+                local option = 0
+                if player:hasCompletedMission(xi.mission.id.cop.THE_CALL_OF_THE_WYRMKING) then
+                    option = 2 -- additional dialogue regarding Crystal propulsion unit and hooded scientists as mentioned in cop wyrmking mission
+                end
+
+                return quest:progressEvent(864, 0, xi.item.GARHADA_TEAK_LUMBER, 0, 0, 0, 0, option)
+            end,
 
             onEventFinish =
             {
@@ -50,6 +51,11 @@ quest.sections =
         {
             ['Raibaht'] =
             {
+                onTrigger = function(player, npc)
+                    -- Cycle between event 871 and default 501
+                    return quest:event(871, 0, xi.item.GARHADA_TEAK_LUMBER):setPriority(10)
+                end,
+
                 onTrade = function(player, npc, trade)
                     if npcUtil.tradeHasExactly(trade, xi.item.GARHADA_TEAK_LUMBER) then
                         return quest:event(865)
@@ -61,6 +67,7 @@ quest.sections =
             {
                 [865] = function(player, csid, option, npc)
                     player:confirmTrade()
+                    xi.quest.setMustZone(player, xi.questLog.BASTOK, xi.quest.id.bastok.HYPER_ACTIVE)
                     quest:complete(player)
                 end,
             },

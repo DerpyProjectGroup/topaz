@@ -1,8 +1,11 @@
 -----------------------------------
--- Water Way to Go
+-- Toraimarai Turmoil
 -----------------------------------
--- !addquest 2 16
+-- !addquest 2 80
 -- Ohbiru-Dohbiru : !pos 23 -5 -193 238
+-- Leepe-Hoppe    ! !pos -131 20 -174 238
+-- Polikal-Ramikal: !pos 15 -18 195 239
+-- Yoran-Oran     : !pos -110 -14 203 239
 -- Giddeus Spring : !pos -258 -2 -249 145
 -----------------------------------
 
@@ -10,10 +13,10 @@ local quest = Quest:new(xi.questLog.WINDURST, xi.quest.id.windurst.TORAIMARAI_TU
 
 quest.reward =
 {
-    gil  = 4500,
-    fame = 100,
+    gil      = 4500,
+    fame     = 100,
     fameArea = xi.fameArea.WINDURST,
-    title = xi.title.CERTIFIED_RHINOSTERY_VENTURER
+    title    = xi.title.CERTIFIED_RHINOSTERY_VENTURER,
 }
 
 quest.sections =
@@ -52,13 +55,19 @@ quest.sections =
         {
             ['Ohbiru-Dohbiru'] =
             {
-                onTrigger = function(player, npc)
-                    return quest:event(786, 4500, xi.keyItem.RHINOSTERY_CERTIFICATE, xi.item.STARMITE_SHELL) -- Reminder text.
-                end,
+                onTrigger = quest:event(786, 4500, xi.keyItem.RHINOSTERY_CERTIFICATE, xi.item.STARMITE_SHELL), -- Reminder text.
+
                 onTrade = function(player, npc, trade)
                     if npcUtil.tradeHasExactly(trade, { { xi.item.STARMITE_SHELL, 3 } }) then
                         return quest:progressEvent(791)
                     end
+                end,
+            },
+
+            ['Leepe-Hoppe'] =
+            {
+                onTrigger = function(player, npc)
+                    return quest:event(790, 0, xi.ki.RHINOSTERY_CERTIFICATE)
                 end,
             },
 
@@ -68,6 +77,23 @@ quest.sections =
                     if quest:complete(player) then
                         player:confirmTrade()
                     end
+                end,
+            },
+        },
+
+        [xi.zone.WINDURST_WALLS] =
+        {
+            ['Polikal-Ramikal'] =
+            {
+                onTrigger = function(player, npc)
+                    return quest:event(391)
+                end,
+            },
+
+            ['Yoran-Oran'] =
+            {
+                onTrigger = function(player, npc)
+                    return quest:event(392)
                 end,
             },
         },
@@ -83,9 +109,8 @@ quest.sections =
         {
             ['Ohbiru-Dohbiru'] =
             {
-                onTrigger = function(player, npc)
-                    return quest:event(795, 4500, 0, xi.item.STARMITE_SHELL) --dialog for repeat
-                end,
+                onTrigger = quest:event(795, 4500, 0, xi.item.STARMITE_SHELL), -- repeat dialog
+
                 onTrade = function(player, npc, trade)
                     if npcUtil.tradeHasExactly(trade, { { xi.item.STARMITE_SHELL, 3 } }) then
                         return quest:progressEvent(791)
@@ -97,9 +122,11 @@ quest.sections =
             {
                 [791] = function(player, csid, option, npc)
                     player:confirmTrade()
+
                     --From previous implementation, award 100 fame on first completion,
                     -- and 50 fame for any subsequent trade.
                     player:addFame(xi.fameArea.WINDURST, 50)
+                    npcUtil.giveCurrency(player, 'gil', 4500)
                 end,
             },
         },

@@ -20,6 +20,13 @@ entity.onMobSpawn = function(mob)
     mob:setLocalVar('itemDebuff_Fungus', 1) -- Miasmic Breath
     mob:setLocalVar('itemDebuff_Root', 1)   -- Vampiric Lash & Putrid Breath
     mob:setLocalVar('itemDebuff_Moss', 1)   -- Fragrant Breath
+    -- mob:setMobSkillAttack(2010)
+    mob:addImmunity(xi.immunity.LIGHT_SLEEP)
+    mob:addImmunity(xi.immunity.DARK_SLEEP)
+    mob:addImmunity(xi.immunity.BIND)
+    mob:addImmunity(xi.immunity.GRAVITY)
+    mob:addImmunity(xi.immunity.SILENCE)
+    mob:setMobMod(xi.mobMod.WEAPON_BONUS, 50)
 end
 
 entity.onMobRoam = function(mob)

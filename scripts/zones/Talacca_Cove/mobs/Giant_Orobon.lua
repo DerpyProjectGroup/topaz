@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Talacca Cove
---   NM: Giant Orobon
--- Note: Fished up
+--  Mob: Giant Orobon
 -----------------------------------
 mixins = { require('scripts/mixins/families/orobon') }
 -----------------------------------

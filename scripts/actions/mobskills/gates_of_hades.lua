@@ -19,21 +19,24 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
         end
     end
 
-    local result = 1
     local mobhp = mob:getHPP()
 
     if mobhp <= 25 then
-        if (mob:getID() == 17093004) and (mob:getInstance():getStage() ~= 100) then -- Nyzul Isle Cerberus will only use this on floor 100
+        if (mob:getID() == 17093004) and (mob:getInstance():getStage() ~= 100) then -- Nyzul Isle Cerberus will only use this on floor 100 TODO: Shift Proof This
             return 1
         end
-        result = 0
+
+        return 0
     end
 
-    return result
+    return 1
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
+    local damage = mob:getWeaponDmg() * 6
     local power = 21
+    local dmgmod = 1.8
+
     -- TODO: MobID References cleanup.
     if (mob:getID() == 17093004) then -- Nyzul Isle Cerberus https://youtu.be/e7CEeeRQ8qU?t=274
         power = 20
@@ -42,14 +45,13 @@ mobskillObject.onMobWeaponSkill = function(target, mob, skill)
         power = 40
     end
 
+    damage = xi.mobskills.mobMagicalMove(mob, target, skill, damage, xi.element.FIRE, dmgmod, xi.mobskills.magicalTpBonus.NO_EFFECT)
+    damage = xi.mobskills.mobFinalAdjustments(damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.FIRE, xi.mobskills.shadowBehavior.WIPE_SHADOWS)
 
+    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.FIRE)
     xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.BURN, power, 3, 60)
 
-    local dmgmod = 1.8
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, mob:getWeaponDmg() * 6, xi.element.FIRE, dmgmod, xi.mobskills.magicalTpBonus.NO_EFFECT)
-    local dmg = xi.mobskills.mobFinalAdjustments(info.dmg, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.FIRE, xi.mobskills.shadowBehavior.WIPE_SHADOWS)
-    target:takeDamage(dmg, mob, xi.attackType.MAGICAL, xi.damageType.FIRE)
-    return dmg
+    return damage
 end
 
 return mobskillObject

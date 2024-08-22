@@ -21,6 +21,7 @@ zones[xi.zone.KING_RANPERRES_TOMB] =
         CHEST_UNLOCKED                = 7290,  -- You unlock the chest!
         SENSE_SOMETHING_EVIL          = 7317,  -- You sense something evil.
         HEAVY_DOOR                    = 7318,  -- It is a solid stone door.
+        FINAL_RESTING_PLACE           = 7322,  -- It appears to be the true resting place of King Ranperre.
         PLAYER_OBTAINS_ITEM           = 8256,  -- <name> obtains <item>!
         UNABLE_TO_OBTAIN_ITEM         = 8257,  -- You were unable to obtain the item.
         PLAYER_OBTAINS_TEMP_ITEM      = 8258,  -- <name> obtains the temporary item: <item>!

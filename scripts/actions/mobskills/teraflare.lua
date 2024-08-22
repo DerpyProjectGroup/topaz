@@ -8,7 +8,7 @@
 --  Notes: Used by Bahamut when at 10% of its HP, and can use anytime afterwards at will.
 ---------------------------------------------
 
-
+-- TODO: Move logic to mobscripts.
 
 -----------------------------------
 local mobskillObject = {}
@@ -34,12 +34,13 @@ mobskillObject.onMobWeaponSkill = function(target, mob, skill)
         mob:setBehaviour(bit.bor(mob:getBehaviour(), xi.behavior.NO_TURN))
     end
 
+    local damage = mob:getWeaponDmg() * 12
     local dmgmod = 1
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, mob:getWeaponDmg() * 12, xi.element.FIRE, dmgmod, xi.mobskills.magicalTpBonus.NO_EFFECT)
-    local dmg = xi.mobskills.mobFinalAdjustments(info.dmg, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.FIRE, xi.mobskills.shadowBehavior.WIPE_SHADOWS)
-    target:takeDamage(dmg, mob, xi.attackType.MAGICAL, xi.damageType.FIRE)
+    damage = xi.mobskills.mobMagicalMove(mob, target, skill, damage, xi.element.FIRE, dmgmod, xi.mobskills.magicalTpBonus.NO_EFFECT)
+    damage = xi.mobskills.mobFinalAdjustments(damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.FIRE, xi.mobskills.shadowBehavior.WIPE_SHADOWS)
+    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.FIRE)
 
-    return dmg
+    return damage
 end
 
 return mobskillObject

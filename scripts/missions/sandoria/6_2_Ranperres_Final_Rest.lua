@@ -191,6 +191,8 @@ mission.sections =
                         not player:hasKeyItem(xi.ki.ANCIENT_SAN_DORIAN_BOOK)
                     then
                         return mission:progressEvent(8)
+                    elseif player:hasKeyItem(xi.ki.ANCIENT_SAN_DORIAN_BOOK) then
+                        return mission:messageSpecial(krtID.text.FINAL_RESTING_PLACE)
                     end
                 end,
             },

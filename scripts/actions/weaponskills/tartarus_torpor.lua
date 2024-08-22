@@ -25,7 +25,7 @@ weaponskillObject.onUseWeaponSkill = function(player, target, wsID, tp, primary,
 
     if damage > 0 then
         local duration = (tp / 1000 * 30) * applyResistanceAddEffect(player, target, xi.element.DARK, 0)
-        if not target:hasStatusEffect(xi.effect.SLEEP_I) and not target:hasImmunity(xi.immunity.SLEEP) then
+        if not target:hasStatusEffect(xi.effect.SLEEP_I) and not target:hasImmunity(xi.immunity.DARK_SLEEP) then
             target:addStatusEffect(xi.effect.SLEEP_I, 1, 0, duration)
             player:messagePublic(xi.msg.basic.SKILL_ENFEEB, target, wsID, xi.effect.SLEEP_I)
         end

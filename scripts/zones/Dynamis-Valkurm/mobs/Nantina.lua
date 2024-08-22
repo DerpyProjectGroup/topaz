@@ -1,6 +1,6 @@
 -----------------------------------
 -- Area: Dynamis - Valkurm
---  Mob: Stcemqestcint
+--  Mob: Nantina
 -----------------------------------
 mixins = 
 {
@@ -11,9 +11,10 @@ mixins =
 local entity = {}
 
 entity.onMobSpawn = function(mob)
-    mob:setAutoAttackEnabled(false)
-    mob:setMobMod(xi.mobMod.SKILL_LIST, 5370)
-    mob:setLocalVar('skillOrder', 0) -- 3 Blow, into 3 Uppercut, into 1 Attractant.
+    mob:addImmunity(xi.immunity.LIGHT_SLEEP)
+    mob:addImmunity(xi.immunity.DARK_SLEEP)
+    mob:setMobSkillAttack(2011)
+    mob:setLocalVar('nantina_skill_count', 0)
 end
 
 entity.onMobFight = function(mob)
@@ -21,27 +22,21 @@ entity.onMobFight = function(mob)
 end
 
 entity.onMobWeaponSkillPrepare = function(mob, target)
-    if mob:getLocalVar('skillOrder') == 0 and mob:getTarget() ~= nil and mob:canUseAbilities() and mob:checkDistance(target) < 6 and mob:getCurrentAction() <= 1 then
-        mob:setLocalVar('skillOrder', 1)
-        return 581
-    elseif mob:getLocalVar('skillOrder') == 1 and mob:getTarget() ~= nil and mob:canUseAbilities() and mob:checkDistance(target) < 6 and mob:getCurrentAction() <= 1 then
-        mob:setLocalVar('skillOrder', 2)
-        return 581
-    elseif mob:getLocalVar('skillOrder') == 2 and mob:getTarget() ~= nil and mob:canUseAbilities() and mob:checkDistance(target) < 6 and mob:getCurrentAction() <= 1 then
-        mob:setLocalVar('skillOrder', 3)
-        return 581
-    elseif mob:getLocalVar('skillOrder') == 3 and mob:getTarget() ~= nil and mob:canUseAbilities() and mob:checkDistance(target) < 6 and mob:getCurrentAction() <= 1 then
-        mob:setLocalVar('skillOrder', 4)
-        return 584
-    elseif mob:getLocalVar('skillOrder') == 4 and mob:getTarget() ~= nil and mob:canUseAbilities() and mob:checkDistance(target) < 6 and mob:getCurrentAction() <= 1 then
-        mob:setLocalVar('skillOrder', 5)
-        return 584
-    elseif mob:getLocalVar('skillOrder') == 5 and mob:getTarget() ~= nil and mob:canUseAbilities() and mob:checkDistance(target) < 6 and mob:getCurrentAction() <= 1 then
-        mob:setLocalVar('skillOrder', 6)
-        return 584
-    elseif mob:getLocalVar('skillOrder') == 6 and mob:getTarget() ~= nil and mob:canUseAbilities() and mob:checkDistance(target) < 6 and mob:getCurrentAction() <= 1 then
-        mob:setLocalVar('skillOrder', 0)
-        return 1619
+    -- Blow x9 > Uppercut x3 > Attractant
+    local skillCount = mob:getLocalVar('nantina_skill_count')
+
+    if skillCount < 9 then
+        mob:setLocalVar('nantina_skill_count', skillCount + 1)
+
+        return 1617 -- blow
+    elseif skillCount < 12 then
+        mob:setLocalVar('nantina_skill_count', skillCount + 1)
+
+        return 1618 -- uppercut
+    else
+        mob:setLocalVar('nantina_skill_count', 0) -- Reset skill count
+
+        return 1619 -- attractant
     end
 end
 

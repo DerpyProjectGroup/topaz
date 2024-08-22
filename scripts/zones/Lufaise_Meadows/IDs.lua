@@ -27,7 +27,7 @@ zones[xi.zone.LUFAISE_MEADOWS] =
         MURDEROUS_PRESENCE            = 7747, -- Wait, you sense a murderous presence...!
         YOU_CAN_SEE_FOR_MALMS         = 7748, -- You can see for malms in every direction.
         SPINE_CHILLING_PRESENCE       = 7750, -- You sense a spine-chilling presence!
-        AMALTHEIA_TRIGGER             = 7789, -- A message has been engraved into the rock: “Offer up the ancient shield, and the pact shall be honored.”
+        AMALTHEIA_TRIGGER             = 7789, -- A message has been engraved into the rock: �Offer up the ancient shield, and the pact shall be honored.�
         AMALTHEIA_SPAWN1              = 7790, -- Very well, I shall test thy mettle...
         AMALTHEIA_SPAWN2              = 7791, -- I am Amaltheia the Omnipotent. My almighty horns shall seal thy fate this day!
         AMALTHEIA_WRONG_TRADE         = 7792, -- Nothing happens...
@@ -72,6 +72,7 @@ zones[xi.zone.LUFAISE_MEADOWS] =
             16875775,
             16875776,
         },
+        BLACKBONE_FRAZDIZ     = GetFirstID('Blackbone_Frazdiz'),
     },
     npc =
     {

@@ -5,22 +5,18 @@
 -----------------------------------
 local mobskillObject = {}
 
-
-
-require('scripts/globals/weaponskills')
-
------------------------------------
 mobskillObject.onMobSkillCheck = function(target, mob, skill)
     return 0
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
+    local damage = mob:getWeaponDmg() * 3
     local dmgmod = 2
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, mob:getWeaponDmg()*3, xi.element.ICE, dmgmod, xi.mobskills.magicalTpBonus.NO_EFFECT)
-    local dmg = xi.mobskills.mobFinalAdjustments(info.dmg, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.ICE, xi.mobskills.shadowBehavior.NUMSHADOWS_1)
+    local info = xi.mobskills.mobMagicalMove(mob, target, skill, damage, xi.element.ICE, dmgmod, xi.mobskills.magicalTpBonus.NO_EFFECT)
+    local damage = xi.mobskills.mobFinalAdjustments(damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.ICE, xi.mobskills.shadowBehavior.NUMSHADOWS_1)
 
-    target:takeDamage(dmg, mob, xi.attackType.MAGICAL, xi.damageType.ICE)
-    return dmg
+    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.ICE)
+    return damage
 end
 
 return mobskillObject

@@ -121,13 +121,15 @@ namespace charutils
     void   EquipItem(CCharEntity* PChar, uint8 slotID, uint8 equipSlotID, uint8 containerID);
     void   UnequipItem(CCharEntity* PChar, uint8 equipSlotID,
                        bool update = true); // call with update == false to prevent calls to UpdateHealth() - used for correct handling of stats on armor swaps
+    bool   hasSlotEquipped(CCharEntity* PChar, uint8 equipSlotID);
     void   RemoveSub(CCharEntity* PChar);
     bool   EquipArmor(CCharEntity* PChar, uint8 slotID, uint8 equipSlotID, uint8 containerID);
     void   CheckUnarmedWeapon(CCharEntity* PChar);
     void   SetStyleLock(CCharEntity* PChar, bool isStyleLocked);
     void   UpdateWeaponStyle(CCharEntity* PChar, uint8 equipSlotID, CItemEquipment* PItem);
     void   UpdateArmorStyle(CCharEntity* PChar, uint8 equipSlotID);
-    void   UpdateRemovedSlots(CCharEntity* PChar);
+    void   UpdateRemovedSlotsLookForLockStyle(CCharEntity* PChar);
+    void   UpdateRemovedSlotsLook(CCharEntity* PChar);
     void   AddItemToRecycleBin(CCharEntity* PChar, uint32 container, uint8 slotID, uint8 quantity);
     void   EmptyRecycleBin(CCharEntity* PChar);
 
@@ -169,6 +171,7 @@ namespace charutils
     int32 addWeaponSkill(CCharEntity* PChar, uint16 WeaponSkillID); // declaration of function to add weapon skill
     int32 hasWeaponSkill(CCharEntity* PChar, uint16 WeaponSkillID); // declaration of function to check for weapon skill
     int32 delWeaponSkill(CCharEntity* PChar, uint16 WeaponSkillID); // declaration of function to delete weapon skill
+    bool  canUseWeaponSkill(CCharEntity* PChar, uint16 wsid);
 
     void SaveCharJob(CCharEntity* PChar, JOBTYPE job); // save the level for the selected character's jobs
     void SaveCharExp(CCharEntity* PChar, JOBTYPE job); // save experience for the selected character’s chosen job

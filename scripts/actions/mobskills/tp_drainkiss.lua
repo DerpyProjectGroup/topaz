@@ -13,6 +13,7 @@ end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
     local tpStolen = target:getTP() / 2 -- 50% of targets TP according to JP Wikis
+
     skill:setMsg(xi.mobskills.mobPhysicalDrainMove(mob, target, skill, xi.mobskills.drainType.TP, tpStolen))
 
     return tpStolen

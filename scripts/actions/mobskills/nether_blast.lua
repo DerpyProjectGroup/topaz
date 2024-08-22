@@ -18,16 +18,16 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local dmg = mob:getMainLvl() * 5 + 10 -- http://wiki.ffo.jp/html/4045.html
+    local damage = mob:getMainLvl() * 5 + 10 -- http://wiki.ffo.jp/html/4045.html
     local dmgmod = 1
     local ignoreres = true
 
-    local info = xi.mobskills.mobMagicalMove(mob, target, skill, dmg, xi.element.DARK, dmgmod, xi.mobskills.magicalTpBonus.NO_EFFECT, ignoreres)
+    damage = xi.mobskills.mobMagicalMove(mob, target, skill, damage, xi.element.DARK, dmgmod, xi.mobskills.magicalTpBonus.NO_EFFECT, ignoreres)
 
-    dmg = xi.mobskills.mobFinalAdjustments(info.dmg, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.DARK, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
+    damage = xi.mobskills.mobFinalAdjustments(damage, mob, skill, target, xi.attackType.MAGICAL, xi.damageType.DARK, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
 
-    target:takeDamage(dmg, mob, xi.attackType.MAGICAL, xi.damageType.DARK)
-    return dmg
+    target:takeDamage(damage, mob, xi.attackType.MAGICAL, xi.damageType.DARK)
+    return damage
 end
 
 return mobskillObject

@@ -8,6 +8,11 @@
 
 
 -----------------------------------
+-- Vile Belch
+-- Description: Belches up noxious fumes, inflicting all targets in an area of effect with Silence and Plague.
+-- Radial
+-- Ignores Shadows
+-----------------------------------
 local mobskillObject = {}
 
 mobskillObject.onMobSkillCheck = function(target, mob, skill)
@@ -15,26 +20,10 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local plagued = false
-    local silence = false
-    local typeEffect
+    skill:setMsg(xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.PLAGUE, 10, 3, xi.mobskills.calculateDuration(skill:getTP(), 15, 45)))
+    skill:setMsg(xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.SILENCE, 1, 0, xi.mobskills.calculateDuration(skill:getTP(), 30, 60)))
 
-    plagued = xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.PLAGUE, 5, 3, 60)
-    silence = xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.SILENCE, 1, 0, 60)
-
-    skill:setMsg(xi.msg.basic.SKILL_ENFEEB_IS)
-
-    -- display plague first, else silence
-    if plagued == xi.msg.basic.SKILL_ENFEEB_IS then
-        typeEffect = xi.effect.PLAGUE
-    elseif silence == xi.msg.basic.SKILL_ENFEEB_IS then
-        typeEffect = xi.effect.SILENCE
-    else
-        skill:setMsg(xi.msg.basic.SKILL_MISS)
-    end
-
-    return typeEffect
+    return xi.effect.PLAGUE
 end
-
 
 return mobskillObject

@@ -7,10 +7,6 @@ require('scripts/globals/barge')
 -----------------------------------
 local zoneObject = {}
 
-zoneObject.onChocoboDig = function(player, precheck)
-    return xi.chocoboDig.start(player, precheck)
-end
-
 zoneObject.onInitialize = function(zone)
     xi.mob.nmTODPersistCache(zone, ID.mob.TEMPEST_TIGON)
 

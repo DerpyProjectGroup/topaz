@@ -191,21 +191,14 @@ xi.mobskills.mobRangedMove = function(mob, target, skill, numHits, accMod, dmgMo
 
     firstHitChance = utils.clamp(firstHitChance, 35, 95)
 
-    --Applying pDIF
-    local pdif
     if (math.random() * 100) <= firstHitChance then
-        pdif = math.random((minRatio * 1000), (maxRatio * 1000)) --generate random PDIF
-        pdif = pdif / 1000 --multiplier set.
-        finaldmg = finaldmg + hitdamage * pdif
-        hitslanded = hitslanded + 1
+        -- use helper function check for parry guard and blocking and handle the hit
+        hitslanded, finaldmg = handleSinglePhysicalHit(mob, target, hitdamage, hitslanded, finaldmg, tpEffect, minRatio, maxRatio)
     end
 
     while hitsdone < numHits do
         if (math.random() * 100) <= hitrate then --it hit
-            pdif       = math.random(minRatio * 1000, maxRatio * 1000) --generate random PDIF
-            pdif       = pdif / 1000 --multiplier set.
-            finaldmg   = finaldmg + hitdamage * pdif
-            hitslanded = hitslanded + 1
+            hitslanded, finaldmg = handleSinglePhysicalHit(mob, target, hitdamage, hitslanded, finaldmg, tpEffect, minRatio, maxRatio)
         end
 
         hitsdone = hitsdone + 1
@@ -558,7 +551,6 @@ end
 -- xi.mobskills.magicalTpBonus.DMG_BONUS and TP = 200, tpvalue = 2, assume V=150  --> damage is now 150*(TP*2) / 100 = 600
 
 xi.mobskills.mobMagicalMove = function(actor, target, action, baseDamage, actionElement, damageModifier, tpEffect, tpMultiplier, ignoreresist, ftp100, ftp200, ftp300, dStatMult)
-    local returnInfo = {} -- TODO: Destroy
 
     if tpMultiplier == nil then
         tpMultiplier = 1
@@ -582,7 +574,7 @@ xi.mobskills.mobMagicalMove = function(actor, target, action, baseDamage, action
 
     -- Base damage
     if tpEffect == xi.mobskills.magicalTpBonus.DMG_BONUS then
-        finalDamage = math.floor(baseDamage * action:getTP() * tpMultiplier / 1000)
+        finalDamage = math.floor(finalDamage * action:getTP() * tpMultiplier / 1000)
     end
 
     -- Get bonus macc.
@@ -645,9 +637,7 @@ xi.mobskills.mobMagicalMove = function(actor, target, action, baseDamage, action
         actor:addTP(tpReturn)
     end
 
-    returnInfo.dmg = finalDamage
-
-    return returnInfo
+    return finalDamage
 end
 
 -- effect = xi.effect.WHATEVER if enfeeble
@@ -1068,6 +1058,14 @@ xi.mobskills.mobHealMove = function(target, healAmount)
     target:addHP(healAmount)
 
     return healAmount
+end
+
+xi.mobskills.calculateDuration = function(tp, minimum, maximum)
+    if tp <= 1000 then
+        return minimum
+    end
+
+    return minimum + (maximum - minimum) * ((tp - 1000) / 1000)
 end
 
 --[[xi.mobskills.ftP = function(tp, ftp100, ftp200, ftp300)
