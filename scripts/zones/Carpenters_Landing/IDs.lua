@@ -44,6 +44,8 @@ zones[xi.zone.CARPENTERS_LANDING] =
         LEFT_BILLET                   = 7449, -- You use your <item>. (<number> trip[/s] remaining)
         END_BILLET                    = 7450, -- You use up your <item>.
         MTICKET_ADDED                 = 7451, -- 10 tickets were added to your 'barge multi-ticket'
+        DIG_THROW_AWAY                = 7294, -- You dig up <item>, but your inventory is full. You regretfully throw the <item> away.
+        FIND_NOTHING                  = 7256, -- You dig and you dig, but find nothing.
     },
     mob =
     {
