@@ -7,18 +7,20 @@
 local itemObject = {}
 
 itemObject.onItemCheck = function(target, item, param, caster)
-    local effect = target:getStatusEffect(xi.effect.DEX_BOOST)
-    if effect ~= nil and effect:getItemSourceID() == xi.item.RUNNERS_BELT then
-        target:delStatusEffect(xi.effect.DEX_BOOST)
-    end
-
     return 0
 end
 
-itemObject.onItemUse = function(target)
-    if target:hasEquipped(xi.item.RUNNERS_BELT) then
-        target:addStatusEffect(xi.effect.DEX_BOOST, 3, 0, 60, 0, 0, 0, xi.item.RUNNERS_BELT)
+itemObject.onItemUse = function(target, caster, item)
+    local effect = target:getItemEnchantmentEffect(item:getID())
+    if effect then
+        effect:delStatusEffect()
     end
+
+    target:addStatusEffect(xi.effect.ENCHANTMENT, 0, 0, 60, item:getID())
+end
+
+itemObject.onEffectGain = function(target, effect)
+    effect:addMod(xi.mod.DEX, 3)
 end
 
 return itemObject

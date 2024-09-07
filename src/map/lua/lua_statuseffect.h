@@ -29,9 +29,11 @@ class CStatusEffect;
 class CLuaStatusEffect
 {
     CStatusEffect* m_PLuaStatusEffect;
+    CBaseEntity*   m_PBaseEntity;
 
 public:
     CLuaStatusEffect(CStatusEffect*);
+    void SetBaseEntity(CBaseEntity* entity);
 
     CStatusEffect* GetStatusEffect() const
     {
@@ -52,7 +54,7 @@ public:
     uint32 getTickCount();
     uint32 getTick();
     uint16 getIcon();
-    uint16 getItemSourceID();
+    uint16 getEnchantmentSlotID();
 
     void setIcon(uint16 icon);
     void setPower(uint16 power);
@@ -60,7 +62,7 @@ public:
     void setTier(uint16 tier);
     void setDuration(uint32 duration);
     void setTick(uint32 tick);
-    void setItemSourceID(uint16 itemSourceID);
+    void setEnchantmentSlotID(uint16 enchantmentSlotID);
 
     void setStartTime(uint32 time);
     void resetStartTime();
@@ -71,6 +73,8 @@ public:
     void   addEffectFlag(uint32 flag);
     void   delEffectFlag(uint32 flag);
     bool   hasEffectFlag(uint32 flag);
+    void   delStatusEffect();
+    void   delStatusEffectSilent();
 
     bool operator==(const CLuaStatusEffect& other) const
     {

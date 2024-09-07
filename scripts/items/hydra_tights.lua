@@ -4,28 +4,30 @@
 -- Item Effect: 10% haste
 -- Duration: 3 minutes
 -----------------------------------
-
-
------------------------------------
 local itemObject = {}
 
 itemObject.onItemCheck = function(target, item, param, caster)
-    local effect = target:getStatusEffect(xi.effect.HASTE)
-    if effect ~= nil and effect:getItemSourceID() == xi.item.HYDRA_TIGHTS then
-        target:delStatusEffect(xi.effect.HASTE)
-    end
-
     return 0
 end
 
-itemObject.onItemUse = function(target)
-    if target:hasEquipped(xi.item.HYDRA_TIGHTS) then
-        if not target:hasStatusEffect(xi.effect.HASTE) then
-            target:addStatusEffect(xi.effect.HASTE, 1000, 0, 180, 0, 0, 0, xi.item.HYDRA_TIGHTS)
-        else
-            target:messageBasic(xi.msg.basic.NO_EFFECT)
-        end
+itemObject.onItemUse = function(target, caster, item)
+    local effect = target:getItemEnchantmentEffect(item:getID())
+    if effect then
+        effect:delStatusEffect()
     end
+
+    target:addStatusEffectEx(xi.effect.ENCHANTMENT, xi.effect.HASTE, 0, 0, 180, item:getID())
+end
+
+itemObject.onItemUnequip = function(user, item)
+    local effect = user:getItemEnchantmentEffect(item:getID())
+    if effect then
+        effect:delStatusEffect()
+    end
+end
+
+itemObject.onEffectGain = function(target, effect)
+    effect:addMod(xi.mod.HASTE_MAGIC, 1000)
 end
 
 return itemObject

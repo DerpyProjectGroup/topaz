@@ -7,25 +7,20 @@
 local itemObject = {}
 
 itemObject.onItemCheck = function(target, item, param, caster)
-    if target:getStatusEffect(xi.effect.ENCHANTMENT, nil, xi.item.TWICER) ~= nil then
-        target:delStatusEffect(xi.effect.ENCHANTMENT, nil, xi.item.TWICER)
-    end
-
     return 0
 end
 
-itemObject.onItemUse = function(target)
-    if target:hasEquipped(xi.item.TWICER) then
-        target:addStatusEffect(xi.effect.ENCHANTMENT, 0, 0, 30, 0, 0, 0, xi.item.TWICER)
+itemObject.onItemUse = function(target, caster, item)
+    local effect = target:getItemEnchantmentEffect(item:getID())
+    if effect then
+        effect:delStatusEffect()
     end
+
+    target:addStatusEffect(xi.effect.ENCHANTMENT, 0, 0, 30, item:getID())
 end
 
 itemObject.onEffectGain = function(target, effect)
-    target:addMod(xi.mod.DOUBLE_ATTACK, 100)
-end
-
-itemObject.onEffectLose = function(target, effect)
-    target:delMod(xi.mod.DOUBLE_ATTACK, 100)
+    effect:addMod(xi.mod.DOUBLE_ATTACK, 100)
 end
 
 return itemObject

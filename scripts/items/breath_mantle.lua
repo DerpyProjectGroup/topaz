@@ -6,27 +6,24 @@
 local itemObject = {}
 
 itemObject.onItemCheck = function(target, item, param, caster)
-    if target:getStatusEffect(xi.effect.ENCHANTMENT, nil, xi.item.BREATH_MANTLE) ~= nil then
-        target:delStatusEffect(xi.effect.ENCHANTMENT, nil, xi.item.BREATH_MANTLE)
-    end
-
     return 0
 end
 
-itemObject.onItemUse = function(target)
-    if target:hasEquipped(xi.item.BREATH_MANTLE) then
-        target:addStatusEffect(xi.effect.ENCHANTMENT, 0, 0, 1800, 0, 0, 0, xi.item.BREATH_MANTLE)
+itemObject.onItemUse = function(target, caster, item)
+    local effect = target:getItemEnchantmentEffect(item:getID())
+    if effect then
+        effect:delStatusEffect()
     end
+
+    target:addStatusEffect(xi.effect.ENCHANTMENT, 0, 0, 1800, item:getID())
 end
 
 itemObject.onEffectGain = function(target, effect)
-    target:addMod(xi.mod.HP, 18)
-    target:addMod(xi.mod.ENMITY, 3)
+    effect:addMod(xi.mod.HP, 18)
+    effect:addMod(xi.mod.ENMITY, 3)
 end
 
 itemObject.onEffectLose = function(target, effect)
-    target:delMod(xi.mod.HP, 18)
-    target:delMod(xi.mod.ENMITY, 3)
 end
 
 return itemObject

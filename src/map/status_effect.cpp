@@ -81,9 +81,9 @@ uint8 CStatusEffect::GetEffectSlot() const
     return m_Slot;
 }
 
-uint16 CStatusEffect::GetItemSourceID() const
+uint16 CStatusEffect::GetEnchantmentSlotID() const
 {
-    return m_ItemSourceID;
+    return m_EnchantmentSlotID;
 }
 
 uint16 CStatusEffect::GetIcon() const
@@ -197,9 +197,9 @@ void CStatusEffect::SetDuration(uint32 Duration)
     m_Duration = Duration;
 }
 
-void CStatusEffect::SetItemSourceID(uint16 ItemSourceID)
+void CStatusEffect::SetEnchantmentSlotID(uint16 EnchantmentSlotID)
 {
-    m_ItemSourceID = ItemSourceID;
+    m_EnchantmentSlotID = EnchantmentSlotID;
 }
 
 void CStatusEffect::SetStartTime(time_point StartTime)

@@ -24,6 +24,9 @@
 
 #include "lua_statuseffect.h"
 #include "status_effect.h"
+#include "status_effect_container.h"
+
+#include "entities/battleentity.h"
 
 //======================================================//
 
@@ -34,6 +37,18 @@ CLuaStatusEffect::CLuaStatusEffect(CStatusEffect* StatusEffect)
     {
         ShowError("CLuaStatusEffect created with nullptr instead of valid CStatusEffect*!");
     }
+
+    m_PBaseEntity = nullptr;
+}
+
+void CLuaStatusEffect::SetBaseEntity(CBaseEntity* BaseEntity)
+{
+    if (BaseEntity == nullptr)
+    {
+        ShowError("CLuaStatusEffect trying to map to a nullptr CBaseEntity*!");
+    }
+
+    m_PBaseEntity = BaseEntity;
 }
 
 //======================================================//
@@ -159,9 +174,9 @@ void CLuaStatusEffect::setTier(uint16 tier)
     m_PLuaStatusEffect->SetTier(tier);
 }
 
-void CLuaStatusEffect::setItemSourceID(uint16 itemSourceID)
+void CLuaStatusEffect::setEnchantmentSlotID(uint16 enchantmentSlotID)
 {
-    m_PLuaStatusEffect->SetItemSourceID(itemSourceID);
+    m_PLuaStatusEffect->SetEnchantmentSlotID(enchantmentSlotID);
 }
 
 //======================================================//
@@ -197,6 +212,14 @@ void CLuaStatusEffect::setStartTime(uint32 time)
 void CLuaStatusEffect::addMod(uint16 mod, int16 amount)
 {
     m_PLuaStatusEffect->addMod(static_cast<Mod>(mod), amount);
+
+    // Since an effect's mod list is only applied to entity when adding the effect
+    // we need to add the mod to the entity manually if the effect is already applied
+    auto* PBattleEntity = dynamic_cast<CBattleEntity*>(m_PBaseEntity);
+    if (PBattleEntity)
+    {
+        PBattleEntity->addModifier(static_cast<Mod>(mod), amount);
+    }
 }
 
 //======================================================//
@@ -226,14 +249,36 @@ bool CLuaStatusEffect::hasEffectFlag(uint32 flag)
     return m_PLuaStatusEffect->HasEffectFlag(flag);
 }
 
+void CLuaStatusEffect::delStatusEffect()
+{
+    auto* PBattleEntity = dynamic_cast<CBattleEntity*>(m_PBaseEntity);
+    if (!PBattleEntity || !PBattleEntity->StatusEffectContainer)
+    {
+        return;
+    }
+
+    PBattleEntity->StatusEffectContainer->RemoveStatusEffect(m_PLuaStatusEffect);
+}
+
+void CLuaStatusEffect::delStatusEffectSilent()
+{
+    auto* PBattleEntity = dynamic_cast<CBattleEntity*>(m_PBaseEntity);
+    if (!PBattleEntity || !PBattleEntity->StatusEffectContainer)
+    {
+        return;
+    }
+
+    PBattleEntity->StatusEffectContainer->RemoveStatusEffect(m_PLuaStatusEffect, true);
+}
+
 uint16 CLuaStatusEffect::getIcon()
 {
     return m_PLuaStatusEffect->GetIcon();
 }
 
-uint16 CLuaStatusEffect::getItemSourceID()
+uint16 CLuaStatusEffect::getEnchantmentSlotID()
 {
-    return m_PLuaStatusEffect->GetItemSourceID();
+    return m_PLuaStatusEffect->GetEnchantmentSlotID();
 }
 
 //======================================================//
@@ -260,14 +305,16 @@ void CLuaStatusEffect::Register()
     SOL_REGISTER("setTier", CLuaStatusEffect::setTier);
     SOL_REGISTER("getTick", CLuaStatusEffect::getTick);
     SOL_REGISTER("setTick", CLuaStatusEffect::setTick);
-    SOL_REGISTER("getItemSourceID", CLuaStatusEffect::getItemSourceID);
-    SOL_REGISTER("setItemSourceID", CLuaStatusEffect::setItemSourceID);
+    SOL_REGISTER("getEnchantmentSlotID", CLuaStatusEffect::getEnchantmentSlotID);
+    SOL_REGISTER("setEnchantmentSlotID", CLuaStatusEffect::setEnchantmentSlotID);
     SOL_REGISTER("setStartTime", CLuaStatusEffect::setStartTime);
     SOL_REGISTER("getEffectFlags", CLuaStatusEffect::getEffectFlags);
     SOL_REGISTER("setEffectFlags", CLuaStatusEffect::setEffectFlags);
     SOL_REGISTER("addEffectFlag", CLuaStatusEffect::addEffectFlag);
     SOL_REGISTER("delEffectFlag", CLuaStatusEffect::delEffectFlag);
     SOL_REGISTER("hasEffectFlag", CLuaStatusEffect::hasEffectFlag);
+    SOL_REGISTER("delStatusEffect", CLuaStatusEffect::delStatusEffect);
+    SOL_REGISTER("delStatusEffectSilent", CLuaStatusEffect::delStatusEffectSilent);
     SOL_REGISTER("getIcon", CLuaStatusEffect::getIcon);
 }
 

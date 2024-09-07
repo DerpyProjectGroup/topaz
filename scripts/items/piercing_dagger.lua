@@ -7,18 +7,20 @@
 local itemObject = {}
 
 itemObject.onItemCheck = function(target, item, param, caster)
-    local effect = target:getStatusEffect(xi.effect.ATTACK_BOOST)
-    if effect ~= nil and effect:getItemSourceID() == xi.item.PIERCING_DAGGER then
-        target:delStatusEffect(xi.effect.ATTACK_BOOST)
-    end
-
     return 0
 end
 
-itemObject.onItemUse = function(target)
-    if target:hasEquipped(xi.item.PIERCING_DAGGER) then
-        target:addStatusEffect(xi.effect.ATTACK_BOOST, 3, 0, 1800, 0, 0, 0, xi.item.PIERCING_DAGGER)
+itemObject.onItemUse = function(target, caster, item)
+    local effect = target:getItemEnchantmentEffect(item:getID())
+    if effect then
+        effect:delStatusEffect()
     end
+
+    target:addStatusEffect(xi.effect.ENCHANTMENT, 0, 0, 1800, item:getID())
+end
+
+itemObject.onEffectGain = function(target, effect)
+    effect:addMod(xi.mod.ATT, 3)
 end
 
 return itemObject

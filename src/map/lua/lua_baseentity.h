@@ -647,7 +647,8 @@ public:
     // Status Effects
     bool   addStatusEffect(sol::variadic_args va);
     bool   addStatusEffectEx(sol::variadic_args va);
-    auto   getStatusEffect(uint16 StatusID, sol::object const& SubType, sol::object const& ItemSourceID) -> std::optional<CLuaStatusEffect>;
+    auto   getStatusEffect(uint16 StatusID, sol::object const& SubType) -> std::optional<CLuaStatusEffect>;
+    auto   getItemEnchantmentEffect(sol::object const& ItemID) -> std::optional<CLuaStatusEffect>;
     auto   getStatusEffects() -> sol::table;
     int16  getStatusEffectElement(uint16 statusId);
     bool   canGainStatusEffect(uint16 effect, sol::object const& powerObj);
@@ -656,7 +657,7 @@ public:
     uint8  countEffect(uint16 StatusID);     // Gets the number of effects of a specific type on the entity
     uint8  countEffectWithFlag(uint32 flag); // Gets the number of effects with a flag on the entity
 
-    bool   delStatusEffect(uint16 StatusID, sol::object const& SubType, sol::object const& ItemSourceID); // Removes Status Effect
+    bool   delStatusEffect(uint16 StatusID, sol::object const& SubType);
     void   delStatusEffectsByFlag(uint32 flag, sol::object const& silent);                                // Removes Status Effects by Flag
     bool   delStatusEffectSilent(uint16 StatusID);                                                        // Removes Status Effect, suppresses message
     uint16 eraseStatusEffect();                                                                           // Used with "Erase" spell

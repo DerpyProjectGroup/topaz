@@ -7,18 +7,20 @@
 local itemObject = {}
 
 itemObject.onItemCheck = function(target, item, param, caster)
-    local effect = target:getStatusEffect(xi.effect.EVASION_BOOST)
-    if effect ~= nil and effect:getItemSourceID() == xi.item.TAIKYOKU_KENPOGI then
-        target:delStatusEffect(xi.effect.EVASION_BOOST)
-    end
-
     return 0
 end
 
-itemObject.onItemUse = function(target)
-    if target:hasEquipped(xi.item.TAIKYOKU_KENPOGI) then
-        target:addStatusEffect(xi.effect.EVASION_BOOST, 3, 0, 1800, 0, 0, 0, xi.item.TAIKYOKU_KENPOGI)
+itemObject.onItemUse = function(target, caster, item)
+    local effect = target:getItemEnchantmentEffect(item:getID())
+    if effect then
+        effect:delStatusEffect()
     end
+
+    target:addStatusEffect(xi.effect.ENCHANTMENT, 0, 0, 1800, item:getID())
+end
+
+itemObject.onEffectGain = function(target, effect)
+    effect:addMod(xi.mod.EVA, 3)
 end
 
 return itemObject

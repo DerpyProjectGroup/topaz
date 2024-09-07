@@ -2683,6 +2683,7 @@ namespace luautils
     // We use the subject. The return value is the message number or 0.
     // It is also necessary to somehow pass the message parameter (for example,
     // number of recovered MP)
+    // Note that effects with subtype > 0 and < 20000 will utilize itemObject.onEffectGain and itemObject.onEffectLose
     int32 OnItemUse(CBaseEntity* PUser, CBaseEntity* PTarget, CItem* PItem)
     {
         TracyZoneScoped;

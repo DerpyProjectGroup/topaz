@@ -7,21 +7,20 @@
 local itemObject = {}
 
 itemObject.onItemCheck = function(target, item, param, caster)
-    local effect = target:getStatusEffect(xi.effect.REFRESH)
-    if
-        effect ~= nil and
-        effect:getItemSourceID() == xi.item.VIAL_OF_REFRESH_MUSK
-    then
-        target:delStatusEffect(xi.effect.REFRESH)
-    end
-
     return 0
 end
 
-itemObject.onItemUse = function(target)
-    if target:hasEquipped(xi.item.VIAL_OF_REFRESH_MUSK) then
-        target:addStatusEffect(xi.effect.REFRESH, 3, 3, 60, 0, 0, 0, xi.item.VIAL_OF_REFRESH_MUSK)
+itemObject.onItemUse = function(target, caster, item)
+    local effect = target:getItemEnchantmentEffect(item:getID())
+    if effect then
+        effect:delStatusEffect()
     end
+
+    target:addStatusEffectEx(xi.effect.ENCHANTMENT, xi.effect.REFRESH, 0, 0, 30, item:getID())
+end
+
+itemObject.onEffectGain = function(target, effect)
+    effect:addMod(xi.mod.REFRESH, 3)
 end
 
 return itemObject

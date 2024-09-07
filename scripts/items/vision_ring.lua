@@ -7,27 +7,21 @@
 local itemObject = {}
 
 itemObject.onItemCheck = function(target, item, param, caster)
-    if target:getStatusEffect(xi.effect.ENCHANTMENT, nil, xi.item.VISION_RING) ~= nil then
-        target:delStatusEffect(xi.effect.ENCHANTMENT, nil, xi.item.VISION_RING)
-    end
-
     return 0
 end
 
-itemObject.onItemUse = function(target)
-    if target:hasEquipped(xi.item.VISION_RING) then
-        target:addStatusEffect(xi.effect.ENCHANTMENT, 0, 0, 1800, 0, 0, 0, xi.item.VISION_RING)
+itemObject.onItemUse = function(target, caster, item)
+    local effect = target:getItemEnchantmentEffect(item:getID())
+    if effect then
+        effect:delStatusEffect()
     end
+
+    target:addStatusEffect(xi.effect.ENCHANTMENT, 0, 0, 1800, item:getID())
 end
 
 itemObject.onEffectGain = function(target, effect)
-    target:addMod(xi.mod.ACC, 2)
-    target:addMod(xi.mod.RACC, 2)
-end
-
-itemObject.onEffectLose = function(target, effect)
-    target:delMod(xi.mod.ACC, 2)
-    target:delMod(xi.mod.RACC, 2)
+    effect:addMod(xi.mod.ACC, 2)
+    effect:addMod(xi.mod.RACC, 2)
 end
 
 return itemObject

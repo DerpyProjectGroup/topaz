@@ -12983,10 +12983,9 @@ bool CLuaBaseEntity::addStatusEffect(sol::variadic_args va)
         auto duration   = static_cast<uint32>(va[3].as<double>());
 
         // Optional
-        auto subType      = va[4].is<uint32>() ? va[4].as<uint32>() : 0;
-        auto subPower     = va[5].is<uint16>() ? va[5].as<uint16>() : 0;
-        auto tier         = va[6].is<uint16>() ? va[6].as<uint16>() : 0;
-        auto itemSourceID = va[7].is<uint16>() ? va[7].as<uint16>() : 0;
+        auto subType  = va[4].is<uint32>() ? va[4].as<uint32>() : 0;
+        auto subPower = va[5].is<uint16>() ? va[5].as<uint16>() : 0;
+        auto tier     = va[6].is<uint16>() ? va[6].as<uint16>() : 0;
 
         CStatusEffect* PEffect = new CStatusEffect(effectID,
                                                    effectIcon,
@@ -12997,10 +12996,6 @@ bool CLuaBaseEntity::addStatusEffect(sol::variadic_args va)
                                                    subPower,
                                                    tier);
 
-        if (itemSourceID > 0)
-        {
-            PEffect->SetItemSourceID(itemSourceID);
-        }
 
         if (PEffect->GetStatusID() == EFFECT_FOOD)
         {
@@ -13069,13 +13064,25 @@ bool CLuaBaseEntity::addStatusEffectEx(sol::variadic_args va)
 }
 
 /************************************************************************
+ *  Function: getItemEnchantmentEffect()
+ *  Purpose : Returns the ENCHANTMENT effect Object of a specified Item ID
+ *  Example : local hasteBeltEffect = target:getItemEnchantmentEffect(xi.item.HASTE_BELT)
+ *  Notes   :
+ ************************************************************************/
+
+std::optional<CLuaStatusEffect> CLuaBaseEntity::getItemEnchantmentEffect(sol::object const& ItemID)
+{
+    return getStatusEffect(EFFECT_ENCHANTMENT, ItemID);
+}
+
+/************************************************************************
  *  Function: getStatusEffect()
  *  Purpose : Returns the Object of a specified Status ID
  *  Example : local debilitation = target:getStatusEffect(xi.effect.DEBILITATION)
  *  Notes   :
  ************************************************************************/
 
-std::optional<CLuaStatusEffect> CLuaBaseEntity::getStatusEffect(uint16 StatusID, sol::object const& SubType, sol::object const& ItemSourceID)
+std::optional<CLuaStatusEffect> CLuaBaseEntity::getStatusEffect(uint16 StatusID, sol::object const& SubType)
 {
     if (m_PBaseEntity->objtype == TYPE_NPC)
     {
@@ -13104,7 +13111,9 @@ std::optional<CLuaStatusEffect> CLuaBaseEntity::getStatusEffect(uint16 StatusID,
 
     if (PStatusEffect)
     {
-        return std::optional<CLuaStatusEffect>(PStatusEffect);
+        auto PLuaStatusEffect = std::optional<CLuaStatusEffect>(PStatusEffect);
+        PLuaStatusEffect->SetBaseEntity(m_PBaseEntity);
+        return PLuaStatusEffect;
     }
 
     return std::nullopt;
@@ -13134,9 +13143,11 @@ sol::table CLuaBaseEntity::getStatusEffects()
     auto table = lua.create_table();
     // clang-format off
     static_cast<CBattleEntity*>(m_PBaseEntity)->StatusEffectContainer->ForEachEffect(
-    [&table](CStatusEffect* PEffect)
+    [&table, &PBattleEntity](CStatusEffect* PEffect)
     {
-        table.add(CLuaStatusEffect(PEffect));
+        auto PLuaStatusEffect = std::optional<CLuaStatusEffect>(PEffect);
+        PLuaStatusEffect->SetBaseEntity(PBattleEntity);
+        table.add(PLuaStatusEffect);
     });
     // clang-format on
 
@@ -13308,7 +13319,7 @@ uint8 CLuaBaseEntity::countEffectWithFlag(uint32 flag)
  *  Notes   : Can specify Power of the Effect as an option
  ************************************************************************/
 
-bool CLuaBaseEntity::delStatusEffect(uint16 StatusID, sol::object const& SubType, sol::object const& ItemSourceID)
+bool CLuaBaseEntity::delStatusEffect(uint16 StatusID, sol::object const& SubType)
 {
     if (m_PBaseEntity->objtype == TYPE_NPC)
     {
@@ -19154,6 +19165,7 @@ void CLuaBaseEntity::Register()
     SOL_REGISTER("addStatusEffect", CLuaBaseEntity::addStatusEffect);
     SOL_REGISTER("addStatusEffectEx", CLuaBaseEntity::addStatusEffectEx);
     SOL_REGISTER("getStatusEffect", CLuaBaseEntity::getStatusEffect);
+    SOL_REGISTER("getItemEnchantmentEffect", CLuaBaseEntity::getItemEnchantmentEffect);
     SOL_REGISTER("getStatusEffects", CLuaBaseEntity::getStatusEffects);
     SOL_REGISTER("getStatusEffectElement", CLuaBaseEntity::getStatusEffectElement);
     SOL_REGISTER("canGainStatusEffect", CLuaBaseEntity::canGainStatusEffect);

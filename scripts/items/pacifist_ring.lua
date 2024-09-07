@@ -7,18 +7,20 @@
 local itemObject = {}
 
 itemObject.onItemCheck = function(target, item, param, caster)
-    local effect = target:getStatusEffect(xi.effect.ENMITY_DOWN)
-    if effect ~= nil and effect:getItemSourceID() == xi.item.PACIFIST_RING then
-        target:delStatusEffect(xi.effect.ENMITY_DOWN)
-    end
-
     return 0
 end
 
-itemObject.onItemUse = function(target)
-    if target:hasEquipped(xi.item.PACIFIST_RING) then
-        target:addStatusEffect(xi.effect.ENMITY_DOWN, 12, 0, 180, 0, 0, 0, xi.item.PACIFIST_RING)
+itemObject.onItemUse = function(target, caster, item)
+    local effect = target:getItemEnchantmentEffect(item:getID())
+    if effect then
+        effect:delStatusEffect()
     end
+
+    target:addStatusEffect(xi.effect.ENCHANTMENT, 0, 0, 180, item:getID())
+end
+
+itemObject.onEffectGain = function(target, effect)
+    effect:delMod(xi.mod.ENMITY, 12)
 end
 
 return itemObject

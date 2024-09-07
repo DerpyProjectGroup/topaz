@@ -49,9 +49,10 @@ public:
     bool DelStatusEffect(EFFECT StatusID);
     bool DelStatusEffectSilent(EFFECT StatusID);
     bool DelStatusEffect(EFFECT StatusID, uint16 SubID);
-    bool DelStatusEffectByItemSource(EFFECT StatusID, uint16 ItemSourceID);
-    void DelStatusEffectsByFlag(uint32 flag, bool silent = false); // Remove all the status effects with the specified type
-    void DelStatusEffectsByIcon(uint16 IconID);                    // Remove all effects with the specified icon
+    bool DelStatusEffectByEnchantmentSlotID(EFFECT StatusID, uint16 EnchantmentSlotID);
+    void RemoveStatusEffect(CStatusEffect* PEffect, bool silent = false); // Remove a single status effect by pointer
+    void DelStatusEffectsByFlag(uint32 flag, bool silent = false);        // Remove all the status effects with the specified type
+    void DelStatusEffectsByIcon(uint16 IconID);                           // Remove all effects with the specified icon
     void DelStatusEffectsByType(uint16 Type);
     bool DelStatusEffectByTier(EFFECT StatusID, uint16 power);
     void KillAllStatusEffect();
@@ -71,7 +72,7 @@ public:
 
     CStatusEffect* GetStatusEffect(EFFECT StatusID);
     CStatusEffect* GetStatusEffect(EFFECT StatusID, uint32 SubID);
-    CStatusEffect* GetStatusEffectByItemSource(EFFECT StatusID, uint16 ItemSourceID);
+    CStatusEffect* GetStatusEffectByEnchantmentSlot(EFFECT StatusID, uint16 EnchantmentSlotID);
 
     std::vector<EFFECT> GetStatusEffectsInIDRange(EFFECT start, EFFECT end);
 
@@ -135,8 +136,7 @@ private:
     CBattleEntity* m_POwner = nullptr;
 
     // void ReplaceStatusEffect(EFFECT effect); //this needs to be implemented
-    void RemoveStatusEffect(uint32 id, bool silent = false);              // We remove the effect by its number in the container
-    void RemoveStatusEffect(CStatusEffect* PEffect, bool silent = false); // We remove the effect by its number in the container
+    void RemoveStatusEffect(uint32 id, bool silent = false); // We remove the effect by its number in the container
     void DeleteStatusEffects();
     void SetEffectParams(CStatusEffect* StatusEffect); // We set the effect of the effect
     void HandleAura(CStatusEffect* PStatusEffect);
