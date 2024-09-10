@@ -43,6 +43,8 @@ zones[xi.zone.CAPE_TERIGGAN] =
         REGIME_REGISTERED             = 10117, -- New training regime registered!
         COMMON_SENSE_SURVIVAL         = 11236, -- It appears that you have arrived at a new survival guide provided by the Adventurers' Mutual Aid Network. Common sense dictates that you should now be able to teleport here from similar tomes throughout the world.
         HOMEPOINT_SET                 = 11264, -- Home point set!
+        DIG_THROW_AWAY                = 7574, -- You dig up <item>, but your inventory is full. You regretfully throw the <item> away.
+        FIND_NOTHING                  = 7576, -- You dig and you dig, but find nothing.
     },
     mob =
     {

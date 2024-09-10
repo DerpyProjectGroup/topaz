@@ -41,6 +41,9 @@ zones[xi.zone.MISAREAUX_COAST] =
         COMMON_SENSE_SURVIVAL         = 8646, -- It appears that you have arrived at a new survival guide provided by the Adventurers' Mutual Aid Network. Common sense dictates that you should now be able to teleport here from similar tomes throughout the world.
         UNITY_WANTED_BATTLE_INTERACT  = 8710, -- Those who have accepted % must pay # Unity accolades to participate. The content for this Wanted battle is #. [Ready to begin?/You do not have the appropriate object set, so your rewards will be limited.]
         HOMEPOINT_SET                 = 8869, -- Home point set!
+
+        DIG_THROW_AWAY                = 7095, -- You dig up <item>, but your inventory is full. You regretfully throw the <item> away.
+        FIND_NOTHING                  = 7097, -- You dig and you dig, but find nothing.
     },
     mob =
     {

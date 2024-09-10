@@ -32,6 +32,8 @@ zones[xi.zone.SAUROMUGUE_CHAMPAIGN_S] =
         VOIDWALKER_BREAK_KI           = 8680,  -- The <keyitem> shatters into tiny fragments.
         VOIDWALKER_OBTAIN_KI          = 8681,  -- Obtained key item: <keyitem>!
         COMMON_SENSE_SURVIVAL         = 10068, -- It appears that you have arrived at a new survival guide provided by the Servicemen's Mutual Aid Network. Common sense dictates that you should now be able to teleport here from similar tomes throughout the world.
+        DIG_THROW_AWAY                = 7232, -- You dig up <item>, but your inventory is full. You regretfully throw the <item> away.
+        FIND_NOTHING                  = 7234, -- You dig and you dig, but find nothing.
     },
     mob =
     {

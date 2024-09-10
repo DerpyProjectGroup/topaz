@@ -30,6 +30,8 @@ zones[xi.zone.VALLEY_OF_SORROWS] =
         UNITY_WANTED_BATTLE_INTERACT  = 7579,  -- Those who have accepted % must pay # Unity accolades to participate. The content for this Wanted battle is #. [Ready to begin?/You do not have the appropriate object set, so your rewards will be limited.]
         REGIME_REGISTERED             = 9695,  -- New training regime registered!
         COMMON_SENSE_SURVIVAL         = 10814, -- It appears that you have arrived at a new survival guide provided by the Adventurers' Mutual Aid Network. Common sense dictates that you should now be able to teleport here from similar tomes throughout the world.
+        DIG_THROW_AWAY                = 7232, -- You dig up <item>, but your inventory is full. You regretfully throw the <item> away.
+        FIND_NOTHING                  = 7234, -- You dig and you dig, but find nothing.
     },
     mob =
     {

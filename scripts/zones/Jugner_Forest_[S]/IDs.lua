@@ -43,6 +43,8 @@ zones[xi.zone.JUGNER_FOREST_S] =
         COMMON_SENSE_SURVIVAL         = 9511, -- It appears that you have arrived at a new survival guide provided by the Servicemen's Mutual Aid Network. Common sense dictates that you should now be able to teleport here from similar tomes throughout the world.
 
         FELLOW_MESSAGE_OFFSET         = 6417, -- I'm ready. I suppose.
+        DIG_THROW_AWAY                = 7386, -- You dig up <item>, but your inventory is full. You regretfully throw the <item> away.
+        FIND_NOTHING                  = 7388, -- You dig and you dig, but find nothing.
     },
 
     mob =

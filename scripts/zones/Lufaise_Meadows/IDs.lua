@@ -48,6 +48,8 @@ zones[xi.zone.LUFAISE_MEADOWS] =
         COMMON_SENSE_SURVIVAL         = 8745, -- It appears that you have arrived at a new survival guide provided by the Adventurers' Mutual Aid Network. Common sense dictates that you should now be able to teleport here from similar tomes throughout the world.
         UNITY_WANTED_BATTLE_INTERACT  = 8809, -- Those who have accepted % must pay # Unity accolades to participate. The content for this Wanted battle is #. [Ready to begin?/You do not have the appropriate object set, so your rewards will be limited.]
         FELLOW_MESSAGE_OFFSET         = 6419, -- I'm ready. I suppose.
+        DIG_THROW_AWAY                = 7575, -- You dig up <item>, but your inventory is full. You regretfully throw the <item> away.
+        FIND_NOTHING                  = 7577, -- You dig and you dig, but find nothing.
     },
     mob =
     {

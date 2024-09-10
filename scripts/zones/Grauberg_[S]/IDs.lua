@@ -28,6 +28,8 @@ zones[xi.zone.GRAUBERG_S] =
         YOU_HAVE_RETRACED_RIVER       = 8398, -- You have retraced the river of memories back to the mission 'Maiden of the Dusk'.
         AIR_WARPED_AND_DISTORTED      = 8399, -- The air before you appears warped and distorted...
         COMMON_SENSE_SURVIVAL         = 9303, -- It appears that you have arrived at a new survival guide provided by the Servicemen's Mutual Aid Network. Common sense dictates that you should now be able to teleport here from similar tomes throughout the world.
+        DIG_THROW_AWAY                = 7232, -- You dig up <item>, but your inventory is full. You regretfully throw the <item> away.
+        FIND_NOTHING                  = 7234, -- You dig and you dig, but find nothing.
     },
     mob =
     {

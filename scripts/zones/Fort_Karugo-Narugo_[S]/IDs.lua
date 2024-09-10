@@ -22,6 +22,8 @@ zones[xi.zone.FORT_KARUGO_NARUGO_S] =
         LOGGING_IS_POSSIBLE_HERE      = 7682, -- Logging is possible here if you have <item>.
         ITEM_DELIVERY_DIALOG          = 8121, -- Deliveries! We're open for business!
         COMMON_SENSE_SURVIVAL         = 9200, -- It appears that you have arrived at a new survival guide provided by the Servicemen's Mutual Aid Network. Common sense dictates that you should now be able to teleport here from similar tomes throughout the world.
+        DIG_THROW_AWAY                = 7073, -- You dig up <item>, but your inventory is full. You regretfully throw the <item> away.
+        FIND_NOTHING                  = 7075, -- You dig and you dig, but find nothing.
     },
     mob =
     {

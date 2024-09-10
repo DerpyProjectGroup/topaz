@@ -26,6 +26,9 @@ zones[xi.zone.ATTOHWA_CHASM] =
         OCCASIONAL_LUMPS              = 7354, -- Occasionally lumps arise in the ground here, then settle down again. It seems that there is something beneath the earth.
         HOMEPOINT_SET                 = 8241, -- Home point set!
         UNITY_WANTED_BATTLE_INTERACT  = 8299, -- Those who have accepted % must pay # Unity accolades to participate. The content for this Wanted battle is #. [Ready to begin?/You do not have the appropriate object set, so your rewards will be limited.]
+
+        DIG_THROW_AWAY                = 7239, -- You dig up <item>, but your inventory is full. You regretfully throw the <item> away.
+        FIND_NOTHING                  = 7241, -- You dig and you dig, but find nothing.
     },
     mob =
     {

@@ -21,6 +21,8 @@ zones[xi.zone.VUNKERL_INLET_S] =
         FISHING_MESSAGE_OFFSET        = 7060, -- You can't fish here.
         -- CAMPAIGN_RESULTS_TALLIED      = 7598, -- Campaign results tallied.
         COMMON_SENSE_SURVIVAL         = 9029, -- It appears that you have arrived at a new survival guide provided by the Servicemen's Mutual Aid Network. Common sense dictates that you should now be able to teleport here from similar tomes throughout the world.
+        DIG_THROW_AWAY                = 7073, -- You dig up <item>, but your inventory is full. You regretfully throw the <item> away.
+        FIND_NOTHING                  = 7075, -- You dig and you dig, but find nothing.
     },
     mob =
     {

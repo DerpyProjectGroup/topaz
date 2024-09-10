@@ -46,6 +46,8 @@ zones[xi.zone.CAEDARVA_MIRE] =
         COMMON_SENSE_SURVIVAL         = 9062, -- It appears that you have arrived at a new survival guide provided by the Adventurers' Mutual Aid Network. Common sense dictates that you should now be able to teleport here from similar tomes throughout the world.
 
         LEG_STUCK                     = 7358, -- Your leg is stuck in the swampy ground!
+        DIG_THROW_AWAY                = 7070, -- You dig up <item>, but your inventory is full. You regretfully throw the <item> away.
+        FIND_NOTHING                  = 7072, -- You dig and you dig, but find nothing.
     },
     mob =
     {

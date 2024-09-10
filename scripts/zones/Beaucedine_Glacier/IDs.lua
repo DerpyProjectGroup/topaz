@@ -47,6 +47,8 @@ zones[xi.zone.BEAUCEDINE_GLACIER] =
         LEARNS_SPELL                   = 12771, -- <name> learns <spell>!
         UNCANNY_SENSATION              = 12773, -- You are assaulted by an uncanny sensation.
         COMMON_SENSE_SURVIVAL          = 12780, -- It appears that you have arrived at a new survival guide provided by the Adventurers' Mutual Aid Network. Common sense dictates that you should now be able to teleport here from similar tomes throughout the world.
+        DIG_THROW_AWAY                 = 7254, -- You dig up <item>, but your inventory is full. You regretfully throw the <item> away.
+        FIND_NOTHING                   = 7256, -- You dig and you dig, but find nothing.
     },
     mob =
     {

@@ -36,6 +36,8 @@ zones[xi.zone.XARCABARD_S] =
         GATHERED_DAWNDROPS_LIGHT      = 8754, -- The gathered dawndrops unleash a brilliant light, melding together to form <keyitem>!
         RETRACED_ALL_JUNCTIONS        = 8755, -- You have retraced all junctions of eventualities. Hasten back to where Cait Sith and Lilisette await.
         HOMEPOINT_SET                 = 8759, -- Home point set!
+        DIG_THROW_AWAY                = 7232, -- You dig up <item>, but your inventory is full. You regretfully throw the <item> away.
+        FIND_NOTHING                  = 7234, -- You dig and you dig, but find nothing.
     },
     mob =
     {

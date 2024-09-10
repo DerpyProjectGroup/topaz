@@ -30,6 +30,8 @@ zones[xi.zone.ULEGUERAND_RANGE] =
         GEUSH_COUNTER                 = 7401, -- Geush Urvan uses Counterstance!
         GEUSH_COUNTER_OFF             = 7402, -- Geush Urvan's Counterstance effect wears off.
         RABBIT_TRACKS                 = 7403, -- There are fresh rabbit tracks here. The creature must still be in the vicinity.
+        DIG_THROW_AWAY                = 7245, -- You dig up <item>, but your inventory is full. You regretfully throw the <item> away.
+        FIND_NOTHING                  = 7247, -- You dig and you dig, but find nothing.
     },
     mob =
     {

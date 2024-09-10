@@ -30,6 +30,8 @@ zones[xi.zone.MERIPHATAUD_MOUNTAINS_S] =
         COMMON_SENSE_SURVIVAL         = 8951, -- It appears that you have arrived at a new survival guide provided by the Servicemen's Mutual Aid Network. Common sense dictates that you should now be able to teleport here from similar tomes throughout the world.
 
         FELLOW_MESSAGE_OFFSET         = 6417, -- I'm ready. I suppose.
+        DIG_THROW_AWAY                = 7232, -- You dig up <item>, but your inventory is full. You regretfully throw the <item> away.
+        FIND_NOTHING                  = 7234, -- You dig and you dig, but find nothing.
     },
 
     mob =
