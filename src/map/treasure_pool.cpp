@@ -268,7 +268,7 @@ void CTreasurePool::LotItem(CCharEntity* PChar, uint8 SlotID, uint16 Lot)
         return;
     }
 
-    CItem* PItem = itemutils::GetItem(m_PoolItems[SlotID].ID);
+    // CItem* PItem = itemutils::GetItem(m_PoolItems[SlotID].ID);
 
     // Cannot lot if player's inventory is full
     if (PChar->getStorage(LOC_INVENTORY)->GetFreeSlotsCount() == 0)
