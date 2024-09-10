@@ -101,6 +101,25 @@ local function MobTakeAoEShadow(mob, target, max)
     return math.random(1, max)
 end
 
+-- helper function to handle a single hit and check for parrying, guarding, and blocking
+local function handleSinglePhysicalHit(mob, target, hitdamage, hitslanded, finaldmg, tpEffect, minRatio, maxRatio)
+    -- if a non-ranged physical mobskill then can parry or guard
+    if
+        tpEffect == xi.mobskills.magicalTpBonus.RANGED or
+        (not xi.combat.physical.isParried(target, mob) and
+        not xi.combat.physical.isGuarded(target, mob))
+    then
+        local pdif = math.random((minRatio * 1000), (maxRatio * 1000)) --generate random PDIF
+        pdif = pdif / 1000 --multiplier set.
+        finaldmg = finaldmg + hitdamage * pdif
+        -- also handle blocking
+        finaldmg = xi.combat.physical.handleBlock(target, mob, finaldmg)
+        hitslanded = hitslanded + 1
+    end
+
+    return hitslanded, finaldmg
+end
+
 xi.mobskills.mobRangedMove = function(mob, target, skill, numHits, accMod, dmgMod, tpEffect, mtp000, mtp150, mtp300, offcratiomod)
     local returninfo    = {}
     local dSTR          = utils.clamp(mob:getStat(xi.mod.STR) - target:getStat(xi.mod.VIT), -10, 10)
