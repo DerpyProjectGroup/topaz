@@ -48,7 +48,7 @@ end
 
 entity.onTrigger = function(player, npc)
     local rank = xi.besieged.getMercenaryRank(player)
-    local haveimperialIDtag
+    local haveImperialIDTag
     
     local assaultPoints = player:getAssaultPoint(xi.assault.assaultArea.NYZUL_ISLE)
     local floorProgress = player:getCharVar('NyzulFloorProgress')
@@ -57,20 +57,26 @@ entity.onTrigger = function(player, npc)
     local vendingBoxPreferences = player:getCharVar('Nyzul_VendingBoxPref')
 
     if player:hasKeyItem(xi.ki.IMPERIAL_ARMY_ID_TAG) then
-        haveimperialIDtag = 1
+        haveImperialIDTag = 1
     else
-        haveimperialIDtag = 0
+        haveImperialIDTag = 0
     end
 
     if (rank > 0) then
         -- param7 on the client side, param 8 here (since the client is a good CS student and counts from 0) appears to be a lockout time - possibly related to uncharted?
-        player:startEvent(278, rank, haveimperialIDtag, assaultPoints, player:getCurrentAssault(), floorProgress, unchartedFloorProgress, vendingBoxPreferences, 0)
+        player:startEvent(278, rank, haveImperialIDTag, assaultPoints, player:getCurrentAssault(), floorProgress, unchartedFloorProgress, vendingBoxPreferences, 0)
     else
         player:startEvent(284) -- no rank
     end
 end
 
 entity.onEventUpdate = function(player, csid, option, npc)
+    local rank = xi.besieged.getMercenaryRank(player)
+    local haveImperialIDTag
+
+    local assaultPoints = player:getAssaultPoint(xi.assault.assaultArea.NYZUL_ISLE)
+    local floorProgress = player:getCharVar('NyzulFloorProgress')
+    local unchartedFloorProgress = 0
     if csid == 278 then
         local categorytype = bit.band(option, 0x0F)
         if categorytype == 3 then
@@ -90,7 +96,7 @@ entity.onEventUpdate = function(player, csid, option, npc)
             player:setCharVar('Nyzul_VendingBoxPref', vendingBoxPreferences)
         end
 
-        player:updateEvent(rank, haveimperialIDtag, assaultPoints, player:getCurrentAssault(), floorProgress, unchartedFloorProgress, vendingBoxPreferences, 0)
+        player:updateEvent(rank, haveImperialIDTag, assaultPoints, player:getCurrentAssault(), floorProgress, unchartedFloorProgress, vendingBoxPreferences, 0)
     end
 end
 

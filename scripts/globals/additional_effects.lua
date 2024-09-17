@@ -212,7 +212,7 @@ xi.additionalEffect.attack = function(attacker, defender, baseAttackDamage, item
         damage = damage - defender:getMod(xi.mod.PHALANX)
         damage = utils.clamp(damage, 0, 99999)
         damage = utils.stoneskin(defender, damage)
-        defender:takeDamage(damage, player, xi.attackType.PHYSCIAL, damageType)
+        defender:takeDamage(damage, attacker, xi.attackType.PHYSICAL, damageType)
 
         -- damage = xi.additionalEffect.calcDamagePhys(attacker, element, defender, damage)
         msgID = xi.msg.basic.ADD_EFFECT_DMG

@@ -16,5 +16,4 @@ return {
     ['qm3']         = { messageSpecial = ID.text.DISMAYED_CUSTOMER },
     ['Ramaufont']   = { text = ID.text.RAMAUFONT_DIALOG },
     ['Zovriace']    = { text = ID.text.ZOVRIACE_DIALOG },
-    ['Ramaufont']   = { text = ID.text.RAMAUFONT_DEFAULT },
 }

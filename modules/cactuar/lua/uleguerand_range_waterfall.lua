@@ -18,7 +18,6 @@ m:addOverride('xi.zones.Uleguerand_Range.Zone.onInitialize', function(zone)
         objtype = xi.objType.NPC,
     
         name = '???',
-        packetName == 'waterfall_qm',
 
         look = 2424,
 
@@ -58,7 +57,7 @@ end)
 
 m:addOverride('xi.zones.Uleguerand_Range.Zone.onZoneWeatherChange', function(weather)
 
-    super(zone)
+    super(weather)
 
     local waterfall = GetNPCByID(ID.npc.WATERFALL)
     if weather == xi.weather.SNOW or weather == xi.weather.BLIZZARDS then

@@ -37,12 +37,12 @@ function content:onBattlefieldWin(player, battlefield)
     local _, clearTime, partySize = battlefield:getRecord()
 
     player:setLocalVar('battlefieldWin', battlefield:getID())
-    player:startEvent(32001, battlefield:getArea(), clearTime, partySize, battlefield:getTimeInside(), player:getZoneID(), self.index, 0, arg8)
+    player:startEvent(32001, battlefield:getArea(), clearTime, partySize, battlefield:getTimeInside(), player:getZoneID(), self.index, 0)
     player:addTitle(xi.title.DISCIPLE_OF_JUSTICE)
     player:completeQuest(xi.questLog.OTHER_AREAS, xi.quest.id.otherAreas.REQUIEM_OF_SIN)
 end
 
-function Battlefield:onBattlefieldLoss(player, battlefield)
+function content:onBattlefieldLoss(player, battlefield)
     player:startEvent(32002)
     
     -- Allow player to get new key item

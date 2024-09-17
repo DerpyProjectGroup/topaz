@@ -23,7 +23,7 @@ commandObj.onTrigger = function(player, allegiance, target)
     if target then
         targ = GetPlayerByName(target)
         if not targ then
-            error(player, string.format('Player named '%s' not found!', target))
+            error(player, string.format('Player named "%s" not found!', target))
             return
         end
     elseif cursorTarget and not cursorTarget:isNPC() then

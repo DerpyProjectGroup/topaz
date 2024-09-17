@@ -343,7 +343,7 @@ xi.mobskills.mobPhysicalMove = function(mob, target, skill, numHits, accMod, dmg
     ----------------------------------
     -- Calculate hitrate for mobskill.
     ----------------------------------
-    local hitrate = xi.weaponskills.getHitRate(mob, target, 0, 0) -- (ASB)
+    local hitrate = xi.weaponskills.getHitRate(mob, target, 0)
 
     if
         accMod and
@@ -459,7 +459,7 @@ xi.mobskills.mobPhysicalMove = function(mob, target, skill, numHits, accMod, dmg
         -- print(critFTP)
 
         if isCrit then
-            pdif = xi.combat.physical.calculateMeleePDIF(mob, target, weaponType, attMod, isCritical)
+            pdif = xi.combat.physical.calculateMeleePDIF(mob, target, weaponType, attMod, isCrit)
             -- print('crit true')
             -- target:printToPlayer(string.format('The attack scores a critical hit!', mob:getName()), xi.msg.channel.SYSTEM_3) -- Debug to see modifier of each hit in a weapon skill.
 
@@ -490,7 +490,7 @@ xi.mobskills.mobPhysicalMove = function(mob, target, skill, numHits, accMod, dmg
         -- print(critFTP)
 
         if isCrit then
-            pdif = xi.combat.physical.calculateMeleePDIF(mob, target, weaponType, attMod, isCritical)
+            pdif = xi.combat.physical.calculateMeleePDIF(mob, target, weaponType, attMod, isCrit)
             -- target:printToPlayer(string.format('The %s attack scores a critical hit!', mob:getName()), xi.msg.channel.SYSTEM_3) -- Debug to see modifier of each hit in a weapon skill.
         else
             pdif = xi.combat.physical.calculateMeleePDIF(mob, target, weaponType, attMod)

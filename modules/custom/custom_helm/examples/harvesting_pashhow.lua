@@ -55,7 +55,7 @@ m:addOverride('xi.zones.Pashhow_Marshlands.Zone.onInitialize', function(zone)
 end)
 
 m:addOverride('xi.zones.Pashhow_Marshlands.Zone.onZoneWeatherChange', function(weatherType)
-    super(onZoneWeatherChange)
+    super(weatherType)
 
     local drops = xi.helm.helmInfo[xi.helmType.HARVESTING].zone[xi.zone.PASHHOW_MARSHLANDS].drops
 
@@ -80,7 +80,7 @@ end)
 
 
 m:addOverride('xi.zones.Pashhow_Marshlands.Zone.onGameDay', function()
-    super(onGameDay)
+    super()
 
     local drops = xi.helm.helmInfo[xi.helmType.HARVESTING].zone[xi.zone.PASHHOW_MARSHLANDS].drops
 

@@ -25,7 +25,7 @@ commandObj.onTrigger = function(player, target, forceZone)
     local targ = GetPlayerByName(target)
     if targ == nil then
         if not player:bringPlayer(target) then
-            error(player, string.format('Player named '%s' not found!', target))
+            error(player, string.format('Player named "%s" not found!', target))
         end
 
         return

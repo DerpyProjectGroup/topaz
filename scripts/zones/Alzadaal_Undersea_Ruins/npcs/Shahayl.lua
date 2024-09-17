@@ -16,7 +16,7 @@ entity.onTrade = function(player, npc, trade)
 end
 
 entity.onTrigger = function(player, npc)
-    local toauMission = player:getCurrentMission(TOAU)
+    local toauMission = player:getCurrentMission(xi.mission.log_id.TOAU)
 
     -- Assault --
     if (toauMission >= xi.mission.id.toau.PRESIDENT_SALAHEEM) then

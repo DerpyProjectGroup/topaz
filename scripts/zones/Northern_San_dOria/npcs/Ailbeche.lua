@@ -48,13 +48,13 @@ entity.onTrigger = function(player, npc)
     then
     -- 'Sharpening the Sword' Quest Dialogs
         if ((mJob == xi.job.PLD and mLvl >= 40) or
-            (msob == xi.job.PLD and sLvl >= 40)) and
+            (sJob == xi.job.PLD and sLvl >= 40)) and
             sharpeningTheSwordCS == 0 
         then
             player:startEvent(45) -- Start Quest 'Sharpening the Sword' with thank you for the rod
         elseif
             ((mJob == xi.job.PLD and mLvl >= 40) or
-            (msob == xi.job.PLD and sLvl >= 40)) and
+            (sJob == xi.job.PLD and sLvl >= 40)) and
             sharpeningTheSwordCS == 1
         then
             player:startEvent(43) -- Start Quest 'Sharpening the Sword'

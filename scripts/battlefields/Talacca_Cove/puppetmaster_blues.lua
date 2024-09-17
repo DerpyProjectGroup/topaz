@@ -26,7 +26,7 @@ function content:onBattlefieldWin(player, battlefield)
     local _, clearTime, partySize = battlefield:getRecord()
 
     player:setLocalVar('battlefieldWin', battlefield:getID())
-    player:startEvent(32001, battlefield:getArea(), clearTime, partySize, battlefield:getTimeInside(), player:getZoneID(), self.index, 0, arg8)
+    player:startEvent(32001, battlefield:getArea(), clearTime, partySize, battlefield:getTimeInside(), player:getZoneID(), self.index, 0)
     player:setCharVar("PuppetmasterBluesProgress", 3)
     player:delKeyItem(xi.ki.TOGGLE_SWITCH) -- BCNM entry trigger
     player:delKeyItem(xi.ki.VALKENGS_MEMORY_CHIP) -- Dont need this anymore

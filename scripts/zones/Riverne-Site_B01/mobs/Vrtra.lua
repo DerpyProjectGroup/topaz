@@ -81,7 +81,7 @@ entity.onMobFight = function(mob, target)
                         local pos = mobArg:getPos()
                         pet:setPos(pos.x, pos.y, pos.z)
                         local options = { followDistance = 0.0 }
-                        xi.follow.follow(pet, mobArg, options)
+                        xi.follow.follow(pet, mobArg)
                         if mobArg:getTarget() ~= nil then
                             pet:updateEnmity(target)
                         end

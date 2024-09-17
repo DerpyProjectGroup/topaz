@@ -39,7 +39,6 @@ zones[xi.zone.OLDTON_MOVALPOLOS] =
         BUGALLUG          = GetFirstID('Bugallug'),
         BUGBEAR_STRONGMAN = GetTableOfIDs('Bugbear_Strongman'),
         GOBLIN_WOLFMAN    = GetFirstID('Goblin_Wolfman'),
-        BUGALLUG          = 16822456,
     },
     npc =
     {

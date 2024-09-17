@@ -89,7 +89,7 @@ entity.onMobDespawn = function(mob)
             pet:setSpawn(pos.x + 1, pos.y - 0.5, pos.z - 1, pos.rot)
             pet:spawn()
             pet:setHP(masterHP)
-            pet:updateEnmity(target)
+            pet:updateEnmity()
             for i = 0, 2 do
                 local dynamisLordsID = ID.mob.ARCH_DYNAMIS_LORD + i
                 local dynamisLords = GetMobByID(dynamisLordsID)

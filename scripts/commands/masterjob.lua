@@ -24,7 +24,7 @@ commandObj.onTrigger = function(player, target)
     end
 
     if not targ then
-        error(player, string.format('Unable to find player named '%s'', target))
+        error(player, string.format('Unable to find player named "%s"', target))
         return
     end
 

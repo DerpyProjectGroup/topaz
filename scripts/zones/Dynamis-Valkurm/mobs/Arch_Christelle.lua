@@ -28,7 +28,7 @@ entity.onMobRoam = function(mob)
     mob:setTP(0)
 end
 
-entity.onMobFight = function(mob)
+entity.onMobFight = function(mob, target)
     mob:setMod(xi.mod.REGAIN, 500)
 
     for _, member in pairs(target:getParty()) do

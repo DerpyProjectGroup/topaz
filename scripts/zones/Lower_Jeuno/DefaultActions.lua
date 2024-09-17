@@ -17,6 +17,5 @@ return {
     ['Sutarara']        = { event = 208 },
     ['Teigero-Bangero'] = { event = 34 },
     ['Yatniel']         = { event = 10028 },
-    ['Ghebi_Damomohe'] = { event = 106, options = 4 },
     ['Vhana_Ehgaklywha'] = { text = ID.text.VHANA_DEFAULT },
 }

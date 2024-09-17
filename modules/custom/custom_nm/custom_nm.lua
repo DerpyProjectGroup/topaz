@@ -168,7 +168,7 @@ local createEntity = function(zone, tblNM)
     return dynamicNM
 end
 
-m.spawnNM = spawnNM
+-- m.spawnNM = spawnNM
 
 local checkPH = function(tblNM, mobPH)
     if tblNM.spawnList and #tblNM.spawnList > 0 then

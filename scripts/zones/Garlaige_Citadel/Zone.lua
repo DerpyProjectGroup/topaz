@@ -55,8 +55,9 @@ end
 
 zoneObject.onTriggerAreaEnter = function(player, triggerArea)
     local triggerAreaID = triggerArea:GetTriggerAreaID()
-    local leverSet = math.floor(triggerAreaID / 9)                      -- The set of levers player is standing on (0, 1, 2)
-    local gateId   = ID.npc.BANISHING_GATE_OFFSET + (9 * leverSet) -- The ID of the related gate
+    local leverSet      = math.floor(triggerAreaID / 9)                 -- The set of levers player is standing on (0, 1, 2)
+    local gateId        = ID.npc.BANISHING_GATE_OFFSET + (9 * leverSet) -- The ID of the related gate
+    local gate          = GetNPCByID(gateId)
 
     -- Logic when standing on the lever.
     GetNPCByID(ID.npc.BANISHING_GATE_OFFSET + triggerAreaID):setAnimation(xi.anim.OPEN_DOOR)

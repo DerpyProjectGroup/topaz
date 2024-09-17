@@ -34,7 +34,7 @@ commandObj.onTrigger = function(player, slot, points, target)
     else
         target = GetPlayerByName(target)
         if target == nil then
-            error(player, string.format('Player named '%s' not found!', target))
+            error(player, string.format('Player named "%s" not found!', target))
             return
         end
     end

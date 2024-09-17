@@ -351,7 +351,7 @@ local function checkCure(mob, master, fellowLvl, mp, fellowType)
         elseif fellowType == 6 then
             if
                 doMasterCure(mob, master, cureSpell) or
-                doFellowCure(mob, fellowType, fellowType, cureSpell)
+                doFellowCure(mob, fellowType, cureSpell)
             then
                 return true
             end
@@ -593,7 +593,7 @@ end
 
 entity.onTrigger = function(player, mob)
     local zoneID        = player:getZoneID()
-    local ID            = zones[xi.zone.zoneID]
+    local ID            = zones[zoneID]
     local personality   = xi.fellow_utils.checkPersonality(mob)
     if personality > 5 then
         personality = personality - 1
@@ -723,8 +723,8 @@ entity.onMobFight = function(mob, target)
         return
     end
 
-    local zoneID        = player:getZoneID()
-    local ID            = zones[xi.zone.zoneID]
+    local zoneID        = mob:getZoneID()
+    local ID            = zones[zoneID]
     local personality   = xi.fellow_utils.checkPersonality(mob)
     local fellowType    = master:getFellowValue('job')
     local maxTime       = master:getFellowValue('maxTime')
@@ -926,7 +926,7 @@ entity.onMobDeath = function(mob)
     local master = GetPlayerByID(mob:getLocalVar('masterID'))
     if master ~= nil then
         local zoneID        = master:getZoneID()
-        local ID            = zones[xi.zone.zoneID]
+        local ID            = zones[zoneID]
         local bf = master:getBattlefield()
         if bf ~= nil then
             if bf:getID() == 37 then -- mirror mirror

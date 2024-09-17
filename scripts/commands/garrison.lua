@@ -31,7 +31,7 @@ commandObj.onTrigger = function(player, command, target)
         targ = GetPlayerByName(target)
 
         if targ == nil then
-            error(player, string.format('Player named '%s' not found', target))
+            error(player, string.format('Player named "%s" not found', target))
             return
         end
     else -- targ == nil, select player

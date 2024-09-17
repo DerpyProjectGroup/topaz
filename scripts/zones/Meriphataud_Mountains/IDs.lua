@@ -55,7 +55,6 @@ zones[xi.zone.MERIPHATAUD_MOUNTAINS] =
         DAGGERCLAW_DRACOS      = GetFirstID('Daggerclaw_Dracos'),
         WARAXE_BEAK            = GetFirstID('Waraxe_Beak'),
         COO_KEJA_THE_UNSEEN    = GetFirstID('Coo_Keja_the_Unseen'),
-        COO_KEJA_THE_UNSEEN = 17264946,
         CHONCHON            = 17264722,
 
         VOIDWALKER =

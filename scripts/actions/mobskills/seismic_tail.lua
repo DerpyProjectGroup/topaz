@@ -22,7 +22,7 @@ mobskillObject.onMobWeaponSkill = function(target, mob, skill)
     local tpeffect2 = xi.mobskills.physicalTpBonus.NONE
     local crit = 0.15
     local attmod = 1.0
-    local info = xi.mobskills.mobPhysicalMove(mob, target, skill, numhits, 1, dmgmod, tpeffect1, 2, 3, 4, tpEffect2, 0, 0, 0, crit, attmod)
+    local info = xi.mobskills.mobPhysicalMove(mob, target, skill, numhits, 1, dmgmod, tpeffect1, 2, 3, 4, tpeffect2, 0, 0, 0, crit, attmod)
     local dmg = xi.mobskills.mobFinalAdjustments(info.dmg, mob, skill, target, xi.attackType.PHYSICAL, xi.damageType.BLUNT, xi.mobskills.shadowBehavior.NUMSHADOWS_2)
     target:takeDamage(dmg, mob, xi.attackType.PHYSICAL, xi.damageType.BLUNT)
     

@@ -33,7 +33,7 @@ mobskillObject.onMobWeaponSkill = function(target, mob, skill)
             duration = math.max(820, duration * (tp/1000)) -- Minimum 13:40 minutes. Maximum 30:30 minutes.
         end
     end
-    local info = xi.mobskills.mobPhysicalMove(mob, target, skill, numhits, accmod, 1, xi.mobskills.physicalTpBonus.DMG_VARIES, 1.75, 2.25, 3.5, tpEffect2, 1.25, 2.25, 3.25, crit, attmod)
+    local info = xi.mobskills.mobPhysicalMove(mob, target, skill, numhits, accmod, 1, xi.mobskills.physicalTpBonus.DMG_VARIES, 1.75, 2.25, 3.5, xi.mobskills.physicalTpBonus.NONE, 1.25, 2.25, 3.25, crit, 1)
     local dmg = xi.mobskills.mobFinalAdjustments(info.dmg, mob, skill, target, xi.attackType.PHYSICAL, xi.damageType.PIERCING, info.hitslanded)
 
     xi.mobskills.mobPhysicalStatusEffectMove(mob, target, skill, xi.effect.DISEASE, 1, 0, duration)

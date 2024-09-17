@@ -14,9 +14,7 @@ local function error(player, msg)
     player:printToPlayer(msg)
     player:printToPlayer('!getdigskill (player)')
 end
-commandObj.onTrigger = function(player, craftname, target)
-
-    local skillID = tonumber(craftName) or xi.skill[string.upper(craftName)]
+commandObj.onTrigger = function(player, target)
     local targ = nil
 
     if target == nil then
@@ -38,7 +36,7 @@ commandObj.onTrigger = function(player, craftname, target)
         end
     end
 
-    player:printToPlayer(string.format('%s\'s current Chocobo Dig Skill is Level: %s', targ:getName(), (targ:getCharSkillLevel(skillID) / 10)))
+    player:printToPlayer(string.format('%s\'s current Chocobo Dig Skill is Level: %s', targ:getName(), (targ:getCharSkillLevel(xi.skill.DIG) / 10)))
 end
 
 return commandObj

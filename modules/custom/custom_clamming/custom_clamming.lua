@@ -87,7 +87,7 @@ local msg =
     INCIDENT =
     {
         'Something jumps into your bucket and breaks through the bottom!',
-        ' All your shellfish are washed away...',I
+        ' All your shellfish are washed away...',
     },
 
     UPGRADE = {
@@ -544,8 +544,7 @@ end
 
 m.onZoneOut = function(player)
     if player:hasKeyItem(xi.ki.CLAMMING_KIT) then
-        local zoneId = player:getZoneID()
-        m.clearBucket(player, zoneId)
+        m.clearBucket(player)
         player:setCharVar(vars.BROKEN, 1)
     end
 end

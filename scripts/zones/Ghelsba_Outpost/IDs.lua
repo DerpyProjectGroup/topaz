@@ -46,7 +46,6 @@ zones[xi.zone.GHELSBA_OUTPOST] =
         KALAMAINU             = GetFirstID('Kalamainu'),
         THOUSANDARM_DESHGLESH = GetFirstID('Thousandarm_Deshglesh'),
         TOADPILLOW            = GetFirstID('Toadpillow'),
-        CARRION_DRAGON        = GetFirstID('Carrion_Dragon'),
         ORCISH_BARRICADER = 17350801,
     },
     npc =

@@ -10,7 +10,7 @@ end
 
 spellObject.onSpellCast = function(caster, target, spell)
     if target:hasStatusEffect(xi.effect.CURSE_II) then
-        skill:setMsg(xi.msg.basic.SKILL_NO_EFFECT) -- no effect
+        spell:setMsg(xi.msg.basic.MAGIC_NO_EFFECT) -- no effect
         return 1
     end
     --calculate raw damage (unknown function  -> only dark skill though) - using http://www.bluegartr.com/threads/44518-Drain-Calculations

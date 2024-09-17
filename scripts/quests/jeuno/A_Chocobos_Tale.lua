@@ -126,12 +126,6 @@ quest.sections =
         {
             ['Outpost_Gate'] =
             {
-                onTrigger = function(player, npc)
-                    if quest:getVar(player, 'Prog') == 1 then
-                        return quest:progressEvent(21, { [1] = xi.item.BOTTLE_OF_WARDING_OIL })
-                    end
-                end,
-
                 onTrade = function(player, npc, trade)
                     if
                         npcUtil.tradeHasExactly(trade, { { xi.item.BOTTLE_OF_WARDING_OIL, 3 } }) and

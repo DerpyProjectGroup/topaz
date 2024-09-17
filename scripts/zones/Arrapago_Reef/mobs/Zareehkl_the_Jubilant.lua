@@ -75,7 +75,7 @@ entity.onMobSpawn = function(mob)
                                 end
                             end)
                             mob:addListener('WEAPONSKILL_TAKE', 'WSDMG_TAKE', function(target, attacker)
-                                if attacker:isPC() or caster:isPet() then
+                                if attacker:isPC() or attacker:isPet() then
                                     target:addEnmity(attacker, 1, 3000)
                                 end
                             end)

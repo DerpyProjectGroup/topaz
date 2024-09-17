@@ -5,6 +5,9 @@
 -----------------------------------
 local entity = {}
 
+local bodyList = { 12554, 13712, 12594, 13723, 12603, 13699, 12610, 13783, 12572, 12611, 13796, 12571, 13750, 12604, 13752, 12544, 13730, 12578, 12553, 12595 }
+local legsList = { 12829, 12800, 12866, 12809, 12810, 12850, 12828, 12859, 12837, 14243, 12838, 12867, 12827, 12836, 12860, 12851 }
+
 entity.onTrade = function(player, npc, trade)
 end
 
@@ -84,9 +87,6 @@ entity.onEventUpdate = function(player, csid, option, npc)
             hasBody = 1
         end
     end
-end
-
-entity.onEventUpdate = function(player, csid, option, npc)
 end
 
 entity.onEventFinish = function(player, csid, option, npc)

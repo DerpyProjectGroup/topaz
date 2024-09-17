@@ -33,10 +33,8 @@ zones[xi.zone.VELUGANNON_PALACE] =
         MIMIC            = GetFirstID('Mimic'),
         BRIGANDISH_BLADE = GetFirstID('Brigandish_Blade'),
         STEAM_CLEANER    = GetFirstID('Steam_Cleaner'),
-        BRIGANDISH_BLADE        = 17502568,
-        STEAM_CLEANER           = 17502569,
-        ZIPACNA                 = 17502570,
-        SC_DETECTORS            =
+        ZIPACNA          = 17502570,
+        SC_DETECTORS     =
         {
             DET1 = 17502545, -- Seiryu North Basement (1-2)
             DET2 = 17502543,

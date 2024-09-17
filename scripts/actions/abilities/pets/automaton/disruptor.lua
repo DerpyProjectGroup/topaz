@@ -19,9 +19,9 @@ abilityObject.onAutomatonAbility = function(target, automaton, skill, master, ac
         spellEffect = target:dispelStatusEffect()
 
         if spellEffect == xi.effect.NONE then
-            spell:setMsg(xi.msg.basic.MAGIC_NO_EFFECT)
+            skill:setMsg(xi.msg.basic.MAGIC_NO_EFFECT)
         else
-            spell:setMsg(xi.msg.basic.MAGIC_ERASE)
+            skill:setMsg(xi.msg.basic.MAGIC_ERASE)
         end
     end
 

@@ -54,7 +54,6 @@ zones[xi.zone.BHAFLAU_THICKETS] =
         MAHISHASURA        = GetFirstID('Mahishasura'),
         NIS_PUK            = GetFirstID('Nis_Puk'),
 
-        DEA                = GetFirstID('Dea'),
         CHIGOE_POOLS =
         {
             {

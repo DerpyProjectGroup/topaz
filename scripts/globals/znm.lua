@@ -451,11 +451,11 @@ xi.znm.soultrapper.getZeniValue = function(target, user, item)
         zeni = utils.clamp(zeni, 1, 1000)
     end
     
-    if (showDebugMessage) then
+    --[[if (showDebugMessage) then
         user:printToPlayer(string.format( 'Zeni for Mob %s is %d!', target:getName(), zeni))
         user:printToPlayer(string.format( 'MobSize [%d] HPP: [%d] isFacing: [%s] LevelOffset: [%d] Distance: [%d] isNM: [%s] hasClaim: [%s] isBeingIrresponsible: [%s]',
                                            modelSize, hpp, isFacing, (targetLevel - 75), distance, isNM, not (not user:isMobOwner(target) or hpp == 100), isBeingIrresponsible ))
-    end
+    end]]
 
     return zeni
 end

@@ -99,7 +99,7 @@ commandObj.onTrigger = function(player)
     if HasAllMaps ~= 1 then
         table.insert(menu.options, {'Add All Maps', function(playerArg)
             -- playerArg:printToPlayer('All Maps Selected', xi.msg.channel.NS_LINKSHELL3)
-            if ALL_MAPS == 0 then
+            if xi.settings.main.ALL_MAPS == 0 then
                 playerArg:printToPlayer('This command is disabled on this server.', xi.msg.channel.SYSTEM_3)
                 return
             end

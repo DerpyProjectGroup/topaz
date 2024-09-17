@@ -7,20 +7,20 @@ require('modules/module_utils')
 local m = Module:new('cactuar_relic_exchange')
 
 local relics = {
-    {name='Spharai', id=xi.item.SPHARAI},
-    {name='Mandau', id=xi.item.MANDAU},
-    {name='Excalibur', id=xi.item.EXCALIBUR},
-    {name='Ragnarok', id=xi.item.RAGNAROK},
-    {name='Guttler', id=xi.item.GUTTLER},
-    {name='Bravura', id=xi.item.BRAVURA},
-    {name='Apocalypse', id=xi.item.APOCALYPSE},
-    {name='Gungnir', id=xi.item.GUNGNIR},
-    {name='Amanomurakumo', id=xi.item.AMANOMURAKUMO},
-    {name='Mjollnir', id=xi.item.MJOLLNIR},
-    {name='Claustrum', id=xi.item.CLAUSTRUM},
-    {name='Yoichinoyumi', id=xi.item.YOICHINOYUMI},
-    {name='Gjallarhorn', id=xi.item.GJALLARHORN},
-    {name='Aegis', id=xi.item.AEGIS},
+    { name = 'Spharai'      , id = xi.item.SPHARAI       },
+    { name = 'Mandau'       , id = xi.item.MANDAU        },
+    { name = 'Excalibur'    , id = xi.item.EXCALIBUR     },
+    { name = 'Ragnarok'     , id = xi.item.RAGNAROK      },
+    { name = 'Guttler'      , id = xi.item.GUTTLER       },
+    { name = 'Bravura'      , id = xi.item.BRAVURA       },
+    { name = 'Apocalypse'   , id = xi.item.APOCALYPSE    },
+    { name = 'Gungnir'      , id = xi.item.GUNGNIR       },
+    { name = 'Amanomurakumo', id = xi.item.AMANOMURAKUMO },
+    { name = 'Mjollnir'     , id = xi.item.MJOLLNIR      },
+    { name = 'Claustrum'    , id = xi.item.CLAUSTRUM     },
+    { name = 'Yoichinoyumi' , id = xi.item.YOICHINOYUMI  },
+    { name = 'Gjallarhorn'  , id = xi.item.GJALLARHORN   },
+    { name = 'Aegis'        , id = xi.item.AEGIS         },
 }
 
 m:addOverride('xi.zones.RuLude_Gardens.Zone.onInitialize', function(zone)
@@ -46,16 +46,25 @@ m:addOverride('xi.zones.RuLude_Gardens.Zone.onInitialize', function(zone)
             local zoneID = zones[player:getZoneID()]
     
             for _, r in ipairs(relics) do
-                if npcUtil.tradeHas(trade, {r.id, {xi.item.MONTIONT_SILVERPIECE, 10}, {xi.item.ONE_HUNDRED_BYNE_BILL, 10}, {xi.item.LUNGO_NANGO_JADESHELL, 10}}) 
-                or npcUtil.tradeHas(trade, xi.item.RELIC_VOUCHER) then
-                    if player:getFreeSlotsCount() == 0 then
+                if
+                    npcUtil.tradeHas(trade, {r.id, {xi.item.MONTIONT_SILVERPIECE, 10}, {xi.item.ONE_HUNDRED_BYNE_BILL, 10}, {xi.item.LUNGO_NANGO_JADESHELL, 10}}) or
+                    npcUtil.tradeHas(trade, xi.item.RELIC_VOUCHER)
+                then
+                    if player:getFreeSlotsCount() == 0 then -- No free slots available
                         player:messageSpecial(zoneID.text.ITEM_CANNOT_BE_OBTAINED, player:getLocalVar('[RelicExchange]'))
                         return
-                    elseif player:getLocalVar('[RelicExchange]') == null then
-                        return
-                    elseif player:getQuestStatus(xi.quest.log_id.JEUNO, xi.quest.id.jeuno.SHATTERING_STARS) ~= QUEST_COMPLETED then
+                    elseif player:getQuestStatus(xi.questLog.JEUNO, xi.quest.id.jeuno.SHATTERING_STARS) ~= xi.questStatus.QUEST_COMPLETED then
                         player:printToPlayer('Eldrin: I\'m sorry, I can\'t accept this. You\'ve yet to prove yourself worthy of such an illustrious weapon.', xi.msg.channel.NS_SAY)
                         player:printToPlayer('Eldrin: Once all of your limits have been broken, return to me and I\'ll gladly present you with this weapon.', xi.msg.channel.NS_SAY)
+                        return
+                    elseif player:getLocalVar('[RelicExchange]') == 0 or nil then -- No selection made yet.
+                        if
+                            npcUtil.tradeHas(trade, {r.id, {xi.item.MONTIONT_SILVERPIECE, 10}, {xi.item.ONE_HUNDRED_BYNE_BILL, 10}, {xi.item.LUNGO_NANGO_JADESHELL, 10}})
+                        then
+                            player:printToPlayer('Eldrin: I see you have the required currency and wish to exchange a relic. Please let met know which Relic you would like.', xi.msg.channel.NS_SAY)
+                        else
+                            player:printToPlayer('Eldrin: I see you have a Relic Voucher to obtain a new relic. Please let met know which Relic you would like.', xi.msg.channel.NS_SAY)
+                        end
                         return
                     end
                     player:addItem(player:getLocalVar('[RelicExchange]'))

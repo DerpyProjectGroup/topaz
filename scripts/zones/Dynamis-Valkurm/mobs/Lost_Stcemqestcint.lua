@@ -42,7 +42,7 @@ end
 
 entity.onMobDeath = function(mob, player, optParams)
     mob:resetLocalVars()
-    for _, member in pairs(zone:getParty()) do
+    for _, member in pairs(player:getParty()) do
         if member:getObjType() == xi.objType.PC then
         member:changeMusic(2, 121)
         member:changeMusic(3, 121)

@@ -118,7 +118,7 @@ xi.reives.setupZone = function(zone)
 
     if xi.settings.main.ENABLE_SOA == 1 then -- If SOA is enabled, spawn the zone's reives on zone initialize.
         for reiveNum, _ in ipairs(xi.reives.zoneData[ZoneID].reive) do
-            xi.reives.enableReive(ZoneID, reiveNum, 5)
+            xi.reives.enableReive(ZoneID, reiveNum)
         end
     end
 end

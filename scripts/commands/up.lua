@@ -25,7 +25,7 @@ commandObj.onTrigger = function(player, number, target)
         entity = cursor
         player:printToPlayer('Moving cursor target.. ')
     elseif target ~= nil and GetPlayerByName(target) == nil then
-        error(player, string.format('Player named '%s' not found!', target))
+        error(player, string.format('Player named "%s" not found!', target))
         return
     else
         entity = GetPlayerByName(target)

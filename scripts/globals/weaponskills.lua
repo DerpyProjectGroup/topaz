@@ -132,7 +132,7 @@ xi.weaponskills.consumeManaBonusPhysical = function(attacker, wsParams) -- For P
     return bonus
 end
 
-xi.weaponskills.consumeManaBonusWeaponDamage = function(attacker, wsParams) -- For modifying a weapon's base damage. Used for Physical Weaponskills.
+xi.weaponskills.consumeManaBonusWeaponDamage = function(attacker) -- For modifying a weapon's base damage. Used for Physical Weaponskills.
     local bonus = 1
 
     if attacker:hasStatusEffect(xi.effect.CONSUME_MANA) then
@@ -999,7 +999,7 @@ xi.weaponskills.doRangedWeaponskill = function(attacker, target, wsID, wsParams,
     local calcParams =
     {
         wsID                    = wsID,
-        weaponDamage            = { attacker:getRangedDmg() * xi.weaponskills.consumeManaBonusWeaponDamage(attacker, wsParams) },
+        weaponDamage            = { attacker:getRangedDmg() * xi.weaponskills.consumeManaBonusWeaponDamage(attacker) },
         skillType               = attacker:getWeaponSkillType(xi.slot.RANGED),
         fSTR                    = xi.weaponskills.fSTR2(attacker:getStat(xi.mod.STR), target:getStat(xi.mod.VIT), attacker:getRangedDmgRank()),
         cratio                  = cratio,
@@ -1357,9 +1357,9 @@ xi.weaponskills.getMeleeDmg = function(attacker, weaponType, kick)
     local offhandDamage = attacker:getOffhandDmg()
 
     if attacker:hasStatusEffect(xi.effect.CONSUME_MANA) then
-        mainhandDamage = mainhandDamage * xi.weaponskills.consumeManaBonusWeaponDamage(attacker, wsParams)
+        mainhandDamage = mainhandDamage * xi.weaponskills.consumeManaBonusWeaponDamage(attacker)
         -- attacker:printToPlayer(string.format('Main Weapon Damage: %s', mainhandDamage), xi.msg.channel.SYSTEM_3) -- Debug to see modifier of each hit in a weapon skill.
-        offhandDamage = offhandDamage * xi.weaponskills.consumeManaBonusWeaponDamage(attacker, wsParams)
+        offhandDamage = offhandDamage * xi.weaponskills.consumeManaBonusWeaponDamage(attacker)
         -- attacker:printToPlayer(string.format('Sub Weapon Damage: %s', offhandDamage), xi.msg.channel.SYSTEM_3) -- Debug to see modifier of each hit in a weapon skill.
     end
 

@@ -13,10 +13,6 @@ local function updateRainHarvesting(status)
     end
 end
 
-zoneObject.onChocoboDig = function(player, precheck)
-    return xi.chocoboDig.start(player, precheck)
-end
-
 zoneObject.onInitialize = function(zone)
     -- NM Persistence
     xi.mob.nmTODPersistCache(zone, ID.mob.WOODLAND_SAGE)

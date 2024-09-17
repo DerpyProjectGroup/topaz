@@ -12,8 +12,9 @@ entity.onTrade = function(player, npc, trade)
 end
 
 entity.onTrigger = function(player, npc)
-    local PuppetmasterBlues = player:getQuestStatus(xi.questLog.AHT_URHGAN, xi.quest.id.ahtUrhgan.PUPPETMASTER_BLUES)
+    local PuppetmasterBlues         = player:getQuestStatus(xi.questLog.AHT_URHGAN, xi.quest.id.ahtUrhgan.PUPPETMASTER_BLUES)
     local PuppetmasterBluesProgress = player:getCharVar("PuppetmasterBluesProgress")
+    local NoStringsAttached         = player:getQuestStatus(xi.questLog.AHT_URHGAN, xi.quest.id.ahtUrhgan.NO_STRINGS_ATTACHED)
     if (PuppetmasterBluesProgress == 1) then
         player:startEvent(437) -- cs - asks player to help Iruki-Waraki
     elseif (PuppetmasterBluesProgress == 2) then
@@ -22,7 +23,7 @@ entity.onTrigger = function(player, npc)
         player:startEvent(439) -- cs - Post Talacca Cove win, sends player to Iruki-Waraki
     elseif (PuppetmasterBluesProgress == 4) then
         player:startEvent(440) -- reminds player to go to Iruki-Waraki
-    elseif (NoStringsAttached == xi.questStatus.QUEST_COMPLETE) then
+    elseif (NoStringsAttached == xi.questStatus.QUEST_COMPLETED) then
         player:startEvent(436) -- encourages you
     else
         player:startEvent(433) -- acts indifferent to you

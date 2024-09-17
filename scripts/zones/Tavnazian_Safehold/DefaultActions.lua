@@ -17,7 +17,6 @@ return {
     ['Ferchinne']        = { event = 240 },
     ['Frescheque']       = { event = 158 },
     ['Fouagine']         = { event = 338 },
-    ['Frescheque']       = { event = 157 },
     ['Geuselibel']       = { event = 328 },
     ['Guda']             = { event = 322 },
     ['Ironclad_Gorilla'] = { event = 305 },

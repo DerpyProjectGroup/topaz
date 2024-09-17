@@ -325,7 +325,7 @@ commandObj.onTrigger = function(player, bytes)
         target = string.sub(bytes, 1, sppos-1)
         targ = GetPlayerByName(target)
         if targ == nil then
-            error(player, string.format('Player named '%s' not found!', target))
+            error(player, string.format('Player named "%s" not found!', target))
             return
         end
     end
@@ -375,7 +375,7 @@ commandObj.onTrigger = function(player, bytes)
             target = dest
             dest = GetPlayerByName(dest)
             if dest == nil then
-                error(player, string.format('Player named '%s' not found!', target))
+                error(player, string.format('Player named "%s" not found!', target))
                 return
             end
 

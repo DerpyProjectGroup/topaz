@@ -73,7 +73,7 @@ commandObj.onTrigger = function(player, handlerName)
 
     local handlerData = zoneData[handlerName]
     if handlerData == nil then
-        cmdPrint('No interactions for '%s'.', handlerName)
+        cmdPrint('No interactions for "%s".', handlerName)
         return
     end
 
@@ -98,7 +98,7 @@ commandObj.onTrigger = function(player, handlerName)
     local onTrades = gatherHandlers('onTrade')
 
     if #onTriggers == 0 and #onTrades == 0 then
-        cmdPrint('No interactions for '%s'.', handlerName)
+        cmdPrint('No interactions for "%s".', handlerName)
         return
     end
 
@@ -111,7 +111,7 @@ commandObj.onTrigger = function(player, handlerName)
         end
     end
 
-    cmdPrint('Handlers for '%s':', handlerName)
+    cmdPrint('Handlers for "%s":', handlerName)
     printHandlers('Trigger', onTriggers)
     printHandlers('Trade', onTrades)
 end

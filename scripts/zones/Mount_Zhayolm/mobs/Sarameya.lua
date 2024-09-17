@@ -13,7 +13,7 @@ local entity = {}
 entity.onMobInitialize = function(mob)
 end
 
-function howlSequence(mob, target, skill)
+function howlSequence(mob, target)
     local howlNum = mob:getLocalVar('Howl')
     mob:setLocalVar('HowlTime', os.time() + 5)
 
@@ -86,9 +86,6 @@ entity.onMobSpawn = function(mob)
     mob:setMagicCastingEnabled(true)
 end
 
-entity.onMobWeaponSkill = function(target, mob, skill)
-end
-
 entity.onMobRoam = function(mob)
     if math.random() > .95 then
         mob:useMobAbility(1892)
@@ -116,7 +113,7 @@ entity.onMobFight = function(mob, target)
 
     if howlNum > 0 then
         if os.time() >= mob:getLocalVar('HowlTime') and mob:actionQueueEmpty() then
-            howlSequence(mob, target, skill)
+            howlSequence(mob, target)
         end
     else
         if hpp < 90 and mob:getLocalVar('chainspell89') == 0 then
@@ -154,7 +151,7 @@ entity.onMobFight = function(mob, target)
 
             if os.time() >= mob:getLocalVar('HowlTime') and mob:getLocalVar('Howl') == 0 then -- Check to see if its time to do Howl Sequence
                 mob:setLocalVar('Howl', 1)
-                howlSequence(mob, target, skill)
+                howlSequence(mob, target)
             end
         end
     end

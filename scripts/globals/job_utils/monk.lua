@@ -57,7 +57,7 @@ xi.job_utils.monk.useChakra = function(player, target, ability)
     local recoveryAmount    = math.min(player:getMaxHP() - player:getHP(), maxRecoveryAmount) -- TODO: Figure out 'function of level' addition (August 2017 update)
     
     if target:hasStatusEffect(xi.effect.CURSE_II) then
-        skill:setMsg(xi.msg.basic.SKILL_NO_EFFECT) -- no effect
+        ability:setMsg(xi.msg.basic.SKILL_NO_EFFECT) -- no effect
     else
         player:setHP(player:getHP() + recoveryAmount)
     end

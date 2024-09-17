@@ -55,36 +55,11 @@ zones[xi.zone.THE_GARDEN_OF_RUHMET] =
             16920665, -- SE
         },
 
-                QNZDEI_GROUP_1 =
-        {
-            16920577,
-            16920578,
-            16920579,
-            16920580,
-        },
-
-        QNZDEI_GROUP_2 =
-        {
-            16920581,
-            16920582,
-            16920583,
-            16920584,
-        },
-
-        QNZDEI_GROUP_3 =
-        {
-            16920585,
-            16920586,
-            16920587,
-            16920588,
-        },
-
         JAILER_OF_FORTITUDE     = GetFirstID('Jailer_of_Fortitude'),
         KFGHRAH_WHM             = GetFirstID('Kfghrah_WHM'),
         KFGHRAH_BLM             = GetFirstID('Kfghrah_BLM'),
         IXAERN_DRK              = GetFirstID('Ixaern_DRK'),
         JAILER_OF_FAITH         = GetFirstID('Jailer_of_Faith'),
-        IXAERN_DRG              = GetFirstID('Ixaern_DRG'),
         IXAERN_DRG              = GetFirstID('Ixaern_DRG'),
         IXZDEI_BASE             = GetFirstID('Ixzdei_RDM'),
         IXZDEI_RDM              = GetFirstID('Ixzdei_RDM'),
