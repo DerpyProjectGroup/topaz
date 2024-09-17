@@ -335,7 +335,7 @@ int16 CBattleEntity::GetWeaponDelay(bool tp)
     {
         uint16 MinimumDelay = weapon->getDelay(); // Track base delay.  We will need this later.  Mod::DELAY is ignored for now.
         WeaponDelay         = weapon->getDelay() - getMod(Mod::DELAY);
-        if (weapon->isHandToHand())
+        if (weapon->isHandToHand() || weapon->getSkillType() == SKILL_STAFF)
         {
             WeaponDelay -= getMod(Mod::MARTIAL_ARTS) * 1000 / 60;
         }
