@@ -231,6 +231,20 @@ uint8 CStatusEffectContainer::GetEffectsCount(EFFECT ID)
     return count;
 }
 
+uint8 CStatusEffectContainer::GetEffectsCountBySubID(EFFECT ID, uint32 SubID)
+{
+    uint8 count = 0;
+
+    for (CStatusEffect* PStatusEffect : m_StatusEffectSet)
+    {
+        if (PStatusEffect->GetStatusID() == ID && PStatusEffect->GetSubID() == SubID && !PStatusEffect->deleted)
+        {
+            count++;
+        }
+    }
+    return count;
+}
+
 uint8 CStatusEffectContainer::GetEffectsCountWithFlag(EFFECTFLAG flag)
 {
     uint8 count = 0;

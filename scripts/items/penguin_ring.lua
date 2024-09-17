@@ -1,8 +1,7 @@
 -----------------------------------
--- ID: 15782
--- Item: Manashell Ring
--- Item Effect: MP +9
--- Duration: 3 minutes
+-- ID: 15553
+-- Penguin Ring
+-- Enchantment: Increases skill at tiring fish.
 -----------------------------------
 local itemObject = {}
 
@@ -33,11 +32,11 @@ itemObject.onItemUnequip = function(target, item)
 end
 
 itemObject.onItemUse = function(target, caster, item)
-    target:addStatusEffectEx(xi.effect.ENCHANTMENT, xi.effect.MAX_MP_BOOST, 0, 0, 1800, item:getID(), 0, 0, false)
+    target:addStatusEffectEx(xi.effect.ENCHANTMENT, xi.effect.ENCHANTMENT, 0, 0, 1200, item:getID(), false)
 end
 
 itemObject.onEffectGain = function(target, effect)
-    effect:addMod(xi.mod.MP, 9)
+    effect:addMod(xi.mod.PENGUIN_RING_EFFECT, 1)
 end
 
 itemObject.onEffectLose = function(target, effect)

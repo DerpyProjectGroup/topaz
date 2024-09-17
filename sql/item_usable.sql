@@ -2018,7 +2018,7 @@ INSERT INTO `item_usable` VALUES (11862,'himegami_yukata',1,2,0,0,1,30,86400,0);
 INSERT INTO `item_usable` VALUES (12406,'coated_shield',1,2,0,0,20,30,1800,0);
 INSERT INTO `item_usable` VALUES (12408,'absorbing_shield',20,2,0,0,20,30,3600,0);
 INSERT INTO `item_usable` VALUES (12411,'dominus_shield',1,10,0,0,15,30,180,0);
-INSERT INTO `item_usable` VALUES (13144,'wing_gorget',1,3,91,0,10,30,1800,0);
+INSERT INTO `item_usable` VALUES (13144,'wing_gorget',1,3,34,0,10,30,1800,0);
 INSERT INTO `item_usable` VALUES (13170,'stoneskin_torque',1,14,29,0,20,30,30,0);
 INSERT INTO `item_usable` VALUES (13171,'reraise_gorget',1,10,33,0,10,30,120,0);
 INSERT INTO `item_usable` VALUES (13173,'memento_muffler',1,1,0,0,20,30,60,0);

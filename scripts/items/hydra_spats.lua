@@ -16,7 +16,7 @@ itemObject.onItemUse = function(target, caster, item)
         effect:delStatusEffect()
     end
 
-    target:addStatusEffect(xi.effect.ENCHANTMENT, 0, 0, 1200, item:getID())
+    target:addStatusEffect(xi.effect.ENCHANTMENT, 0, 0, 1800, item:getID())
 end
 
 return itemObject

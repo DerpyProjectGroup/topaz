@@ -4,32 +4,26 @@
 -- Item Effect: Conserve MP
 -- Duration: 45 seconds
 -----------------------------------
-
-
------------------------------------
 local itemObject = {}
 
 itemObject.onItemCheck = function(target, item, param, caster)
-    if target:getStatusEffect(xi.effect.ENCHANTMENT, nil, xi.item.PURGATORY_COLLAR) ~= nil then
-        target:delStatusEffect(xi.effect.ENCHANTMENT, nil, xi.item.PURGATORY_COLLAR)
+    local effect = target:getItemEnchantmentEffect(item:getID())
+    if effect then
+        effect:delStatusEffect()
     end
 
     return 0
 end
 
-itemObject.onItemUse = function(target)
-    if target:hasEquipped(xi.item.PURGATORY_COLLAR) then
-        target:addStatusEffect(xi.effect.ENCHANTMENT, 0, 0, 45, 0, 0, 0, xi.item.PURGATORY_COLLAR)
-    end
+itemObject.onItemUse = function(target, caster, item)
+    target:addStatusEffectEx(xi.effect.ENCHANTMENT, xi.effect.ENCHANTMENT, 0, 0, 300, item:getID(), false)
 end
 
-itemObject.onEffectGain = function(target)
-    -- **Power needs validation**
-    target:addMod(xi.mod.CONSERVE_MP, 10)
+itemObject.onEffectGain = function(target, effect)
+    effect:addMod(xi.mod.CONSERVE_MP, 10)
 end
 
-itemObject.onEffectLose = function(target)
-    target:delMod(xi.mod.CONSERVE_MP, 10)
+itemObject.onEffectLose = function(target, effect)
 end
 
 return itemObject

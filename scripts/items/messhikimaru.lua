@@ -7,18 +7,23 @@
 local itemObject = {}
 
 itemObject.onItemCheck = function(target, item, param, caster)
-    local effect = target:getStatusEffect(xi.effect.ARCANE_CIRCLE)
-    if effect ~= nil and effect:getItemSourceID() == xi.item.MESSHIKIMARU then
-        target:delStatusEffect(xi.effect.ARCANE_CIRCLE)
+    local effect = target:getItemEnchantmentEffect(item:getID())
+    if effect then
+        effect:delStatusEffect()
     end
 
     return 0
 end
 
-itemObject.onItemUse = function(target)
-    if target:hasEquipped(xi.item.MESSHIKIMARU) then
-        target:addStatusEffect(xi.effect.ARCANE_CIRCLE, 20, 0, 600, 0, 0, 0, xi.item.MESSHIKIMARU)
-    end
+itemObject.onItemUse = function(target, caster, item)
+    target:addStatusEffectEx(xi.effect.ENCHANTMENT, xi.effect.ARCANE_CIRCLE, 0, 0, 600, item:getID(), false)
+end
+
+itemObject.onEffectGain = function(target, effect)
+    effect:addMod(xi.mod.ARCANA_KILLER, 20)
+end
+
+itemObject.onEffectLose = function(target, effect)
 end
 
 return itemObject

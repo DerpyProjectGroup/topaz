@@ -9,18 +9,24 @@
 local itemObject = {}
 
 itemObject.onItemCheck = function(target, item, param, caster)
-    local effect = target:getStatusEffect(xi.effect.POTENCY)
-    if effect ~= nil and effect:getItemSourceID() == xi.item.HYDRA_TIARA then
-        target:delStatusEffect(xi.effect.POTENCY)
+    local effect = target:getItemEnchantmentEffect(item:getID())
+    if effect then
+        effect:delStatusEffect()
     end
 
     return 0
 end
 
-itemObject.onItemUse = function(target)
-    if target:hasEquipped(xi.item.HYDRA_TIARA) then
-        target:addStatusEffect(xi.effect.POTENCY, 7, 0, 180, 0, 0, 0, xi.item.HYDRA_TIARA)
-    end
+itemObject.onItemUse = function(target, caster, item)
+    target:addStatusEffectEx(xi.effect.ENCHANTMENT, xi.effect.POTENCY, 0, 0, 300, item:getID(), false)
+end
+
+itemObject.onEffectGain = function(target, effect)
+    effect:addMod(xi.mod.CRITHITRATE, 10)
+    effect:addMod(xi.mod.MAGIC_CRITHITRATE, 10)
+end
+
+itemObject.onEffectLose = function(target, effect)
 end
 
 return itemObject

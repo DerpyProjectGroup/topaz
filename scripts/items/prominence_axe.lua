@@ -8,7 +8,7 @@ local itemObject = {}
 
 itemObject.onItemCheck = function(target, item, param, caster)
     local effect = target:getStatusEffect(xi.effect.ENFIRE)
-    if effect ~= nil and effect:getItemSourceID() == xi.item.PROMINENCE_AXE then
+    if effect ~= nil then
         target:delStatusEffect(xi.effect.ENFIRE)
     end
 
@@ -29,7 +29,7 @@ itemObject.onItemUse = function(target)
 
         potency = utils.clamp(potency, 3, 25)
 
-        target:addStatusEffect(effect, potency, 0, 180, 0, 0, 0, xi.item.PROMINENCE_AXE)
+        target:addStatusEffect(effect, potency, 0, 180)
     end
 end
 

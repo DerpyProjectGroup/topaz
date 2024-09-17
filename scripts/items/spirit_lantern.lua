@@ -7,6 +7,11 @@
 local itemObject = {}
 
 itemObject.onItemCheck = function(target, item, param, caster)
+    local effect = target:getItemEnchantmentEffect(item:getID())
+    if effect then
+        effect:delStatusEffect()
+    end
+
     return 0
 end
 
@@ -16,11 +21,11 @@ itemObject.onItemUse = function(target, caster, item)
         effect:delStatusEffect()
     end
 
-    target:addStatusEffect(xi.effect.ENCHANTMENT, 0, 0, 180, item:getID())
+    target:addStatusEffect(xi.effect.ENCHANTMENT, 0, 0, 300, item:getID())
 end
 
 itemObject.onEffectGain = function(target, effect)
-    effect:addMod(xi.mod.MAGIC_DAMAGE, 10)
+    effect:addMod(xi.mod.MATT, 10)
 end
 
 return itemObject

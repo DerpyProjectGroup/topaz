@@ -13288,6 +13288,31 @@ uint8 CLuaBaseEntity::countEffect(uint16 StatusID)
 }
 
 /************************************************************************
+ *  Function: countEffectBySubType()
+ *  Purpose : Returns the number of Effects an Entity has in their container
+ *  Example : if target:countEffect() > 3 then
+ *  Notes   :
+ ************************************************************************/
+
+uint8 CLuaBaseEntity::countEffectBySubID(uint16 StatusID, uint32 SubID)
+{
+    if (m_PBaseEntity->objtype == TYPE_NPC)
+    {
+        ShowWarning("Invalid Entity (NPC: %s) calling function.", m_PBaseEntity->getName());
+        return 0;
+    }
+
+    auto* PBattleEntity = dynamic_cast<CBattleEntity*>(m_PBaseEntity);
+    if (!PBattleEntity)
+    {
+        return 0;
+    }
+    auto effect_StatusID = static_cast<EFFECT>(StatusID);
+    auto effect_SubID    = static_cast<uint32>(SubID);
+    return PBattleEntity->StatusEffectContainer->GetEffectsCountBySubID(effect_StatusID, effect_SubID);
+}
+
+/************************************************************************
  *  Function: countEffectWithFlag(EFFECTFLAG)
  *  Purpose : Returns the number of Effects an Entity has in their container that matches the provided flag
  *  Example : if target:countEffectWithFlag(xi.effectFlag.DISPELABLE) > 3 then
@@ -19172,6 +19197,7 @@ void CLuaBaseEntity::Register()
     SOL_REGISTER("hasStatusEffect", CLuaBaseEntity::hasStatusEffect);
     SOL_REGISTER("hasStatusEffectByFlag", CLuaBaseEntity::hasStatusEffectByFlag);
     SOL_REGISTER("countEffect", CLuaBaseEntity::countEffect);
+    SOL_REGISTER("countEffectBySubID", CLuaBaseEntity::countEffectBySubID);
     SOL_REGISTER("countEffectWithFlag", CLuaBaseEntity::countEffectWithFlag);
 
     SOL_REGISTER("delStatusEffect", CLuaBaseEntity::delStatusEffect);

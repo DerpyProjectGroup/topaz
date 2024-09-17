@@ -7,16 +7,16 @@
 local itemObject = {}
 
 itemObject.onItemCheck = function(target, item, param, caster)
-    return 0
-end
-
-itemObject.onItemUse = function(target, caster, item)
     local effect = target:getItemEnchantmentEffect(item:getID())
     if effect then
         effect:delStatusEffect()
     end
 
-    target:addStatusEffect(xi.effect.ENCHANTMENT, 0, 0, 180, item:getID())
+    return 0
+end
+
+itemObject.onItemUse = function(target, caster, item)
+    target:addStatusEffectEx(xi.effect.ENCHANTMENT, xi.effect.AGI_BOOST_II, 0, 0, 300, item:getID(), false)
 end
 
 itemObject.onEffectGain = function(target, effect)

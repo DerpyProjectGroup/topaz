@@ -10,7 +10,7 @@ itemObject.onItemCheck = function(target, item, param, caster)
 end
 
 itemObject.onItemUse = function(target)
-    target:addStatusEffect(xi.effect.ICE_SPIKES, 15, 0, 180, 0, 0, 0, xi.item.ICE_TROUSERS)
+    target:addStatusEffect(xi.effect.ICE_SPIKES, 15, 0, 180)
 end
 
 return itemObject

@@ -6,22 +6,23 @@
 local itemObject = {}
 
 itemObject.onItemCheck = function(target, item, param, caster)
-    local effect = target:getStatusEffect(xi.effect.REFRESH)
-    if effect ~= nil and effect:getItemSourceID() == xi.item.HYDRA_DOUBLET then
-        target:delStatusEffect(xi.effect.REFRESH)
+    local effect = target:getItemEnchantmentEffect(item:getID())
+    if effect then
+        effect:delStatusEffect()
     end
 
     return 0
 end
 
-itemObject.onItemUse = function(target)
-    if target:hasEquipped(xi.item.HYDRA_DOUBLET) then
-        if target:hasStatusEffect(xi.effect.REFRESH) then
-            target:messageBasic(xi.msg.basic.NO_EFFECT)
-        else
-            target:addStatusEffect(xi.effect.REFRESH, 4, 3, 180, 0, 0, 0, xi.item.HYDRA_DOUBLET)
-        end
-    end
+itemObject.onItemUse = function(target, caster, item)
+    target:addStatusEffectEx(xi.effect.ENCHANTMENT, xi.effect.REFRESH, 0, 0, 300, item:getID(), false)
+end
+
+itemObject.onEffectGain = function(target, effect)
+    effect:addMod(xi.mod.REFRESH, 6)
+end
+
+itemObject.onEffectLose = function(target, effect)
 end
 
 return itemObject

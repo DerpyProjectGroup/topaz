@@ -16,7 +16,7 @@ itemObject.onItemUse = function(target, caster, item)
         effect:delStatusEffect()
     end
 
-    target:addStatusEffectEx(xi.effect.ENCHANTMENT, xi.effect.HASTE, 0, 0, 180, item:getID())
+    target:addStatusEffectEx(xi.effect.ENCHANTMENT, xi.effect.HASTE, 0, 0, 1800, item:getID())
 end
 
 itemObject.onItemUnequip = function(user, item)

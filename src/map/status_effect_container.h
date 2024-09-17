@@ -91,6 +91,7 @@ public:
     void SaveStatusEffects(bool logout = false); // We keep the character effects
 
     uint8 GetEffectsCount(EFFECT ID);               // We get the number of effects with the specified ID
+    uint8 GetEffectsCountBySubID(EFFECT ID, uint32 SubID); // We get the number of effects with the specified ID
     uint8 GetEffectsCountWithFlag(EFFECTFLAG flag); // We get the number of effects with the specified flag
     uint8 GetLowestFreeSlot();                      // returns the lowest free slot for songs/rolls
 

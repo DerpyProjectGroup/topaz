@@ -6,22 +6,23 @@
 local itemObject = {}
 
 itemObject.onItemCheck = function(target, item, param, caster)
-    local effect = target:getStatusEffect(xi.effect.REGEN)
-    if effect ~= nil and effect:getItemSourceID() == xi.item.REGEN_COLLAR then
-        target:delStatusEffect(xi.effect.REGEN)
+    local effect = target:getItemEnchantmentEffect(item:getID())
+    if effect then
+        effect:delStatusEffect()
     end
 
     return 0
 end
 
-itemObject.onItemUse = function(target)
-    if target:hasEquipped(xi.item.REGEN_COLLAR) then
-        if not target:hasStatusEffect(xi.effect.REGEN) then
-            target:addStatusEffect(xi.effect.REGEN, 1, 3, 120, 0, 0, 0, xi.item.REGEN_COLLAR)
-        else
-            target:messageBasic(xi.msg.basic.NO_EFFECT)
-        end
-    end
+itemObject.onItemUse = function(target, caster, item)
+    target:addStatusEffectEx(xi.effect.ENCHANTMENT, xi.effect.REGEN, 0, 0, 300, item:getID(), false)
+end
+
+itemObject.onEffectGain = function(target, effect)
+    effect:addMod(xi.mod.REGEN, 1)
+end
+
+itemObject.onEffectLose = function(target, effect)
 end
 
 return itemObject

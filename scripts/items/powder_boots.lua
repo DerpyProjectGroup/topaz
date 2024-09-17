@@ -11,7 +11,7 @@ end
 
 itemObject.onItemUse = function(target)
     target:delStatusEffect(xi.effect.FLEE)
-    target:addStatusEffect(xi.effect.FLEE, 100, 0, 30, 0, 0, 0, xi.item.POWDER_BOOTS)
+    target:addStatusEffect(xi.effect.FLEE, 100, 0, 30)
 end
 
 return itemObject

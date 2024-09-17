@@ -8,18 +8,23 @@
 local itemObject = {}
 
 itemObject.onItemCheck = function(target, item, param, caster)
-    local effect = target:getStatusEffect(xi.effect.ACCURACY_BOOST)
-    if effect ~= nil and effect:getItemSourceID() == xi.item.KEEN_ZAGHNAL then
-        target:delStatusEffect(xi.effect.ACCURACY_BOOST)
+    local effect = target:getItemEnchantmentEffect(item:getID())
+    if effect then
+        effect:delStatusEffect()
     end
 
     return 0
 end
 
-itemObject.onItemUse = function(target)
-    if target:hasEquipped(xi.item.KEEN_ZAGHNAL) then
-        target:addStatusEffect(xi.effect.ACCURACY_BOOST, 3, 0, 1800, 0, 0, 0, xi.item.KEEN_ZAGHNAL)
-    end
+itemObject.onItemUse = function(target, caster, item)
+    target:addStatusEffect(xi.effect.ENCHANTMENT, 0, 0, 1800, item:getID())
+end
+
+itemObject.onEffectGain = function(target, effect)
+    effect:addMod(xi.mod.ACC, 3)
+end
+
+itemObject.onEffectLose = function(target, effect)
 end
 
 return itemObject

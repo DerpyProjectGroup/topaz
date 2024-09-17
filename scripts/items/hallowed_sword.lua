@@ -3,14 +3,11 @@
 -- Item: Hallowed Sword
 -- Item Effect: Enlight
 -----------------------------------
-
-
------------------------------------
 local itemObject = {}
 
 itemObject.onItemCheck = function(target, item, param, caster)
     local effect = target:getStatusEffect(xi.effect.ENLIGHT)
-    if effect ~= nil and effect:getItemSourceID() == xi.item.HALLOWED_SWORD then
+    if effect ~= nil then
         target:delStatusEffect(xi.effect.ENLIGHT)
     end
 
@@ -31,7 +28,7 @@ itemObject.onItemUse = function(target)
 
         potency = utils.clamp(potency, 3, 25)
 
-        target:addStatusEffect(effect, potency, 0, 180, 0, 0, 0, xi.item.HALLOWED_SWORD)
+        target:addStatusEffect(effect, potency, 0, 180, 0, 0, 0)
     end
 end
 

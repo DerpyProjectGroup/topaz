@@ -8,25 +8,23 @@
 local itemObject = {}
 
 itemObject.onItemCheck = function(target, item, param, caster)
-    if target:getStatusEffect(xi.effect.ENCHANTMENT, nil, xi.item.DEATH_CHAKRAM) ~= nil then
-        target:delStatusEffect(xi.effect.ENCHANTMENT, nil, xi.item.DEATH_CHAKRAM)
+    local effect = target:getItemEnchantmentEffect(item:getID())
+    if effect then
+        effect:delStatusEffect()
     end
 
     return 0
 end
 
-itemObject.onItemUse = function(target)
-    if target:hasEquipped(xi.item.DEATH_CHAKRAM) then
-        target:addStatusEffect(xi.effect.ENCHANTMENT, 0, 0, 180, 0, 0, 0, xi.item.DEATH_CHAKRAM)
-    end
+itemObject.onItemUse = function(target, caster, item)
+    target:addStatusEffectEx(xi.effect.ENCHANTMENT, xi.effect.MAX_MP_BOOST, 0, 0, 300, item:getID(), false)
 end
 
 itemObject.onEffectGain = function(target, effect)
-    target:addMod(xi.mod.MPP, 5)
+    effect:addMod(xi.mod.MPP, 5)
 end
 
 itemObject.onEffectLose = function(target, effect)
-    target:delMod(xi.mod.MPP, 5)
 end
 
 return itemObject

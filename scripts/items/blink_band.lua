@@ -16,7 +16,7 @@ itemObject.onItemUse = function(target)
     then
         target:messageBasic(xi.msg.basic.NO_EFFECT)
     else
-        target:addStatusEffect(xi.effect.BLINK, 3, 0, 300, 0, 0, 0, xi.item.BLINK_BAND)
+        target:addStatusEffect(xi.effect.BLINK, 3, 0, 300)
         target:messageBasic(xi.msg.basic.GAINS_EFFECT_OF_STATUS, xi.effect.BLINK)
     end
 end

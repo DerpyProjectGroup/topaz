@@ -6,22 +6,23 @@
 local itemObject = {}
 
 itemObject.onItemCheck = function(target, item, param, caster)
-    local effect = target:getStatusEffect(xi.effect.REGAIN)
-    if effect ~= nil and effect:getItemSourceID() == xi.item.WING_GORGET then
-        target:delStatusEffect(xi.effect.REGAIN)
+    local effect = target:getItemEnchantmentEffect(item:getID())
+    if effect then
+        effect:delStatusEffect()
     end
 
     return 0
 end
 
-itemObject.onItemUse = function(target)
-    if target:hasEquipped(xi.item.WING_GORGET) then
-        if target:hasStatusEffect(xi.effect.REGAIN) then
-            target:messageBasic(xi.msg.basic.NO_EFFECT)
-        else
-            target:addStatusEffect(xi.effect.REGAIN, 5, 3, 30, 0, 0, 0, xi.item.WING_GORGET)
-        end
-    end
+itemObject.onItemUse = function(target, caster, item)
+    target:addStatusEffectEx(xi.effect.ENCHANTMENT, xi.effect.REGAIN, 0, 0, 30, item:getID(), false)
+end
+
+itemObject.onEffectGain = function(target, effect)
+    effect:addMod(xi.mod.REGAIN, 50)
+end
+
+itemObject.onEffectLose = function(target, effect)
 end
 
 return itemObject
