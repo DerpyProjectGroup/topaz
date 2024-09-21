@@ -194,7 +194,20 @@ REPLACE INTO `item_equipment` (`itemId`, `name`, `level`, `ilevel`, `jobs`, `MId
 (10760,'portus_ring',75,0,4194303,0,0,0,24576,0,0,0),
 (10761,'portus_annulet',75,0,4194303,0,0,0,24576,0,0,0),
 (10944,'portus_collar',75,0,2473969,0,0,0,512,0,0,0),
-(11924,'alucinor_mitts',75,0,2593459,242,0,0,64,0,0,0);
+(11924,'alucinor_mitts',75,0,2593459,242,0,0,64,0,0,0),
+(11000,'swith_cape',72,0,1753628,0,0,0,32768,0,0,0),
+(11001,'swith_cape_+1',72,0,1753628,0,0,0,32768,0,0,0),
+
+(13787,'dalmatica',73,0,1589788,107,0,0,32,0,0,0), -- Add SCH to Zenith set
+(13788,'dalmatica_+1',73,0,1589788,107,0,0,32,0,0,0),
+(13876,'zenith_crown',73,0,1589788,107,0,0,16,0,0,0),
+(13877,'zenith_crown_+1',73,0,1589788,107,0,0,16,0,0,0),
+(14006,'zenith_mitts',73,0,1589788,107,0,0,64,0,0,0),
+(14007,'zenith_mitts_+1',73,0,1589788,107,0,0,64,0,0,0),
+(14123,'zenith_pumps',73,0,1589788,107,0,0,256,0,0,0),
+(14124,'zenith_pumps_+1',73,0,1589788,107,0,0,256,0,0,0),
+(14247,'zenith_slacks',73,0,1589788,107,0,0,128,0,0,0),
+(14248,'zenith_slacks_+1',73,0,1589788,107,0,0,128,0,0,0);
 
 REPLACE INTO `item_mods` (`itemid`, `modid`, `value`) VALUES
 -- Melaco Mittens
@@ -798,7 +811,21 @@ REPLACE INTO `item_mods` (`itemid`, `modid`, `value`) VALUES
 (18330,557,3),   -- THUNDER_AFFINITY_PERP: 3
 (18330,558,3),   -- WATER_AFFINITY_PERP: 3
 (18330,559,3),   -- LIGHT_AFFINITY_PERP: 3
-(18330,560,3);   -- DARK_AFFINITY_PERP: 3
+(18330,560,3),   -- DARK_AFFINITY_PERP: 3
+
+-- Swith Cape
+(11000,1,5),   -- DEF: 5
+(11000,2,-20), -- HP: -20
+(11000,13,3),  -- MND: 3
+(11000,14,3),  -- CHR: 3
+(11000,170,3), -- FASTCAST: 3
+
+-- Swith Cape +1
+(11001,1,6),   -- DEF: 6
+(11001,2,-25), -- HP: -25
+(11001,13,4),  -- MND: 4
+(11001,14,4),  -- CHR: 4
+(11001,170,4); -- FASTCAST: 4
 
 REPLACE INTO `item_mods_pet` (`itemId`, `modId`, `value`, `petType`) VALUES
 
