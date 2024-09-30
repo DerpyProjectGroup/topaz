@@ -15,10 +15,12 @@ local relics = {
     { name = 'Bravura'      , id = xi.item.BRAVURA       },
     { name = 'Apocalypse'   , id = xi.item.APOCALYPSE    },
     { name = 'Gungnir'      , id = xi.item.GUNGNIR       },
+    { name = 'Kikoku'       , id = xi.item.KIKOKU        },
     { name = 'Amanomurakumo', id = xi.item.AMANOMURAKUMO },
     { name = 'Mjollnir'     , id = xi.item.MJOLLNIR      },
     { name = 'Claustrum'    , id = xi.item.CLAUSTRUM     },
     { name = 'Yoichinoyumi' , id = xi.item.YOICHINOYUMI  },
+    { name = 'Annihilator'  , id = xi.item.ANNIHILATOR   },
     { name = 'Gjallarhorn'  , id = xi.item.GJALLARHORN   },
     { name = 'Aegis'        , id = xi.item.AEGIS         },
 }
@@ -31,7 +33,7 @@ m:addOverride('xi.zones.RuLude_Gardens.Zone.onInitialize', function(zone)
 
         objtype = xi.objType.NPC,
 
-        name = 'Eldrin ',
+        name = 'Eldrin',
         look = '0x01000E0300101920193019401950196000700080',
 
         x = -27.1487,
@@ -82,6 +84,7 @@ m:addOverride('xi.zones.RuLude_Gardens.Zone.onInitialize', function(zone)
             local page1 = {}
             local page2 = {}
             local page3 = {}
+            local page4 = {}
 
             local delaySendMenu = function(player)
                 player:timer(50, function(playerArg)
@@ -94,12 +97,13 @@ m:addOverride('xi.zones.RuLude_Gardens.Zone.onInitialize', function(zone)
                 options = {}
             }
 
+            -- Page 1
             table.insert(page1, {
-                'Learn about exchange.', 
+                'Learn about exchange.',
                 function(playerArg)
                     playerArg:printToPlayer('Eldrin : Here, we can exchange your old relic for a shiny new one.', xi.msg.channel.NS_SAY)
                     playerArg:printToPlayer('Eldrin : Nothing is free, of course. We require a fee of 10 Montiont Silverpieces, 10 One Hundred Byne Bills, and 10 Lungo Nango Jadeshells.', xi.msg.channel.NS_SAY)
-                    playerArg:printToPlayer('Eldrin : We have been instructed to provide a free relic to anyone who presents me with a Relic Exchange Certificate.', xi.msg.channel.NS_SAY)                    
+                    playerArg:printToPlayer('Eldrin : We have been instructed to provide a free relic to anyone who presents me with a Relic Exchange Certificate.', xi.msg.channel.NS_SAY)
                 end,
             })
 
@@ -110,41 +114,75 @@ m:addOverride('xi.zones.RuLude_Gardens.Zone.onInitialize', function(zone)
                     delaySendMenu(playerArg)
                 end,
             })
-            
-            for i = 1, 7 do
+
+            -- Page 2
+            table.insert(page2, {
+                'Previous Page',
+                function(playerArg)
+                    menu.options = page1
+                    delaySendMenu(playerArg)
+                end})
+
+            for i = 1, 6 do
                 local v = relics[i]
                 table.insert(page2, {v.name, function(playerArg)
                     player:setLocalVar('[RelicExchange]', v.id)
                     playerArg:printToPlayer('Eldrin : ' .. v.name .. ', a fine choice. Bring me a relic of your choosing along with my fee of', xi.msg.channel.NS_SAY)
                     playerArg:printToPlayer('Eldrin : 10 Montiont Silverpieces, 10 One Hundred Byne Bills, and 10 Lungo Nango Jadeshells, and I shall exchange it.', xi.msg.channel.NS_SAY)
-                    playerArg:printToPlayer('Eldrin : Or, if you have one, you can present me with a Relic Exchange Certificate.', xi.msg.channel.NS_SAY)                    
+                    playerArg:printToPlayer('Eldrin : Or, if you have one, you can present me with a Relic Exchange Certificate.', xi.msg.channel.NS_SAY)
                 end})
             end
- 
+
             table.insert(page2, {
-                'Next Page', 
+                'Next Page',
                 function(playerArg)
                     menu.options = page3
                     delaySendMenu(playerArg)
                 end})
 
-            for i = 8, 14 do
+            -- Page 3
+            table.insert(page3, {
+                'Previous Page',
+                function(playerArg)
+                    menu.options = page2
+                    delaySendMenu(playerArg)
+                end})
+
+            for i = 7, 12 do
                 local v = relics[i]
                 table.insert(page3, {v.name, function(playerArg)
                     player:setLocalVar('[RelicExchange]', v.id)
                     playerArg:printToPlayer('Eldrin : ' .. v.name .. ', a fine choice. Bring me a relic of your choosing along with my fee of', xi.msg.channel.NS_SAY)
                     playerArg:printToPlayer('Eldrin : 10 Montiont Silverpieces, 10 One Hundred Byne Bills, and 10 Lungo Nango Jadeshells, and I shall exchange it.', xi.msg.channel.NS_SAY)
-                    playerArg:printToPlayer('Eldrin : Or, if you have one, you can present me with a Relic Exchange Certificate.', xi.msg.channel.NS_SAY)                    
+                    playerArg:printToPlayer('Eldrin : Or, if you have one, you can present me with a Relic Exchange Certificate.', xi.msg.channel.NS_SAY)
                 end})
             end
 
             table.insert(page3, {
-                'Previous Page', 
+                'Next Page',
                 function(playerArg)
-                    menu.options = page2
+                    menu.options = page4
                     delaySendMenu(playerArg)
                 end})
-            
+
+            -- Page 4
+            table.insert(page4, {
+                'Previous Page',
+                function(playerArg)
+                    menu.options = page3
+                    delaySendMenu(playerArg)
+                end})
+
+            for i = 13, 16 do
+                local v = relics[i]
+                table.insert(page4, {v.name, function(playerArg)
+                    player:setLocalVar('[RelicExchange]', v.id)
+                    playerArg:printToPlayer('Eldrin : ' .. v.name .. ', a fine choice. Bring me a relic of your choosing along with my fee of', xi.msg.channel.NS_SAY)
+                    playerArg:printToPlayer('Eldrin : 10 Montiont Silverpieces, 10 One Hundred Byne Bills, and 10 Lungo Nango Jadeshells, and I shall exchange it.', xi.msg.channel.NS_SAY)
+                    playerArg:printToPlayer('Eldrin : Or, if you have one, you can present me with a Relic Exchange Certificate.', xi.msg.channel.NS_SAY)
+                end})
+            end
+
             npc:facePlayer(player)
             menu.options = page1
             delaySendMenu(player)
