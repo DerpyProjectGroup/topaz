@@ -901,6 +901,7 @@ xi.item =
     MYSTERIAL_FRAGMENT                  = 1584,
     ETHEREAL_FRAGMENT                   = 1585,
     TITANICTUS_SHELL                    = 1586,
+    HANDFUL_OF_HIGH_QUALITY_PUGIL_SCALES = 1587, --TODO: Spacing for this long name.
     SHARD_OF_NECROPSYCHE                = 1589,
     SPRIG_OF_HOLY_BASIL                 = 1590,
     HIGH_QUALITY_COEURL_HIDE            = 1591,
