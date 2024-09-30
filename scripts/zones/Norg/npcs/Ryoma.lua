@@ -22,10 +22,10 @@ entity.onTrigger = function(player, npc)
 
     if
         twentyInPirateYears == xi.questStatus.QUEST_AVAILABLE and
-        mJob == xi.job.NIN and
-        mLvl >= 40 or
-        sJob == xi.job.NIN and
-        sLvl >= 40 -- Umeboshi
+        ((mJob == xi.job.NIN and
+        mLvl >= 40) or
+        (sJob == xi.job.NIN and
+        sLvl >= 40))
     then
         player:startEvent(133) -- Start Quest '20 in Pirate Years'
     elseif
@@ -36,10 +36,10 @@ entity.onTrigger = function(player, npc)
     elseif
         twentyInPirateYears == xi.questStatus.QUEST_COMPLETED and
         illTakeTheBigBox == xi.questStatus.QUEST_AVAILABLE and
-        mJob == xi.job.NIN and
-        mLvl >= 50 or
-        sJob == xi.job.NIN and
-        sLvl >= 50 and -- Umeboshi
+        ((mJob == xi.job.NIN and
+        mLvl >= 50) or
+        (sJob == xi.job.NIN and
+        sLvl >= 50)) and -- Umeboshi
         not player:needToZone()
     then
         player:startEvent(135) -- Start Quest "I'll Take the Big Box"
