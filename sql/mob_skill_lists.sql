@@ -4383,6 +4383,54 @@ INSERT INTO `mob_skill_lists` VALUES ('Mantid_Auto_Attacks',5401,2748);
 INSERT INTO `mob_skill_lists` VALUES ('Mantid_Auto_Attacks',5401,2749);
 INSERT INTO `mob_skill_lists` VALUES ('Mantid_Auto_Attacks',5401,2750);
 
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_FIRE',5402,1217);
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_FIRE',5402,1218);
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_FIRE',5402,1219);
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_FIRE',5402,1220);
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_FIRE',5402,1221);
+
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_ICE',5403,1217);
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_ICE',5403,1218);
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_ICE',5403,1219);
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_ICE',5403,1220);
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_ICE',5403,1222);
+
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_WIND',5404,1217);
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_WIND',5404,1218);
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_WIND',5404,1219);
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_WIND',5404,1220);
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_WIND',5404,1223);
+
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_LIGHT',5405,1217);
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_LIGHT',5405,1218);
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_LIGHT',5405,1219);
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_LIGHT',5405,1220);
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_LIGHT',5405,1224);
+
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_EARTH',5406,1217);
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_EARTH',5406,1218);
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_EARTH',5406,1219);
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_EARTH',5406,1220);
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_EARTH',5406,1225);
+
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_LIGHTNING',5407,1217);
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_LIGHTNING',5407,1218);
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_LIGHTNING',5407,1219);
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_LIGHTNING',5407,1220);
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_LIGHTNING',5407,1226);
+
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_WATER',5408,1217);
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_WATER',5408,1218);
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_WATER',5408,1219);
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_WATER',5408,1220);
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_WATER',5408,1227);
+
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_DARK',5409,1217);
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_DARK',5409,1218);
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_DARK',5409,1219);
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_DARK',5409,1220);
+INSERT INTO `mob_skill_lists` VALUES ('Weeper_DARK',5409,1228);
+
 -- ------------------------------------------------------------
 -- Start of Ambuscade section
 -- NOTE: The mobs are changed every update in the DATs, so using out-of-date

@@ -9,7 +9,10 @@ g_mixins = g_mixins or {}
 
 local setModel = function(mob, skin)
     -- Strays in Vahzl can also spawn as Weeper and Seether models
-    if mob:getZone():getID() == xi.zone.PROMYVION_VAHZL and mob:getName() == 'Stray' then
+    if
+        mob:getZone():getID() == xi.zone.PROMYVION_VAHZL and
+        mob:getName() == 'Stray'
+    then
         local chance = math.random(1, 10)
         if chance == 1 then -- Weeper
             mob:setLocalVar('strayType', 1)
@@ -26,32 +29,57 @@ local setModel = function(mob, skin)
     -- Two elements per model
     local model = 0
     if skin < 3 then
-        model = 1
+        model = 1 -- Dark/Water
     elseif skin > 2 and skin < 5 then
-        model = 2
+        model = 2 -- Lightning/Earth
     elseif skin > 4 and skin < 7 then
-        model = 3
+        model = 3 -- Light/Fire
     elseif skin > 6 then
-        model = 4
+        model = 4 -- Ice/Wind
     end
 
     -- Set model depending on mob family
-    if mob:getFamily() == 255 or (mob:getFamily() == 499 and mob:getLocalVar('strayType') == 3) then -- Wanderer/Stray
+    if
+        mob:getFamily() == 255 or
+        (mob:getFamily() == 499 and
+        mob:getLocalVar('strayType') == 3)
+    then -- Wanderer/Stray
         if model == 4 then
             model = model + 1
         end
-        mob:setModelId(1105 + model)
-    elseif mob:getFamily() == 256 or (mob:getFamily() == 499 and mob:getLocalVar('strayType') == 1) then -- Weeper / Stray
-        mob:setModelId(1111 + model)
-    elseif mob:getFamily() == 220 or (mob:getFamily() == 499 and mob:getLocalVar('strayType') == 2) then -- Seether / Stray
+        if mob:getPool() == 2048 then -- Apex Idle Drifter
+            mob:setModelId(3613 + model)
+        else
+            mob:setModelId(1105 + model)
+        end
+    elseif
+        mob:getFamily() == 256 or
+        (mob:getFamily() == 499 and
+        mob:getLocalVar('strayType') == 1)
+    then -- Weeper / Stray
+        if mob:getPool() == 298 then -- Apex Idle Lamenter
+            mob:setModelId(3618 + model)
+        else
+            mob:setModelId(1111 + model)
+        end
+    elseif
+        mob:getFamily() == 220 or
+        (mob:getFamily() == 499 and
+        mob:getLocalVar('strayType') == 2)
+    then -- Seether / Stray
         if model > 1 then
             model = model + 1
         end
-        mob:setModelId(1116 + model)
+        if mob:getPool() == 4527 then -- Apex Livid Rager
+            mob:setModelId(3624 + model)
+        else
+            mob:setModelId(1115 + model)
+        end
     elseif mob:getFamily() == 241 then -- Thinker
         if model > 2 then
             model = model + 1
         end
+
         mob:setModelId(1122 + model)
     elseif mob:getFamily() == 137 or mob:getFamily() == 138 then -- Gorger
         mob:setModelId(1128 + model)
@@ -59,6 +87,7 @@ local setModel = function(mob, skin)
         if model > 2 then
             model = model + 1
         end
+
         mob:setModelId(1133 + model)
     end
 end
@@ -68,57 +97,6 @@ g_mixins.families.empty = function(emptyMob)
         -- Dark > Water > Lightning > Earth > Light > Fire > Ice > Wind
         local skin = math.random(1, 8)
         mob:setLocalVar('skin', skin)
-
-        -- Set elemental resistances
-        -- Currently bugged, mods cannot be set on spawn through a listener
-        -- if skin == 1 then -- Dark
-        --     mob:setMod(xi.mod.DARK_MEVA, 99)
-        --     mob:setMod(xi.mod.SLEEPRES, 90)
-        --     mob:setMod(xi.mod.LIGHT_MEVA, -27)
-        -- elseif skin == 2 then -- Water
-        --     mob:setMod(xi.mod.FIRE_MEVA, 80)
-        --     mob:setMod(xi.mod.WATER_MEVA, 99)
-        --     mob:setMod(xi.mod.POISONRES, 90)
-        --     mob:setMod(xi.mod.THUNDER_MEVA, -27)
-        -- elseif skin == 3 then -- Lightning
-        --     mob:setMod(xi.mod.WATER_MEVA, 80)
-        --     mob:setMod(xi.mod.POISONRES, 90)
-        --     mob:setMod(xi.mod.THUNDER_MEVA, 99)
-        --     mob:setMod(xi.mod.STUNRES, 90)
-        --     mob:setMod(xi.mod.EARTH_MEVA, -27)
-        -- elseif skin == 4 then -- Earth
-        --     mob:setMod(xi.mod.THUNDER_MEVA, 80)
-        --     mob:setMod(xi.mod.STUNRES, 90)
-        --     mob:setMod(xi.mod.EARTH_MEVA, 99)
-        --     mob:setMod(xi.mod.SLOWRES, 90)
-        --     mob:setMod(xi.mod.WIND_MEVA, -27)
-        -- elseif skin == 5 then -- Light
-        --     mob:setMod(xi.mod.LIGHT_MEVA, 99)
-        --     mob:setMod(xi.mod.LULLABYRES, 90)
-        --     mob:setMod(xi.mod.DARK_MEVA, -27)
-        -- elseif skin == 6 then -- Fire
-        --     mob:setMod(xi.mod.ICE_MEVA, 80)
-        --     mob:setMod(xi.mod.PARALYZERES, 90)
-        --     mob:setMod(xi.mod.BINDRES, 90)
-        --     mob:setMod(xi.mod.FIRE_MEVA, 99)
-        --     mob:setMod(xi.mod.WATER_MEVA, -27)
-        -- elseif skin == 7 then -- Ice
-        --     mob:setMod(xi.mod.WIND_MEVA, 80)
-        --     mob:setMod(xi.mod.GRAVITYRES, 90)
-        --     mob:setMod(xi.mod.SILENCERES, 90)
-        --     mob:setMod(xi.mod.ICE_MEVA, 99)
-        --     mob:setMod(xi.mod.PARALYZERES, 90)
-        --     mob:setMod(xi.mod.BINDRES, 90)
-        --     mob:setMod(xi.mod.FIRE_MEVA, -27)
-        -- else -- Wind
-        --     mob:setMod(xi.mod.EARTH_MEVA, 80)
-        --     mob:setMod(xi.mod.SLOWRES, 90)
-        --     mob:setMod(xi.mod.WIND_MEVA, 99)
-        --     mob:setMod(xi.mod.GRAVITYRES, 90)
-        --     mob:setMod(xi.mod.SILENCERES, 90)
-        --     mob:setMod(xi.mod.ICE_MEVA, -27)
-        -- end
-
         setModel(mob, skin)
     end)
 
@@ -132,60 +110,113 @@ g_mixins.families.empty = function(emptyMob)
 
         -- Temporary solution until mods on spawn issue is corrected
         local buffed = mob:getLocalVar('buffed')
+        if buffed == 0 then
+            -- return EEM to neutral, overriding DB
+            mob:setMod(xi.mod.FIRE_RES_RANK, 1)
+            mob:setMod(xi.mod.ICE_RES_RANK, 1)
+            mob:setMod(xi.mod.WIND_RES_RANK, 1)
+            mob:setMod(xi.mod.EARTH_RES_RANK, 1)
+            mob:setMod(xi.mod.THUNDER_RES_RANK, 1)
+            mob:setMod(xi.mod.WATER_RES_RANK, 1)
+            mob:setMod(xi.mod.LIGHT_RES_RANK, 1)
+            mob:setMod(xi.mod.DARK_RES_RANK, 1)
+        end
+
         if skin == 1 and buffed == 0 then -- Dark
-            mob:setMod(xi.mod.DARK_MEVA, 99)
-            mob:setMod(xi.mod.SLEEPRES, 90)
-            mob:setMod(xi.mod.LIGHT_MEVA, -27)
+            mob:setMod(xi.mod.DARK_RES_RANK, 11)
+            mob:setMod(xi.mod.LIGHT_RES_RANK, -3)
             mob:setLocalVar('buffed', 1)
+            if -- Weeper Elemental Skills
+                mob:getFamily() == 256 or
+                (mob:getFamily() == 499 and
+                mob:getLocalVar('strayType') == 1)
+            then
+                mob:setMobMod(xi.mobMod.SKILL_LIST, 5409)
+            end
+
         elseif skin == 2 and buffed == 0 then -- Water
-            mob:setMod(xi.mod.FIRE_MEVA, 80)
-            mob:setMod(xi.mod.WATER_MEVA, 99)
-            mob:setMod(xi.mod.POISONRES, 90)
-            mob:setMod(xi.mod.THUNDER_MEVA, -27)
+            mob:setMod(xi.mod.FIRE_RES_RANK, 11)
+            mob:setMod(xi.mod.WATER_RES_RANK, 11)
+            mob:setMod(xi.mod.THUNDER_RES_RANK, -3)
             mob:setLocalVar('buffed', 1)
+            if -- Weeper Elemental Skills
+                mob:getFamily() == 256 or
+                (mob:getFamily() == 499 and
+                mob:getLocalVar('strayType') == 1)
+            then
+                mob:setMobMod(xi.mobMod.SKILL_LIST, 5408)
+            end
         elseif skin == 3 and buffed == 0 then -- Lightning
-            mob:setMod(xi.mod.WATER_MEVA, 80)
-            mob:setMod(xi.mod.POISONRES, 90)
-            mob:setMod(xi.mod.THUNDER_MEVA, 99)
-            mob:setMod(xi.mod.STUNRES, 90)
-            mob:setMod(xi.mod.EARTH_MEVA, -27)
+            mob:setMod(xi.mod.WATER_RES_RANK, 11)
+            mob:setMod(xi.mod.THUNDER_RES_RANK, 11)
+            mob:setMod(xi.mod.EARTH_RES_RANK, -3)
             mob:setLocalVar('buffed', 1)
+            if -- Weeper Elemental Skills
+                mob:getFamily() == 256 or
+                (mob:getFamily() == 499 and
+                mob:getLocalVar('strayType') == 1)
+            then
+                mob:setMobMod(xi.mobMod.SKILL_LIST, 5407)
+            end
         elseif skin == 4 and buffed == 0 then -- Earth
-            mob:setMod(xi.mod.THUNDER_MEVA, 80)
-            mob:setMod(xi.mod.STUNRES, 90)
-            mob:setMod(xi.mod.EARTH_MEVA, 99)
-            mob:setMod(xi.mod.SLOWRES, 90)
-            mob:setMod(xi.mod.WIND_MEVA, -27)
+            mob:setMod(xi.mod.THUNDER_RES_RANK, 11)
+            mob:setMod(xi.mod.EARTH_RES_RANK, 11)
+            mob:setMod(xi.mod.WIND_RES_RANK, -3)
             mob:setLocalVar('buffed', 1)
+            if -- Weeper Elemental Skills
+                mob:getFamily() == 256 or
+                (mob:getFamily() == 499 and
+                mob:getLocalVar('strayType') == 1)
+            then
+                mob:setMobMod(xi.mobMod.SKILL_LIST, 5406)
+            end
         elseif skin == 5 and buffed == 0 then -- Light
-            mob:setMod(xi.mod.LIGHT_MEVA, 99)
-            mob:setMod(xi.mod.LULLABYRES, 90)
-            mob:setMod(xi.mod.DARK_MEVA, -27)
+            mob:setMod(xi.mod.LIGHT_RES_RANK, 11)
+            mob:setMod(xi.mod.DARK_RES_RANK, -3)
             mob:setLocalVar('buffed', 1)
+            if -- Weeper Elemental Skills
+                mob:getFamily() == 256 or
+                (mob:getFamily() == 499 and
+                mob:getLocalVar('strayType') == 1)
+            then
+                mob:setMobMod(xi.mobMod.SKILL_LIST, 5405)
+            end
         elseif skin == 6 and buffed == 0 then -- Fire
-            mob:setMod(xi.mod.ICE_MEVA, 80)
-            mob:setMod(xi.mod.PARALYZERES, 90)
-            mob:setMod(xi.mod.BINDRES, 90)
-            mob:setMod(xi.mod.FIRE_MEVA, 99)
-            mob:setMod(xi.mod.WATER_MEVA, -27)
+            mob:setMod(xi.mod.ICE_RES_RANK, 11)
+            mob:setMod(xi.mod.FIRE_RES_RANK, 11)
+            mob:setMod(xi.mod.WATER_RES_RANK, -3)
             mob:setLocalVar('buffed', 1)
+            if -- Weeper Elemental Skills
+                mob:getFamily() == 256 or
+                (mob:getFamily() == 499 and
+                mob:getLocalVar('strayType') == 1)
+            then
+                mob:setMobMod(xi.mobMod.SKILL_LIST, 5402)
+            end
         elseif skin == 7 and buffed == 0 then -- Ice
-            mob:setMod(xi.mod.WIND_MEVA, 80)
-            mob:setMod(xi.mod.GRAVITYRES, 90)
-            mob:setMod(xi.mod.SILENCERES, 90)
-            mob:setMod(xi.mod.ICE_MEVA, 99)
-            mob:setMod(xi.mod.PARALYZERES, 90)
-            mob:setMod(xi.mod.BINDRES, 90)
-            mob:setMod(xi.mod.FIRE_MEVA, -27)
+            mob:setMod(xi.mod.WIND_RES_RANK, 11)
+            mob:setMod(xi.mod.ICE_RES_RANK, 11)
+            mob:setMod(xi.mod.FIRE_RES_RANK, -3)
             mob:setLocalVar('buffed', 1)
+            if -- Weeper Elemental Skills
+                mob:getFamily() == 256 or
+                (mob:getFamily() == 499 and
+                mob:getLocalVar('strayType') == 1)
+            then
+                mob:setMobMod(xi.mobMod.SKILL_LIST, 5403)
+            end
         elseif buffed == 0 then -- Wind
-            mob:setMod(xi.mod.EARTH_MEVA, 80)
-            mob:setMod(xi.mod.SLOWRES, 90)
-            mob:setMod(xi.mod.WIND_MEVA, 99)
-            mob:setMod(xi.mod.GRAVITYRES, 90)
-            mob:setMod(xi.mod.SILENCERES, 90)
-            mob:setMod(xi.mod.ICE_MEVA, -27)
+            mob:setMod(xi.mod.EARTH_RES_RANK, 11)
+            mob:setMod(xi.mod.WIND_RES_RANK, 11)
+            mob:setMod(xi.mod.ICE_RES_RANK, -3)
             mob:setLocalVar('buffed', 1)
+            if -- Weeper Elemental Skills
+                mob:getFamily() == 256 or
+                (mob:getFamily() == 499 and
+                mob:getLocalVar('strayType') == 1)
+            then
+                mob:setMobMod(xi.mobMod.SKILL_LIST, 5404)
+            end
         end
     end)
 end
