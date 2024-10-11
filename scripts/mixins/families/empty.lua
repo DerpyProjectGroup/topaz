@@ -73,7 +73,7 @@ local setModel = function(mob, skin)
         if mob:getPool() == 4527 then -- Apex Livid Rager
             mob:setModelId(3624 + model)
         else
-            mob:setModelId(1115 + model)
+            mob:setModelId(1116 + model)
         end
     elseif mob:getFamily() == 241 then -- Thinker
         if model > 2 then
