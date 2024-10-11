@@ -19,7 +19,7 @@ local content = BattlefieldQuest:new({
 })
 
 function content:entryRequirement(player, npc, isRegistrant, trade)
-    return player:hasKeyItem(xi.ki.DRAGON_CURSE_REMEDY)
+    return player:hasKeyItem(xi.ki.DRAGON_CURSE_REMEDY) or player:hasCompletedQuest(xi.questLog.SANDORIA, xi.quest.id.sandoria.THE_HOLY_CREST)
 end
 
 function content:onEventFinishWin(player, csid, option, npc)
