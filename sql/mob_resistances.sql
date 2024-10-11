@@ -161,8 +161,8 @@ INSERT INTO `mob_resistances` VALUES (133,'Goblin',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0
 INSERT INTO `mob_resistances` VALUES (134,'God - Promathia',0.9,0.9,0.9,0.9,0,0,0,0,0,0,0,0,0,2,2,2,2,2,2,0,11);
 INSERT INTO `mob_resistances` VALUES (135,'Golem',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,2,2,2);
 INSERT INTO `mob_resistances` VALUES (136,'Goobbue',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,-2,0,0,0,0,0,0,-2);
-INSERT INTO `mob_resistances` VALUES (137,'Gorger - Offspring',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,0,-3,11,11,0,0,0,0);
-INSERT INTO `mob_resistances` VALUES (138,'Gorger',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,0,-3,11,11,0,0,0,0);
+INSERT INTO `mob_resistances` VALUES (137,'Gorger - Offspring',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+INSERT INTO `mob_resistances` VALUES (138,'Gorger',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 INSERT INTO `mob_resistances` VALUES (139,'Hecteyes',1.0,1.0,0.75,0.75,0,0,0,0,0,0,0,0,0,-2,-2,-2,-2,-2,-2,-2,2);
 INSERT INTO `mob_resistances` VALUES (140,'Hippogryph',1.0,1.25,1.0,1.0,0,0,0,0,0,0,0,0,0,-1,-1,3,-2,3,-1,-1,-1);
 INSERT INTO `mob_resistances` VALUES (141,'Hippogryph-High_Res',1.0,1.25,1.0,1.0,0,0,0,0,0,0,0,0,0,-1,-1,3,-2,3,-1,-1,-1);
@@ -244,7 +244,7 @@ INSERT INTO `mob_resistances` VALUES (216,'Sapling',1.0,1.0,1.0,1.0,0,0,0,0,0,0,
 INSERT INTO `mob_resistances` VALUES (217,'Scorpion',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,0,-3,0,0,-2,-2,-3,0);
 INSERT INTO `mob_resistances` VALUES (218,'Sea_Monk',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,-2,-3,-2,-2,-3,4,-2,-2);
 INSERT INTO `mob_resistances` VALUES (219,'Sea Monk - Tieholtsodi',0.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,-2,-3,-2,-2,-3,4,-2,-2);
-INSERT INTO `mob_resistances` VALUES (220,'Seether',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,11,11,0,0,0,-3,0,0);
+INSERT INTO `mob_resistances` VALUES (220,'Seether',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 INSERT INTO `mob_resistances` VALUES (221,'Shadow - COP',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,-2,4,0,0,0,0,-2,4);
 INSERT INTO `mob_resistances` VALUES (222,'Shadow - Brothers DAurphe',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,-2,4,0,0,0,0,-2,4);
 INSERT INTO `mob_resistances` VALUES (223,'Shadow - NM',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,-2,4,0,0,0,0,-2,4);
@@ -265,7 +265,7 @@ INSERT INTO `mob_resistances` VALUES (237,'Structure',1.0,1.0,1.0,1.0,0,0,0,0,0,
 INSERT INTO `mob_resistances` VALUES (238,'Archaic_Mirror',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 INSERT INTO `mob_resistances` VALUES (239,'Structure',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 INSERT INTO `mob_resistances` VALUES (240,'Tauri',1.0,1.0,1.25,1.5,0,0,0,0,0,0,0,0,0,-1,-1,-1,-1,-1,-1,-2,2);
-INSERT INTO `mob_resistances` VALUES (241,'Thinker',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,0,0,-3,11,11,0,0,0);
+INSERT INTO `mob_resistances` VALUES (241,'Thinker',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 INSERT INTO `mob_resistances` VALUES (242,'Tiger',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,-3,0,0,0,-3,-2,0,0);
 INSERT INTO `mob_resistances` VALUES (243,'Tonberry',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,-1,-3,-1,0,-2,1,4,0);
 INSERT INTO `mob_resistances` VALUES (244,'Tonberry - Golden-Tongued_Culberry',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,-1,-3,-1,0,-2,1,4,0);
@@ -279,8 +279,8 @@ INSERT INTO `mob_resistances` VALUES (251,'Uragnite',1.0,1.0,1.0,1.0,0,0,0,0,0,0
 INSERT INTO `mob_resistances` VALUES (252,'Vampyr',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,1,4,3,3,1,1,-1,11);
 INSERT INTO `mob_resistances` VALUES (253,'Wamoura',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,11,-2,2,-1,0,-2,0,-1);
 INSERT INTO `mob_resistances` VALUES (254,'Wamouracampa',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,11,-2,2,-1,0,-2,0,-1);
-INSERT INTO `mob_resistances` VALUES (255,'Wanderer',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,-3,11,11,0,0,0,0,0);
-INSERT INTO `mob_resistances` VALUES (256,'Weeper',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-3,11);
+INSERT INTO `mob_resistances` VALUES (255,'Wanderer',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+INSERT INTO `mob_resistances` VALUES (256,'Weeper',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 INSERT INTO `mob_resistances` VALUES (257,'Wivre',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,0,-2,-2,3,1,-1,-1,-1);
 INSERT INTO `mob_resistances` VALUES (258,'Worm',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,-2,-2,-3,2,-2,-2,-3,0);
 INSERT INTO `mob_resistances` VALUES (259,'Wyrm-Ouryu',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,0,0,-2,11,11,0,0,0);
