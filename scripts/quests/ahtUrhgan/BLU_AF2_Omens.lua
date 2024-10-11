@@ -22,8 +22,8 @@ quest.sections =
     {
         check = function(player, status, vars)
             return status == xi.questStatus.QUEST_AVAILABLE and
-                ((player:hasCompletedQuest(xi.questLog.AHT_URHGAN, xi.quest.id.ahtUrhgan.BEGINNINGS) and
-                player:getMainJob() == xi.job.BLU and
+                player:hasCompletedQuest(xi.questLog.AHT_URHGAN, xi.quest.id.ahtUrhgan.BEGINNINGS) and
+                ((player:getMainJob() == xi.job.BLU and
                 player:getMainLvl() >= xi.settings.main.AF2_QUEST_LEVEL) or
                 (player:getMainJob() == xi.job.BLU and
                 player:getMainLvl() >= xi.settings.main.AF2_QUEST_LEVEL))
