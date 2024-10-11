@@ -566,7 +566,7 @@ xi.combat.physical.calculateRangedPDIF = function(actor, target, weaponType, wsA
 
     -- Crit damage bonus is a final modifier
     if isCritical then
-        local critDamageBonus = utils.clamp(actor:getMod(xi.mod.CRIT_DMG_INCREASE) - target:getMod(xi.mod.CRIT_DEF_BONUS), 0, 100)
+        local critDamageBonus = utils.clamp(actor:getMod(xi.mod.CRIT_DMG_INCREASE) - target:getMod(xi.mod.CRIT_DEF_BONUS) + target:getMod(xi.mod.ENEMYCRITDMG), 0, 100)
         pDif = pDif * (100 + critDamageBonus) / 100
     end
 
