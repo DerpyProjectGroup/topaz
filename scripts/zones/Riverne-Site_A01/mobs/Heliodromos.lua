@@ -6,6 +6,15 @@ local ID = zones[xi.zone.RIVERNE_SITE_A01]
 -----------------------------------
 local entity = {}
 
+local HELIODROMOS =
+{
+    {
+        ID.mob.HELIODROMOS_OFFSET,
+        ID.mob.HELIODROMOS_OFFSET + 1,
+        ID.mob.HELIODROMOS_OFFSET + 2,
+    },
+}
+
 entity.onMobSpawn = function(mob)
     SetServerVariable('Heliodromos_Despawn', 0)
 end
@@ -34,8 +43,8 @@ entity.onMobRoam = function(mob)
 end
 
 entity.onMobEngage = function(mob, target)
-    for i = 1, 3 do
-        GetMobByID(ID.mob.HELIODROMOS_OFFSET[i]):updateEnmity(target)
+    for i = 0, 2 do
+        GetMobByID(ID.mob.HELIODROMOS_OFFSET + i):updateEnmity(target)
     end
 end
 
