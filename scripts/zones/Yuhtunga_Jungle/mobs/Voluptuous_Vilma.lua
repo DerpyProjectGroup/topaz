@@ -6,6 +6,7 @@ local ID = zones[xi.zone.YUHTUNGA_JUNGLE]
 -----------------------------------
 local entity = {}
 
+local roseGardenPH = ID.mob.ROSE_GARDEN - 1
 local updateRegen = function(mob)
     local regen = mob:getMod(xi.mod.REGEN)
 
@@ -52,8 +53,8 @@ end
 
 entity.onMobDespawn = function(mob)
     DisallowRespawn(ID.mob.VOLUPTUOUS_VILMA, true)
-    DisallowRespawn(ID.mob.ROSE_GARDEN_PH, false)
-    GetMobByID(ID.mob.ROSE_GARDEN_PH):setRespawnTime(GetMobRespawnTime(ID.mob.ROSE_GARDEN_PH))
+    DisallowRespawn(ID.mob.ROSE_GARDEN, false)
+    GetMobByID(roseGardenPH):setRespawnTime(GetMobRespawnTime(roseGardenPH))
 end
 
 return entity
