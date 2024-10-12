@@ -8,12 +8,26 @@ mixins = { require('scripts/mixins/job_special') }
 -----------------------------------
 local entity = {}
 
+entity.onMobInitialize = function(mob)
+    mob:setMobMod(xi.mobMod.ADD_EFFECT, 1)
+end
+
 entity.onMobSpawn = function(mob, target)
+    mob:setMod(xi.mod.SILENCERES, 90)
+    mob:addMod(xi.mod.ATT, 155)
+    mob:addMod(xi.mod.DEF, 94)
+    mob:setMod(xi.mod.EVA, 377)
+    mob:addMod(xi.mod.VIT, 77)
+    mob:setMobMod(xi.mobMod.MAGIC_COOL, 35)
+    mob:setMobMod(xi.mobMod.WEAPON_BONUS, 53)
     GetNPCByID(ID.npc.PORTAL_OFFSET + 11):setAnimation(xi.anim.CLOSE_DOOR)
 end
 
-entity.onMobInitialize = function(mob)
-    mob:setMobMod(xi.mobMod.ADD_EFFECT, 1)
+entity.onMobEngage = function(mob, target)
+    mob:messageText(mob, ID.text.SKY_GOD_OFFSET + 7)
+    mob:timer(5000, function(mobArg)
+        mobArg:setMagicCastingEnabled(true)
+    end)
 end
 
 -- Return the selected spell ID.

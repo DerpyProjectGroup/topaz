@@ -18,6 +18,9 @@ entity.onMobSpawn = function(mob)
             { id = xi.jsa.MIGHTY_STRIKES, cooldown = 300, hpp = math.random(85, 95) }, -- 5min cooldown
         },
     })
+    mob:setMod(xi.mod.ATTP, -50)
+    mob:setMod(xi.mod.DOUBLE_ATTACK, 100)
+    mob:setMod(xi.mod.TRIPLE_ATTACK, 30)
 end
 
 entity.onMobFight = function(mob, target)

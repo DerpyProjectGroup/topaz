@@ -15,6 +15,8 @@ end
 
 entity.onMobSpawn = function(mob)
     mob:setMobMod(xi.mobMod.DRAW_IN, 1)
+    mob:setMobMod(xi.mobMod.WEAPON_BONUS, 21)
+    mob:setMod(xi.mod.EVA, 300)
     -- custom distance from retail capture
     mob:setMobMod(xi.mobMod.DRAW_IN_CUSTOM_RANGE, 34)
 end

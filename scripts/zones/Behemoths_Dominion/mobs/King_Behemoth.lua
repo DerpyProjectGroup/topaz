@@ -14,11 +14,20 @@ end
 
 entity.onMobSpawn = function(mob)
     mob:setLocalVar('[rage]timer', 3600) -- 60 minutes
+    mob:setMobMod(xi.mobMod.WEAPON_BONUS, 58)
     mob:setMod(xi.mod.MDEF, 20)
     mob:addMod(xi.mod.ATT, 150)
     mob:addMod(xi.mod.DEF, 200)
     mob:addMod(xi.mod.EVA, 110)
     mob:setMod(xi.mod.TRIPLE_ATTACK, 5)
+    mob:setMod(xi.mod.POISONRES, 10)
+    mob:setMod(xi.mod.SLOWRES, 10)
+    mob:setMod(xi.mod.GRAVITYRES, 10)
+    mob:setMod(xi.mod.PARALYZERES, 15)
+    mob:setMod(xi.mod.BLINDRES, 15)
+    mob:setMod(xi.mod.SLEEPRES, 100)
+    mob:setMod(xi.mod.STUNRES, 50)
+    mob:setMod(xi.mod.SILENCERES, 100)
     mob:setLocalVar('delay', os.time())
 
     -- Despawn the ???
@@ -45,7 +54,7 @@ entity.onMobFight = function(mob, target)
     then
         mob:setMod(xi.mod.REGAIN, 160)
     elseif 
-        mob:getHPP() < 50 and mob:getHPP() > 25 
+        mob:getHPP() < 50 and mob:getHPP() > 25
     then
         mob:setMod(xi.mod.REGAIN, 100)
     else

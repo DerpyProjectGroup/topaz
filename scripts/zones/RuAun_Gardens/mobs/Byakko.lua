@@ -8,12 +8,26 @@ mixins = { require('scripts/mixins/job_special') }
 -----------------------------------
 local entity = {}
 
+entity.onMobInitialize = function(mob)
+    mob:setMobMod(xi.mobMod.ADD_EFFECT, 1)
+end
+
 entity.onMobSpawn = function(mob, target)
+    mob:setMod(xi.mod.ATT, 391)
+    mob:setMod(xi.mod.DEF, 345)
+    mob:addMod(xi.mod.VIT, 43)
+    mob:addMod(xi.mod.DOUBLE_ATTACK, 10)
+    mob:setMod(xi.mod.EVA, 397)
+    mob:setMobMod(xi.mobMod.MAGIC_COOL, 35)
+    mob:setMagicCastingEnabled(false)
     GetNPCByID(ID.npc.PORTAL_OFFSET + 8):setAnimation(xi.anim.CLOSE_DOOR)
 end
 
-entity.onMobInitialize = function(mob)
-    mob:setMobMod(xi.mobMod.ADD_EFFECT, 1)
+entity.onMobEngage = function(mob, target)
+    mob:messageText(mob, ID.text.SKY_GOD_OFFSET + 11)
+    mob:timer(5000, function(mobArg)
+        mobArg:setMagicCastingEnabled(true)
+    end)
 end
 
 entity.onAdditionalEffect = function(mob, target, damage)

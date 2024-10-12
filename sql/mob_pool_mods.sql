@@ -96,7 +96,8 @@ INSERT INTO `mob_pool_mods` VALUES (519,160,-50,0); -- DMG: -50
 INSERT INTO `mob_pool_mods` VALUES (532,160,-50,0); -- DMG: -50
 
 -- Bugbby
-INSERT INTO `mob_pool_mods` VALUES (559,62,-50,0);   -- ATTP: -50
+-- INSERT INTO `mob_pool_mods` VALUES (559,62,-50,0);   -- ATTP: -50
+
 -- Byakko
 INSERT INTO `mob_pool_mods` VALUES (592,3,100,1);  -- MP_BASE: 100
 INSERT INTO `mob_pool_mods` VALUES (592,68,15,0);  -- EVA: 15
