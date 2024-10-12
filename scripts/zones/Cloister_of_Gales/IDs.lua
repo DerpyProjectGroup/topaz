@@ -23,6 +23,7 @@ zones[xi.zone.CLOISTER_OF_GALES] =
         GARUDA_UNLOCKED                  = 7579, -- You are now able to summon [Ifrit/Titan/Leviathan/Garuda/Shiva/Ramuh].
         ATTACH_SEAL                      = 7763, -- <player> attaches <item> to the protocrystal.
         POWER_STYMIES                    = 7764, -- An unseen power stymies your efforts to attach <item> to the protocrystal.
+        ENTERING_THE_BATTLEFIELD_FOR     = 7667, -- Entering the battlefield for [Trial by Ice/Class Reunion/Trial-Size Trial by Ice/Waking the Beast/Sugar-coated Directive/Trial by Ice]!
     },
     mob =
     {
