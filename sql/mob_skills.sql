@@ -2424,17 +2424,17 @@ INSERT INTO `mob_skills` VALUES (2388,2132,'dirty_breath',0,7.0,2000,1500,4,0,0,
 -- INSERT INTO `mob_skills` VALUES (2407,2151,'charged_whisker',0,7.0,2000,1500,4,0,0,0,0,0,0);
 -- INSERT INTO `mob_skills` VALUES (2408,2152,'.',0,7.0,2000,1500,4,0,0,0,0,0,0);
 -- INSERT INTO `mob_skills` VALUES (2409,2153,'.',0,7.0,2000,1500,4,0,0,0,0,0,0);
-INSERT INTO `mob_skills` VALUES (2410,2410,'demonic_flower',1,15.0,2000,1500,4,0,0,0,0,0,0);
-INSERT INTO `mob_skills` VALUES (2411,2411,'phantasmal_dance',1,15.0,2000,1500,4,0,0,15,0,0,0);
-INSERT INTO `mob_skills` VALUES (2412,2412,'thunderous_yowl',1,20.0,2000,1500,4,0,0,0,0,0,0);
-INSERT INTO `mob_skills` VALUES (2413,2413,'feather_maelstrom',0,7.0,2000,1500,4,0,0,0,0,0,0);
-INSERT INTO `mob_skills` VALUES (2414,2414,'saucepan',4,7.0,2000,1500,4,0,0,0,0,0,0);
--- INSERT INTO `mob_skills` VALUES (2415,2159,'.',0,7.0,2000,1500,4,0,0,0,0,0,0);
--- INSERT INTO `mob_skills` VALUES (2416,2160,'seed_of_deception',0,7.0,2000,1500,4,0,0,0,0,0,0);
--- INSERT INTO `mob_skills` VALUES (2417,2161,'seed_of_deference',0,7.0,2000,1500,4,0,0,0,0,0,0);
--- INSERT INTO `mob_skills` VALUES (2418,2162,'seed_of_nihility',0,7.0,2000,1500,4,0,0,0,0,0,0);
--- INSERT INTO `mob_skills` VALUES (2419,2163,'seed_of_judgment',0,7.0,2000,1500,4,0,0,0,0,0,0);
--- INSERT INTO `mob_skills` VALUES (2420,2164,'shackling_clout',0,7.0,2000,1500,4,0,0,0,0,0,0);
+INSERT INTO `mob_skills` VALUES (2410,1489,'demonic_flower',1,15.0,2000,1500,4,0,0,0,0,0,0);
+INSERT INTO `mob_skills` VALUES (2411,1490,'phantasmal_dance',1,15.0,2000,1500,4,0,0,15,0,0,0);
+INSERT INTO `mob_skills` VALUES (2412,1491,'thunderous_yowl',1,20.0,2000,1500,4,0,0,0,0,0,0);
+INSERT INTO `mob_skills` VALUES (2413,1492,'feather_maelstrom',0,7.0,2000,1500,4,0,0,0,0,0,0);
+INSERT INTO `mob_skills` VALUES (2414,1493,'saucepan',4,7.0,2000,1500,4,0,0,0,0,0,0);
+-- INSERT INTO `mob_skills` VALUES (2415,1494,'.',0,7.0,2000,1500,4,0,0,0,0,0,0); -- Seed Crystal Attack
+-- INSERT INTO `mob_skills` VALUES (2416,1496,'seed_of_deception',0,7.0,2000,1500,4,0,0,0,0,0,0);
+-- INSERT INTO `mob_skills` VALUES (2417,1495,'seed_of_deference',0,7.0,2000,1500,4,0,0,0,0,0,0);
+-- INSERT INTO `mob_skills` VALUES (2418,1497,'seed_of_nihility',0,7.0,2000,1500,4,0,0,0,0,0,0);
+-- INSERT INTO `mob_skills` VALUES (2419,1498,'seed_of_judgment',0,7.0,2000,1500,4,0,0,0,0,0,0);
+-- INSERT INTO `mob_skills` VALUES (2420,2164,'shackling_clout',0,7.0,2000,1500,4,0,0,0,0,0,0); -- Gigas Gaoler MMM
 INSERT INTO `mob_skills` VALUES (2421,1682,'dark_orb',1,15.0,2000,1000,4,0,0,0,0,0,0); -- flying only.
 INSERT INTO `mob_skills` VALUES (2422,1678,'dark_mist',1,14.0,2000,1000,4,0,0,0,0,0,0); -- flying only.
 INSERT INTO `mob_skills` VALUES (2423,1680,'triumphant_roar',0,7.0,2000,1000,1,0,0,0,0,0,0); -- standing only.
