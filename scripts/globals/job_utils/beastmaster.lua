@@ -187,6 +187,29 @@ xi.job_utils.beastmaster.onUseAbilityGauge = function(player, target, ability)
     end
 end
 
+-- On Ability Check Gauge
+xi.job_utils.beastmaster.onAbilityCheckKillerInstinct = function(player, target, ability)
+    local pet = player:getPet()
+
+    if pet == nil then
+        return xi.msg.basic.REQUIRES_A_PET, 0
+    end
+
+    return 0, 0
+end
+
+-- On Ability Use Gauge
+xi.job_utils.beastmaster.onUseAbilityKillerInstinct = function(player, target, ability)
+    local pet          = player:getPet()
+    local petEcosystem = pet:getEcosystem()
+    local duration     = 180 + (player:getMerit(xi.merit.KILLER_INSTINCT) - 10)
+    print(duration)
+    local power = 10
+    target:addStatusEffect(xi.effect.KILLER_INSTINCT, power, 0, duration, 0, petEcosystem)
+
+    return 0, 0
+end
+
 -- On Ability Check Tame
 xi.job_utils.beastmaster.onAbilityCheckTame = function(player, target, ability)
     return 0, 0
