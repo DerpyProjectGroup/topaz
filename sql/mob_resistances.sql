@@ -227,7 +227,7 @@ INSERT INTO `mob_resistances` VALUES (199,'Qiqirn',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0
 INSERT INTO `mob_resistances` VALUES (200,'Quadav',1.0,1.25,1.0,1.0,0,0,0,0,0,0,0,0,0,2,0,0,0,-1,2,0,0);
 INSERT INTO `mob_resistances` VALUES (201,'Quadav - BoWho_Warmonger',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,1,-1,-1,-1,-2,1,-1,-1);
 INSERT INTO `mob_resistances` VALUES (202,'Quadav',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,2,0,0,0,-1,2,0,0);
-INSERT INTO `mob_resistances` VALUES (203,'Qutrub',2.0,2.0,2.0,2.0,0,0,0,0,0,0,0,0,0,-2,4,-1,1,-1,-1,-2,4);
+INSERT INTO `mob_resistances` VALUES (203,'Qutrub',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,-2,4,-1,1,-1,-1,-2,4);
 INSERT INTO `mob_resistances` VALUES (204,'Unused',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 INSERT INTO `mob_resistances` VALUES (205,'Qutrub - Qutrub_Wastrel',1.875,1.875,1.875,1.875,0,0,0,0,0,0,0,0,0,-2,4,-1,1,-1,-1,-2,4);
 INSERT INTO `mob_resistances` VALUES (206,'Rabbit',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,-2,-1,-2,-1,-3,-3,-1,-3);

@@ -616,9 +616,11 @@ INSERT INTO `mob_family_mods` VALUES (201,10,15,1); -- SUBLINK: 15
 INSERT INTO `mob_family_mods` VALUES (202,10,15,1); -- SUBLINK: 15
 
 -- Qutrub
-INSERT INTO `mob_family_mods` VALUES (203,36,50,1);   -- ROAM_COOL: 50
-INSERT INTO `mob_family_mods` VALUES (203,51,3,1);    -- ROAM_TURNS: 3
-INSERT INTO `mob_family_mods` VALUES (203,52,30,1);   -- ROAM_RATE: 30
+INSERT INTO `mob_family_mods` VALUES (203,36,50,1);     -- ROAM_COOL: 50
+INSERT INTO `mob_family_mods` VALUES (203,51,3,1);      -- ROAM_TURNS: 3
+INSERT INTO `mob_family_mods` VALUES (203,52,30,1);     -- ROAM_RATE: 30
+INSERT INTO `mob_family_mods` VALUES (203,160,10000,0); -- DMG: 10000 (200% DMG Taken from all sources.)
+INSERT INTO `mob_family_mods` VALUES (203,61,200,1);    -- HP_SCALE: 300%
 
 -- Qutrub
 INSERT INTO `mob_family_mods` VALUES (204,36,50,1);   -- ROAM_COOL: 50
