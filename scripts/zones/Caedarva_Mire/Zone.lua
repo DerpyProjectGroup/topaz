@@ -8,8 +8,9 @@ local zoneObject = {}
 zoneObject.onInitialize = function(zone)
     UpdateNMSpawnPoint(ID.mob.AYNU_KAYSEY)
     GetMobByID(ID.mob.AYNU_KAYSEY):setRespawnTime(math.random(900, 10800))
-    GetMobByID(ID.mob.KHIMAIRA):setRespawnTime(math.random(12, 36) * 3600) -- 12 to 36 hours after maintenance, in 1-hour increments
+    -- GetMobByID(ID.mob.KHIMAIRA):setRespawnTime(math.random(12, 36) * 3600) -- 12 to 36 hours after maintenance, in 1-hour increments
     xi.mob.nmTODPersistCache(zone, ID.mob.ZIKKO)
+    xi.mob.nmTODPersistCache(zone, ID.mob.KHIMAIRA)
     DisallowRespawn(ID.mob.ZIKKO, true) -- Spawn is controlled by players entering swamps
 
     xi.helm.initZone(zone, xi.helmType.LOGGING)

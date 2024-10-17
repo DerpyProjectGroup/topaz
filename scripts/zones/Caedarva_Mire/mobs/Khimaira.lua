@@ -64,7 +64,7 @@ end
 
 entity.onMobDespawn = function(mob)
     local respawn = math.random(48, 72) * 3600 -- 48 to 72 hours in 60min windows
-    mob:setRespawnTime(respawn)
+    xi.mob.nmTODPersist(mob, respawn)
 end
 
 return entity
