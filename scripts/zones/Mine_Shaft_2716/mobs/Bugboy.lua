@@ -3,8 +3,6 @@
 -- Mob: Bugboy
 -- ENM: Bionic Bug
 -----------------------------------
-
------------------------------------
 local entity = {}
 
 entity.onMobSpawn = function(mob)
@@ -13,7 +11,7 @@ end
 
 entity.onMobWeaponSkill = function(target, mob, skill)
     if skill:getID() == 688 then
-        mob:addStatusEffect(xi.effect.COUNTERSTANCE, 1, 0, 45)
+        mob:addStatusEffect(xi.effect.COUNTERSTANCE, 1, 0, 45, 0, 50)
         mob:addMod(xi.mod.UDMGMAGIC, 5000)
     end
 end

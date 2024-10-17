@@ -1,11 +1,7 @@
 -----------------------------------
--- Bionic Boost
+-- Cacophony
 -- Description:
--- Gives the user the effect of counterstance
------------------------------------
-
-
-
+-- Gives the user the effect of counterstance and haste
 -----------------------------------
 local mobskillObject = {}
 
@@ -14,10 +10,10 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local typeEffect = xi.effect.COUNTERSTANCE
-
-    skill:setMsg(xi.mobskills.mobBuffMove(mob, typeEffect, 1, 0, 60, 0, 50))
-    return typeEffect
+    xi.mobskills.mobBuffMove(mob, xi.effect.COUNTERSTANCE, 30, 0, 60)
+    xi.mobskills.mobBuffMove(mob, xi.effect.HASTE, 30, 0, 60)
+    skill:setMsg(xi.msg.basic.NONE)
+    return 0
 end
 
 return mobskillObject

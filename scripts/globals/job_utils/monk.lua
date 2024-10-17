@@ -95,7 +95,7 @@ xi.job_utils.monk.useCounterstance = function(player, target, ability)
     local power = 45 + player:getMod(xi.mod.COUNTERSTANCE_EFFECT)
 
     target:delStatusEffect(xi.effect.COUNTERSTANCE) --if not found this will do nothing
-    target:addStatusEffect(xi.effect.COUNTERSTANCE, power, 0, 300)
+    target:addStatusEffect(xi.effect.COUNTERSTANCE, power, 0, 300, 0, 50)
 end
 
 xi.job_utils.monk.useDodge = function(player, target, ability)
