@@ -4432,6 +4432,8 @@ INSERT INTO `mob_skill_lists` VALUES ('Weeper_DARK',5409,1219);
 INSERT INTO `mob_skill_lists` VALUES ('Weeper_DARK',5409,1220);
 INSERT INTO `mob_skill_lists` VALUES ('Weeper_DARK',5409,1228);
 
+INSERT INTO `mob_skill_lists` VALUES ('Burlibix_Brawnback',5410,1119);
+
 -- ------------------------------------------------------------
 -- Start of Ambuscade section
 -- NOTE: The mobs are changed every update in the DATs, so using out-of-date
