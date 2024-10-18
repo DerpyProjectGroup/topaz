@@ -2188,11 +2188,11 @@ INSERT INTO `mob_skills` VALUES (2167,1553,'bloody_caress',0,10.0,2000,1500,4,0,
 INSERT INTO `mob_skills` VALUES (2170,1589,'fevered_pitch',0,7.0,2000,1500,4,0,0,0,0,0,0);
 INSERT INTO `mob_skills` VALUES (2171,1590,'call_of_the_moon_up',1,25.0,2000,1500,4,0,0,0,0,0,0); -- standing up
 INSERT INTO `mob_skills` VALUES (2172,1591,'call_of_the_moon_down',1,25.0,2000,1500,4,0,0,0,0,0,0); -- On 4 legs
-INSERT INTO `mob_skills` VALUES (2173,1592,'plenilune_embrace_up',0,15.0,2000,1500,1,0,0,0,0,0,0); -- standing up
-INSERT INTO `mob_skills` VALUES (2174,1593,'plenilune_embrace_down',0,15.0,2000,1500,1,0,0,0,0,0,0); -- 4 legs
-INSERT INTO `mob_skills` VALUES (2175,1594,'nox_blast',0,7.0,2000,1000,4,0,0,3,0,0,0); -- standing only
+INSERT INTO `mob_skills` VALUES (2173,1593,'plenilune_embrace_up',0,15.0,2000,1500,1,0,0,0,0,0,0); -- standing up
+INSERT INTO `mob_skills` VALUES (2174,1592,'plenilune_embrace_down',0,15.0,2000,1500,1,0,0,0,0,0,0); -- 4 legs
+INSERT INTO `mob_skills` VALUES (2175,1594,'nox_blast',4,7.0,2000,1000,4,0,0,3,0,0,0); -- standing only
 INSERT INTO `mob_skills` VALUES (2176,1595,'asuran_claws',0,7.0,2000,1000,4,0,0,0,0,0,0); -- standing only
--- INSERT INTO `mob_skills` VALUES (2177,1921,'cacophony',0,7.0,2000,1500,4,0,0,0,0,0,0);
+INSERT INTO `mob_skills` VALUES (2177,1596,'cacophony',0,7.0,2000,2000,1,0,0,0,0,0,0); -- standing only
 INSERT INTO `mob_skills` VALUES (2178,1576,'sudden_lunge',0,10.0,2000,1800,4,0,0,3,0,0,0);
 INSERT INTO `mob_skills` VALUES (2179,1577,'noisome_powder',1,10.0,2000,1000,4,0,0,0,0,0,0); -- daytime only
 INSERT INTO `mob_skills` VALUES (2180,1578,'nepenthean_hum',1,10.0,2000,1000,4,0,0,0,0,0,0); -- daytime only
@@ -2362,7 +2362,7 @@ INSERT INTO `mob_skills` VALUES (2343,1638,'di_glow',0,30.0,4000,0,4,8,0,0,0,0,0
 -- INSERT INTO `mob_skills` VALUES (2344,2088,'.',0,7.0,2000,1500,4,0,0,0,0,0,0);
 -- INSERT INTO `mob_skills` VALUES (2345,2089,'.',0,7.0,2000,1500,4,0,0,0,0,0,0);
 -- INSERT INTO `mob_skills` VALUES (2346,2090,'.',0,7.0,2000,1500,4,0,0,0,0,0,0);
--- INSERT INTO `mob_skills` VALUES (2347,2091,'.',0,7.0,2000,1500,4,0,0,0,0,0,0);
+-- INSERT INTO `mob_skills` VALUES (2347,1603,'lycopodium_regen_buff',0,7.0,2000,1500,4,0,0,0,0,0,0); -- https://discord.com/channels/443544205206355968/791182054015762482/1270352468106154036
 -- INSERT INTO `mob_skills` VALUES (2348,2092,'glacial_bellow',0,7.0,2000,1500,4,0,0,0,0,0,0);
 -- INSERT INTO `mob_skills` VALUES (2349,2093,'daunting_hurl',0,7.0,2000,1500,4,0,0,0,0,0,0);
 -- INSERT INTO `mob_skills` VALUES (2350,2094,'scatter_shell',0,7.0,2000,1500,4,0,0,0,0,0,0);

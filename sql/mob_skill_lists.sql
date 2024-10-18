@@ -534,6 +534,7 @@ INSERT INTO `mob_skill_lists` VALUES ('Gnole',132,2173);
 INSERT INTO `mob_skill_lists` VALUES ('Gnole',132,2174);
 INSERT INTO `mob_skill_lists` VALUES ('Gnole',132,2175);
 INSERT INTO `mob_skill_lists` VALUES ('Gnole',132,2176);
+INSERT INTO `mob_skill_lists` VALUES ('Gnole',132,2177);
 INSERT INTO `mob_skill_lists` VALUES ('Goblin',133,590);
 INSERT INTO `mob_skill_lists` VALUES ('Goblin',133,591);
 -- INSERT INTO `mob_skill_lists` VALUES ('Goblin',133,592);

@@ -30,10 +30,14 @@ effectObject.onEffectGain = function(target, effect)
         effect:addMod(xi.mod.ARCANA_KILLER, effect:getPower())
     elseif effect:getSubPower() == xi.ecosystem.VERMIN then
         effect:addMod(xi.mod.PLANTOID_KILLER, effect:getPower())
-    end
-
     -- Special cases for subPower > 21. This can be used for special mob buffs etc.
     -- Add more below
+
+    --Gnole Mobskill: Call Of The Moon
+    elseif effect:getSubPower() == 22 then
+        effect:addMod(xi.mod.HUMANOID_KILLER, effect:getPower())
+        effect:addEffectFlag(xi.effectFlag.NO_LOSS_MESSAGE)
+    end
 end
 
 effectObject.onEffectTick = function(target, effect)

@@ -1,7 +1,7 @@
 -----------------------------------
--- Cacophony
+-- Call of the Moon (up)
 -- Description: Self Buff, Only used while standing.
--- Gives the user the effect of counterstance and haste
+-- Allows the user to intimidate players.
 -----------------------------------
 local mobskillObject = {}
 
@@ -14,8 +14,9 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    xi.mobskills.mobBuffMove(mob, xi.effect.COUNTERSTANCE, 30, 0, 60)
-    xi.mobskills.mobBuffMove(mob, xi.effect.HASTE, 30, 0, 60)
+    local duration = math.random(30, 60)
+    local humanoidKiller = 22
+    xi.mobskills.mobBuffMove(mob, xi.effect.KILLER_INSTINCT, 30, 0, duration, 0, humanoidKiller)
     skill:setMsg(xi.msg.basic.NONE)
     return 0
 end
