@@ -15,7 +15,7 @@ local content = BattlefieldQuest:new({
     index            = 2,
     entryNpc         = 'MC_Entrance',
     exitNpc          = 'Memento_Circle',
-    requiredKeyItems = { xi.ki.VIAL_OF_DREAM_INCENSE },
+    requiredKeyItems = { xi.ki.VIAL_OF_DREAM_INCENSE, keep = true },
 
     questArea = xi.questLog.WINDURST,
     quest     = xi.quest.id.windurst.WAKING_DREAMS,
@@ -32,6 +32,7 @@ end
 function content:onEventFinishWin(player, csid, option, npc)
     npcUtil.giveKeyItem(player, xi.ki.WHISPER_OF_DREAMS)
     player:addTitle(xi.title.HEIR_TO_THE_REALM_OF_DREAMS)
+    player:delKeyItem(xi.ki.VIAL_OF_DREAM_INCENSE)
 end
 
 content.groups =
