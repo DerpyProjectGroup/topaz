@@ -35,7 +35,6 @@ end
 local function changeStance(mob, forceStanceChange)
     local moonPhase = VanadielMoonPhase()
     local hour = VanadielHour()
-    print('Moon Phase', moonPhase)
 
     forceStanceChange = forceStanceChange or false
     local isNighttime = hour <= 4 or hour > 20
