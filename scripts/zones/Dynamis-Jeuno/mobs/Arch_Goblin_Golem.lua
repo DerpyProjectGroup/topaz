@@ -6,7 +6,8 @@
 require('scripts/globals/dynamis')
 mixins =
 {
-    require('scripts/mixins/job_special')
+    require('scripts/mixins/job_special'),
+    require('scripts/mixins/dynamis_beastmen'),
 }
 -----------------------------------
 local entity = {}

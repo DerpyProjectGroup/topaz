@@ -3,6 +3,12 @@
 --  Mob: Goblin Golem
 -- Note: Mega Boss
 -----------------------------------
+mixins =
+{
+    require('scripts/mixins/dynamis_beastmen'),
+    require('scripts/mixins/job_special')
+}
+-----------------------------------
 local entity = {}
 
 entity.onMobSpawn = function(mob)

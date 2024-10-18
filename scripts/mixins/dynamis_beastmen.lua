@@ -104,11 +104,6 @@ g_mixins.dynamis_beastmen = function(dynamisBeastmenMob)
             local singleChance   = th.single
             local hundredChance  = th.hundred
 
-            local partySize      = killer:getPartySize() -- Get the size of the player's party.
-            local party          = killer:getParty()     -- Get the players in the killer's party.
-            local rollBonus      = 0
-            local partySizeBonus = 0
-
             if mob:getMainLvl() > 77 then
                 singleChance = math.floor(singleChance * 1.5)
             end
@@ -144,42 +139,56 @@ g_mixins.dynamis_beastmen = function(dynamisBeastmenMob)
             -------------------------
             -- Cactuar Changes Below
             -------------------------
+            local party          = killer:getParty() -- Get the players in the killer's party.
+            local rollBonus      = 0
+            local partySizeBonus = 0
+            local membersInZone = {}
+
+            -- Create a list of party members in the same zone when the mob dies.
+            for i = 1, #party do
+                if mob:getZoneID() == party[i]:getZoneID() then
+                    table.insert(membersInZone, party[i])
+                end
+            end
 
             -- Trash Mob
             if not mob:isNM() then
+
                 local currencyText        = currencyName[currency] or tostring(currency) -- Used for print messaging. Converts itemID to name string.
-                local currencyText100     = currencyName[currency + 1] or tostring(currency + 1) -- Used for print messaging. Converts itemID to name string.
                 local totalCurrencyChange = 0 -- Variable to store the total currency change during the loop
                 
                 if mob:getMainLvl() > 77 then
                     rollBonus = rollBonus + 5 -- Higher level tier mobs give more rolls.
                 end
                 
-
-                
-                -- Creates a list of current party members and randomly distributes currency drops to them.
+                -- Creates a list of current party members and ensures each member gets at least 1 currency.
                 local memberTotalCurrencyChange = {}
-                local membersInZone = {}
 
-                local partyMembers = killer:getParty()
-                local membersInZone = {}
-                for i = 1, #partyMembers do
-                    if mob:getZoneID() == partyMembers[i]:getZoneID() then
-                        table.insert(membersInZone, partyMembers[i])
-                    end
-                end
-
+                -- Calculate party size bonus
                 if #membersInZone > 1 then
                     partySizeBonus = math.floor(1.25 * #membersInZone)
                 end
 
-                for i = 1, 10 + rollBonus do -- 10 drops distributed between members
+                -- Ensure each member gets at least 1 currency
+                for _, member in ipairs(membersInZone) do
+                    local partyMemberCurrency = member:getCharVar('Dynamis_Currency[' .. currency .. ']')
+                    partyMemberCurrency = partyMemberCurrency + 1 -- Give 1 currency to each member
+                    totalCurrencyChange = totalCurrencyChange + 1 -- Update total currency change
+                    member:setCharVar('Dynamis_Currency[' .. currency .. ']', partyMemberCurrency) -- Add the currency to the player's bank.
+
+                    -- Update memberTotalCurrencyChange for the selected party member
+                    memberTotalCurrencyChange[member] = (memberTotalCurrencyChange[member] or 0) + 1
+                end
+
+                -- Distribute the remaining currency randomly among party members in the same zone
+                local remainingDrops = (10 + rollBonus) - #membersInZone -- Calculate how many remaining drops after each member gets at least 1
+                for _ = 1, remainingDrops do -- Distribute remaining drops randomly
                     local randomIndex = math.random(1, #membersInZone) -- Randomly select a party member
-                    local partyMember = party[randomIndex]
+                    local partyMember = membersInZone[randomIndex] -- Fetch from membersInZone
                     local partyMemberCurrency = partyMember:getCharVar('Dynamis_Currency[' .. currency .. ']')
                     partyMemberCurrency = partyMemberCurrency + 1 -- Increment the currency for the selected party member
                     totalCurrencyChange = totalCurrencyChange + 1 -- Update total currency change
-                    partyMember:setCharVar('Dynamis_Currency[' .. currency .. ']', partyMemberCurrency) -- Add the currency to the players bank.
+                    partyMember:setCharVar('Dynamis_Currency[' .. currency .. ']', partyMemberCurrency) -- Add the currency to the player's bank.
                 
                     -- Update memberTotalCurrencyChange for the selected party member
                     memberTotalCurrencyChange[partyMember] = (memberTotalCurrencyChange[partyMember] or 0) + 1
@@ -187,14 +196,12 @@ g_mixins.dynamis_beastmen = function(dynamisBeastmenMob)
                 
                 -- Handle party bonus drops
                 if #membersInZone > 1 then
-                    for _, v in pairs(party) do
-                        if v:getZone() == mob:getZone() then
-                            for i = 1, partySizeBonus do
-                                local partyMemberCurrency = v:getCharVar('Dynamis_Currency[' .. currency .. ']')
-                                partyMemberCurrency = partyMemberCurrency + 1 -- Increment the currency for the selected party member
-                                memberTotalCurrencyChange[v] = (memberTotalCurrencyChange[v] or 0) + 1 -- Update memberTotalCurrencyChange for the selected party member
-                                v:setCharVar('Dynamis_Currency[' .. currency .. ']', partyMemberCurrency)
-                            end
+                    for _, v in pairs(membersInZone) do -- Use membersInZone here for party members in the same zone
+                        for _ = 1, partySizeBonus do
+                            local partyMemberCurrency = v:getCharVar('Dynamis_Currency[' .. currency .. ']')
+                            partyMemberCurrency = partyMemberCurrency + 1 -- Increment the currency for the selected party member
+                            memberTotalCurrencyChange[v] = (memberTotalCurrencyChange[v] or 0) + 1 -- Update memberTotalCurrencyChange for the selected party member
+                            v:setCharVar('Dynamis_Currency[' .. currency .. ']', partyMemberCurrency)
                         end
                     end
                 end
@@ -218,8 +225,8 @@ g_mixins.dynamis_beastmen = function(dynamisBeastmenMob)
                 local currencyText = currencyName[currency + 1] or tostring(currency+ 1) -- Used for print messaging. Converts itemID to name string.
                 local totalCurrencyChange = 0 -- Variable to store the total currency change during the loop
                 if killer then
-                    for _, v in pairs(party) do -- For every party member, do loot roll.
-                        if v:getZone() == mob:getZone() then -- If a party member is not in same zone as mob, exclude their loot roll.
+                    for _, v in pairs(membersInZone) do -- For every party member, do loot roll.
+                        if v:getZoneID() == mob:getZoneID() then -- If a party member is not in same zone as mob, exclude their loot roll.
 
                             -- 1 guaranteed hundred.
                             local partyMemberCurrency = v:getCharVar('Dynamis_Currency[' .. currency .. ']')
@@ -231,9 +238,9 @@ g_mixins.dynamis_beastmen = function(dynamisBeastmenMob)
                             end
 
                              -- 2 loot rolls for chance of hundreds.
-                            for i = 1, 2 do
+                            for _ = 1, 2 do
                                 if math.random(0, 1000) < hundredChance then -- Drop rate of loot rolls.
-                                    local partyMemberCurrency = v:getCharVar('Dynamis_Currency[' .. currency .. ']')
+                                    partyMemberCurrency = v:getCharVar('Dynamis_Currency[' .. currency .. ']')
                                     partyMemberCurrency = partyMemberCurrency + 100 -- Increment the currency for the selected party member
                                     totalCurrencyChange = totalCurrencyChange + 100 -- Update total currency change
                                     v:setCharVar('Dynamis_Currency[' .. currency .. ']', partyMemberCurrency)
@@ -255,8 +262,8 @@ g_mixins.dynamis_beastmen = function(dynamisBeastmenMob)
                 local currencyText = currencyName[currency + 1] or tostring(currency+ 1) -- Used for print messaging. Converts itemID to name string.
                 local totalCurrencyChange = 0 -- Variable to store the total currency change during the loop
                 if killer then
-                    for _, v in pairs(party) do -- For every party member, do loot roll.
-                        if v:getZone() == mob:getZone() then -- If a party member is not in same zone as mob, exclude their loot roll.
+                    for _, v in pairs(membersInZone) do -- For every party member, do loot roll.
+                        if v:getZoneID() == mob:getZoneID() then -- If a party member is not in same zone as mob, exclude their loot roll.
 
                             -- 1 guaranteed hundred.
                             local partyMemberCurrency = v:getCharVar('Dynamis_Currency[' .. currency .. ']')
@@ -268,9 +275,8 @@ g_mixins.dynamis_beastmen = function(dynamisBeastmenMob)
                             end
 
                              -- 3 loot rolls for chance of hundreds.
-                            for i = 1, 3 do
+                            for _ = 1, 3 do
                                 if math.random(0, 1000) < hundredChance then -- Drop rate of loot rolls.
-                                    local partyMemberCurrency = v:getCharVar('Dynamis_Currency[' .. currency .. ']')
                                     partyMemberCurrency = partyMemberCurrency + 100 -- Increment the currency for the selected party member
                                     totalCurrencyChange = totalCurrencyChange + 100 -- Update total currency change
                                     v:setCharVar('Dynamis_Currency[' .. currency .. ']', partyMemberCurrency)
@@ -289,12 +295,11 @@ g_mixins.dynamis_beastmen = function(dynamisBeastmenMob)
                 mob:isNM() and
                 mob:getLocalVar('[isDynamis_Arch_Megaboss]') == 1
             then
-                local party = killer:getParty() -- Fetch party list.
                 local currencyText = currencyName[currency + 1] or tostring(currency+ 1) -- Used for print messaging. Converts itemID to name string.
                 local totalCurrencyChange = 0 -- Variable to store the total currency change during the loop
                 if killer then
-                    for _, v in pairs(party) do -- For every party member, do loot roll.
-                        if v:getZone() == mob:getZone() then -- If a party member is not in same zone as mob, exclude their loot roll.
+                    for _, v in pairs(membersInZone) do -- For every party member, do loot roll.
+                        if v:getZoneID() == mob:getZoneID() then -- If a party member is not in same zone as mob, exclude their loot roll.
 
                             -- 2 guaranteed hundred.
                             local partyMemberCurrency = v:getCharVar('Dynamis_Currency[' .. currency .. ']')
@@ -306,9 +311,8 @@ g_mixins.dynamis_beastmen = function(dynamisBeastmenMob)
                             end
 
                              -- 3 loot rolls for chance of hundreds.
-                            for i = 1, 3 do
+                            for _ = 1, 3 do
                                 if math.random(0, 1000) < hundredChance then -- Drop rate of loot rolls.
-                                    local partyMemberCurrency = v:getCharVar('Dynamis_Currency[' .. currency .. ']')
                                     partyMemberCurrency = partyMemberCurrency + 100 -- Increment the currency for the selected party member
                                     totalCurrencyChange = totalCurrencyChange + 100 -- Update total currency change
                                     v:setCharVar('Dynamis_Currency[' .. currency .. ']', partyMemberCurrency)

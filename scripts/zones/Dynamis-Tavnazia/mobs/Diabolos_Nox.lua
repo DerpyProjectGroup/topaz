@@ -4,6 +4,10 @@
 -- Note: Mega Boss
 -----------------------------------
 require('scripts/globals/dynamis')
+mixins =
+{
+    require('scripts/mixins/dynamis_beastmen'),
+}
 -----------------------------------
 local entity = {}
 

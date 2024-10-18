@@ -5,6 +5,11 @@
 -----------------------------------
 local entity = {}
 
+mixins =
+{
+    require('scripts/mixins/dynamis_beastmen'),
+}
+
 entity.onMobSpawn = function(mob)
     mob:setLocalVar('[isDynamis_Megaboss]', 1)
 end
