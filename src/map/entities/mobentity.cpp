@@ -1083,10 +1083,10 @@ void CMobEntity::DropItems(CCharEntity* PChar)
             }
         });
         // clang-format on
-
+        uint8 crystalYieldMod = (PChar->getMod(Mod::CRYSTAL_YIELD));
         for (uint8 i = 0; i < crystalRolls; i++)
         {
-            if (xirand::GetRandomNumber(100) < 20 && AddItemToPool(4095 + m_Element, ++dropCount))
+            if (xirand::GetRandomNumber(100) < (20 + crystalYieldMod) && AddItemToPool(4095 + m_Element, ++dropCount))
             {
                 return;
             }

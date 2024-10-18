@@ -1106,6 +1106,8 @@ enum class Mod
     BANISH_POTENCY         = 2043, // % Increase to Banish SDT debuff effect potency.
     YAEGASUMI_BONUS        = 2044, // % Increase to weaponskill damage. Calculated after WSD modifiers.
     SENGIKORI_DEBUFF       = 2045, // % Increase to closing skillchain damage and magic bursts. Applied to defender.
+    CRYSTAL_YIELD          = 2046, // % Increase to elemental crystal drop rates.
+    CASKET_RATE_INCREASE   = 2047, // % Increase to chance of getting treasure casket to appear.
     // ITEM_ADDEFFECT_OPTION   = 2045, // Additional parameters for more specific latents required to proc LOCATED ABOVE
 
     // IF YOU ADD ANY NEW MODIFIER HERE, ADD IT IN scripts/enum/mod.lua ASWELL!
