@@ -61,9 +61,6 @@ xi.combat.tp.getModifiedDelayAndCanZanshin = function(actor, delay)
             -- elseif actor:getAutoAttackHits() > 1
             modifiedDelay = math.max((delay - actor:getMod(xi.mod.MARTIAL_ARTS)) / 2, 48)
         end
-    elseif actor:getWeaponSkillType(xi.slot.MAIN) == xi.skill.STAFF then -- using a staff
-        modifiedDelay = math.max((delay - actor:getMod(xi.mod.MARTIAL_ARTS)), 96)
-        canZanshin = true
     else -- single melee swing, either 1H or 2H
         canZanshin = true -- https://www.bg-wiki.com/ffxi/Zanshin
     end
