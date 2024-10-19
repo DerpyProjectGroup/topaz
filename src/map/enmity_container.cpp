@@ -146,7 +146,8 @@ float CEnmityContainer::CalculateEnmityBonus(CBattleEntity* PEntity)
             PChar->StatusEffectContainer->HasStatusEffect(EFFECT_DEFENSE_BOOST) ||
             PChar->StatusEffectContainer->HasStatusEffect(EFFECT_YONIN))
         {
-            enmityBonus += 0.25;
+            int tankStanceBonus = std::round(enmityBonus * 0.25f);
+            enmityBonus += tankStanceBonus;
         }
     }
 
