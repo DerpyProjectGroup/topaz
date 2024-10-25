@@ -2,10 +2,11 @@
 -- Under the Sea
 -----------------------------------
 -- Log ID: 4, Quest ID: 17
+-- !addquest 4 17
 -- Yaya    : !pos -18.770 -2.597 -14.929 248
 -- Oswald  : !pos 47.119 -15.273 7.989 248
 -- Jimaida : !pos -17.342 -2.597 -18.766 248
--- Zaldon  : !pos -11.810 -7.287 -6.742
+-- Zaldon  : !pos -11.810 -7.287 -6.742 248
 -----------------------------------
 
 local quest = Quest:new(xi.questLog.OTHER_AREAS, xi.quest.id.otherAreas.UNDER_THE_SEA)
@@ -21,7 +22,8 @@ quest.sections =
     {
         check = function(player, status, vars)
             return status == xi.questStatus.QUEST_AVAILABLE and
-                player:getFameLevel(xi.fameArea.SELBINA_RABAO) >= 2
+                player:getFameLevel(xi.fameArea.SELBINA_RABAO) >= 2 and
+                xi.settings.map.FISHING_ENABLE == true
         end,
 
         [xi.zone.SELBINA] =
