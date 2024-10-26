@@ -16,6 +16,8 @@ entity.onTrigger = function(player, npc)
         if player:sendGuild(60420, 1, 23, 4) then
             player:showText(npc, ID.text.TENSHODO_SHOP_OPEN_DIALOG)
         end
+    else
+        player:startEvent(150, 1)
     end
 end
 
