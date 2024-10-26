@@ -51,6 +51,21 @@ entity.onMobFight = function(mob, target)
 end
 
 entity.onMobEngage = function(mob, target)
+    -- This is actually called each time a mob engages from a passive stance - ensure to trigger spawn behavior once and only once
+    local mobID = mob:getID()
+    for _, v in pairs(ID.mob.MAMMET_800) do
+        if mobID == v and mob:getLocalVar('AlreadyEngagedOnce') == 0 then -- If this is the initial Mammet-800 in a BCNM
+            mob:setLocalVar('AlreadyEngagedOnce', 1) -- only trigger the additional spawn logic once - or if players wipe we could respawn mammets that were killed
+            local players = mob:getBattlefield():getPlayers()
+            for i = 1, #players, 2 do
+                if i == 19 then
+                    break
+                end
+                mobID = mobID + 1
+                SpawnMob(mobID):updateEnmity(target)
+            end
+        end
+    end
 end
 
 return entity

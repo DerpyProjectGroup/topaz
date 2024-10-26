@@ -16,6 +16,11 @@ local content = Battlefield:new({
     requiredKeyItems = { xi.ki.MONARCH_LINN_PATROL_PERMIT, message = ID.text.KI_TORN },
 })
 
+content:addEssentialMobs({ 'Mammet-800' })
+content.groups[1].spawned = false
+
+content:addEssentialMobs({ 'Mammet-800_Leader' })
+
 content.groups =
 {
     {
@@ -26,13 +31,28 @@ content.groups =
             },
 
             {
-                monarchLinnID.mob.MAMMET_800_OFFSET + 19,
+                monarchLinnID.mob.MAMMET_800_OFFSET + 10,
             },
 
             {
                 monarchLinnID.mob.MAMMET_800_OFFSET + 20,
             },
         },
+        death = function(battlefield, mob)
+            local battlefieldMobs = battlefield:getMobs(true, true)
+            local allMobsDefeated = true  -- Assume all mobs are defeated
+
+            for _, mobObj in ipairs(battlefieldMobs) do
+                if mobObj:isAlive() then
+                    allMobsDefeated = false  -- Found a live mob, so not all are defeated
+                    break
+                end
+            end
+
+            if allMobsDefeated then
+                content:handleAllMonstersDefeated(battlefield, mob)
+            end
+        end,
     },
 
     {
@@ -72,7 +92,21 @@ content.groups =
             },
         },
         spawned  = false,
-        allDeath = utils.bind(content.handleAllMonstersDefeated, content),
+        death = function(battlefield, mob)
+            local battlefieldMobs = battlefield:getMobs(true, true)
+            local allMobsDefeated = true  -- Assume all mobs are defeated
+
+            for _, mobObj in ipairs(battlefieldMobs) do
+                if mobObj:isAlive() then
+                    allMobsDefeated = false  -- Found a live mob, so not all are defeated
+                    break
+                end
+            end
+
+            if allMobsDefeated then
+                content:handleAllMonstersDefeated(battlefield, mob)
+            end
+        end,
     },
 }
 

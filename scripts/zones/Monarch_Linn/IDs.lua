@@ -34,7 +34,7 @@ zones[xi.zone.MONARCH_LINN] =
         MAMMET_19_EPSILON = GetFirstID('Mammet-19_Epsilon'),
         OURYU             = GetFirstID('Ouryu'),
         WATCH_HIPPOGRYPH  = GetFirstID('Watch_Hippogryph'),
-        MAMMET_800_OFFSET = GetFirstID('Mammet-800'),
+        MAMMET_800_OFFSET = GetFirstID('Mammet-800_Leader'),
         MAMMET_800 =
         {
             16904233,
