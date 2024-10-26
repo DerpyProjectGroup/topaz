@@ -93,16 +93,19 @@ g_mixins.dynamis_beastmen = function(dynamisBeastmenMob)
 
     dynamisBeastmenMob:addListener('DEATH', 'DYNAMIS_ITEM_DISTRIBUTION', function(mob, killer)
         if killer then
-            local th       = thCurrency[math.min(mob:getTHlevel(), 5)]
-            local family   = mob:getFamily()
-            local currency = familyCurrency[family]
+            local th             = thCurrency[math.min(mob:getTHlevel(), 5)]
+            local family         = mob:getFamily()
+            local currency       = familyCurrency[family]
+            local singleChance   = th.single
+            local hundredChance  = th.hundred
+            local party          = killer:getAlliance() -- Get the players in the killer's party/alliance.
+            local rollBonus      = 0
+            local partySizeBonus = 0
+            local membersInZone  = {}
 
             if currency == nil then -- if currency type not defined in mob family, pick randomly.
                 currency = 1449 + math.random(0, 2) * 3
             end
-
-            local singleChance   = th.single
-            local hundredChance  = th.hundred
 
             if mob:getMainLvl() > 77 then
                 singleChance = math.floor(singleChance * 1.5)
@@ -139,10 +142,6 @@ g_mixins.dynamis_beastmen = function(dynamisBeastmenMob)
             -------------------------
             -- Cactuar Changes Below
             -------------------------
-            local party          = killer:getParty() -- Get the players in the killer's party.
-            local rollBonus      = 0
-            local partySizeBonus = 0
-            local membersInZone = {}
 
             -- Create a list of party members in the same zone when the mob dies.
             for i = 1, #party do
