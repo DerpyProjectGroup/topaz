@@ -10,6 +10,7 @@ local zoneObject = {}
 zoneObject.onInitialize = function(zone)
     xi.conq.setRegionalConquestOverseers(zone:getRegionID())
     xi.mogTablet.onZoneInitialize(zone)
+    xi.cactuarRegimes.initializeBooks(zone)
 
     local results = zone:queryEntitiesByName('qm2')
     if results ~= nil and results[1] ~= nil then

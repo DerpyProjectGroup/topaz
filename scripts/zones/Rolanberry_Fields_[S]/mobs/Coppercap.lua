@@ -10,11 +10,10 @@ local entity = {}
 
 entity.onMobSpawn = function(mob)
     mob:setAnimationSub(0)
---    mob:setStealItemID(4373) -- Woozyshroom is default steal item, needed here in case first action on the mob is steal
-
 end
 
 entity.onMobDeath = function(mob, player, optParams)
+    xi.cactuarRegimes.checkRegime(player, mob, 3, 1, xi.regime.type.FIELDS)
 end
 
 return entity

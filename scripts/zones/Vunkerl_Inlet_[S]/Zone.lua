@@ -6,6 +6,7 @@ local ID = zones[xi.zone.VUNKERL_INLET_S]
 local zoneObject = {}
 
 zoneObject.onInitialize = function(zone)
+    xi.cactuarRegimes.initializeBooks(zone)
 end
 
 zoneObject.onZoneIn = function(player, prevZone)

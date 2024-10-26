@@ -9,6 +9,7 @@ zoneObject.onInitialize = function(zone)
     GetMobByID(ID.mob.CERBERUS):setRespawnTime(math.random(12, 36) * 3600)
 
     xi.helm.initZone(zone, xi.helmType.MINING)
+    xi.cactuarRegimes.initializeBooks(zone)
 end
 
 zoneObject.onZoneIn = function(player, prevZone)

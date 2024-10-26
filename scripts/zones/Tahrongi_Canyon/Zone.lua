@@ -11,6 +11,7 @@ zoneObject.onInitialize = function(zone)
     xi.helm.initZone(zone, xi.helmType.EXCAVATION)
     xi.chocobo.initZone(zone)
     xi.voidwalker.zoneOnInit(zone)
+    xi.cactuarRegimes.initializeBooks(zone)
 end
 
 zoneObject.onZoneIn = function(player, prevZone)

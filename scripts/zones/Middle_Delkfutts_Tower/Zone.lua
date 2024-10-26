@@ -17,6 +17,7 @@ zoneObject.onInitialize = function(zone)
     zone:registerTriggerArea(11, -489, -130, 84, -484, -129, 88) -- Ninth Floor F-6 porter to Upper Delkfutt's Tower
 
     xi.treasure.initZone(zone)
+    xi.cactuarRegimes.initializeBooks(zone)
 end
 
 zoneObject.onConquestUpdate = function(zone, updatetype, influence, owner, ranking, isConquestAlliance)

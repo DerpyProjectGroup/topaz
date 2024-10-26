@@ -7,7 +7,8 @@ local ID = zones[xi.zone.INNER_HORUTOTO_RUINS]
 local entity = {}
 
 entity.onMobDeath = function(mob, player, optParams)
-    xi.regime.checkRegime(player, mob, 648, 2, xi.regime.type.GROUNDS)
+    -- xi.regime.checkRegime(player, mob, 648, 2, xi.regime.type.GROUNDS)
+    xi.cactuarRegimes.checkRegime(player, mob, 1, 2, xi.regime.type.FIELDS)
 end
 
 entity.onMobDespawn = function(mob)

@@ -7,7 +7,9 @@ local zoneObject = {}
 
 zoneObject.onInitialize = function(zone)
     GetMobByID(ID.mob.ZIRNITRA):setRespawnTime(math.random(14400, 18000))
+
     xi.voidwalker.zoneOnInit(zone)
+    xi.cactuarRegimes.initializeBooks(zone)
 end
 
 zoneObject.onZoneIn = function(player, prevZone)

@@ -8,6 +8,7 @@ local zoneObject = {}
 zoneObject.onInitialize = function(zone)
     local newPosition = npcUtil.pickNewPosition(ID.npc.BASTOK_7_1_QM, ID.npc.BASTOK_7_1_QM_POS, true)
     GetNPCByID(ID.npc.BASTOK_7_1_QM):setPos(newPosition.x, newPosition.y, newPosition.z)
+    xi.cactuarRegimes.initializeBooks(zone)
 
     -- NM Persistence
     xi.mob.nmTODPersistCache(zone, ID.mob.SHIKIGAMI_WEAPON)

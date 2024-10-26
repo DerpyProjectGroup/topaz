@@ -8,6 +8,7 @@ local zoneObject = {}
 zoneObject.onInitialize = function(zone)
     xi.voidwalker.zoneOnInit(zone)
     xi.darkixion.zoneOnInit(zone)
+    xi.cactuarRegimes.initializeBooks(zone)
 end
 
 zoneObject.onGameHour = function(zone)

@@ -13,6 +13,7 @@ local balamPHTable =
 }
 
 entity.onMobDeath = function(mob, player, optParams)
+    xi.cactuarRegimes.checkRegime(player, mob, 3, 1, xi.regime.type.FIELDS)
 end
 
 entity.onMobDespawn = function(mob)

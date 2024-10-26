@@ -15,6 +15,7 @@ zoneObject.onInitialize = function(zone)
 
     xi.conq.setRegionalConquestOverseers(zone:getRegionID())
     xi.chocobo.initZone(zone)
+    xi.cactuarRegimes.initializeBooks(zone)
 end
 
 zoneObject.onConquestUpdate = function(zone, updatetype, influence, owner, ranking, isConquestAlliance)

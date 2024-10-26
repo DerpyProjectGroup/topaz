@@ -5,6 +5,8 @@ local ID = zones[xi.zone.THE_SHRINE_OF_RUAVITAU]
 local zoneObject = {}
 
 zoneObject.onInitialize = function(zone)
+    xi.cactuarRegimes.initializeBooks(zone)
+
     -- NM Persistence
     xi.mob.nmTODPersistCache(zone, ID.mob.MOTHER_GLOBE)
     xi.mob.nmTODPersistCache(zone, ID.mob.FAUST)

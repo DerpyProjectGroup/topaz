@@ -15,6 +15,8 @@ local erucaPHTable =
     [ID.mob.ENERGETIC_ERUCA - 321] = ID.mob.ENERGETIC_ERUCA, -- 181.601 -14.120 -166.218
 }
 entity.onMobDeath = function(mob, player, optParams)
+    xi.cactuarRegimes.checkRegime(player, mob, 2, 1, xi.regime.type.FIELDS)
+    xi.cactuarRegimes.checkRegime(player, mob, 4, 1, xi.regime.type.FIELDS)
 end
 
 entity.onMobDespawn = function(mob)

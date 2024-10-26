@@ -32,6 +32,7 @@ zoneObject.onInitialize = function(zone)
     UpdateNMSpawnPoint(ID.mob.COVETER)
     GetMobByID(ID.mob.COVETER):setRespawnTime(math.random(3600, 21600))
     xi.exp_controller.onInitialize(zone)
+    xi.cactuarRegimes.initializeBooks(zone)
 end
 
 zoneObject.onZoneIn = function(player, prevZone)

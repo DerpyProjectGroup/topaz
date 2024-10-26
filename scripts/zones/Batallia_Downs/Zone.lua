@@ -31,6 +31,7 @@ zoneObject.onInitialize = function(zone)
     registerRegionAroundNPC(zone, ID.npc.SYRILLIA, 9)
 
     xi.voidwalker.zoneOnInit(zone)
+    xi.cactuarRegimes.initializeBooks(zone)
 end
 
 zoneObject.onZoneIn = function(player, prevZone)

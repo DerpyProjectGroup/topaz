@@ -8,6 +8,7 @@ zoneObject.onInitialize = function(zone)
     zone:registerTriggerArea(2, -369, -178, -49, -365, -177, -43) -- Twelfth Floor F-10 porter to Stellar Fulcrum
 
     xi.treasure.initZone(zone)
+    xi.cactuarRegimes.initializeBooks(zone)
 end
 
 zoneObject.onConquestUpdate = function(zone, updatetype, influence, owner, ranking, isConquestAlliance)

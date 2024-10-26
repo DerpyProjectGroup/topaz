@@ -80,6 +80,7 @@ zoneObject.onInitialize = function(zone)
 
     xi.treasure.initZone(zone)
     xi.conq.setRegionalConquestOverseers(zone:getRegionID())
+    xi.cactuarRegimes.initializeBooks(zone)
 end
 
 zoneObject.onConquestUpdate = function(zone, updatetype, influence, owner, ranking, isConquestAlliance)

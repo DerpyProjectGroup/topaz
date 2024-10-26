@@ -3,14 +3,15 @@
 --  Mob: Great Ameretat
 -----------------------------------
 require('scripts/globals/mobs')
-mixins = 
-{ 
+mixins =
+{
 require('scripts/mixins/families/ameretat'),
 }
 -----------------------------------
 local entity = {}
 
 entity.onMobDeath = function(mob, player, optParams)
+    xi.cactuarRegimes.checkRegime(player, mob, 6, 2, xi.regime.type.FIELDS)
 end
 
 entity.onAdditionalEffect = function(mob, target, damage)

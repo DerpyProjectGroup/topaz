@@ -14,7 +14,8 @@ local donnergugiPHTable =
 }
 
 entity.onMobDeath = function(mob, player, optParams)
-    xi.regime.checkRegime(player, mob, 110, 3, xi.regime.type.FIELDS)
+    -- xi.regime.checkRegime(player, mob, 110, 3, xi.regime.type.FIELDS)
+    xi.cactuarRegimes.checkRegime(player, mob, 2, 3, xi.regime.type.FIELDS)
 end
 
 entity.onMobDespawn = function(mob)

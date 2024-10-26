@@ -24,9 +24,14 @@ effectObject.onEffectGain = function(target, effect)
             target:addMod(xi.mod.FOOD_HP_CAP, 75)
             target:addMod(xi.mod.STORETP, 5)
         elseif effect:getPower() == 5 then -- Dried Agaricus
-            target:addMod(xi.mod.MND, 4)
+            local power = target:getMainLvl() + 1
+            effect:addMod(xi.mod.MP, power)
+            effect:addMod(xi.mod.MND, 4)
+            effect:addMod(xi.mod.MPHEAL, 2)
         elseif effect:getPower() == 6 then -- Instant Rice
             target:addMod(xi.mod.CHR, 6)
+            target:addMod(xi.mod.HP, 35)
+            target:addMod(xi.mod.HPHEAL, 3)
         elseif effect:getPower() == 255 then -- ACP Seed Goblin Saucepan Attack
             -- Based on info from http://www.bg-wiki.com/bg/Seed_Goblin
             target:addMod(xi.mod.STR, -10)
@@ -63,8 +68,6 @@ effectObject.onEffectLose = function(target, effect)
             target:delMod(xi.mod.FOOD_HPP, 27)
             target:delMod(xi.mod.FOOD_HP_CAP, 75)
             target:delMod(xi.mod.STORETP, 5)
-        elseif effect:getPower() == 5 then -- Dried Agaricus
-            target:delMod(xi.mod.MND, 4)
         elseif effect:getPower() == 6 then -- Instant Rice
             target:delMod(xi.mod.CHR, 6)
         elseif effect:getPower() == 255 then -- ACP Seed Goblin Saucepan Attack

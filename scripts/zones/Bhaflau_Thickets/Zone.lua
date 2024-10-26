@@ -10,6 +10,7 @@ zoneObject.onInitialize = function(zone)
     GetMobByID(ID.mob.HARVESTMAN):setRespawnTime(math.random(900, 10800))
 
     xi.helm.initZone(zone, xi.helmType.HARVESTING)
+    xi.cactuarRegimes.initializeBooks(zone)
 end
 
 zoneObject.onZoneIn = function(player, prevZone)

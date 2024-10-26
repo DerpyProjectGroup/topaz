@@ -6,6 +6,8 @@ local ID = zones[xi.zone.GUSTAV_TUNNEL]
 local zoneObject = {}
 
 zoneObject.onInitialize = function(zone)
+    xi.cactuarRegimes.initializeBooks(zone)
+
     -- NM Persistence
     xi.mob.nmTODPersistCache(zone, ID.mob.BUNE)
 end

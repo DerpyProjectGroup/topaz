@@ -7,6 +7,7 @@ require('scripts/quests/i_can_hear_a_rainbow')
 local zoneObject = {}
 
 zoneObject.onInitialize = function(zone)
+    xi.cactuarRegimes.initializeBooks(zone)
     xi.mob.nmTODPersistCache(zone, ID.mob.DUKE_DECAPOD)
 end
 

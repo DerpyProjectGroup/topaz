@@ -8,6 +8,8 @@ local zoneObject = {}
 
 zoneObject.onInitialize = function(zone)
     xi.helm.initZone(zone, xi.helmType.LOGGING)
+    xi.cactuarRegimes.initializeBooks(zone)
+
     xi.mob.nmTODPersistCache(zone, ID.mob.RAMBUKK)
 end
 

@@ -9,6 +9,7 @@ zoneObject.onInitialize = function(zone)
     xi.mob.nmTODPersistCache(zone, ID.mob.ZIPACNA)
 
     xi.treasure.initZone(zone)
+    xi.cactuarRegimes.initializeBooks(zone)
     SetServerVariable('[POP]SteamCleaner', 0) -- should 'reset' on server repop
 end
 

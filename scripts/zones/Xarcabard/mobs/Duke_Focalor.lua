@@ -14,7 +14,8 @@ end
 
 entity.onMobDeath = function(mob, player, optParams)
     xi.hunts.checkHunt(mob, player, 316)
-    xi.regime.checkRegime(player, mob, 55, 1, xi.regime.type.FIELDS)
+    -- xi.regime.checkRegime(player, mob, 55, 1, xi.regime.type.FIELDS)
+    xi.cactuarRegimes.checkRegime(player, mob, 5, 1, xi.regime.type.FIELDS)
 end
 
 entity.onMobDespawn = function(mob)

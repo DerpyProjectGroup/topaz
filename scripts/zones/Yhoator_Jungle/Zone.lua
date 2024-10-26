@@ -25,6 +25,7 @@ zoneObject.onInitialize = function(zone)
     xi.helm.initZone(zone, xi.helmType.LOGGING)
     xi.helm.initZone(zone, xi.helmType.HARVESTING)
     updateRainHarvesting(xi.status.DISAPPEAR)
+    xi.cactuarRegimes.initializeBooks(zone)
 
     xi.bmt.updatePeddlestox(xi.zone.YUHTUNGA_JUNGLE, ID.npc.PEDDLESTOX)
 end

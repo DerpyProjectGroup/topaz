@@ -26,6 +26,7 @@ zoneObject.onInitialize = function(zone)
 
     xi.helm.initZone(zone, xi.helmType.LOGGING)
     xi.exp_controller.onInitialize(zone)
+    xi.cactuarRegimes.initializeBooks(zone)
 
 end
 

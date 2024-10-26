@@ -11,6 +11,7 @@ zoneObject.onInitialize = function(zone)
 
     xi.treasure.initZone(zone)
     xi.helm.initZone(zone, xi.helmType.MINING)
+    xi.cactuarRegimes.initializeBooks(zone)
 end
 
 zoneObject.onConquestUpdate = function(zone, updatetype, influence, owner, ranking, isConquestAlliance)

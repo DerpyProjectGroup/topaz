@@ -15,6 +15,7 @@ zoneObject.onInitialize = function(zone)
     xi.mob.nmTODPersistCache(zone, ID.mob.ODQAN)
 
     xi.exp_controller.onInitialize(zone)
+    xi.cactuarRegimes.initializeBooks(zone)
 
 end
 

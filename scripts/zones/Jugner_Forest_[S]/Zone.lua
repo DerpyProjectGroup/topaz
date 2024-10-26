@@ -10,6 +10,7 @@ zoneObject.onInitialize = function(zone)
     xi.chocobo.initZone(zone)
     xi.voidwalker.zoneOnInit(zone)
     xi.darkixion.zoneOnInit(zone)
+    xi.cactuarRegimes.initializeBooks(zone)
 end
 
 zoneObject.onGameHour = function(zone)

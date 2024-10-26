@@ -12,6 +12,8 @@ zoneObject.onInitialize = function(zone)
 
     ph:setLocalVar("timeToGrow", GetServerVariable("[Taisai]TimeToGrow"))
     ph:setLocalVar('phIndex', phIndex)
+
+    xi.cactuarRegimes.initializeBooks(zone)
 end
 
 zoneObject.onConquestUpdate = function(zone, updatetype, influence, owner, ranking, isConquestAlliance)

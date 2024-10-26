@@ -13,7 +13,7 @@ zoneObject.onInitialize = function(zone)
     end
 
     xi.exp_controller.onInitialize(zone)
-
+    xi.cactuarRegimes.initializeBooks(zone)
 end
 
 zoneObject.onConquestUpdate = function(zone, updatetype, influence, owner, ranking, isConquestAlliance)

@@ -10,6 +10,7 @@ zoneObject.onInitialize = function(zone)
     xi.conq.setRegionalConquestOverseers(zone:getRegionID())
     --NM Persistence
     xi.mob.nmTODPersistCache(zone, ID.mob.AMANITA)
+    xi.cactuarRegimes.initializeBooks(zone)
 end
 
 zoneObject.onZoneIn = function(player, prevZone)

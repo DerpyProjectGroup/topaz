@@ -5,6 +5,12 @@
 local effectObject = {}
 
 effectObject.onEffectGain = function(target, effect)
+    effect:delEffectFlag(xi.effectFlag.ON_ZONE)
+    if target:getZoneID() == effect:getSubPower() then
+        effect:addMod(xi.mod.CASKET_RATE_INCREASE, effect:getPower())
+    else
+        effect:addMod(xi.mod.CASKET_RATE_INCREASE, 0)
+    end
 end
 
 effectObject.onEffectTick = function(target, effect)

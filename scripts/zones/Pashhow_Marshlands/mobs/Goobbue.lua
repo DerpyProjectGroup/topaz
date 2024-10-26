@@ -13,7 +13,8 @@ local jollyPHTable =
 }
 
 entity.onMobDeath = function(mob, player, optParams)
-    xi.regime.checkRegime(player, mob, 60, 3, xi.regime.type.FIELDS)
+    -- xi.regime.checkRegime(player, mob, 60, 3, xi.regime.type.FIELDS)
+    xi.cactuarRegimes.checkRegime(player, mob, 5, 3, xi.regime.type.FIELDS)
 end
 
 entity.onMobDespawn = function(mob)

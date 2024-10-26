@@ -26,7 +26,8 @@ function evolvedFromPrince(mob)
     return evolved    
 end
 
-entity.onMobDeath = function(mob)
+entity.onMobDeath = function(mob, player, optParams)
+    xi.cactuarRegimes.checkRegime(player, mob, 5, 1, xi.regime.type.FIELDS)
 end
 
 entity.onMobDespawn = function(mob)

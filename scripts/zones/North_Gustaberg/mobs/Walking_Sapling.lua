@@ -19,7 +19,8 @@ local maighdeanPHTable =
 }
 
 entity.onMobDeath = function(mob, player, optParams)
-    xi.regime.checkRegime(player, mob, 18, 2, xi.regime.type.FIELDS)
+    -- xi.regime.checkRegime(player, mob, 18, 2, xi.regime.type.FIELDS)
+    xi.cactuarRegimes.checkRegime(player, mob, 3, 2, xi.regime.type.FIELDS)
 end
 
 entity.onMobDespawn = function(mob)

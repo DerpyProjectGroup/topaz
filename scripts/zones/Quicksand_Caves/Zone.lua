@@ -33,6 +33,7 @@ zoneObject.onInitialize = function(zone)
     xi.mob.nmTODPersistCache(zone, ID.mob.PROCONSUL_XII)
 
     xi.treasure.initZone(zone)
+    xi.cactuarRegimes.initializeBooks(zone)
 
     npcUtil.UpdateNPCSpawnPoint(ID.npc.ANTICAN_TAG_QM, 60, 120, ID.npc.ANTICAN_TAG_POSITIONS, '[POP]Antican_Tag')
 end

@@ -29,6 +29,8 @@ end
 
 entity.onMobDeath = function(mob, player, optParams)
     GetNPCByID(ID.npc.QM3):setLocalVar('PillarCharged', 1)
+    xi.cactuarRegimes.checkRegime(player, mob, 1, 1, xi.regime.type.FIELDS)
+    xi.cactuarRegimes.checkRegime(player, mob, 2, 1, xi.regime.type.FIELDS)
 end
 
 return entity

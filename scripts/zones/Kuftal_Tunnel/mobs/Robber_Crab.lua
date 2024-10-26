@@ -13,9 +13,12 @@ entity.onMobInitialize = function(mob)
 end
 
 entity.onMobDeath = function(mob, player, optParams)
-    xi.regime.checkRegime(player, mob, 735, 1, xi.regime.type.GROUNDS)
-    xi.regime.checkRegime(player, mob, 736, 1, xi.regime.type.GROUNDS)
-    xi.regime.checkRegime(player, mob, 738, 1, xi.regime.type.GROUNDS)
+    -- xi.regime.checkRegime(player, mob, 735, 1, xi.regime.type.GROUNDS)
+    -- xi.regime.checkRegime(player, mob, 736, 1, xi.regime.type.GROUNDS)
+    -- xi.regime.checkRegime(player, mob, 738, 1, xi.regime.type.GROUNDS)
+    xi.cactuarRegimes.checkRegime(player, mob, 1, 1, xi.regime.type.FIELDS)
+    xi.cactuarRegimes.checkRegime(player, mob, 2, 1, xi.regime.type.FIELDS)
+    xi.cactuarRegimes.checkRegime(player, mob, 4, 1, xi.regime.type.FIELDS)
 end
 
 return entity

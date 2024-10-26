@@ -15,6 +15,7 @@ entity.onAdditionalEffect = function(mob, target, damage)
 end
 
 entity.onMobDeath = function(mob, player, optParams)
+    xi.cactuarRegimes.checkRegime(player, mob, 1, 1, xi.regime.type.FIELDS)
     if optParams.isKiller then
         local pos = mob:getPos()
         GetMobByID(mob:getID() + 1):setSpawn(pos.x, pos.y, pos.z)

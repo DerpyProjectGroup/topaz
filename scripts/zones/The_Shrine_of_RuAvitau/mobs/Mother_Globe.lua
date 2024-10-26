@@ -171,6 +171,7 @@ entity.onAdditionalEffect = function(mob, target, damage)
 end
 
 entity.onMobDeath = function(mob, player, optParams)
+    xi.cactuarRegimes.checkRegime(player, mob, 1, 1, xi.regime.type.FIELDS)
     mob:setRespawnTime(math.random(10800, 21600)) -- respawn 3-6 hrs
 
     for _, slaveGlobeID in ipairs(slaveGlobes) do

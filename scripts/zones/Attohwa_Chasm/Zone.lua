@@ -54,7 +54,7 @@ zoneObject.onInitialize = function(zone)
     xi.helm.initZone(zone, xi.helmType.EXCAVATION)
 
     xi.exp_controller.onInitialize(zone)
-
+    xi.cactuarRegimes.initializeBooks(zone)
 end
 
 zoneObject.onZoneIn = function(player, prevZone)

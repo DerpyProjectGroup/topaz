@@ -11,6 +11,7 @@ zoneObject.onInitialize = function(zone)
     GetMobByID(ID.mob.NOBLE_MOLD):setLocalVar('pop', os.time() + math.random(43200, 57600)) -- 12 to 16 hr
 
     xi.conq.setRegionalConquestOverseers(zone:getRegionID())
+    xi.cactuarRegimes.initializeBooks(zone)
 end
 
 zoneObject.onConquestUpdate = function(zone, updatetype, influence, owner, ranking, isConquestAlliance)

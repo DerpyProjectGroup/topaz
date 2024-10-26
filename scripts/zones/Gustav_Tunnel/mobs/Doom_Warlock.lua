@@ -16,9 +16,12 @@ local taximPHTable =
 }
 
 entity.onMobDeath = function(mob, player, optParams)
-    xi.regime.checkRegime(player, mob, 765, 2, xi.regime.type.GROUNDS)
-    xi.regime.checkRegime(player, mob, 766, 1, xi.regime.type.GROUNDS)
-    xi.regime.checkRegime(player, mob, 769, 1, xi.regime.type.GROUNDS)
+    -- xi.regime.checkRegime(player, mob, 765, 2, xi.regime.type.GROUNDS)
+    -- xi.regime.checkRegime(player, mob, 766, 1, xi.regime.type.GROUNDS)
+    -- xi.regime.checkRegime(player, mob, 769, 1, xi.regime.type.GROUNDS)
+    xi.cactuarRegimes.checkRegime(player, mob, 3, 2, xi.regime.type.FIELDS)
+    xi.cactuarRegimes.checkRegime(player, mob, 4, 1, xi.regime.type.FIELDS)
+    xi.cactuarRegimes.checkRegime(player, mob, 7, 1, xi.regime.type.FIELDS)
 end
 
 entity.onMobDespawn = function(mob)

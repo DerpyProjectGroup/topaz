@@ -28,6 +28,7 @@ zoneObject.onInitialize = function(zone)
     -- Select portals.
     xi.promyvion.setupInitialPortals(zone)
     xi.exp_controller.onInitialize(zone)
+    xi.cactuarRegimes.initializeBooks(zone)
 end
 
 zoneObject.onZoneIn = function(player, prevZone)

@@ -12,6 +12,7 @@ zoneObject.onInitialize = function(zone)
 
     xi.helm.initZone(zone, xi.helmType.MINING)
     xi.voidwalker.zoneOnInit(zone)
+    xi.cactuarRegimes.initializeBooks(zone)
 end
 
 zoneObject.onZoneIn = function(player, prevZone)

@@ -20,10 +20,14 @@ local timewornPHTable =
 }
 
 entity.onMobDeath = function(mob, player, optParams)
-    xi.regime.checkRegime(player, mob, 51, 1, xi.regime.type.FIELDS)
-    xi.regime.checkRegime(player, mob, 52, 1, xi.regime.type.FIELDS)
-    xi.regime.checkRegime(player, mob, 53, 2, xi.regime.type.FIELDS)
-    xi.regime.checkRegime(player, mob, 54, 3, xi.regime.type.FIELDS)
+    -- xi.regime.checkRegime(player, mob, 51, 1, xi.regime.type.FIELDS)
+    -- xi.regime.checkRegime(player, mob, 52, 1, xi.regime.type.FIELDS)
+    -- xi.regime.checkRegime(player, mob, 53, 2, xi.regime.type.FIELDS)
+    -- xi.regime.checkRegime(player, mob, 54, 3, xi.regime.type.FIELDS)
+    xi.cactuarRegimes.checkRegime(player, mob, 1, 1, xi.regime.type.FIELDS)
+    xi.cactuarRegimes.checkRegime(player, mob, 2, 1, xi.regime.type.FIELDS)
+    xi.cactuarRegimes.checkRegime(player, mob, 3, 2, xi.regime.type.FIELDS)
+    xi.cactuarRegimes.checkRegime(player, mob, 4, 3, xi.regime.type.FIELDS)
 end
 
 entity.onMobDespawn = function(mob)

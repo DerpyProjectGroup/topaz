@@ -26,6 +26,8 @@ zoneObject.onInitialize = function(zone)
     -- Swamp trigger areas (Map 2)
     zone:registerTriggerArea(7, -378, 2.5, -143, 0, 0, 0) -- Swamp (I-7)
     zone:registerTriggerArea(8, -421, 2.5, -184, 0, 0, 0) -- Swamp (I-7)
+
+    xi.cactuarRegimes.initializeBooks(zone)
 end
 
 zoneObject.onZoneIn = function(player, prevZone)

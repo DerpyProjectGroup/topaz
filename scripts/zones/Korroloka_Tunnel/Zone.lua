@@ -15,6 +15,7 @@ zoneObject.onInitialize = function(zone)
     xi.mob.nmTODPersistCache(zone, ID.mob.THOON)
 
     xi.helm.initZone(zone, xi.helmType.EXCAVATION)
+    xi.cactuarRegimes.initializeBooks(zone)
 end
 
 zoneObject.onZoneIn = function(player, prevZone)

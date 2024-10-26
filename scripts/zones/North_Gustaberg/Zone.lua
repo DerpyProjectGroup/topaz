@@ -9,6 +9,7 @@ local zoneObject = {}
 zoneObject.onInitialize = function(zone)
     xi.conq.setRegionalConquestOverseers(zone:getRegionID())
     xi.voidwalker.zoneOnInit(zone)
+    xi.cactuarRegimes.initializeBooks(zone)
     
     --NM Persistence
     xi.mob.nmTODPersistCache(zone, ID.mob.BEDROCK_BARRY)

@@ -9,6 +9,7 @@ zoneObject.onInitialize = function(zone)
     UpdateNMSpawnPoint(ID.mob.COQUECIGRUE)
     GetMobByID(ID.mob.COQUECIGRUE):setRespawnTime(math.random(7200, 7800))
     xi.voidwalker.zoneOnInit(zone)
+    xi.cactuarRegimes.initializeBooks(zone)
 end
 
 zoneObject.onZoneIn = function(player, prevZone)

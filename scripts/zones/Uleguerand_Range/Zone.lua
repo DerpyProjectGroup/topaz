@@ -17,6 +17,7 @@ zoneObject.onInitialize = function(zone)
     -- BG Wiki has no info. For now, triggers every 3 vana minutes
     GetNPCByID(ID.npc.RABBIT_FOOTPRINT):addPeriodicTrigger(0, 3, 0)
     xi.exp_controller.onInitialize(zone)
+    xi.cactuarRegimes.initializeBooks(zone)
 
 end
 

@@ -7,7 +7,8 @@ local ID = zones[xi.zone.BATALLIA_DOWNS]
 local entity = {}
 
 entity.onMobDeath = function(mob, player, optParams)
-    xi.regime.checkRegime(player, mob, 74, 2, xi.regime.type.FIELDS)
+    -- xi.regime.checkRegime(player, mob, 74, 2, xi.regime.type.FIELDS)
+    xi.cactuarRegimes.checkRegime(player, mob, 4, 2, xi.regime.type.FIELDS)
     if
         xi.settings.main.ENABLE_ACP == 1 and
         not player:hasKeyItem(xi.ki.BOWL_OF_BLAND_GOBLIN_SALAD) and

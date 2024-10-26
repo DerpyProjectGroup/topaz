@@ -13,8 +13,10 @@ local barbaricPHTable =
 }
 
 entity.onMobDeath = function(mob, player, optParams)
-    xi.regime.checkRegime(player, mob, 52, 2, xi.regime.type.FIELDS)
-    xi.regime.checkRegime(player, mob, 53, 3, xi.regime.type.FIELDS)
+    -- xi.regime.checkRegime(player, mob, 52, 2, xi.regime.type.FIELDS)
+    -- xi.regime.checkRegime(player, mob, 53, 3, xi.regime.type.FIELDS)
+    xi.cactuarRegimes.checkRegime(player, mob, 2, 2, xi.regime.type.FIELDS)
+    xi.cactuarRegimes.checkRegime(player, mob, 3, 3, xi.regime.type.FIELDS)
 end
 
 entity.onMobDespawn = function(mob)

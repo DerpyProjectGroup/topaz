@@ -14,6 +14,7 @@ end
 
 entity.onMobDeath = function(mob, player, optParams)
     xi.magian.onMobDeath(mob, player, optParams, set{ 2 })
+    xi.cactuarRegimes.checkRegime(player, mob, 4, 1, xi.regime.type.FIELDS)
     xi.hunts.checkHunt(mob, player, 287)
 end
 

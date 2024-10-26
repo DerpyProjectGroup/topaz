@@ -13,8 +13,10 @@ local ogygosPHTable =
 }
 
 entity.onMobDeath = function(mob, player, optParams)
-    xi.regime.checkRegime(player, mob, 783, 1, xi.regime.type.GROUNDS)
-    xi.regime.checkRegime(player, mob, 784, 2, xi.regime.type.GROUNDS)
+    -- xi.regime.checkRegime(player, mob, 783, 1, xi.regime.type.GROUNDS)
+    -- xi.regime.checkRegime(player, mob, 784, 2, xi.regime.type.GROUNDS)
+    xi.cactuarRegimes.checkRegime(player, mob, 2, 2, xi.regime.type.FIELDS)
+    xi.cactuarRegimes.checkRegime(player, mob, 3, 2, xi.regime.type.FIELDS)
 end
 
 entity.onMobDespawn = function(mob)

@@ -15,7 +15,8 @@ local serpopardPHTable =
 }
 
 entity.onMobDeath = function(mob, player, optParams)
-    xi.regime.checkRegime(player, mob, 96, 2, xi.regime.type.FIELDS)
+    -- xi.regime.checkRegime(player, mob, 96, 2, xi.regime.type.FIELDS)
+    xi.cactuarRegimes.checkRegime(player, mob, 5, 2, xi.regime.type.FIELDS)
     xi.tutorial.onMobDeath(player)
 end
 

@@ -11,6 +11,7 @@ zoneObject.onInitialize = function(zone)
     zone:registerTriggerArea(3,  -67.3, 2, 532.8,  -66.3, 4,  534.0)  -- J-3 Geyser
 
     xi.treasure.initZone(zone)
+    xi.cactuarRegimes.initializeBooks(zone)
 end
 
 zoneObject.onConquestUpdate = function(zone, updatetype, influence, owner, ranking, isConquestAlliance)

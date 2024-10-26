@@ -17,7 +17,8 @@ local ungurPHTable =
 }
 
 entity.onMobDeath = function(mob, player, optParams)
-    xi.regime.checkRegime(player, mob, 769, 2, xi.regime.type.GROUNDS)
+    -- xi.regime.checkRegime(player, mob, 769, 2, xi.regime.type.GROUNDS)
+    xi.cactuarRegimes.checkRegime(player, mob, 7, 2, xi.regime.type.FIELDS)
 end
 
 entity.onMobDespawn = function(mob)

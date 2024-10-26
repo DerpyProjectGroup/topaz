@@ -23,6 +23,7 @@ end
 
 entity.onMobDeath = function(mob, player, optParams)
     local mg = GetMobByID(ID.mob.MOTHER_GLOBE)
+    xi.cactuarRegimes.checkRegime(player, mob, 1, 1, xi.regime.type.FIELDS)
 
     if mg:getLocalVar('nextSlaveSpawnTime') == 0 then
         mg:setLocalVar('nextSlaveSpawnTime', os.time() + 30)
