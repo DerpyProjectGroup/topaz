@@ -417,7 +417,7 @@ INSERT INTO `item_basic` VALUES (421,0,'vase_of_rulude_orchids','r._orchid_vase'
 INSERT INTO `item_basic` VALUES (422,0,'elshimo_pachira','elshimo_pachira',1,4,34,0,0);
 INSERT INTO `item_basic` VALUES (423,0,'tavern_bench','tavern_bench',1,36,34,0,0);
 INSERT INTO `item_basic` VALUES (424,0,'feasting_table','feasting_table',1,36,34,0,0);
-INSERT INTO `item_basic` VALUES (425,0,'girandola','girandola',1,36,34,0,0);
+INSERT INTO `item_basic` VALUES (425,0,'girandola','girandola',1,36,34,0,6820);
 INSERT INTO `item_basic` VALUES (426,0,'orchestrion','orchestrion',1,61552,0,1,0);
 INSERT INTO `item_basic` VALUES (427,0,'rococo_table','rococo_table',1,36,34,1,0);
 INSERT INTO `item_basic` VALUES (428,0,'semainier','semainier',1,36,34,1,0);
