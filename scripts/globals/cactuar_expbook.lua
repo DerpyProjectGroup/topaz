@@ -253,6 +253,14 @@ xi.cactuarRegimes.initializeBooks = function(zone)
                             local obj2_needed = playerArg:getCharVar('[cactuarRegimes]needed2')
                             local obj3_needed = playerArg:getCharVar('[cactuarRegimes]needed3')
                             local obj4_needed = playerArg:getCharVar('[cactuarRegimes]needed4')
+                            local pageRepeat  = playerArg:getCharVar('[cactuarRegimes]repeat')
+                            local repeatString = ''
+
+                            if pageRepeat == 0 then
+                                repeatString = 'No'
+                            elseif pageRepeat == 1 then
+                                repeatString = 'Yes'
+                            end
 
                             local regimeZoneID = regimeZone
                             local regimeZoneData = xi.cactuarRegimes.zoneData[regimeZoneID]
@@ -260,7 +268,7 @@ xi.cactuarRegimes.initializeBooks = function(zone)
 
                             playerArg:printToPlayer(string.format('Current Regime:'), xi.msg.channel.SYSTEM_3)
                             playerArg:printToPlayer(string.format('%s', regimeTrainingData.zoneDialog), xi.msg.channel.SYSTEM_3)
-                            playerArg:printToPlayer(string.format('Training Regime: Page %i', regimePage), xi.msg.channel.SYSTEM_3)
+                            playerArg:printToPlayer(string.format('Training Regime: Page %i, Repeat: %s', regimePage, repeatString), xi.msg.channel.SYSTEM_3)
                             playerArg:printToPlayer(string.format('Base Reward: %s', regimeTrainingData.expReward), xi.msg.channel.SYSTEM_3)
                             playerArg:printToPlayer(string.format('Objective 1: %s/ %s %s.', obj1_killed, obj1_needed, regimeTrainingData.obj1Dialog), xi.msg.channel.SYSTEM_3)
                             if obj2_needed ~= 0 or nil then
@@ -1497,6 +1505,6 @@ xi.cactuarRegimes.checkRegime = function(player, mob, regimeId, index, regimeTyp
 
         player:messageBasic(xi.msg.basic.FOV_REGIME_BEGINS_ANEW)
     else
-        xi.regime.clearRegimeVars(player)
+        xi.cactuarRegimes.clearRegimeVars(player)
     end
 end
