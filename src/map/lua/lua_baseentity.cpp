@@ -14360,6 +14360,28 @@ bool CLuaBaseEntity::isWeaponTwoHanded()
 }
 
 /************************************************************************
+ *  Function: getRangedPDIF()
+ *  Purpose : Return pdif values.
+ *  Example : attacker:getRangedPDIF(defender, isCritical, bonusAttackPercent, xi.slot.MAIN, ignoredDef)
+ *  Notes   : Battleutils calculates via GetRangedDamageRatio
+ ************************************************************************/
+
+float CLuaBaseEntity::getRangedPDIF(CLuaBaseEntity* PLuaBaseEntity, bool isCritical, float atkMulti, uint16 ignoredDef)
+{
+    if (m_PBaseEntity->objtype == TYPE_NPC)
+    {
+        ShowWarning("Invalid Entity (NPC: %s) calling function.", m_PBaseEntity->getName());
+        return false;
+    }
+
+    CBattleEntity* PAttacker = static_cast<CBattleEntity*>(m_PBaseEntity);
+    CBattleEntity* PDefender = static_cast<CBattleEntity*>(PLuaBaseEntity->GetBaseEntity());
+
+    return battleutils::GetRangedDamageRatio(PAttacker, PDefender, isCritical, atkMulti, ignoredDef);
+}
+
+
+/************************************************************************
  *  Function: getGuardRate()
  *  Purpose : Return guard rate.
  *  Example : defender:getGuardRate(attacker)
@@ -16988,6 +17010,27 @@ void CLuaBaseEntity::setDamage(uint16 damage)
 }
 
 /************************************************************************
+ *  Function: setRangedDamage()
+ *  Purpose : Override default ranged damage settings for a Mob
+ *  Example : mob:setRangedDamage(40)
+ ************************************************************************/
+
+void CLuaBaseEntity::setRangedDamage(uint16 damage)
+{
+    if (!(m_PBaseEntity->objtype & TYPE_MOB))
+    {
+        ShowError("function call on invalid entity! (name: %s type: %d)", m_PBaseEntity->name, m_PBaseEntity->objtype);
+        return;
+    }
+
+    auto* PMobEntity = static_cast<CMobEntity*>(m_PBaseEntity);
+    if (auto* PItemWeapon = dynamic_cast<CItemWeapon*>(PMobEntity->m_Weapons[SLOT_RANGED]))
+    {
+        PItemWeapon->setDamage(damage);
+    }
+}
+
+/************************************************************************
  *  Function: hasSpellList()
  *  Purpose : Returns true if a Mob has spells to cast
  *  Example : if mob:hasSpellList() then
@@ -19267,6 +19310,7 @@ void CLuaBaseEntity::Register()
     SOL_REGISTER("getRangedDmgRank", CLuaBaseEntity::getRangedDmgRank);
     SOL_REGISTER("getAmmoDmg", CLuaBaseEntity::getAmmoDmg);
     SOL_REGISTER("getWeaponHitCount", CLuaBaseEntity::getWeaponHitCount);
+    SOL_REGISTER("getRangedPDIF", CLuaBaseEntity::getRangedPDIF);
     SOL_REGISTER("getGuardRate", CLuaBaseEntity::getGuardRate);
     SOL_REGISTER("getBlockRate", CLuaBaseEntity::getBlockRate);
     SOL_REGISTER("getParryRate", CLuaBaseEntity::getParryRate);
@@ -19402,6 +19446,7 @@ void CLuaBaseEntity::Register()
     SOL_REGISTER("setDelay", CLuaBaseEntity::setDelay);
     SOL_REGISTER("getDelay", CLuaBaseEntity::getDelay);
     SOL_REGISTER("setDamage", CLuaBaseEntity::setDamage);
+    SOL_REGISTER("setRangedDamage", CLuaBaseEntity::setRangedDamage);
     SOL_REGISTER("hasSpellList", CLuaBaseEntity::hasSpellList);
     SOL_REGISTER("setSpellList", CLuaBaseEntity::setSpellList);
     SOL_REGISTER("setAutoAttackEnabled", CLuaBaseEntity::setAutoAttackEnabled);

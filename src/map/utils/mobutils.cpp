@@ -62,6 +62,10 @@ namespace mobutils
         if (slot == SLOT_RANGED)
         {
             bonus = 5;
+            if (PMob->getMobMod(MOBMOD_RANGED_WEAPON_BONUS) != 0)
+            {
+                bonus = PMob->getMobMod(MOBMOD_RANGED_WEAPON_BONUS); // Add this mod to increase a mobs ranged damage by a base amount
+            }
         }
 
         if (lvl == 1)

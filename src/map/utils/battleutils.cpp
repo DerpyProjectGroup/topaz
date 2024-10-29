@@ -1730,7 +1730,7 @@ namespace battleutils
     }
 
     // todo: need to penalise attacker's RangedAttack depending on distance from mob. (% decrease)
-    float GetRangedDamageRatio(CBattleEntity* PAttacker, CBattleEntity* PDefender, bool isCritical)
+    float GetRangedDamageRatio(CBattleEntity* PAttacker, CBattleEntity* PDefender, bool isCritical, float atkMulti, uint16 ignoredDef)
     {
         // get ranged attack value
         uint16 rAttack = 1;
@@ -1765,11 +1765,13 @@ namespace battleutils
         else
         {
             // assume mobs capped
-            rAttack = battleutils::GetMaxSkill(SKILL_ARCHERY, JOB_RNG, PAttacker->GetMLevel());
+            //rAttack = battleutils::GetMaxSkill(SKILL_ARCHERY, JOB_RNG, PAttacker->GetMLevel());
+            rAttack = PAttacker->RATT(SKILL_ARCHERY);
         }
+        rAttack = static_cast<uint16>(rAttack * atkMulti);
 
         // get ratio (not capped for RAs)
-        float ratio = (float)rAttack / (float)PDefender->DEF();
+        float ratio = (float)rAttack / ((float)PDefender->DEF() - ignoredDef);
 
         // Ranged damage limit caluclations
 
@@ -1784,9 +1786,38 @@ namespace battleutils
         }
 
         // level correct (0.025 not 0.05 like for melee)
-        if (PDefender->GetMLevel() > PAttacker->GetMLevel())
+        // if (PDefender->GetMLevel() > PAttacker->GetMLevel())
+        // {
+        //     ratio -= 0.025f * (PDefender->GetMLevel() - PAttacker->GetMLevel());
+        // }
+
+        ENTITYTYPE attackerType = PAttacker->objtype;
+        uint8 attackerLvl = PAttacker->GetMLevel();
+        uint8 defenderLvl = PDefender->GetMLevel();
+        uint8 dLvl        = std::abs(attackerLvl - defenderLvl);
+        float correction  = static_cast<float>(dLvl) * 0.025f;
+
+        // Players only get penalties
+        if (attackerType == TYPE_PC)
         {
-            ratio -= 0.025f * (PDefender->GetMLevel() - PAttacker->GetMLevel());
+            if (attackerLvl < defenderLvl)
+            {
+                // Screw the players, no known cap
+                ratio = ratio - correction;
+            }
+        }
+        // Mobs, Avatars and pets only get bonuses, no penalties (or they are calculated differently)
+        else if (attackerType == TYPE_MOB || attackerType == TYPE_PET)
+        {
+            if (attackerLvl > defenderLvl)
+            {
+                ratio = ratio + correction; // Sets positive level correction for all mobs and pets
+
+                if ((attackerType == TYPE_PET) && (charutils::CheckMob(attackerLvl, defenderLvl) == EMobDifficulty::TooWeak)) // Checks if the mob is too weak and if its a pet
+                {
+                    ratio = std::clamp(ratio, 0.f, 2.f);
+                }
+            }
         }
 
         // calculate min/max PDIF
@@ -1797,6 +1828,11 @@ namespace battleutils
         {
             minPdif = ratio;
             maxPdif = (10.0f / 9.0f) * ratio;
+            if (PAttacker->objtype == TYPE_MOB)
+            {
+                minPdif = ratio * (20.0f / 19.0f);
+                maxPdif = std::clamp<float>((10.0f / 8.0f) * ratio, 0, 1);
+            }
         }
         else if (ratio <= 1.1)
         {

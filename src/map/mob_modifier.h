@@ -121,6 +121,7 @@ enum MOBMODIFIER : int
     MOBMOD_ENCROACH_TARGET      = 200, // How close a mob will encroach on it's target, attempting to make model to model contact. Encroach distance * 10
     MOBMOD_PIXIE                = 201, // Pixie (heals players)
     MOBMOD_BREATH_ATTACK_LINEAR = 202, // Mob Breath Attacks will now scale linearly from %100-0 HP after the damage is capped if applied(If a cap is set).
+    MOBMOD_RANGED_WEAPON_BONUS  = 203, // Add a flat modifer mob ranged weapon damage ( damage + bonus ) This overrides the default +5 bonus)
 };
 
 #endif

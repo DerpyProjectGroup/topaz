@@ -9,11 +9,14 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local numhits = 1
-    local accmod  = 0.8
-    local dmgmod  = 2.3
-    local info    = xi.mobskills.mobRangedMove(mob, target, skill, numhits, accmod, dmgmod, xi.mobskills.magicalTpBonus.NO_EFFECT)
-    local dmg     = xi.mobskills.mobFinalAdjustments(info.dmg, mob, skill, target, xi.attackType.RANGED, xi.damageType.PIERCING, info.hitslanded)
+    local numhits  = 1
+    local accmod   = 1
+    local distance = mob:checkDistance(target)
+    -- xi.mobskills.calculate_fTP(distance, min_fTP, mid_fTP, max_fTP, min_distance, mid_distance, max_distance)
+    local dmgmod   = xi.mobskills.calculate_fTP(distance, 1, 2, 3, 0, 5, 10)
+
+    local info = xi.mobskills.mobRangedMove(mob, target, skill, numhits, accmod, dmgmod, xi.mobskills.physicalTpBonus.DMG_VARIES, 1, 1, 1)
+    local dmg = xi.mobskills.mobFinalAdjustments(info.dmg, mob, skill, target, xi.attackType.PHYSICAL, xi.damageType.PIERCING, info.hitslanded)
 
     xi.mobskills.mobPhysicalStatusEffectMove(mob, target, skill, xi.effect.STUN, 1, 0, 4)
     target:takeDamage(dmg, mob, xi.attackType.RANGED, xi.damageType.PIERCING)

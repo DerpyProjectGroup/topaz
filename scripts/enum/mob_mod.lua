@@ -90,6 +90,7 @@ xi.mobMod =
     ENCROACH_TARGET        = 200, -- How close a mob will encroach on it's target, attempting to make model to model contact. Encroach distance * 10
     PIXIE                  = 201, -- Pixie (heals players)
     BREATH_ATTACK_LINEAR   = 202, -- Mob Breath Attacks will now scale linearly from %100-0 HP after the damage is capped if applied(If a cap is set). (1 = true, 0 = false/off)
+    RANGED_WEAPON_BONUS    = 203, -- Add a flat modifer mob ranged weapon damage ( damage + bonus ) This overrides the default +5 bonus)
         -- ASB Mod Start
     DRAW_IN_INCLUDE_PARTY     = 100, -- This will cause the mob's draw-in to also affect all party and alliance members
     DRAW_IN_FRONT             = 101, -- Mob will draw in slightly in front of them instead of the center of their hitbox

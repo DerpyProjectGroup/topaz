@@ -95,7 +95,7 @@ void CAttack::SetCritical(bool value)
 
     if (m_attackType == PHYSICAL_ATTACK_TYPE::DAKEN)
     {
-        m_damageRatio = battleutils::GetRangedDamageRatio(m_attacker, m_victim, m_isCritical);
+        m_damageRatio = battleutils::GetRangedDamageRatio(m_attacker, m_victim, m_isCritical, 1, 0);
     }
     else
     {

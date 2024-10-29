@@ -457,7 +457,7 @@ xi.combat.physical.calculateMeleePDIF = function(actor, target, weaponType, wsAt
     -- Crit damage bonus is a final modifier
     if isCritical then
         local critDamageBonus = utils.clamp(actor:getMod(xi.mod.CRIT_DMG_INCREASE) - target:getMod(xi.mod.CRIT_DEF_BONUS) + target:getMod(xi.mod.ENEMYCRITDMG), 0, 100)
-        pDif                  = pDif * 1.25 * (100 + critDamageBonus) / 100
+        pDif                  = pDif * (100 + critDamageBonus) / 100
     end
 
     return pDif
@@ -473,8 +473,8 @@ xi.combat.physical.calculateRangedPDIF = function(actor, target, weaponType, wsA
     if wsAttackMod == nil then
         wsAttackMod = 1
     end
-    
-    local actorAttack   = math.max(1, math.floor(actor:getStat(xi.mod.RATT) * wsAttackMod))
+
+    local actorAttack   = math.max(1, math.floor(actor:getMod(xi.mod.RATT) * wsAttackMod))
     local targetDefense = math.max(1, target:getStat(xi.mod.DEF))
 
     -- Actor Weaponskill Specific Ranged Attack modifiers.
@@ -494,7 +494,7 @@ xi.combat.physical.calculateRangedPDIF = function(actor, target, weaponType, wsA
     local ignoreDefenseFactor = 1
 
     if tpIgnoresDefense then
-        ignoreDefenseFactor = 1.0 - tpFactor
+        ignoreDefenseFactor = 1 - tpFactor
     end
 
     targetDefense = math.floor(targetDefense * ignoreDefenseFactor)
@@ -510,7 +510,11 @@ xi.combat.physical.calculateRangedPDIF = function(actor, target, weaponType, wsA
     local levelDifFactor = 0
 
     if applyLevelCorrection then
-        levelDifFactor = (target:getMainLvl() - actor:getMainLvl()) * 0.05
+        levelDifFactor = (target:getMainLvl() - actor:getMainLvl()) * 0.025
+    end
+
+    if actor:hasStatusEffect(xi.effect.FLASHY_SHOT) then
+        levelCorrection = 0
     end
 
     -- Only players suffer from negative level difference.
@@ -528,14 +532,14 @@ xi.combat.physical.calculateRangedPDIF = function(actor, target, weaponType, wsA
     ----------------------------------------
     -- Step 3: pDif Caps (Ranged)
     ----------------------------------------
-    local pDifUpperCap = 0
-    local pDifLowerCap = 0
+    local pDifUpperCap       = 0
+    local pDifLowerCap       = 0
 
     -- pDIF upper and lower caps.
     if cRatio < 0.9 then
         pDifUpperCap = cRatio * 10 / 9
         pDifLowerCap = cRatio
-    elseif cRatio < 1.1 then
+    elseif cRatio <= 1.1 then
         pDifUpperCap = 1
         pDifLowerCap = 1
     else

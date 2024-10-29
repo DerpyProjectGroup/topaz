@@ -723,6 +723,7 @@ public:
     uint16 getRangedDmgRank();              // Get ranged weapond DMG rating used for calculating rank
     uint16 getAmmoDmg();                    // Get ammo DMG rating
     uint16 getWeaponHitCount(bool offhand); // Get PC weapon hit count (Occasionally Attacks N times weapons)
+    float  getRangedPDIF(CLuaBaseEntity* PLuaBaseEntity, bool isCritical = false, float atkMulti = 1, uint16 ignoredDef = 0); // Gets PDIF for an attack.
     uint8  getGuardRate(CLuaBaseEntity* PLuaBaseEntity); // Returns the guard rate for an attack.
     uint8  getBlockRate(CLuaBaseEntity* PLuaBaseEntity); // Returns the block rate for an attack.
     uint8  getParryRate(CLuaBaseEntity* PLuaBaseEntity);
@@ -860,6 +861,7 @@ public:
     void  setDelay(uint16 delay);
     int16 getDelay(); // return the delay value
     void  setDamage(uint16 damage);
+    void  setRangedDamage(uint16 damage);
     bool  hasSpellList();
     void  setSpellList(uint16 spellList);
     void  setAutoAttackEnabled(bool state);   // halts/resumes auto attack of entity
