@@ -283,7 +283,9 @@ xi.job_utils.beastmaster.onAbilityCheckReward = function(player, target, ability
         local id = player:getEquipID(xi.slot.AMMO)
         if
             id >= xi.item.PET_FOOD_ALPHA_BISCUIT and
-            id <= xi.item.PET_FOOD_THETA_BISCUIT
+            id <= xi.item.PET_FOOD_THETA_BISCUIT or
+            id == xi.item.PET_ROBORANT or
+            id == xi.item.PET_POULTICE
         then
             return 0, 0
         else
@@ -305,6 +307,9 @@ xi.job_utils.beastmaster.onUseAbilityReward = function(player, target, ability)
     local pet              = player:getPet()
     local petCurrentHP     = pet:getHP()
     local petMaxHP         = pet:getMaxHP()
+    local tick             = 3
+    local petRoborant      = false
+    local petPoultice      = false
 
     -- Need to start to calculate the HP to restore to the pet.
     -- Please note that I used this as base for the calculations:
@@ -359,6 +364,17 @@ xi.job_utils.beastmaster.onUseAbilityReward = function(player, target, ability)
             regenAmount    = 20
             totalHealing   = math.floor(minimumHealing + 4 * (playerMnd - 55))
         end,
+
+        [xi.item.PET_ROBORANT] = function()
+            petRoborant        = true
+        end,
+
+        [xi.item.PET_POULTICE] = function()
+            petPoultice    = true
+            regenAmount    = petMaxHP * 0.01
+            tick           = 10
+            regenTime      = 300
+        end,
     }
 
     -- Now calculating the bonus based on gear.
@@ -397,37 +413,57 @@ xi.job_utils.beastmaster.onUseAbilityReward = function(player, target, ability)
             pet:delStatusEffect(xi.effect.SILENCE)
         end,
     }
+    if petRoborant == true then
+        local erasedEffect = pet:eraseStatusEffect()
+        if erasedEffect == xi.effect.NONE then
+            ability:setMsg(xi.msg.basic.NO_EFFECT) -- no effect
+        else
+            if erasedEffect then
+                ability:setMsg(xi.msg.basic.NONE)
+                player:messageBasic(xi.msg.basic.JA_REMOVE_EFFECT, 78, erasedEffect, pet)
+                player:removeAmmo()
+            end
+        end
 
-    -- Adding bonus to the total to heal.
-    if target:hasStatusEffect(xi.effect.CURSE_II) then
-        target:messageBasic(xi.msg.basic.NO_EFFECT)
-    else
+        return erasedEffect
+    else if petPoultice == true then
+        ability:setMsg(xi.msg.basic.NONE)
+        pet:delStatusEffectSilent(xi.effect.REGEN)
+        pet:addStatusEffect(xi.effect.REGEN, regenAmount, tick, regenTime) -- 3 = tick, each 3 seconds.
+        player:messageBasic(xi.msg.basic.JA_RECEIVES_EFFECT_2, 78, xi.effect.REGEN, pet)
+        player:removeAmmo()
+    else if
+        petRoborant == false and
+        petPoultice == false
+    then
+         -- Adding bonus to the total to heal.
+        if target:hasStatusEffect(xi.effect.CURSE_II) then
+                player:removeAmmo()
+                return ability:setMsg(xi.msg.basic.JA_NO_EFFECT)
+            end
+        end
         if
             rewardHealingMod ~= nil and
             rewardHealingMod > 0
         then
             totalHealing = totalHealing + math.floor(totalHealing * rewardHealingMod / 100)
         end
-
         local diff = petMaxHP - petCurrentHP
-
         if diff < totalHealing then
             totalHealing = diff
         end
-
         pet:addHP(totalHealing)
         pet:wakeUp()
-
         -- Apply regen xi.effect.
-
-        pet:delStatusEffect(xi.effect.REGEN)
-        pet:addStatusEffect(xi.effect.REGEN, regenAmount, 3, regenTime) -- 3 = tick, each 3 seconds.
+        pet:delStatusEffectSilent(xi.effect.REGEN)
+        pet:addStatusEffect(xi.effect.REGEN, regenAmount, tick, regenTime) -- 3 = tick, each 3 seconds.
+        player:messageBasic(xi.msg.basic.JA_RECEIVES_EFFECT_2, 78, xi.effect.REGEN, pet)
         player:removeAmmo()
-
         pet:updateEnmityFromCure(pet, totalHealing)
     end
 
-    return totalHealing
+        return totalHealing
+    end
 end
 
 -- On Ability Check Unleash

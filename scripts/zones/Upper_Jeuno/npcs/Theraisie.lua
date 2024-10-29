@@ -11,7 +11,7 @@ entity.onTrade = function(player, npc, trade)
 end
 
 entity.onTrigger = function(player, npc)
-    local stock =
+    --[[local stock =  -- Default Shop
     {
         21444,  200,    -- Livid Broth
         21445,  344,    -- Lyrical Broth
@@ -35,6 +35,33 @@ entity.onTrigger = function(player, npc)
         17023, 2000,    -- Pet Food Theta
         19251,  300,    -- Pet Roborant
         19252,  250,    -- Pet Poultice
+    }]]
+
+    local stock =
+    -- ItemID,                            Price
+    {
+        xi.item.JUG_OF_CARROT_BROTH,       200,
+        xi.item.JUG_OF_HERBAL_BROTH,       344,
+        xi.item.JUG_OF_HUMUS,              519,
+        xi.item.JUG_OF_MEAT_BROTH,         700,
+        xi.item.JUG_OF_GRASSHOPPER_BROTH,  675,
+        xi.item.JUG_OF_CARRION_BROTH,      630,
+        xi.item.JUG_OF_BUG_BROTH,          625,
+        xi.item.JUG_OF_MOLE_BROTH,         978,
+        xi.item.JUG_OF_TREE_SAP,           601,
+        xi.item.JUG_OF_ANTICA_BROTH,       828,
+        xi.item.JUG_OF_FISH_BROTH,         604,
+        xi.item.JUG_OF_BLOOD_BROTH,       1026,
+        xi.item.PET_FOOD_ALPHA_BISCUIT,    100,    -- Pet Food Alpha
+        xi.item.PET_FOOD_BETA_BISCUIT,     300,    -- Pet Food Beta
+        xi.item.PET_FOOD_GAMMA_BISCUIT,    500,    -- Pet Food Gamma
+        xi.item.PET_FOOD_DELTA_BISCUIT,    850,    -- Pet Food Delta
+        xi.item.PET_FOOD_EPSILON_BISCUIT, 1000,    -- Pet Food Epsilon
+        xi.item.PET_FOOD_ZETA_BISCUIT,    1250,    -- Pet Food Zeta
+        -- xi.item.PET_FOOD_ETA_BISCUIT,     1500,    -- Pet Food Eta
+        -- xi.item.PET_FOOD_THETA_BISCUIT,   2000,    -- Pet Food Theta
+        xi.item.PET_ROBORANT,              500,
+        xi.item.PET_POULTICE,              250,
     }
 
     player:showText(npc, ID.text.MP_SHOP_DIALOG)

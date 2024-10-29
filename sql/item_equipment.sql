@@ -8944,7 +8944,7 @@ INSERT INTO `item_equipment` VALUES (19248,'lucky_coin',76,0,2494498,0,0,0,8,0,0
 INSERT INTO `item_equipment` VALUES (19249,'thew_bomblet',78,0,2500642,0,0,0,8,0,0,0);
 INSERT INTO `item_equipment` VALUES (19250,'witchstone',79,0,1589788,0,0,0,8,0,0,0);
 INSERT INTO `item_equipment` VALUES (19251,'pet_roborant',1,0,4194303,0,0,0,8,4,0,0);
-INSERT INTO `item_equipment` VALUES (19252,'pet_poultice',1,0,4194303,0,0,0,8,0,0,0);
+INSERT INTO `item_equipment` VALUES (19252,'pet_poultice',1,0,4194303,0,0,0,8,4,0,0);
 INSERT INTO `item_equipment` VALUES (19253,'ravagers_orb',84,0,1,0,0,0,8,0,0,0);
 INSERT INTO `item_equipment` VALUES (19254,'tantra_tathlum',84,0,2,0,0,0,8,0,0,0);
 INSERT INTO `item_equipment` VALUES (19255,'mavi_tathlum',84,0,32768,0,0,0,8,0,0,0);

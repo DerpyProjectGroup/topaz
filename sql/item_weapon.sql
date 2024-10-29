@@ -2776,8 +2776,8 @@ INSERT INTO `item_weapon` VALUES (19247,'savants_treatise',0,0,0,0,0,0,1,999,0,0
 INSERT INTO `item_weapon` VALUES (19248,'lucky_coin',0,0,0,0,0,0,1,999,0,0);
 INSERT INTO `item_weapon` VALUES (19249,'thew_bomblet',0,0,0,0,0,0,1,999,0,0);
 INSERT INTO `item_weapon` VALUES (19250,'witchstone',0,0,0,0,0,0,1,999,0,0);
-INSERT INTO `item_weapon` VALUES (19251,'pet_roborant',255,0,0,0,0,0,1,84,0,0);
-INSERT INTO `item_weapon` VALUES (19252,'pet_poultice',255,0,0,0,0,0,1,84,6,0);
+INSERT INTO `item_weapon` VALUES (19251,'pet_roborant',0,0,0,0,0,0,1,84,0,0);
+INSERT INTO `item_weapon` VALUES (19252,'pet_poultice',0,0,0,0,0,0,1,84,6,0);
 INSERT INTO `item_weapon` VALUES (19253,'ravagers_orb',0,0,0,0,0,0,1,999,0,0);
 INSERT INTO `item_weapon` VALUES (19254,'tantra_tathlum',0,0,0,0,0,0,1,999,0,0);
 INSERT INTO `item_weapon` VALUES (19255,'mavi_tathlum',0,0,0,0,0,0,1,999,0,0);
