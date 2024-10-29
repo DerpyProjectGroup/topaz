@@ -1328,12 +1328,7 @@ end
 
 xi.cactuarRegimes.checkRegime = function(player, mob, regimeId, index, regimeType)
     local zoneID       = mob:getZoneID()
-    local zoneData     = xi.cactuarRegimes.zoneData[zoneID]
-    local trainingData = zoneData.trainingData[regimeId]
-    local mobLevel     = mob:getMainLvl()
-    local playerLevel = player:getMainLvl()
-    local avgMobLevel  = player:getCharVar('[cactuarRegimes]avgMobLevel')
-    local rewardModifier = 1
+
     -- dead players, or players not on this training regime, get no credit
     -- also prevents error when this function is called onMobDeath from a mob not killed by a player
     if
@@ -1344,6 +1339,13 @@ xi.cactuarRegimes.checkRegime = function(player, mob, regimeId, index, regimeTyp
     then
         return
     end
+
+    local zoneData     = xi.cactuarRegimes.zoneData[zoneID]
+    local trainingData = zoneData.trainingData[regimeId]
+    local mobLevel     = mob:getMainLvl()
+    local playerLevel  = player:getMainLvl()
+    local avgMobLevel  = player:getCharVar('[cactuarRegimes]avgMobLevel')
+    local rewardModifier = 1
 
     -- people in alliance get no fields credit unless FOV_REWARD_ALLIANCE is 1 in settings/main.lua
     if
