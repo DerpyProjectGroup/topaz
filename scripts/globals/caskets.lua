@@ -87,13 +87,24 @@ local casketInfo =
 -----------------------------------
 -- Desc: Helper function for making it easier to read time between spawns.
 -----------------------------------
-local function convertTime(rawTime)
+--[[local function convertTime(rawTime)
     local rawSeconds = tonumber(rawTime)
     local timeTable = { 0, 0, 0 }
 
     timeTable[1] = string.format('%02.f', math.floor(rawSeconds / 3600))
     timeTable[2] = string.format('%02.f', math.floor(rawSeconds / 60 - (timeTable[1] * 60)))
     timeTable[3] = string.format('%02.f', math.floor(rawSeconds - timeTable[1] * 3600 - timeTable[2] * 60))
+
+    return timeTable
+end]]
+
+local function convertTime(rawTime)
+    local rawSeconds = tonumber(rawTime)
+    local timeTable = { '', '', '' }
+
+    timeTable[1] = string.format('%02d', math.floor(rawSeconds / 3600))
+    timeTable[2] = string.format('%02d', math.floor((rawSeconds / 60) % 60))
+    timeTable[3] = string.format('%02d', math.floor(rawSeconds % 60))
 
     return timeTable
 end
@@ -184,7 +195,7 @@ local function dropChance(player)
     --end
 
     if player:hasStatusEffect(xi.effect.PROWESS_CASKET_RATE) then
-        prowessCasketsPower = casketProwessEffect:getPower()
+        prowessCasketsPower = player:getMod(xi.mod.CASKET_RATE_INCREASE) / 100
     end
 
     local rand = math.random()
