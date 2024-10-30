@@ -35,6 +35,7 @@ quest.sections =
                     local xPos = player:getXPos()
                     local zPos = player:getZPos()
 
+                    -- Cutscenes won't start in the docking area. Must be on town side.
                     if zPos <= 29 or zPos >= 38 or xPos <= 16 or xPos >= 32 then
                         if quest:getVar(player, 'Prog') == 0 then
                             return quest:progressEvent(125) -- I know he's out there
@@ -58,7 +59,7 @@ quest.sections =
             {
                 onTrigger = function(player, npc)
                     if quest:getVar(player, 'Prog') == 3 then
-                        return quest:progressEvent(126, xi.item.SAND_CHARM)
+                        return quest:progressEvent(126, xi.item.SAND_CHARM) -- Go get back the sand charm
                     end
                 end,
             },
@@ -95,7 +96,7 @@ quest.sections =
             {
                 onTrade = function(player, npc, trade)
                     if npcUtil.tradeHas(trade, xi.item.SAND_CHARM) then
-                        return quest:progressEvent(127, 0, xi.item.SAND_CHARM)
+                        return quest:progressEvent(127, 0, xi.item.SAND_CHARM) -- hes dead, but he'll be back soon I'm sure
                     end
                 end,
             },
@@ -123,9 +124,9 @@ quest.sections =
             {
                 onTrigger = function(player, npc)
                     if player:getCharVar('SmallDialogByBlandine') == 1 then
-                        return quest:event(128)
+                        return quest:progressEvent(128) -- I stand here and pray for sailors now
                     else
-                        return quest:event(129):replaceDefault()
+                        return quest:event(129):replaceDefault() -- May the sea be kind...
                     end
                 end,
             },
