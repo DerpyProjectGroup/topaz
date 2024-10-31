@@ -3930,7 +3930,13 @@ INSERT INTO `mob_skill_lists` VALUES ('Avatar_Ifrit_WTB',2013,844); -- Waking th
 INSERT INTO `mob_skill_lists` VALUES ('Avatar_Ifrit_WTB',2013,845); -- Waking the Beast, fire iv
 INSERT INTO `mob_skill_lists` VALUES ('Avatar_Ifrit_WTB',2013,847); -- Waking the Beast, meteor_strike
 
--- Next available ID: 2014
+INSERT INTO `mob_skill_lists` VALUES ('Bomb_TOAU',2014,511); -- Berserk
+INSERT INTO `mob_skill_lists` VALUES ('Bomb_TOAU',2014,510); -- Self-destruct
+INSERT INTO `mob_skill_lists` VALUES ('Bomb_TOAU',2014,594); -- Vulcanian Impact
+INSERT INTO `mob_skill_lists` VALUES ('Bomb_TOAU',2014,595); -- Heat Wave
+INSERT INTO `mob_skill_lists` VALUES ('Bomb_TOAU',2014,596); -- Hellstorm
+
+-- Next available ID: 2015
 
 -- ------------------------------------------------------------
 -- Start of Ambuscade section
