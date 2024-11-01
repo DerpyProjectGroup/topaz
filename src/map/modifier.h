@@ -1108,6 +1108,8 @@ enum class Mod
     SENGIKORI_DEBUFF       = 2045, // % Increase to closing skillchain damage and magic bursts. Applied to defender.
     CRYSTAL_YIELD          = 2046, // % Increase to elemental crystal drop rates.
     CASKET_RATE_INCREASE   = 2047, // % Increase to chance of getting treasure casket to appear.
+    TRUE_SHOT_MODIFIER     = 2048, // % Increase to ranged attacks landed when in the "Sweet Spot" of the equipped ranged weapon.
+    CRITHITRATE_RANGED     = 2049, // Raises chance to crit for ranged attacks
     // ITEM_ADDEFFECT_OPTION   = 2045, // Additional parameters for more specific latents required to proc LOCATED ABOVE
 
     // IF YOU ADD ANY NEW MODIFIER HERE, ADD IT IN scripts/enum/mod.lua ASWELL!

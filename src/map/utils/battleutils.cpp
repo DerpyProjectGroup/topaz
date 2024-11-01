@@ -1687,7 +1687,7 @@ namespace battleutils
 
             if (PItem != nullptr && PItem->isType(ITEM_WEAPON))
             {
-                acc = PChar->RACC(PItem->getSkillType());
+                acc = PChar->RACC(PItem->getSkillType(), distance(PChar->loc.p, PDefender->loc.p));
             }
 
             // Check For Ambush Merit - Ranged
@@ -1696,18 +1696,26 @@ namespace battleutils
                 acc += ((CCharEntity*)PAttacker)->PMeritPoints->GetMeritValue(MERIT_AMBUSH, (CCharEntity*)PAttacker);
             }
         }
+        // RACC distance correction to PC automations was removed in March 2010 update
         else if (PAttacker->objtype == TYPE_PET && ((CPetEntity*)PAttacker)->getPetType() == PET_TYPE::AUTOMATON)
         {
-            acc = PAttacker->RACC(SKILL_AUTOMATON_RANGED);
+            acc = PAttacker->RACC(SKILL_AUTOMATON_RANGED, 0, 0, false);
         }
         else if (PAttacker->objtype == TYPE_TRUST)
         {
-            auto archery_acc      = PAttacker->RACC(SKILL_ARCHERY);
-            auto marksmanship_acc = PAttacker->RACC(SKILL_MARKSMANSHIP);
-            auto throwing_acc     = PAttacker->RACC(SKILL_THROWING);
+            auto archery_acc      = PAttacker->RACC(SKILL_ARCHERY, distance(PAttacker->loc.p, PDefender->loc.p));
+            auto marksmanship_acc = PAttacker->RACC(SKILL_MARKSMANSHIP, distance(PAttacker->loc.p, PDefender->loc.p));
+            auto throwing_acc     = PAttacker->RACC(SKILL_THROWING, distance(PAttacker->loc.p, PDefender->loc.p));
 
             acc = std::max({ archery_acc, marksmanship_acc, throwing_acc });
         }
+        // monsters also use distance correction
+        else if (PAttacker->objtype == TYPE_MOB)
+        {
+            // can pass in any skill because mobs get their A+ skill from Mod::RACC
+            acc = PAttacker->RACC(SKILL_ARCHERY, distance(PAttacker->loc.p, PDefender->loc.p));
+        }
+
         // Check for Yonin evasion bonus while in front of target
         if (PDefender->StatusEffectContainer->HasStatusEffect(EFFECT_YONIN) && infront(PDefender->loc.p, PAttacker->loc.p, 64))
         {
@@ -1742,7 +1750,7 @@ namespace battleutils
 
             if (PItem != nullptr && PItem->isType(ITEM_WEAPON))
             {
-                rAttack = PChar->RATT(PItem->getSkillType(), PItem->getILvlSkill());
+                rAttack = PChar->RATT(PItem->getSkillType(), distance(PChar->loc.p, PDefender->loc.p), PItem->getILvlSkill());
             }
             else
             {
@@ -1754,19 +1762,20 @@ namespace battleutils
                 }
                 else
                 {
-                    rAttack = PChar->RATT(PItem->getSkillType(), PItem->getILvlSkill());
+                    rAttack = PChar->RATT(PItem->getSkillType(), distance(PChar->loc.p, PDefender->loc.p), PItem->getILvlSkill());
                 }
             }
         }
+        // RATT distance correction to PC automations was removed in December 2011 update
         else if (PAttacker->objtype == TYPE_PET && ((CPetEntity*)PAttacker)->getPetType() == PET_TYPE::AUTOMATON)
         {
-            rAttack = PAttacker->RATT(SKILL_AUTOMATON_RANGED);
+            rAttack = PAttacker->RATT(SKILL_AUTOMATON_RANGED, 0, 0, false);
         }
-        else
+        // monsters also use distance correction (use their highest skill)
+        else if (PAttacker->objtype == TYPE_MOB)
         {
-            // assume mobs capped
-            //rAttack = battleutils::GetMaxSkill(SKILL_ARCHERY, JOB_RNG, PAttacker->GetMLevel());
-            rAttack = PAttacker->RATT(SKILL_ARCHERY);
+            // can pass in any skill because mobs get their A+ skill from Mod::RACC
+            rAttack = PAttacker->RATT(SKILL_ARCHERY, distance(PAttacker->loc.p, PDefender->loc.p));
         }
         rAttack = static_cast<uint16>(rAttack * atkMulti);
 
@@ -2256,6 +2265,7 @@ namespace battleutils
         int32       baseDamage = damage;
         ATTACK_TYPE attackType = ATTACK_TYPE::PHYSICAL;
         DAMAGE_TYPE damageType = DAMAGE_TYPE::NONE;
+
         if (PAttacker->StatusEffectContainer->HasStatusEffect(EFFECT_FORMLESS_STRIKES) && !isCounter)
         {
             attackType        = ATTACK_TYPE::SPECIAL;
@@ -2278,7 +2288,19 @@ namespace battleutils
 
             if (isRanged)
             {
+                float distanceCorrection = luautils::GetRangedDistanceCorrection(PAttacker, distance(PAttacker->loc.p, PDefender->loc.p));
+                float damageModifier     = 1.00f;
+                float trueShotMod        = PAttacker->getMod(Mod::TRUE_SHOT_MODIFIER) / 100.0f;
                 attackType = ATTACK_TYPE::RANGED;
+                if (PAttacker->getMod(Mod::TRUE_SHOT_MODIFIER) > 0)
+                {
+                    if (distanceCorrection == 1)
+                    {
+                        damageModifier += trueShotMod;
+                        damage *= damageModifier;
+                    }
+                }
+
                 damage     = RangedDmgTaken(PDefender, damage, damageType, isCovered);
             }
             else
@@ -3147,6 +3169,7 @@ namespace battleutils
 
         critHitRate += GetAGICritBonus(PAttacker, PDefender);
         critHitRate += PAttacker->getMod(Mod::CRITHITRATE);
+        critHitRate += PAttacker->getMod(Mod::CRITHITRATE_RANGED);
         critHitRate -= PDefender->getMod(Mod::CRITICAL_HIT_EVASION); // Similar to merits. However, it can be possitive or negative. When mod is negative, it raises crit-hit-rate.
         critHitRate = std::clamp(critHitRate, 0, 100);
 
@@ -4865,7 +4888,7 @@ namespace battleutils
         //     return 0;
         // }
 
-        uint8 lvl       = PChar->jobs.job[JOB_RNG]; // Get Ranger level of char
+        uint8 lvl = PChar->jobs.job[JOB_RNG]; // Get Ranger level of char
         uint8 shotCount = 0;                        // the total number of extra hits
 
         if (PChar->GetSJob() == JOB_RNG)

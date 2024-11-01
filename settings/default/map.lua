@@ -289,6 +289,9 @@ xi.settings.map =
     -- for everone. Setting it to 0 enables for everyone.
     REPORT_LUA_ERRORS_TO_PLAYER_LEVEL = 0,
 
+    -- Enable/disable distance correction to ranged attack and accuracy
+    RANGED_DISTANCE_CORRECTION = false,
+
     -- Enable/disable players having multiple copies of rare items.
     DISABLE_RARE_ITEM_LIMIT = true,
 }

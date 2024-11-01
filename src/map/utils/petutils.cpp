@@ -745,6 +745,8 @@ namespace petutils
         PMob->setModifier(Mod::EVA, mobutils::GetBaseDefEva(PMob, GetJugEvasionRank(PMob)));
         PMob->setModifier(Mod::ATT, mobutils::GetBaseSkill(PMob, PMob->attRank));
         PMob->setModifier(Mod::ACC, mobutils::GetBaseSkill(PMob, PMob->accRank));
+        PMob->setModifier(Mod::RATT, mobutils::GetBaseSkill(PMob, PMob->attRank));
+        PMob->setModifier(Mod::RACC, mobutils::GetBaseSkill(PMob, PMob->accRank));
 
         ApplyJugStatCorrections(PMob);
     }

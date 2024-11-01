@@ -1045,6 +1045,7 @@ xi.mod =
     SENGIKORI_DEBUFF         = 2045, -- % Increase to closing skillchain damage and magic bursts. Applied to defender.
     CRYSTAL_YIELD            = 2046, -- % Increase to elemental crystal drop rates.
     CASKET_RATE_INCREASE     = 2047, -- % Increase to chance of getting treasure casket to appear.
+    TRUE_SHOT_MODIFIER       = 2048, -- % Increase to ranged attacks landed when in the "Sweet Spot" of the equipped ranged weapon.
     -- IF YOU ADD ANY NEW MODIFIER HERE, ADD IT IN src/map/modifier.h ASWELL!
 
     -- The spares take care of finding the next ID to use so long as we don't forget to list IDs that have been freed up by refactoring.

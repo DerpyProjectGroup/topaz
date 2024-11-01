@@ -45,6 +45,7 @@
 #include "roe.h"
 #include "status_effect_container.h"
 #include "utils/battleutils.h"
+#include "utils/mobutils.h"
 #include "utils/petutils.h"
 #include "utils/puppetutils.h"
 #include "utils/zoneutils.h"
@@ -489,6 +490,13 @@ uint16 CBattleEntity::GetRangedWeaponDmg()
 {
     TracyZoneScoped;
     uint16 dmg = 0;
+
+    if (objtype == TYPE_MOB)
+    {
+        auto* PMob = static_cast<CMobEntity*>(this);
+        return (mobutils::GetWeaponDamage(PMob, SLOT_RANGED) + getMod(Mod::RANGED_DMG_RATING)) * luautils::GetRangedDistanceCorrection(this, distance(this->loc.p, this->GetBattleTarget()->loc.p));
+    }
+
     if (auto* weapon = dynamic_cast<CItemWeapon*>(m_Weapons[SLOT_RANGED]))
     {
         if ((weapon->getReqLvl() > GetMLevel()) && objtype == TYPE_PC)
@@ -742,15 +750,23 @@ uint16 CBattleEntity::ATT(SLOTTYPE slot)
     auto* weapon = dynamic_cast<CItemWeapon*>(m_Weapons[slot]);
     if (weapon && weapon->isTwoHanded())
     {
-        ATT += (STR() * 3) / 4;
+        ATT += (STR());
     }
     else if (weapon && weapon->isHandToHand())
     {
-        ATT += (STR() * 5) / 8;
-    }
-    else
-    {
         ATT += (STR() * 3) / 4;
+    }
+    else if (slot == SLOT_RANGED || slot == SLOT_AMMO) // Ranged/ammo weapon.
+    {
+        ATT += STR();
+    }
+    else if (slot == SLOT_MAIN) // 1-handed weapon in main slot.
+    {
+        ATT += STR();
+    }
+    else // 1-handed weapon in sub slot.
+    {
+        ATT += STR() / 2;
     }
 
     if (this->StatusEffectContainer->HasStatusEffect(EFFECT_ENDARK))
@@ -773,13 +789,20 @@ uint16 CBattleEntity::ATT(SLOTTYPE slot)
     }
     else if (this->objtype == TYPE_PET && ((CPetEntity*)this)->getPetType() == PET_TYPE::AUTOMATON)
     {
-        ATT += this->GetSkill(SKILL_AUTOMATON_MELEE);
+        //ATT += this->GetSkill(SKILL_AUTOMATON_MELEE);
+        int16 ATT = this->GetSkill(SKILL_AUTOMATON_MELEE) + 8;
+        ATT       = (ATT > 200 ? (int16)(((ATT - 200) * 0.9) + 200) : ATT);
+        ATT += (int16)(STR());
+        ATT += m_modStat[Mod::ATT];
+
+        ATT = ATT + std::min<int16>((ATT * m_modStat[Mod::FOOD_ATTP] / 100), m_modStat[Mod::FOOD_ATT_CAP]);
+        return std::max<int16>(0, ATT + (ATT * ATTP / 100));
     }
     // use max to prevent underflow
     return std::max(1, ATT + (ATT * ATTP / 100) + std::min<int16>((ATT * m_modStat[Mod::FOOD_ATTP] / 100), m_modStat[Mod::FOOD_ATT_CAP]));
 }
 
-uint16 CBattleEntity::RATT(uint8 skill, uint16 bonusSkill)
+uint16 CBattleEntity::RATT(uint8 skill, float distance, uint16 bonusSkill, bool withDistanceCorrection)
 {
     auto* PWeakness = StatusEffectContainer->GetStatusEffect(EFFECT_WEAKNESS);
     if (PWeakness && PWeakness->GetPower() >= 2)
@@ -788,13 +811,42 @@ uint16 CBattleEntity::RATT(uint8 skill, uint16 bonusSkill)
     }
 
     // make sure to not use fishing skill
-    uint16 baseSkill = skill == SKILL_FISHING ? 0 : GetSkill(skill);
-    int32  RATT      = 8 + baseSkill + bonusSkill + m_modStat[Mod::RATT] + battleutils::GetRangedAttackBonuses(this) + (STR() * 3) / 4;
+    //uint16 baseSkill = skill == SKILL_FISHING ? 0 : GetSkill(skill);
+    //int32  RATT      = 8 + baseSkill + bonusSkill + m_modStat[Mod::RATT] + battleutils::GetRangedAttackBonuses(this) + (STR() * 3) / 4;
+    int32  RATT = 8 + GetSkill(skill == SKILL_FISHING ? 0 : skill) + bonusSkill;
+
+    if (withDistanceCorrection && settings::get<bool>("map.RANGED_DISTANCE_CORRECTION"))
+    {
+        RATT = int32((float)RATT * luautils::GetRangedDistanceCorrection(this, distance));
+    }
+
+    if (stats.STR + m_modStat[Mod::STR] > STR())
+    {
+        RATT += std::max<int16>((999 - stats.STR), 0);
+    }
+    else
+    {
+        RATT += m_modStat[Mod::STR];
+    }
+
+    if (this->objtype == TYPE_PET && ((CPetEntity*)this)->getPetType() == PET_TYPE::AUTOMATON)
+    {
+        int16 RATT = this->GetSkill(SKILL_AUTOMATON_RANGED) + 8;
+        RATT       = (RATT > 200 ? (int16)(((RATT - 200) * 0.9) + 200) : RATT);
+        RATT += (int16)(STR());
+        RATT += m_modStat[Mod::RATT] + battleutils::GetRangedAttackBonuses(this);
+
+        RATT = RATT + std::min<int16>((RATT * m_modStat[Mod::FOOD_RATTP] / 100), m_modStat[Mod::FOOD_RATT_CAP]);
+        return std::max<int16>(0, RATT + (RATT * m_modStat[Mod::RATTP] / 100));
+    }
+
+    RATT += m_modStat[Mod::RATT] + battleutils::GetRangedAttackBonuses(this);
+
     // use max to prevent any underflow
     return std::max(0, RATT + (RATT * m_modStat[Mod::RATTP] / 100) + std::min<int16>((RATT * m_modStat[Mod::FOOD_RATTP] / 100), m_modStat[Mod::FOOD_RATT_CAP]));
 }
 
-uint16 CBattleEntity::RACC(uint8 skill, uint16 bonusSkill)
+uint16 CBattleEntity::RACC(uint8 skill, float distance, uint16 bonusSkill, bool withDistanceCorrection)
 {
     TracyZoneScoped;
     auto* PWeakness = StatusEffectContainer->GetStatusEffect(EFFECT_WEAKNESS);
@@ -811,9 +863,39 @@ uint16 CBattleEntity::RACC(uint8 skill, uint16 bonusSkill)
     {
         RACC = (int16)(200 + (skill_level - 200) * 0.9);
     }
+    
+    if (withDistanceCorrection && settings::get<bool>("map.RANGED_DISTANCE_CORRECTION") &&
+        !this->StatusEffectContainer->HasStatusEffect(EFFECT_SHARPSHOT))
+    {
+        RACC = int16((float)RACC * luautils::GetRangedDistanceCorrection(this, distance));
+    }
+
+    if (stats.AGI + m_modStat[Mod::AGI] > AGI())
+    {
+        RACC += std::max<int16>((999 - stats.AGI) * 0.75, 0);
+    }
+    else
+    {
+        RACC += (m_modStat[Mod::AGI] * 0.75);
+    }
+
+    if (this->objtype == TYPE_PET && ((CPetEntity*)this)->getPetType() == PET_TYPE::AUTOMATON)
+    {
+        {
+            int16 RACC = this->GetSkill(SKILL_AUTOMATON_RANGED);
+            RACC       = (RACC > 200 ? (int16)(((RACC - 200) * 0.9) + 200) : RACC);
+            RACC += (int16)(AGI() * 3) / 4;
+            RACC += m_modStat[Mod::RACC];
+            RACC += battleutils::GetRangedAccuracyBonuses(this);
+
+            RACC = RACC + std::min<int16>((RACC * m_modStat[Mod::FOOD_RACCP] / 100), m_modStat[Mod::FOOD_RACC_CAP]);
+            return std::max<int16>(0, RACC);
+        }
+    }
+
     RACC += getMod(Mod::RACC);
     RACC += battleutils::GetRangedAccuracyBonuses(this);
-    RACC += (AGI() * 3) / 4;
+
     // use max to prevent underflow
     return std::max(0, RACC + std::min<int16>(((100 + getMod(Mod::FOOD_RACCP) * RACC) / 100), getMod(Mod::FOOD_RACC_CAP)));
 }
@@ -900,7 +982,7 @@ uint16 CBattleEntity::ACC(uint8 attackNumber, uint8 offsetAccuracy)
     {
         int16 ACC = this->GetSkill(SKILL_AUTOMATON_MELEE);
         ACC       = (ACC > 200 ? (int16)(((ACC - 200) * 0.9) + 200) : ACC);
-        ACC += (int16)(DEX() * 0.5);
+        ACC += (int16)(DEX() * 0.75);
         ACC += m_modStat[Mod::ACC] + offsetAccuracy;
 
         if (this->StatusEffectContainer->HasStatusEffect(EFFECT_ENLIGHT))
@@ -937,9 +1019,21 @@ uint16 CBattleEntity::EVA()
 {
     int16 evasion = 1;
 
-    if (this->objtype == TYPE_MOB || this->objtype == TYPE_PET)
+    if (this->objtype == TYPE_MOB || (this->objtype == TYPE_PET && ((CPetEntity*)this)->getPetType() != PET_TYPE::AUTOMATON))
     {
         evasion = m_modStat[Mod::EVA]; // Mobs and pets base evasion is based off the EVA mod
+    }
+    else if (this->objtype == TYPE_PET && ((CPetEntity*)this)->getPetType() == PET_TYPE::AUTOMATON)
+    {
+        evasion = GetSkill(SKILL_EVASION);
+
+        // Player only evasion calculation
+        if (evasion > 200)
+        {
+            evasion = 200 + (evasion - 200) * 0.9;
+        }
+        evasion += AGI() / 2;
+        evasion += m_modStat[Mod::EVA];
     }
     else // If it is a player then evasion = SKILL_EVASION
     {

@@ -1027,6 +1027,9 @@ xi.weaponskills.doRangedWeaponskill = function(attacker, target, wsID, wsParams,
     end
 
     calcParams.hitRate = xi.weaponskills.getRangedHitRate(attacker, target, calcParams.bonusAcc + 10)
+    --[[if wsParams.melee == true then
+        calcParams.hitRate = xi.weaponskills.getHitRate(attacker, target, calcParams.bonusAcc + 10)
+    end]]
 
     -- Send our params off to calculate our raw WS damage, hits landed, and shadows absorbed
     calcParams = xi.weaponskills.calculateRawWSDmg(attacker, target, wsID, tp, action, wsParams, calcParams)
