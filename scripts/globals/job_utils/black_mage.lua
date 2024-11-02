@@ -24,10 +24,8 @@ end
 -- Ability Use Functions
 -----------------------------------
 xi.job_utils.black_mage.useCascade = function(player, target, ability)
-    local tP    = player:getTP()
-    local power = tP / 10
-
-    player:addStatusEffect(xi.effect.CASCADE, power, 0, 60)
+    -- Damage modifiers handled in damage_spell.lua
+    player:addStatusEffect(xi.effect.CASCADE, 25, 0, 60, 0, 0)
 end
 
 xi.job_utils.black_mage.useElementalSeal = function(player, target, ability)

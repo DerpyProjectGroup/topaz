@@ -328,11 +328,6 @@ xi.spells.damage.calculateBaseDamage = function(caster, target, spellId, spellGr
     -- Bonus to spell base damage from gear.
     baseSpellDamageBonus = baseSpellDamageBonus + caster:getMod(xi.mod.MAGIC_DAMAGE)
 
-    if caster:hasStatusEffect(xi.effect.CASCADE) then
-        caster:delStatusEffectSilent(xi.effect.CASCADE)
-        caster:setTP(0)
-    end
-
     -- Banish: Afflatus Misery
     if caster:hasStatusEffect(xi.effect.AFFLATUS_MISERY) and
         (spellId >= xi.magic.spell.BANISH and spellId <= xi.magic.spell.BANISH_V) or
@@ -374,7 +369,25 @@ xi.spells.damage.calculateBaseDamage = function(caster, target, spellId, spellGr
         caster:setMod(xi.mod.AFFLATUS_MISERY, 0)
     end
 
-    
+    -- print('baseSpellDamage', baseSpellDamage)
+    if
+        caster:hasStatusEffect(xi.effect.CASCADE)
+    then
+        local tP                 = caster:getTP()
+        local cascadeDamageBonus = 0
+
+        if
+            (spellId >= xi.magic.spell.GEOHELIX and spellId <= xi.magic.spell.LUMINOHELIX) or
+            (spellId >= xi.magic.spell.GEOHELIX_II and spellId <= xi.magic.spell.LUMINOHELIX_II)
+        then
+            cascadeDamageBonus = (tP / 3000) * 1.5
+        else
+            cascadeDamageBonus = (tP / 3000) * 0.50
+        end
+        baseSpellDamage = math.floor(baseSpellDamage + (baseSpellDamage * cascadeDamageBonus))
+        -- print('SpellDamage', baseSpellDamage)
+        -- print('cascadeDamageBonus', cascadeDamageBonus)
+    end
 
     -----------------------------------
     -- STEP 4: Spell Damage
@@ -397,10 +410,10 @@ xi.spells.damage.calculateBaseDamage = function(caster, target, spellId, spellGr
 
     -- Kaustra
     elseif spellId == xi.magic.spell.KAUSTRA then
-        baseSpellDamage = math.floor(caster:getMainLvl() * 0.67) / 10
-        statDiffBonus   = math.floor(statDiffBonus)
+        baseSpellDamage = math.floor(caster:getMainLvl() * 67 / 100)
+        statDiffBonus   = math.floor(statDiffBonus * 67 / 100) + 37
 
-        spellDamage = math.floor(baseSpellDamage * (baseSpellDamageBonus + statDiffBonus))
+        spellDamage = math.floor(baseSpellDamage * (baseSpellDamageBonus + statDiffBonus) / 10)
     end
 
     return utils.clamp(spellDamage, 0, 99999)
@@ -923,6 +936,13 @@ xi.spells.damage.calculateIfMagicBurstBonus = function(caster, target, spellId, 
     local magicBurstBonus = 1 -- The variable we want to calculate
     local cappedBonus     = caster:getMod(xi.mod.MAGIC_BURST_BONUS_CAPPED) / 100
     local uncappedBonus   = caster:getMod(xi.mod.MAGIC_BURST_BONUS_UNCAPPED) / 100
+    local cascadeBonus    = 0
+
+    if caster:hasStatusEffect(xi.effect.CASCADE) then
+        local tP    = caster:getTP()
+        cascadeBonus = (tP * 0.001) / 100 -- MAGIC_BURST_BONUS_UNCAPPED
+        -- print('Bonus:', cascadeBonus)
+    end
 
     -- TODO: merge spellFamily and spell ID tables into one table in spell_data.lua, then maybe add a family for all AM and use spellFamily here instead of spellID
     if spellId >= xi.magic.spell.FLARE and spellId <= xi.magic.spell.FLOOD_II then
@@ -941,7 +961,7 @@ xi.spells.damage.calculateIfMagicBurstBonus = function(caster, target, spellId, 
     uncappedBonus = uncappedBonus + caster:getJobPointLevel(xi.jp.MAGIC_BURST_DMG_BONUS) / 100
 
     -- Get final multiplier
-    magicBurstBonus = magicBurstBonus + cappedBonus + uncappedBonus
+    magicBurstBonus = magicBurstBonus + cappedBonus + uncappedBonus + cascadeBonus
 
     return magicBurstBonus
 end
@@ -1068,17 +1088,17 @@ xi.spells.damage.useDamageSpell = function(caster, target, spell)
         end
     end
 
+    if caster:hasStatusEffect(xi.effect.CASCADE) then
+        caster:delStatusEffectSilent(xi.effect.CASCADE)
+        caster:setTP(0)
+    end
+
     -- Calculate finalDamage. It MUST be floored after EACH multiplication.
     finalDamage = math.floor(spellDamage * multipleTargetReduction)
     finalDamage = math.floor(finalDamage * elementalStaffBonus)
     finalDamage = math.floor(finalDamage * magianAffinity)
     finalDamage = math.floor(finalDamage * sdt)
     finalDamage = math.floor(finalDamage * resist)
-
-    if not caster:hasStatusEffect(xi.effect.IMMANENCE) then
-    finalDamage = math.floor(finalDamage * magicBurst)
-    finalDamage = math.floor(finalDamage * magicBurstBonus)
-    end
     finalDamage = math.floor(finalDamage * dayAndWeather)
     finalDamage = math.floor(finalDamage * magicBonusDiff)
     finalDamage = math.floor(finalDamage * targetMagicDamageAdjustment)
@@ -1094,8 +1114,10 @@ xi.spells.damage.useDamageSpell = function(caster, target, spell)
     finalDamage = math.floor(finalDamage * helixMeritMultiplier)
     finalDamage = math.floor(finalDamage * areaOfEffectResistance)
     finalDamage = math.floor(finalDamage * nukeAbsorbOrNullify)
-    finalDamage = math.floor(finalDamage * magicBurst)
-    finalDamage = math.floor(finalDamage * magicBurstBonus)
+    if not caster:hasStatusEffect(xi.effect.IMMANENCE) then
+        finalDamage = math.floor(finalDamage * magicBurst)
+        finalDamage = math.floor(finalDamage * magicBurstBonus)
+    end
 
     if 
         target:getAllegiance() == 2 or

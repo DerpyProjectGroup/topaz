@@ -177,6 +177,7 @@ INSERT INTO `traits` VALUES (24,'clear mind',4,96,6,71,18,'ABYSSEA',0);
 INSERT INTO `traits` VALUES (24,'clear mind',4,96,6,295,3,'ABYSSEA',0);
 INSERT INTO `traits` VALUES (109,'occult acumen',4,25,1,902,25,NULL,0); -- BLM Level 25 Mod:25
 INSERT INTO `traits` VALUES (109,'occult acumen',4,50,2,902,50,NULL,0); -- BLM Level 45 Mod:50
+INSERT INTO `traits` VALUES (109,'occult acumen',4,65,3,902,75,NULL,0); -- BLM Level 65 Mod:75
 INSERT INTO `traits` VALUES (110,'mag. burst bonus',4,45,1,274,5,NULL,0);
 INSERT INTO `traits` VALUES (110,'mag. burst bonus',4,58,2,274,7,NULL,0);
 INSERT INTO `traits` VALUES (110,'mag. burst bonus',4,71,3,274,9,NULL,0);
