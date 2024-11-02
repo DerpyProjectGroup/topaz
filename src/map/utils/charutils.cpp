@@ -4365,12 +4365,12 @@ namespace charutils
 
                     if (isInSigilZone)
                     {
-                        exp *= 1.75f; // 50% XP Bonus in WOTG Areas
+                        exp *= 1.00f; // 0% XP Bonus in WOTG Areas
                     }
 
                     if (isInSanctionZone)
                     {
-                        exp *= 1.75f; // 50% XP Bonus in TOAU Areas
+                        exp *= 1.00f; // 0% XP Bonus in TOAU Areas
                     }
 
                     if (PMob->getMobMod(MOBMOD_EXP_BONUS))

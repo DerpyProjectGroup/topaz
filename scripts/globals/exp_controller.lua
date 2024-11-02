@@ -10,7 +10,7 @@ xi.exp_controller.onInitialize = function(zone)
     local mobs = zone:getMobs() -- Gives mobs a zone wide EXP bonus. Used for COP Signet Zones without FoV/GoV.
     if next(mobs) ~= nil then -- Check to see if table is empty
         for _, mob in ipairs(mobs) do
-            mob:addMobMod(xi.mobMod.EXP_BONUS, 75)
+            mob:addMobMod(xi.mobMod.EXP_BONUS, 0)
         end
     end
 end
