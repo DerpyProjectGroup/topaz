@@ -1,9 +1,13 @@
 -----------------------------------
 -- Zone: La_Vaule_[S] (85)
 -----------------------------------
+local ID = zones[xi.zone.LA_VAULE_S]
+-----------------------------------
 local zoneObject = {}
 
 zoneObject.onInitialize = function(zone)
+    -- NM Persistence
+    xi.mob.nmTODPersistCache(zone, ID.mob.COGTOOTH_SKAGNOGG)
 end
 
 zoneObject.onZoneIn = function(player, prevZone)

@@ -34,13 +34,14 @@ xi.mobskills.shadowBehavior =
 
 xi.mobskills.physicalTpBonus =
 {
-    ACC_VARIES  = 0,
-    ATK_VARIES  = 1,
-    DMG_VARIES  = 2,
-    CRIT_VARIES = 3,
-    DMG_FLAT    = 4,
-    RANGED      = 5,
-    NONE        = 6,
+    NONE           = 0,
+    ACC_VARIES     = 1,
+    ATK_VARIES     = 2,
+    DMG_VARIES     = 3,
+    CRIT_VARIES    = 4,
+    DMG_FLAT       = 5,
+    RANGED         = 6,
+    ENFEEB_SPECIAL = 7, -- Debuffs on specific hits. (See: Tornado Edge)
 }
 
 xi.mobskills.magicalTpBonus =
@@ -280,18 +281,11 @@ xi.mobskills.mobRangedMove = function(mob, target, skill, numHits, accMod, dmgMo
     if chance <= firstHitChance then -- A hit landed (ASB)
         local isCrit = math.random() < critRate
 
-        -- print(critRate)
-        -- print(critFTP)
-
         if isCrit then
             pdif = mob:getRangedPDIF(target, true, attMod, ignoreDef)
-            print('CRIT: True')
         else
             pdif = mob:getRangedPDIF(target, false, attMod, ignoreDef)-- xi.combat.physical.calculateMeleePDIF(mob, target, weaponType, attMod)
-            print('CRIT: False')
         end
-        print('PDIF', pdif)
-        print('ATT Mod:', attMod)
 
         finaldmg = finaldmg + hitdamage * pdif
         -- finaldmg = xi.weaponskills.handleBlock(mob, target, finaldmg) -- (ASB)
@@ -450,7 +444,7 @@ xi.mobskills.mobPhysicalMove = function(mob, target, skill, numHits, accMod, dmg
         tpEffect2 == xi.mobskills.physicalTpBonus.RANGED
     then
         base = math.floor(mob:getWeaponDmg() + fStr) -- TODO Seperate DMG rating based on equip slot.
-    elseif 
+    elseif
         tpEffect1 == xi.mobskills.physicalTpBonus.DMG_FLAT or
         tpEffect2 == xi.mobskills.physicalTpBonus.DMG_FLAT
     then
@@ -529,90 +523,75 @@ xi.mobskills.mobPhysicalMove = function(mob, target, skill, numHits, accMod, dmg
     firstHitChance = utils.clamp(firstHitChance, 0.20, 0.95) -- (ASB)
 
     -- Getting PDIF
-    if
-        tpEffect1 == xi.mobskills.physicalTpBonus.ATK_VARIES
-    then
+    if tpEffect1 == xi.mobskills.physicalTpBonus.ATK_VARIES then
         attMod = attMod * xi.mobskills.fTP(skill:getTP(), tpEffect1_ftp100, tpEffect1_ftp200, tpEffect1_ftp300)
-    elseif
-        tpEffect2 == xi.mobskills.physicalTpBonus.ATK_VARIES
-    then
+    elseif tpEffect2 == xi.mobskills.physicalTpBonus.ATK_VARIES then
         attMod = attMod * xi.mobskills.fTP(skill:getTP(), tpEffect2_ftp100, tpEffect2_ftp200, tpEffect2_ftp300)
     end
 
-    -- print(attMod)
-
-    -- TODO: coffratioMod for cannonball
-    
     -- Calculate Critical Hit rate
-    local critRate = 0 -- if no CritPerc value set in mobskill, critRate = 0.
+    local critRate = critPerc or 0 -- Default to 0 unless set otherwise.
 
-    if critPerc == nil then
-        critPerc = 0 -- Default to 0 unless set otherwise.
-    end
-
-    if critPerc then -- Base Critical Hit Rate for Mobskill
+    if critPerc then
         critRate = critPerc
-        --apply ftp
+        -- Apply ftp for critical rate varies
         if tpEffect1 == xi.mobskills.physicalTpBonus.CRIT_VARIES then
             critRate = critRate * xi.mobskills.fTP(skill:getTP(), tpEffect1_ftp100, tpEffect1_ftp200, tpEffect1_ftp300)
         elseif tpEffect2 == xi.mobskills.physicalTpBonus.CRIT_VARIES then
             critRate = critRate * xi.mobskills.fTP(skill:getTP(), tpEffect2_ftp100, tpEffect2_ftp200, tpEffect2_ftp300)
-        else
-            critRate = critRate
         end
     end
+
     local weaponType = mob:getWeaponSkillType(xi.slot.MAIN)
     local pdif = 0
 
-    if chance <= firstHitChance then -- A hit landed (ASB)
+    if chance <= firstHitChance then -- First hit
         local isCrit = math.random() < critRate
-
-        -- print(critRate)
-        -- print(critFTP)
-
-        if isCrit then
-            pdif = xi.combat.physical.calculateMeleePDIF(mob, target, weaponType, attMod, isCrit)
-            -- print('crit true')
-            -- target:printToPlayer(string.format('The attack scores a critical hit!', mob:getName()), xi.msg.channel.SYSTEM_3) -- Debug to see modifier of each hit in a weapon skill.
-
-        else
-            pdif = xi.combat.physical.calculateMeleePDIF(mob, target, weaponType, attMod)
-        end
-
+        pdif = xi.combat.physical.calculateMeleePDIF(mob, target, weaponType, attMod, isCrit)
         finaldmg = finaldmg + hitdamage * pdif
         finaldmg = xi.weaponskills.handleBlock(mob, target, finaldmg) -- (ASB)
         hitslanded = hitslanded + 1
+
+        if
+            (tpEffect1 == xi.mobskills.physicalTpBonus.ENFEEB_SPECIAL or
+            tpEffect2 == xi.mobskills.physicalTpBonus.ENFEEB_SPECIAL) and
+            (skill:getMsg() ~= xi.msg.basic.EVADES and
+            skill:getMsg() ~= xi.msg.basic.SKILL_MISS)
+        then
+            if hitsdone == 1 then
+                target:addStatusEffect(xi.effect.MAX_HP_DOWN, 50, 0, 120)
+            end
+        end
     end
 
-    while hitsdone < numHits do -- (ASB)
+    while hitsdone < numHits do
         chance = math.random()
-        -- If mobskill is not ranged, allow for Parry/Guard chance on the following hit attempts.
-        if
-            tpEffect1 ~= xi.mobskills.physicalTpBonus.RANGED and
-            tpEffect2 ~= xi.mobskills.physicalTpBonus.RANGED
-        then
+
+        if tpEffect1 ~= xi.mobskills.physicalTpBonus.RANGED and tpEffect2 ~= xi.mobskills.physicalTpBonus.RANGED then
             chance = xi.weaponskills.handleParry(mob, target, chance)
             chance = xi.weaponskills.handleGuard(mob, target, chance)
         end
-        
-        if chance <= hitrate then --it hit
-        local isCrit = math.random() < critRate
 
-        -- print(critRate)
-        -- print(critFTP)
-
-        if isCrit then
+        if chance <= hitrate then
+            local isCrit = math.random() < critRate
             pdif = xi.combat.physical.calculateMeleePDIF(mob, target, weaponType, attMod, isCrit)
-            -- target:printToPlayer(string.format('The %s attack scores a critical hit!', mob:getName()), xi.msg.channel.SYSTEM_3) -- Debug to see modifier of each hit in a weapon skill.
-        else
-            pdif = xi.combat.physical.calculateMeleePDIF(mob, target, weaponType, attMod)
-        end
-        
             finaldmg = finaldmg + (hitdamage * pdif)
             finaldmg = xi.weaponskills.handleBlock(mob, target, finaldmg) -- (ASB)
             hitslanded = hitslanded + 1
+
+            if tpEffect1 == xi.mobskills.physicalTpBonus.ENFEEB_SPECIAL or tpEffect2 == xi.mobskills.physicalTpBonus.ENFEEB_SPECIAL then
+                if hitsdone == 1 then
+                    target:addStatusEffect(xi.effect.MAX_HP_DOWN, 50, 0, 120)
+                elseif hitsdone == 2 then
+                    target:addStatusEffect(xi.effect.MAX_MP_DOWN, 50, 0, 120)
+                end
+            end
         end
         hitsdone = hitsdone + 1
+    end
+
+    if hitslanded == 3 then
+        target:addStatusEffect(xi.effect.MAX_TP_DOWN, 1000, 3, 120)
     end
 
     -- print(hitslanded)
@@ -646,7 +625,6 @@ xi.mobskills.mobPhysicalMove = function(mob, target, skill, numHits, accMod, dmg
         mob:addTP(tpReturn)
     end
 
-    
     --[[if -- ASB Pet damage reduction
         tpeffect ~= xi.mobskills.physicalTpBonus.RANGED and
         target:getMod(xi.mod.PET_DMG_TAKEN_PHYSICAL) ~= 0

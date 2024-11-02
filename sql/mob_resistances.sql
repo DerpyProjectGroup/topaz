@@ -152,7 +152,7 @@ INSERT INTO `mob_resistances` VALUES (124,'Ghrah - Jailer_of_Fortitude',0.875,0.
 INSERT INTO `mob_resistances` VALUES (125,'Greater_Bird',0.75,1.25,1.0,0.75,0,0,0,0,0,0,0,0,0,1,-3,4,1,1,1,1,1);
 INSERT INTO `mob_resistances` VALUES (126,'Gigas',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,0,0,0,-2,4,0,0,0);
 INSERT INTO `mob_resistances` VALUES (127,'Gigas - Cronos',0.0,0.0,0.0,0.0,0,0,0,0,0,0,0,0,0,0,0,0,-2,4,0,0,0);
-INSERT INTO `mob_resistances` VALUES (128,'Gigas - Agrios',0.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,0,0,0,-2,4,0,0,0);
+INSERT INTO `mob_resistances` VALUES (128,'Gigas - Agrios',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,0,0,0,-2,4,0,0,0);
 INSERT INTO `mob_resistances` VALUES (129,'Gigas - Okeanos',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,0,0,0,-2,4,0,0,0);
 INSERT INTO `mob_resistances` VALUES (130,'Gigas - Hyperion',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,0,0,0,-2,4,0,0,0);
 INSERT INTO `mob_resistances` VALUES (131,'Gnat',1.0,1.0,1.0,1.0,0,0,0,0,0,0,0,0,0,-1,0,3,0,0,0,-2,4);

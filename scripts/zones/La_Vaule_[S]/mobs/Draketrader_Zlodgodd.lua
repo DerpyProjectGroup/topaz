@@ -9,6 +9,11 @@ entity.onMobSpawn = function(mob)
     -- Once his HP dips below 50%, he will add additional 'short' jumps at 10% intervals.
     -- His attack also becomes notably higher at this point.
     mob:setMod(xi.mod.REGAIN, 400)
+    mob:addImmunity(xi.immunity.PARALYZE)
+    mob:addImmunity(xi.immunity.GRAVITY)
+    mob:addImmunity(xi.immunity.SLOW)
+    mob:addImmunity(xi.immunity.DARK_SLEEP)
+    mob:addImmunity(xi.immunity.LIGHT_SLEEP)
 
     mob:addListener('WEAPONSKILL_USE', 'TRIPLE_JUMP', function(mobArg, target, wsid, tp, action)
         local mobHPP        = mobArg:getHPP()
@@ -49,6 +54,16 @@ entity.onMobSpawn = function(mob)
             mobArg:addMod(xi.mod.ATT, 100)
         end
     end)
+end
+
+entity.onMobFight = function(mob, target)
+    if mob:getCurrentAction() == xi.action.MOBABILITY_USING then
+        mob:addStatusEffectEx(xi.effect.ALL_MISS, 0, 1, 0, 0)
+    else
+        if mob:hasStatusEffect(xi.effect.ALL_MISS) then
+            mob:delStatusEffectSilent(xi.effect.ALL_MISS)
+        end
+    end
 end
 
 entity.onMobDeath = function(mob, player, optParams)

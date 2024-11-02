@@ -31,9 +31,10 @@ zones[xi.zone.LA_VAULE_S] =
     },
     mob =
     {
-        ASHMAKER_GOTBLUT = GetFirstID('Ashmaker_Gotblut'),
-        HAWKEYED_DNATBAT = GetFirstID('Hawkeyed_Dnatbat'),
-        GALARHIGG        = GetFirstID('Galarhigg'),
+        ASHMAKER_GOTBLUT  = GetFirstID('Ashmaker_Gotblut'),
+        HAWKEYED_DNATBAT  = GetFirstID('Hawkeyed_Dnatbat'),
+        GALARHIGG         = GetFirstID('Galarhigg'),
+        COGTOOTH_SKAGNOGG = GetFirstID('Cogtooth_Skagnogg'),
     },
     npc =
     {

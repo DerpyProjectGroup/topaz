@@ -14,6 +14,10 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
         return 0
     end
 
+    if mob:getName() == 'Falsespinner_Bhudbrodd' then
+        return 0
+    end
+
     return 1
 end
 

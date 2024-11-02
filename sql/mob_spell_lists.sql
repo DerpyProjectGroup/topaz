@@ -6560,7 +6560,53 @@ INSERT INTO `mob_spell_lists` VALUES ('DarkSpirit_Avatars_Favor',5105,118,37,255
 INSERT INTO `mob_spell_lists` VALUES ('DarkSpirit_Avatars_Favor',5105,284,37,255); -- noctohelix (37~255)
 INSERT INTO `mob_spell_lists` VALUES ('DarkSpirit_Avatars_Favor',5105,277,37,255); -- dread_spikes (37~255)
 
+INSERT INTO `mob_spell_lists` VALUES ('All-seeing_Onyx_Eye',5106,162,1,255);  -- Stone IV
+INSERT INTO `mob_spell_lists` VALUES ('All-seeing_Onyx_Eye',5106,172,1,255);  -- Water IV
+INSERT INTO `mob_spell_lists` VALUES ('All-seeing_Onyx_Eye',5106,157,1,255);  -- Aero IV
+INSERT INTO `mob_spell_lists` VALUES ('All-seeing_Onyx_Eye',5106,147,1,255);  -- Fire IV
+INSERT INTO `mob_spell_lists` VALUES ('All-seeing_Onyx_Eye',5106,152,1,255);  -- Blizzard IV
+INSERT INTO `mob_spell_lists` VALUES ('All-seeing_Onyx_Eye',5106,167,1,255);  -- Thunder IV
+INSERT INTO `mob_spell_lists` VALUES ('All-seeing_Onyx_Eye',5106,210,1,255);  -- Quake
+INSERT INTO `mob_spell_lists` VALUES ('All-seeing_Onyx_Eye',5106,214,1,255);  -- Flood
+INSERT INTO `mob_spell_lists` VALUES ('All-seeing_Onyx_Eye',5106,208,1,255);  -- Tornado
+INSERT INTO `mob_spell_lists` VALUES ('All-seeing_Onyx_Eye',5106,204,1,255);  -- Flare
+INSERT INTO `mob_spell_lists` VALUES ('All-seeing_Onyx_Eye',5106,206,1,255);  -- Freeze
+INSERT INTO `mob_spell_lists` VALUES ('All-seeing_Onyx_Eye',5106,212,1,255);  -- Burst
+INSERT INTO `mob_spell_lists` VALUES ('All-seeing_Onyx_Eye',5106,278,1,255);  -- Geohelix
+INSERT INTO `mob_spell_lists` VALUES ('All-seeing_Onyx_Eye',5106,279,1,255);  -- Hydrohelix
+INSERT INTO `mob_spell_lists` VALUES ('All-seeing_Onyx_Eye',5106,280,1,255);  -- Anemohelix
+INSERT INTO `mob_spell_lists` VALUES ('All-seeing_Onyx_Eye',5106,281,1,255);  -- Pyrohelix
+INSERT INTO `mob_spell_lists` VALUES ('All-seeing_Onyx_Eye',5106,282,1,255);  -- Cryohelix
+INSERT INTO `mob_spell_lists` VALUES ('All-seeing_Onyx_Eye',5106,283,1,255);  -- Ionohelix
+INSERT INTO `mob_spell_lists` VALUES ('All-seeing_Onyx_Eye',5106,284,1,255);  -- Noctohelix
+INSERT INTO `mob_spell_lists` VALUES ('All-seeing_Onyx_Eye',5106,285,1,255);  -- Luminohelix
+INSERT INTO `mob_spell_lists` VALUES ('All-seeing_Onyx_Eye',5106,46,1,255);   -- Protect IV
+INSERT INTO `mob_spell_lists` VALUES ('All-seeing_Onyx_Eye',5106,51,1,255);   -- Shell IV
+INSERT INTO `mob_spell_lists` VALUES ('All-seeing_Onyx_Eye',5106,247,1,255);  -- Aspir
+INSERT INTO `mob_spell_lists` VALUES ('All-seeing_Onyx_Eye',5106,253,1,255);  -- Sleep
+INSERT INTO `mob_spell_lists` VALUES ('All-seeing_Onyx_Eye',5106,259,1,255);  -- Sleep II
+INSERT INTO `mob_spell_lists` VALUES ('All-seeing_Onyx_Eye',5106,58,1,255);   -- Paralyze
+INSERT INTO `mob_spell_lists` VALUES ('All-seeing_Onyx_Eye',5106,59,1,255);   -- Silence
+INSERT INTO `mob_spell_lists` VALUES ('All-seeing_Onyx_Eye',5106,216,1,255);  -- Gravity
+INSERT INTO `mob_spell_lists` VALUES ('All-seeing_Onyx_Eye',5106,143,1,255);  -- Erase
+INSERT INTO `mob_spell_lists` VALUES ('All-seeing_Onyx_Eye',5106,260,1,255);  -- Dispel
+INSERT INTO `mob_spell_lists` VALUES ('All-seeing_Onyx_Eye',5106,14,1,255);   -- Poisona
+INSERT INTO `mob_spell_lists` VALUES ('All-seeing_Onyx_Eye',5106,4,1,255);    -- Cure IV
+INSERT INTO `mob_spell_lists` VALUES ('All-seeing_Onyx_Eye',5106,108,1,255);  -- Regen
+INSERT INTO `mob_spell_lists` VALUES ('All-seeing_Onyx_Eye',5106,110,1,255);  -- Regen II
 
+INSERT INTO `mob_spell_lists` VALUES ('Ashmaker_Gotblut[S]',5107,175,1,255);  -- Firaga II
+INSERT INTO `mob_spell_lists` VALUES ('Ashmaker_Gotblut[S]',5107,176,1,255);  -- Firaga III
+INSERT INTO `mob_spell_lists` VALUES ('Ashmaker_Gotblut[S]',5107,147,1,255);  -- Fire IV
+INSERT INTO `mob_spell_lists` VALUES ('Ashmaker_Gotblut[S]',5107,249,1,255);  -- Blaze Spikes
+INSERT INTO `mob_spell_lists` VALUES ('Ashmaker_Gotblut[S]',5107,205,1,255);  -- Flare II
+
+INSERT INTO `mob_spell_lists` VALUES ('Coinbiter_Cjaknokk',5108,275,1,255);  -- Absorb TP
+INSERT INTO `mob_spell_lists` VALUES ('Coinbiter_Cjaknokk',5108,277,1,255);  -- Dread Spikes
+
+INSERT INTO `mob_spell_lists` VALUES ('Feeblescheme_Bhogbigg',5109,273,1,255);  -- Sleepga
+INSERT INTO `mob_spell_lists` VALUES ('Feeblescheme_Bhogbigg',5109,226,1,255);  -- Poisonga II
+INSERT INTO `mob_spell_lists` VALUES ('Feeblescheme_Bhogbigg',5109,196,1,255);  -- Thundaga III
 
 /*!40000 ALTER TABLE `mob_spell_lists` ENABLE KEYS */;
 UNLOCK TABLES;

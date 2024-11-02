@@ -4435,6 +4435,20 @@ INSERT INTO `mob_skill_lists` VALUES ('Weeper_DARK',5409,1228);
 
 INSERT INTO `mob_skill_lists` VALUES ('Burlibix_Brawnback',5410,1119);
 
+INSERT INTO `mob_skill_lists` VALUES ('Agrios',5411,2349); -- Daunting Hurl
+INSERT INTO `mob_skill_lists` VALUES ('Agrios',5411,665); -- Grand Slam
+INSERT INTO `mob_skill_lists` VALUES ('Agrios',5411,666); -- Power Attack
+INSERT INTO `mob_skill_lists` VALUES ('Agrios',5411,667); -- Power Attack Weapon
+INSERT INTO `mob_skill_lists` VALUES ('Agrios',5411,658); -- Catapult
+
+INSERT INTO `mob_skill_lists` VALUES ('Falsespinner_Bhudbrodd_Phase1',5412,2202); -- Berserker Dance
+INSERT INTO `mob_skill_lists` VALUES ('Falsespinner_Bhudbrodd_Phase1',5412,2201); -- Orcish Counterstance
+INSERT INTO `mob_skill_lists` VALUES ('Falsespinner_Bhudbrodd_Phase1',5412,609); -- Battle Dance
+
+INSERT INTO `mob_skill_lists` VALUES ('Falsespinner_Bhudbrodd_Phase2',5413,2202); -- Berserker Dance
+INSERT INTO `mob_skill_lists` VALUES ('Falsespinner_Bhudbrodd_Phase2',5413,2201); -- Orcish Counterstance
+INSERT INTO `mob_skill_lists` VALUES ('Falsespinner_Bhudbrodd_Phase2',5413,609); -- Battle Dance
+INSERT INTO `mob_skill_lists` VALUES ('Falsespinner_Bhudbrodd_Phase2',5413,1066); -- Fanatic Dance
 -- ------------------------------------------------------------
 -- Start of Ambuscade section
 -- NOTE: The mobs are changed every update in the DATs, so using out-of-date
