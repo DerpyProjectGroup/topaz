@@ -19,4 +19,5 @@ xi.targetType =
     PET                     = 0x100,
     PLAYER_PARTY_ENTRUST    = 0x200,
     IGNORE_BATTLEID         = 0x400, -- Can hit targets that do not have the same battle ID
+    TARGET_MOB_AND_PLAYER   = 0x800, -- Can hit targets from any allegiance simultaneously.
 }
