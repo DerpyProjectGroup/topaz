@@ -108,6 +108,8 @@ enum MOBMODIFIER : int
     MOBMOD_TRUST_DISTANCE         = 77, // TRUSTS ONLY: Set movement type/distance. See trust.lua for details.
     MOBMOD_STANDBACK_RANGE        = 78, // Applies a specific standback range for the mob
 
+    MOBMOD_SPEED_BOOST_MULT       = 82, // Multiplier for the base speed of a mob when the mob's target is out of range (range between 100 and 25500, 250 means 2.5x, mechanism is from retail)
+
             // ASB Mod Start
     MOBMOD_DRAW_IN_INCLUDE_PARTY     = 100, // this will cause the mob's draw-in to also affect all party and alliance members
     MOBMOD_DRAW_IN_FRONT             = 101, // Mob will draw in slightly in front of them instead of the center of their hitbox
@@ -121,7 +123,6 @@ enum MOBMODIFIER : int
     MOBMOD_ENCROACH_TARGET      = 200, // How close a mob will encroach on it's target, attempting to make model to model contact. Encroach distance * 10
     MOBMOD_PIXIE                = 201, // Pixie (heals players)
     MOBMOD_BREATH_ATTACK_LINEAR = 202, // Mob Breath Attacks will now scale linearly from %100-0 HP after the damage is capped if applied(If a cap is set).
-    MOBMOD_RANGED_WEAPON_BONUS  = 203, // Add a flat modifer mob ranged weapon damage ( damage + bonus ) This overrides the default +5 bonus)
 };
 
 #endif

@@ -280,8 +280,11 @@ uint8 CBattleEntity::GetSpeed()
 
     outputSpeed = static_cast<uint8>(modifiedSpeed);
 
-    // Set cap.
-    outputSpeed = std::clamp<uint8>(outputSpeed, 0, 80 + settings::get<int8>("map.SPEED_MOD"));
+    // Set cap if a PC (Default 80).
+    if (objtype == TYPE_PC)
+    {
+        outputSpeed = std::clamp<int16>(outputSpeed, 0, 80 + settings::get<int8>("map.SPEED_MOD"));
+    }
 
     // Speed cap can be bypassed. Ex. Feast of swords. GM speed.
     // TODO: Find exceptions. Add them here.
@@ -491,11 +494,11 @@ uint16 CBattleEntity::GetRangedWeaponDmg()
     TracyZoneScoped;
     uint16 dmg = 0;
 
-    if (objtype == TYPE_MOB)
-    {
-        auto* PMob = static_cast<CMobEntity*>(this);
-        return (mobutils::GetWeaponDamage(PMob, SLOT_RANGED) + getMod(Mod::RANGED_DMG_RATING)) * luautils::GetRangedDistanceCorrection(this, distance(this->loc.p, this->GetBattleTarget()->loc.p));
-    }
+    //if (objtype == TYPE_MOB)
+    //{
+    //    auto* PMob = static_cast<CMobEntity*>(this);
+    //    return (mobutils::GetWeaponDamage(PMob, SLOT_RANGED) + getMod(Mod::RANGED_DMG_RATING)) * luautils::GetRangedDistanceCorrection(this, distance(this->loc.p, this->GetBattleTarget()->loc.p));
+    //}
 
     if (auto* weapon = dynamic_cast<CItemWeapon*>(m_Weapons[SLOT_RANGED]))
     {
