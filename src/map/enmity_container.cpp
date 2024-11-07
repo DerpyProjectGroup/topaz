@@ -137,6 +137,17 @@ float CEnmityContainer::CalculateEnmityBonus(CBattleEntity* PEntity)
         {
             enmityBonus -= PChar->PMeritPoints->GetMeritValue(MERIT_MUTED_SOUL, PChar);
         }
+        // Enmity Bonus for Tank Stance type effects  (Use of || Prevents multiple effects stacking with one another.)
+        if (PChar->StatusEffectContainer->HasStatusEffect(EFFECT_DEFENDER) ||
+            PChar->StatusEffectContainer->HasStatusEffect(EFFECT_FAN_DANCE) ||
+            PChar->StatusEffectContainer->HasStatusEffect(EFFECT_MAJESTY) ||
+            PChar->StatusEffectContainer->HasStatusEffect(EFFECT_SEIGAN) ||
+            PChar->StatusEffectContainer->HasStatusEffect(EFFECT_COUNTERSTANCE) ||
+            PChar->StatusEffectContainer->HasStatusEffect(EFFECT_DEFENSE_BOOST) ||
+            PChar->StatusEffectContainer->HasStatusEffect(EFFECT_YONIN))
+        {
+            enmityBonus += 25;
+        }
     }
 
     float bonus = (100.f + std::clamp(enmityBonus, -50, 100)) / 100.f;
@@ -484,7 +495,7 @@ void CEnmityContainer::DecayEnmity()
     for (auto& it : m_EnmityList)
     {
         EnmityObject_t& PEnmityObject = it.second;
-        constexpr int   decay_amount  = (int)(60 / server_tick_rate);
+        constexpr int   decay_amount  = (int)(120 / server_tick_rate);  //Enmity Decay rate Doubled
 
         PEnmityObject.VE -= PEnmityObject.VE > decay_amount ? decay_amount : PEnmityObject.VE;
     }
