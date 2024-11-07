@@ -21,6 +21,7 @@ entity.onTrigger = function(player, npc)
         player:getZPos() <= 79.75 and
         npc:getAnimation() == xi.anim.CLOSE_DOOR
     then
+        npc:openDoor(15)
         -- player:startEvent(??)
     end
 end

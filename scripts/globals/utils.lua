@@ -1054,19 +1054,59 @@ end
 
 function utils.arenaDrawIn(mob, target, table)
     local nextDrawIn = target:getLocalVar('[Draw-In]WaitTime')
+
     local condition1 = utils.ternary(table.condition1 ~= nil, table.condition1, false)
     local condition2 = utils.ternary(table.condition2 ~= nil, table.condition2, false)
     local condition3 = utils.ternary(table.condition3 ~= nil, table.condition3, false)
     local condition4 = utils.ternary(table.condition4 ~= nil, table.condition4, false)
-    local position   = utils.ternary(table.position ~= nil, table.position, { mob:getXPos(), mob:getYPos(), mob:getZPos(), mob:getRotPos() })
 
-    if
-        (condition1 or condition2 or condition3 or condition4) and
-        (os.time() > nextDrawIn)
-    then
-        target:setPos(position[1], position[2], position[3], utils.ternary(position[4] ~= nil, position[4], 0))
-        mob:messageBasic(232, 0, 0, target)
-        target:setLocalVar('[Draw-In]WaitTime', os.time() + 1)
+    -- Handle positions, assuming it's now a list of positions
+    local positionTables = utils.ternary(table.position ~= nil, table.position, { { mob:getXPos(), mob:getYPos(), mob:getZPos(), mob:getRotPos() } })
+
+    -- Ensure positionTables is always a table of positions, even if it's a single position
+    if type(positionTables) ~= "table" then
+        positionTables = { positionTables }  -- Wrap it into a table if it's a single position
+    end
+
+    -- If there are multiple positions, calculate the closest one
+    local closestPosition = nil  -- Initialize as nil
+    local closestDistance = math.huge
+
+    -- Get the current position of the target
+    local targetX, targetY, targetZ = target:getXPos(), target:getYPos(), target:getZPos()
+
+    -- Loop through each possible position in the position list
+    for _, position in ipairs(positionTables) do
+        -- Ensure each position is a table with at least 3 elements (x, y, z)
+        if type(position) == "table" and #position >= 3 then
+            local posX = position[1]
+            local posY = position[2]
+            local posZ = position[3]
+
+            -- Calculate the distance between the target and the position
+            local distance = math.sqrt((posX - targetX)^2 + (posY - targetY)^2 + (posZ - targetZ)^2)
+
+            -- If this position is closer, update the closest position
+            if distance < closestDistance then
+                closestDistance = distance
+                closestPosition = position
+            end
+        end
+    end
+
+    if closestPosition then
+        local posX = closestPosition[1]
+        local posY = closestPosition[2]
+        local posZ = closestPosition[3]
+        local rot  = utils.ternary(closestPosition[4] ~= nil, closestPosition[4], 0)  -- Handle rotation
+
+        
+        if (condition1 or condition2 or condition3 or condition4) and (os.time() > nextDrawIn) then
+            target:setPos(posX, posY, posZ, rot)
+            mob:messageBasic(232, 0, 0, target)
+            target:setLocalVar('[Draw-In]WaitTime', os.time() + 1)
+        end
+    else
+        print("Error: No valid closest position found.")
     end
 end
-

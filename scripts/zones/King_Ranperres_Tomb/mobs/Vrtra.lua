@@ -37,7 +37,10 @@ entity.onMobFight = function(mob, target)
     local drawInTableRoom =
     {
         condition1 = target:getXPos() < 180 and target:getZPos() > -305 and target:getZPos() < -290,
-        position = { 180.79, 7.5, -299.96, target:getRotPos() },
+        position =
+        {
+            { 180.79, 7.5, -299.96, target:getRotPos() },
+        }
     }
 
     if twohourTime == 0 then
@@ -71,6 +74,7 @@ entity.onMobFight = function(mob, target)
                 mob:setAutoAttackEnabled(false)
                 mob:setMagicCastingEnabled(false)
                 mob:setMobAbilityEnabled(false)
+                mob:setMobMod(xi.mobMod.NO_MOVE, 1)
 
                 mob:timer(3000, function(mobArg)
                     if mobArg:isAlive() then
@@ -78,6 +82,8 @@ entity.onMobFight = function(mob, target)
                         mobArg:setAutoAttackEnabled(true)
                         mobArg:setMagicCastingEnabled(true)
                         mobArg:setMobAbilityEnabled(true)
+                        mobArg:setMobMod(xi.mobMod.NO_MOVE, 0)
+                        mobArg:stun(2000)
                         pet:spawn()
                         local pos = mob:getPos()
                         pet:setPos(pos.x, pos.y, pos.z)

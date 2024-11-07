@@ -8,7 +8,7 @@ local entity = {}
 
 entity.onMobInitialize = function(mob)
     mob:setCarefulPathing(true)
-    mob:setMobMod(xi.mobMod.DRAW_IN, 15)
+    -- mob:setMobMod(xi.mobMod.DRAW_IN, 15)
 end
 
 entity.onMobSpawn = function(mob)
@@ -126,17 +126,35 @@ entity.onMobFight = function(mob, target)
     local drawInTableNorth =
     {
         condition1 = target:getXPos() < -105 and target:getXPos() > -215 and target:getZPos() > 195,
-        position   = { -201.86, -175.66, 189.32, target:getRotPos() },
+        position   =
+        {
+            { -210.86, -175.66, 193.32, target:getRotPos() },
+            { -205.86, -175.66, 193.32, target:getRotPos() },
+            { -200.86, -175.66, 193.32, target:getRotPos() },
+            { -195.86, -175.66, 193.32, target:getRotPos() },
+            { -190.86, -176.28, 193.32, target:getRotPos() },
+        }
     }
     local drawInTableSouth =
     {
-        condition1 = target:getXPos() > -250 and target:getXPos() < -212 and target:getZPos() < 55,
-        position   = { -235.62, -175.17, 62.67, target:getRotPos() },
+        condition1 = target:getXPos() > -250 and target:getXPos() < -212 and target:getZPos() < 45,
+        position   =
+        {
+            { -225.62, -176.17, 49.67, target:getRotPos() },
+            { -230.62, -176.17, 49.67, target:getRotPos() },
+            { -235.62, -176.17, 49.67, target:getRotPos() },
+            { -240.62, -176.17, 49.67, target:getRotPos() },
+            { -245.62, -176.17, 49.67, target:getRotPos() },
+
+        }
     }
     local drawInTableEast =
     {
         condition1 = target:getXPos() > -160 and target:getZPos() > 105 and target:getZPos() < 130,
-        position   = { -166.02, -175.89, 119.38, target:getRotPos() },
+        position   =
+        {
+            { -166.02, -175.89, 119.38, target:getRotPos() },
+        }
     }
 
     -- Jorm draws in from set boundaries leaving her spawn area

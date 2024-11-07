@@ -21,6 +21,7 @@ local drawInPos =
     { x = 850.40, y = -1.45, z = 355.85 },
 }
 
+
 entity.onMobInitialize = function(mob)
     mob:addListener('EFFECT_LOSE', 'KHIMAIRA_EFFECT_LOSE', function(owner, effect)
         local effectType = effect:getEffectType()
@@ -40,15 +41,33 @@ entity.onMobSpawn = function(mob)
 end
 
 entity.onMobFight = function(mob, target)
+    local drawInTableNorth =
+    {
+        condition1 = target:getZPos() > 442,
+        position   =
+        {
+            { 574.86, -20.32, 437.50, target:getRotPos() },
+        }
+    }
+
+    local drawInTableEast =
+    {
+        condition1 = target:getXPos() > 645,
+        position   =
+        {
+            { 640.47, -15.81, 304.56, target:getRotPos() },
+            { 640.47, -15.81, 313.56, target:getRotPos() },
+            { 640.47, -15.81, 320.56, target:getRotPos() },
+            { 640.47, -15.81, 325.56, target:getRotPos() },
+            { 640.47, -15.81, 333.56, target:getRotPos() },
+        }
+    }
+
     if
-        (target:getXPos() < 814 or target:getXPos() > 865 or
-        target:getZPos() < 345 or target:getZPos() > 377) and
-        os.time() > mob:getLocalVar('DrawInWait')
+        target:getLocalVar('[Draw-In]WaitTime') < os.time()
     then
-        local pos = math.random(1, 8)
-        target:setPos(drawInPos[pos])
-        mob:messageBasic(xi.msg.basic.DRAWN_IN, 0, 0, target)
-        mob:setLocalVar('DrawInWait', os.time() + 2)
+        utils.arenaDrawIn(mob, target, drawInTableNorth)
+        utils.arenaDrawIn(mob, target, drawInTableEast)
     end
 end
 

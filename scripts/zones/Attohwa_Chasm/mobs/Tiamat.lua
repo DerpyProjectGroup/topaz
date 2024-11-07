@@ -8,7 +8,7 @@ local entity = {}
 
 entity.onMobInitialize = function(mob)
     mob:setCarefulPathing(true)
-    mob:setMobMod(xi.mobMod.DRAW_IN, 8)
+    -- mob:setMobMod(xi.mobMod.DRAW_IN, 8)
 end
 
 entity.onMobSpawn = function(mob)
@@ -132,13 +132,26 @@ entity.onMobFight = function(mob, target)
 
     local drawInTableNorth =
     {
-        condition1 = target:getXPos() < -515 and target:getZPos() > 8,
-        position   = { -530.642, -4.013, 6.262, target:getRotPos() },
+        condition1 = target:getXPos() < -505 and target:getZPos() > 30,
+        position   =
+        {
+            { -527.318, -4.223, 28, target:getRotPos() },
+            { -524.266, -3.678, 28, target:getRotPos() },
+            { -521.814, -3.578, 28, target:getRotPos() },
+            { -516.786, -3.652, 28, target:getRotPos() },
+        }
     }
     local drawInTableEast =
     {
         condition1 = target:getXPos() > -480 and target:getZPos() > -50,
-        position   = { -481.179, -4, -41.92, target:getRotPos() },
+        position   =
+        {
+            { -481.342, -4.422, -32.67, target:getRotPos() },
+            { -481.555, -4.000, -36.16, target:getRotPos() },
+            { -481.179, -4.000, -41.92, target:getRotPos() },
+            { -480.745, -4.178, -44.65, target:getRotPos() },
+            { -480.398, -4.929, -47.84, target:getRotPos() },
+        }
     }
 
     -- Tiamat draws in from set boundaries leaving her spawn area

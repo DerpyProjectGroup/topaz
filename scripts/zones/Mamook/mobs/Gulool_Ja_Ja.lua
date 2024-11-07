@@ -13,11 +13,6 @@ mixins = { require('scripts/mixins/job_special') }
 -----------------------------------
 local entity = {}
 
-local arena =
-{
-    x = -272.5, y = 17.5, z = -380
-}
-
 entity.onMobSpawn = function(mob)
     xi.mix.jobSpecial.config(mob, {
         specials =
@@ -40,14 +35,6 @@ entity.onMobEngage = function(mob, target)
 end
 
 entity.onMobFight = function(mob, target)
-    local arenaArg =
-    {
-        condition1 = target:checkDistance(arena) > 15,
-        position   = { arena.x + math.random(-3, 3), arena.y, arena.z + math.random(-3, 3), target:getRotPos() },
-    }
-
-    utils.arenaDrawIn(mob, target, arenaArg)
-
     for id = mob:getID() + 1, mob:getID() + 4 do
         local pet = GetMobByID(id)
         if

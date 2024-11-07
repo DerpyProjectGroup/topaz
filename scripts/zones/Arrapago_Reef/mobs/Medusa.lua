@@ -15,7 +15,7 @@ local entity = {}
 
 local arena =
 {
-    x = -440, y = -17.6, z = 438
+    x = -455, y = -17.6, z = 438
 }
 
 entity.onMobSpawn = function(mob)
@@ -42,8 +42,11 @@ end
 entity.onMobFight = function(mob, target)
     local arenaArg =
     {
-        condition1 = target:checkDistance(arena) > 15,
-        position   = { arena.x + math.random(-3, 3), arena.y, arena.z + math.random(-3, 3), target:getRotPos() },
+        condition1 = target:getXPos() > -405,
+        position   =
+        {
+            { -408.0, -15.7, 419, target:getRotPos() },
+        }
     }
 
     utils.arenaDrawIn(mob, target, arenaArg)

@@ -10,7 +10,7 @@ local entity = {}
 
 entity.onMobSpawn = function(mob)
     -- mob not witnessed to use any mob skills
-    mob:setMobAbilityEnabled(false)
+    mob:setMobMod(xi.mobMod.SKILL_LIST, 0)
     mob:setMod(xi.mod.WIND_ABSORB, 100)
 end
 

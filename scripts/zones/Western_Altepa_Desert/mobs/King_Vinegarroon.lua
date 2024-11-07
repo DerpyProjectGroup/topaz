@@ -77,12 +77,36 @@ entity.onMobFight = function(mob, target)
     local drawInTableNorth =
     {
         condition1 = target:getZPos() > -540,
-        position   = { target:getXPos(), target:getYPos(), -542, target:getRotPos() },
+        position   =
+        {
+            { -265, -1.65, -542, target:getRotPos() },
+            { -270, -0.86, -542, target:getRotPos() },
+            { -275, -0.86, -542, target:getRotPos() },
+            { -280, -0.86, -542, target:getRotPos() }, --
+            { -285, -0.86, -542, target:getRotPos() },
+            { -290, -0.39, -542, target:getRotPos() },
+            { -295, -2.17, -542, target:getRotPos() },
+        }
     }
     local drawInTableSouth =
     {
-        condition1 = target:getXPos() < -350,
-        position   = { -348, target:getYPos(), target:getZPos(), target:getRotPos() },
+        condition1 = target:getXPos() < -360,
+        position   =
+        {
+            { -355, -2.47, -545, target:getRotPos() },
+            { -355, target:getYPos(), -550, target:getRotPos() },
+            { -355, target:getYPos(), -555, target:getRotPos() },
+            { -355, target:getYPos(), -560, target:getRotPos() },
+            { -355, target:getYPos(), -565, target:getRotPos() },
+            { -355, target:getYPos(), -570, target:getRotPos() },
+            { -355, target:getYPos(), -575, target:getRotPos() },
+            { -355, target:getYPos(), -580, target:getRotPos() },
+            { -355, target:getYPos(), -585, target:getRotPos() },
+            { -355, target:getYPos(), -590, target:getRotPos() },
+            { -355, target:getYPos(), -595, target:getRotPos() },
+            { -355, target:getYPos(), -600, target:getRotPos() },
+            { -355, target:getYPos(), -605, target:getRotPos() },
+        }
     }
 
     updateRegen(mob)

@@ -29,8 +29,11 @@ end
 entity.onMobFight = function(mob, target)
     local arenaArg =
     {
-        condition1 = target:checkDistance(arena) > 15,
-        position   = { arena.x + math.random(-3, 3), arena.y, arena.z + math.random(-3, 3), target:getRotPos() },
+        condition1 = target:getZPos() > 79,
+        position   =
+        {
+            { -59.94, -20.00, 79.40, target:getRotPos() },
+        }
     }
 
     utils.arenaDrawIn(mob, target, arenaArg)
