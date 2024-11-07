@@ -9,8 +9,6 @@ entity.onMobInitialize = function(mob)
     mob:setMod(xi.mod.BINDRES, 100)
     mob:setMod(xi.mod.SLEEPRES, 100)
     mob:setMod(xi.mod.SILENCERES, 100)
-    -- Enhanced Movement Speed
-    mob:setSpeed((50 + xi.settings.map.MOB_SPEED_MOD) + 25)
     -- takes ~3s to cast AOE flood
     mob:setMod(xi.mod.UFASTCAST, 75)
     -- said to spam tp moves/barrage of tp moves
