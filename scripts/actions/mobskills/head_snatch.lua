@@ -22,7 +22,9 @@ mobskillObject.onMobWeaponSkill = function(target, mob, skill)
         dmg = targetCurrentHP - hpset
     end
 
-    target:takeDamage(dmg, mob, xi.attackType.PHYSICAL, xi.damageType.NONE)
+    local dmg = xi.mobskills.mobFinalAdjustments(dmg, mob, skill, target, xi.attackType.PHYSICAL, xi.damageType.HTH, xi.mobskills.shadowBehavior.IGNORE_SHADOWS)
+
+    target:takeDamage(dmg, mob, xi.attackType.PHYSICAL, xi.damageType.SLASHING)
     return dmg
 end
 

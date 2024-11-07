@@ -2,10 +2,6 @@
 -- Ranged Attack (Trolls)
 -- Deals a ranged attack to a single target.
 -----------------------------------
-
-
-
------------------------------------
 local mobskillObject = {}
 
 mobskillObject.onMobSkillCheck = function(target, mob, skill)
