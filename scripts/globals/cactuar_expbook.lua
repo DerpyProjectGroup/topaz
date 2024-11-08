@@ -1173,6 +1173,16 @@ xi.cactuarRegimes.initializeBooks = function(zone)
                         playerArg:setCharVar('[cactuarRegimes]needed3', regimeObj3)
                         playerArg:setCharVar('[cactuarRegimes]needed4', regimeObj4)
 
+                        -- Records of Eminence: Undertake a FoV Training Regime
+                        if player:getEminenceProgress(3) then
+                            xi.roe.onRecordTrigger(player, 3)
+                        end
+
+                        -- Records of Eminence: Undertake a GoV Training Regime
+                        if player:getEminenceProgress(11) then
+                            xi.roe.onRecordTrigger(player, 11)
+                        end
+
                         pageRepeatMenu.options = pageRepeatMenu_Options
                         delaySendMenu(playerArg, pageRepeatMenu)
                     end,

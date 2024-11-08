@@ -33,6 +33,7 @@ zoneObject.onInitialize = function(zone)
     GetMobByID(ID.mob.SKEWER_SAM):setRespawnTime(math.random(900, 10800))
 
     xi.treasure.initZone(zone)
+    xi.cactuarRegimes.initializeBooks(zone)
 end
 
 zoneObject.onZoneIn = function(player, prevZone)

@@ -590,13 +590,12 @@ xi.cactuarRegimes.zoneData =
     {
         books =
         {
-            -- !pos 535 -6.9 60.9 2
             [1] =
             {
                 name = 'Training Manual',
                 look = '0x0000B40800000000000000000000000000000000',
                 x =  -144.21,
-                y =    -8.85,
+                y =    8.85,
                 z =  -246.16,
                 rotation = 17,
             },
@@ -1662,7 +1661,7 @@ xi.cactuarRegimes.zoneData =
             },
             [6] =
             {
-                pageId     =  5,
+                pageId     =  6,
                 obj1_count =  8,
                 obj2_count =  0,
                 obj3_count =  0,
@@ -1680,7 +1679,7 @@ xi.cactuarRegimes.zoneData =
             },
             [7] =
             {
-                pageId     =  6,
+                pageId     =  7,
                 obj1_count =  6,
                 obj2_count =  1,
                 obj3_count =  0,
@@ -1698,7 +1697,7 @@ xi.cactuarRegimes.zoneData =
             },
             [8] =
             {
-                pageId     =  7,
+                pageId     =  8,
                 obj1_count =  5,
                 obj2_count =  1,
                 obj3_count =  0,
@@ -2302,7 +2301,7 @@ xi.cactuarRegimes.zoneData =
             },
             [2] =
             {
-                pageId         =  1,
+                pageId         =  2,
                 obj1_count     =  2,
                 obj2_count     =  2,
                 obj3_count     =  1,
@@ -4561,7 +4560,7 @@ xi.cactuarRegimes.zoneData =
             },
             [3] =
             {
-                pageId         =  4,
+                pageId         =  3,
                 obj1_count     =  3,
                 obj2_count     =  3,
                 obj3_count     =  0,
@@ -4579,7 +4578,7 @@ xi.cactuarRegimes.zoneData =
             },
             [4] =
             {
-                pageId         =  5,
+                pageId         =  4,
                 obj1_count     =  5,
                 obj2_count     =  0,
                 obj3_count     =  0,
@@ -4597,7 +4596,7 @@ xi.cactuarRegimes.zoneData =
             },
             [5] =
             {
-                pageId         =  6,
+                pageId         =  5,
                 obj1_count     =  5,
                 obj2_count     =  0,
                 obj3_count     =  0,
@@ -4615,7 +4614,7 @@ xi.cactuarRegimes.zoneData =
             },
             [6] =
             {
-                pageId         =  7,
+                pageId         =  6,
                 obj1_count     =  7,
                 obj2_count     =  0,
                 obj3_count     =  0,
@@ -5660,9 +5659,9 @@ xi.cactuarRegimes.zoneData =
                 lvlRangeDialog = 'Target level range: 49 ~ 52',
                 zoneDialog     = 'Training Area: Rolanberry Fields [S]',
             },
-            [6] =
+            [5] =
             {
-                pageId         =  6,
+                pageId         =  5,
                 obj1_count     =  5,
                 obj2_count     =  0,
                 obj3_count     =  0,
@@ -5678,9 +5677,9 @@ xi.cactuarRegimes.zoneData =
                 lvlRangeDialog = 'Target level range: 58 ~ 62',
                 zoneDialog     = 'Training Area: Rolanberry Fields [S]',
             },
-            [7] =
+            [6] =
             {
-                pageId         =  7,
+                pageId         =  6,
                 obj1_count     =  5,
                 obj2_count     =  0,
                 obj3_count     =  0,
@@ -5696,9 +5695,9 @@ xi.cactuarRegimes.zoneData =
                 lvlRangeDialog = 'Target level range: 60 ~ 63',
                 zoneDialog     = 'Training Area: Rolanberry Fields [S]',
             },
-            [8] =
+            [7] =
             {
-                pageId         =  8,
+                pageId         =  7,
                 obj1_count     =  7,
                 obj2_count     =  0,
                 obj3_count     =  0,
@@ -6374,7 +6373,7 @@ xi.cactuarRegimes.zoneData =
             },
             [3] =
             {
-                pageId         =  4,
+                pageId         =  3,
                 obj1_count     =  5,
                 obj2_count     =  0,
                 obj3_count     =  0,
@@ -6392,7 +6391,7 @@ xi.cactuarRegimes.zoneData =
             },
             [4] =
             {
-                pageId         =  5,
+                pageId         =  4,
                 obj1_count     =  5,
                 obj2_count     =  0,
                 obj3_count     =  0,
@@ -6410,7 +6409,7 @@ xi.cactuarRegimes.zoneData =
             },
             [5] =
             {
-                pageId         =  6,
+                pageId         =  5,
                 obj1_count     =  6,
                 obj2_count     =  0,
                 obj3_count     =  0,
@@ -6622,7 +6621,7 @@ xi.cactuarRegimes.zoneData =
             },
             [5] =
             {
-                pageId     =  4,
+                pageId     =  5,
                 obj1_count =  6,
                 obj2_count =  1,
                 obj3_count =  0,
@@ -6844,7 +6843,7 @@ xi.cactuarRegimes.zoneData =
             },
             [4] =
             {
-                pageId     =  5,
+                pageId     =  4,
                 obj1_count =  5,
                 obj2_count =  3,
                 obj3_count =  0,
@@ -6860,9 +6859,9 @@ xi.cactuarRegimes.zoneData =
                 lvlRangeDialog = 'Target level range: 11 ~ 14',
                 zoneDialog     = 'Training Area: La Theine Plateau',
             },
-            [6] =
+            [5] =
             {
-                pageId     =  6,
+                pageId     =  5,
                 obj1_count =  5,
                 obj2_count =  3,
                 obj3_count =  0,
@@ -7225,7 +7224,7 @@ xi.cactuarRegimes.zoneData =
             },
             [5] =
             {
-                pageId     =  1,
+                pageId     =  5,
                 obj1_count =  9,
                 obj2_count =  0,
                 obj3_count =  0,
@@ -8323,7 +8322,7 @@ xi.cactuarRegimes.zoneData =
             },
             [5] =
             {
-                pageId     =  1,
+                pageId     =  5,
                 obj1_count =  3,
                 obj2_count =  3,
                 obj3_count =  2,
@@ -9421,7 +9420,7 @@ xi.cactuarRegimes.zoneData =
             },
             [4] =
             {
-                pageId     =  1,
+                pageId     =  4,
                 obj1_count =  4,
                 obj2_count =  6,
                 obj3_count =  0,
@@ -10664,7 +10663,7 @@ xi.cactuarRegimes.zoneData =
             },
             [4] =
             {
-                pageId     =  1,
+                pageId     =  4,
                 obj1_count =  3,
                 obj2_count =  3,
                 obj3_count =  0,
@@ -10890,7 +10889,7 @@ xi.cactuarRegimes.zoneData =
             },
             [7] =
             {
-                pageId     =  1,
+                pageId     =  7,
                 obj1_count =  3,
                 obj2_count =  3,
                 obj3_count =  0,
@@ -10923,6 +10922,187 @@ xi.cactuarRegimes.zoneData =
                 obj4Dialog     = nil,
                 lvlRangeDialog = 'Target level range: 75 ~ 80',
                 zoneDialog     = 'Training Area: The Den of Rancor',
+            },
+        }
+    },
+
+    [xi.zone.GARLAIGE_CITADEL] =
+    {
+        books =
+        {
+            [1] =
+            {
+                name = 'Training Manual',
+                look = '0x0000B40800000000000000000000000000000000',
+                x =  -377.00,
+                y =  -6.11,
+                z =  363.50,
+                rotation = 0,
+            },
+            [2] =
+            {
+                name = 'Training Manual',
+                look = '0x0000B40800000000000000000000000000000000',
+                x =  23.00,
+                y =  -12.10,
+                z =  404.50,
+                rotation = 0,
+            },
+            [3] =
+            {
+                name = 'Training Manual',
+                look = '0x0000B40800000000000000000000000000000000',
+                x =  -297.00,
+                y =  17.99,
+                z =  322.45,
+                rotation = 0,
+            },
+        },
+        trainingData =
+        {
+            [1] =
+            {
+                pageId     =  1,
+                obj1_count =  4,
+                obj2_count =  2,
+                obj3_count =  0,
+                obj4_count =  0,
+                min_level  =  1,
+                max_level  = 75,
+                expReward  = 1160,
+                gilReward  = 1160,
+                obj1Dialog     = 'Wing Rats',
+                obj2Dialog     = 'Members of the Skeleton family.',
+                obj3Dialog     = nil,
+                obj4Dialog     = nil,
+                lvlRangeDialog = 'Target level range: 40 ~ 43',
+                zoneDialog     = 'Training Area: Garlaige Citadel',
+            },
+            [2] =
+            {
+                pageId     =  2,
+                obj1_count =  4,
+                obj2_count =  2,
+                obj3_count =  0,
+                obj4_count =  0,
+                min_level  =  1,
+                max_level  = 75,
+                expReward  = 1160,
+                gilReward  = 1160,
+                obj1Dialog     = 'Siege Bats',
+                obj2Dialog     = 'Borer Beetles',
+                obj3Dialog     = nil,
+                obj4Dialog     = nil,
+                lvlRangeDialog = 'Target level range: 40 ~ 44',
+                zoneDialog     = 'Training Area: Garlaige Citadel',
+            },
+            [3] =
+            {
+                pageId     =  3,
+                obj1_count =  2,
+                obj2_count =  4,
+                obj3_count =  0,
+                obj4_count =  0,
+                min_level  =  1,
+                max_level  = 75,
+                expReward  = 1240,
+                gilReward  = 1240,
+                obj1Dialog     = 'Members of the Evil Weapon family.',
+                obj2Dialog     = 'Citadel Bats',
+                obj3Dialog     = nil,
+                obj4Dialog     = nil,
+                lvlRangeDialog = 'Target level range: 46 ~ 49',
+                zoneDialog     = 'Training Area: Garlaige Citadel',
+            },
+            [4] =
+            {
+                pageId     =  4,
+                obj1_count =  4,
+                obj2_count =  2,
+                obj3_count =  0,
+                obj4_count =  0,
+                min_level  =  1,
+                max_level  = 75,
+                expReward  = 1310,
+                gilReward  = 1310,
+                obj1Dialog     = 'Funnel Bats',
+                obj2Dialog     = 'Explosures',
+                obj3Dialog     = nil,
+                obj4Dialog     = nil,
+                lvlRangeDialog = 'Target level range: 51 ~ 55',
+                zoneDialog     = 'Training Area: Garlaige Citadel',
+            },
+            [5] =
+            {
+                pageId     =  5,
+                obj1_count =  3,
+                obj2_count =  3,
+                obj3_count =  0,
+                obj4_count =  0,
+                min_level  =  1,
+                max_level  = 75,
+                expReward  = 1240,
+                gilReward  = 1240,
+                obj1Dialog     = 'Dromas',
+                obj2Dialog     = 'Chamber Beetles',
+                obj3Dialog     = nil,
+                obj4Dialog     = nil,
+                lvlRangeDialog = 'Target level range: 52 ~ 58',
+                zoneDialog     = 'Training Area: Garlaige Citadel',
+            },
+            [6] =
+            {
+                pageId     =  6,
+                obj1_count =  2,
+                obj2_count =  2,
+                obj3_count =  1,
+                obj4_count =  0,
+                min_level  =  1,
+                max_level  = 75,
+                expReward  = 1270,
+                gilReward  = 1270,
+                obj1Dialog     = 'Over Weapons',
+                obj2Dialog     = 'Vault Weapons',
+                obj3Dialog     = 'Wraith',
+                obj4Dialog     = nil,
+                lvlRangeDialog = 'Target level range: 59 ~ 62',
+                zoneDialog     = 'Training Area: Garlaige Citadel',
+            },
+            [7] =
+            {
+                pageId     =  7,
+                obj1_count =  5,
+                obj2_count =  2,
+                obj3_count =  0,
+                obj4_count =  0,
+                min_level  =  1,
+                max_level  = 75,
+                expReward  = 1840,
+                gilReward  = 1840,
+                obj1Dialog     = 'Donjon Bats',
+                obj2Dialog     = 'Kabooms',
+                obj3Dialog     = nil,
+                obj4Dialog     = nil,
+                lvlRangeDialog = 'Target level range: 85 ~ 87',
+                zoneDialog     = 'Training Area: Garlaige Citadel',
+            },
+            [8] =
+            {
+                pageId     =  8,
+                obj1_count =  4,
+                obj2_count =  3,
+                obj3_count =  0,
+                obj4_count =  0,
+                min_level  =  1,
+                max_level  = 75,
+                expReward  = 2220,
+                gilReward  = 2220,
+                obj1Dialog     = 'Fortalice Bats',
+                obj2Dialog     = 'Warden Beetles',
+                obj3Dialog     = nil,
+                obj4Dialog     = nil,
+                lvlRangeDialog = 'Target level range: 85 ~ 87',
+                zoneDialog     = 'Training Area: Garlaige Citadel',
             },
         }
     },
@@ -13821,7 +14001,7 @@ xi.cactuarRegimes.zoneData =
             },
             [4] =
             {
-                pageId     =  1,
+                pageId     =  4,
                 obj1_count =  1,
                 obj2_count =  1,
                 obj3_count =  1,
