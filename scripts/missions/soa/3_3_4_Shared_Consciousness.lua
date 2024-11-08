@@ -11,8 +11,8 @@ local mission = Mission:new(xi.mission.log_id.SOA, xi.mission.id.soa.SHARED_CONS
 
 mission.reward =
 {
-    exp         = 1000,
     bayld       = 1000,
+    xp          = 1000,
     title       = xi.title.SUNSHINE_CADET,
     nextMission = { xi.mission.log_id.SOA, xi.mission.id.soa.CLEAR_SKIES },
 }

@@ -12,9 +12,9 @@ local quest = Quest:new(xi.questLog.CRYSTAL_WAR, xi.quest.id.crystalWar.LOST_IN_
 
 quest.reward =
 {
-    gil     = 2000,
-    exp     = 2000,
     keyItem = xi.ki.MAP_OF_GRAUBERG,
+    gil     = 2000,
+    xp      = 2000,
 }
 
 local mapKeyItems =

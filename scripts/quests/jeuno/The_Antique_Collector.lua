@@ -12,12 +12,12 @@ local quest = Quest:new(xi.questLog.JEUNO, xi.quest.id.jeuno.THE_ANTIQUE_COLLECT
 
 quest.reward =
 {
-    exp      = 2000,
+    keyItem  = xi.ki.MAP_OF_DELKFUTTS_TOWER,
+    gil      = 2000,
+    xp       = 2000,
+    title    = xi.title.TRADER_OF_ANTIQUITIES,
     fame     = 30,
     fameArea = xi.fameArea.JEUNO,
-    gil      = 2000,
-    keyItem  = xi.ki.MAP_OF_DELKFUTTS_TOWER,
-    title    = xi.title.TRADER_OF_ANTIQUITIES,
 }
 
 quest.sections =

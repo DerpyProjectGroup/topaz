@@ -12,11 +12,11 @@ local quest = Quest:new(xi.questLog.OTHER_AREAS, xi.quest.id.otherAreas.THE_RESC
 
 quest.reward =
 {
-    exp      = 2000,
-    gil      = 5000,
-    fameArea = xi.fameArea.SELBINA_RABAO,
     keyItem  = xi.ki.MAP_OF_THE_RANGUEMONT_PASS,
+    gil      = 5000,
+    xp       = 2000,
     title    = xi.title.HONORARY_CITIZEN_OF_SELBINA,
+    fameArea = xi.fameArea.SELBINA_RABAO,
 }
 
 quest.sections =
