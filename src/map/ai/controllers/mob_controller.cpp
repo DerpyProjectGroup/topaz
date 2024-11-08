@@ -424,9 +424,14 @@ bool CMobController::TrySpecialSkill()
         // distance check for special skill
         float currentDistance = distance(PMob->loc.p, PTarget->loc.p);
 
-        if (currentDistance <= PSpecialSkill->getDistance())
+        if (currentDistance <= PSpecialSkill->getDistance() && PMob->CanSeeTarget(PTarget))
         {
             PAbilityTarget = PTarget;
+        }
+        else if (currentDistance >= PSpecialSkill->getDistance() || !PMob->CanSeeTarget(PTarget))
+        {
+            PMob->PAI->Inactive(2000ms, true);
+            return false;
         }
         else
         {
@@ -1411,6 +1416,7 @@ bool CMobController::CanMoveForward(float currentDistance)
 
     auto standbackThreshold = PMob->getMobMod(MOBMOD_HP_STANDBACK);
     if (currentDistance < standbackRange &&
+        PMob->CanSeeTarget(PTarget) &&
         standbackThreshold > 0 &&
         PMob->getMobMod(MOBMOD_NO_STANDBACK) == 0 &&
         PMob->GetHPP() >= standbackThreshold &&
@@ -1452,6 +1458,12 @@ bool CMobController::IsSpecialSkillReady(float currentDistance)
     {
         // Mobs use ranged attacks quicker when standing back
         bonusTime = PMob->getBigMobMod(MOBMOD_STANDBACK_COOL);
+    }
+
+    if (currentDistance > 15 && !PMob->CanSeeTarget(PTarget))
+    {
+        // If mob is chasing but can't see target, extend time between attempts.
+        bonusTime = -10;
     }
 
     snapshotBonus = (PMob->getBigMobMod(MOBMOD_SPECIAL_COOL) - bonusTime) * (PMob->getMod(Mod::SNAP_SHOT) / 100);
