@@ -2105,6 +2105,27 @@ namespace petutils
         if (petType == PET_TYPE::AUTOMATON && PMaster->objtype == TYPE_PC)
         {
             PPet = static_cast<CCharEntity*>(PMaster)->PAutomaton;
+
+            if (PetID == PETID_HARLEQUINFRAME)
+            {
+                PPet->setModifier(Mod::DMG, -625); // -6% phys and -6% magical per http://wiki.ffo.jp/html/8477.html
+            }
+            else if (PetID == PETID_VALOREDGEFRAME)
+            {
+                PPet->setModifier(Mod::DMGPHYS, -1250); // -12.5% phys dmg taken per http://wiki.ffo.jp/html/8478.html#comment_1
+            }
+            else if (PetID == PETID_SHARPSHOTFRAME)
+            {
+                PPet->setModifier(Mod::PIERCE_SDT, 125); // -12.5% pierce dmg taken per http://wiki.ffo.jp/html/8481.html
+                PPet->setModifier(Mod::DMGMAGIC, -1250);  // -12.5% magic dmg taken
+                PPet->setModifier(Mod::DMGBREATH, -1250); // -12.5% breath dmg taken
+            }
+            else if (PetID == PETID_STORMWAKERFRAME)
+            {
+                PPet->setModifier(Mod::DMGMAGIC, -2420); // -24.2% magic dmg taken per http://wiki.ffo.jp/wiki.cgi?Command=HDetail&articleid=133971&id=8502
+                PPet->setModifier(Mod::DMGBREATH, -2420); // -24.2% breath dmg taken per http://wiki.ffo.jp/wiki.cgi?Command=HDetail&articleid=133971&id=8502
+            }
+
             PPet->PAI->SetController(std::make_unique<CAutomatonController>(static_cast<CAutomatonEntity*>(PPet)));
         }
         else

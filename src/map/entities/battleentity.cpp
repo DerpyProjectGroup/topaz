@@ -493,6 +493,7 @@ uint16 CBattleEntity::GetRangedWeaponDmg()
 {
     TracyZoneScoped;
     uint16 dmg = 0;
+    float  AUTO_RANGED_DAMAGEP_MOD = 1.0f + getMod(Mod::AUTO_RANGED_DAMAGEP) / 100.0f;
 
     //if (objtype == TYPE_MOB)
     //{
@@ -530,7 +531,8 @@ uint16 CBattleEntity::GetRangedWeaponDmg()
             dmg += ammo->getDamage() + ammo->getModifier(Mod::DMG_RATING);
         }
     }
-    return dmg + getMod(Mod::RANGED_DMG_RATING);
+    // return (dmg + getMod(Mod::RANGED_DMG_RATING));
+    return static_cast<int>(std::floor((dmg + getMod(Mod::RANGED_DMG_RATING)) * AUTO_RANGED_DAMAGEP_MOD));
 }
 
 uint16 CBattleEntity::GetMainWeaponRank()
@@ -1036,6 +1038,7 @@ uint16 CBattleEntity::EVA()
             evasion = 200 + (evasion - 200) * 0.9;
         }
         evasion += AGI() / 2;
+        evasion += getMod(Mod::EVA);
         evasion += m_modStat[Mod::EVA];
     }
     else // If it is a player then evasion = SKILL_EVASION
