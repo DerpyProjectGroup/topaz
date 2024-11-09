@@ -1037,9 +1037,7 @@ uint16 CBattleEntity::EVA()
         {
             evasion = 200 + (evasion - 200) * 0.9;
         }
-        evasion += AGI() / 2;
         evasion += getMod(Mod::EVA);
-        evasion += m_modStat[Mod::EVA];
     }
     else // If it is a player then evasion = SKILL_EVASION
     {

@@ -3,40 +3,24 @@
 -----------------------------------
 local attachmentObject = {}
 
-attachmentObject.onEquip = function(pet)
-    pet:addMod(xi.mod.EVA, 20)
-    pet:addMod(xi.mod.ACC, -20)
+attachmentObject.onEquip = function(pet, attachment)
+    xi.automaton.onAttachmentEquip(pet, attachment)
 end
 
-attachmentObject.onUnequip = function(pet)
-    pet:delMod(xi.mod.EVA, 20)
-    pet:delMod(xi.mod.ACC, -20)
+attachmentObject.onUnequip = function(pet, attachment)
+    xi.automaton.onAttachmentUnequip(pet, attachment)
 end
 
-attachmentObject.onManeuverGain = function(pet, maneuvers)
-    if maneuvers == 1 then
-        pet:addMod(xi.mod.EVA, 20)
-        pet:addMod(xi.mod.ACC, -20)
-    elseif maneuvers == 2 then
-        pet:addMod(xi.mod.EVA, 40)
-        pet:addMod(xi.mod.ACC, -40)
-    elseif maneuvers == 3 then
-        pet:addMod(xi.mod.EVA, 80)
-        pet:addMod(xi.mod.ACC, -80)
-    end
+attachmentObject.onManeuverGain = function(pet, attachment, maneuvers)
+    xi.automaton.onManeuverGain(pet, attachment, maneuvers)
 end
 
-attachmentObject.onManeuverLose = function(pet, maneuvers)
-    if maneuvers == 1 then
-        pet:delMod(xi.mod.EVA, 20)
-        pet:delMod(xi.mod.ACC, -20)
-    elseif maneuvers == 2 then
-        pet:delMod(xi.mod.EVA, 40)
-        pet:delMod(xi.mod.ACC, -40)
-    elseif maneuvers == 3 then
-        pet:delMod(xi.mod.EVA, 80)
-        pet:delMod(xi.mod.ACC, -80)
-    end
+attachmentObject.onManeuverLose = function(pet, attachment, maneuvers)
+    xi.automaton.onManeuverLose(pet, attachment, maneuvers)
+end
+
+attachmentObject.onUpdate = function(pet, attachment, maneuvers)
+    xi.automaton.updateAttachmentModifier(pet, attachment, maneuvers)
 end
 
 return attachmentObject
