@@ -1283,7 +1283,7 @@ end
 -- can stack each effect up to maxStack times, per https://ffxiclopedia.fandom.com/wiki/Grounds_of_Valor#Prowesses
 local prowessData =
 {
-    { effect = xi.effect.PROWESS_CASKET_RATE,   basePower = 4,   addPower = 4,   maxStack = 5  },
+    { effect = xi.effect.PROWESS_CASKET_RATE,   basePower = 10,  addPower = 10,  maxStack = 5  },
     { effect = xi.effect.PROWESS_SKILL_RATE,    basePower = 4,   addPower = 2,   maxStack = 11 },
     { effect = xi.effect.PROWESS_CRYSTAL_YIELD, basePower = 4,   addPower = 4,   maxStack = 5  },
     { effect = xi.effect.PROWESS_TH,            basePower = 1,   addPower = 1,   maxStack = 3  },
