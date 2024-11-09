@@ -71,6 +71,7 @@ zones[xi.zone.THE_ELDIEME_NECROPOLIS] =
         APPARATUS_ELEMENTAL = 17576271,
         NAMORODO            = GetFirstID('Namorodo'),
         SKULL_OFFSET        = 17575937,
+        ANEMONE             = GetFirstID('Anemone'),
     },
     npc =
     {

@@ -1,11 +1,17 @@
 -----------------------------------
 -- Zone: The Eldieme Necropolis (195)
 -----------------------------------
+local ID = zones[xi.zone.THE_ELDIEME_NECROPOLIS]
+-----------------------------------
 local zoneObject = {}
 
 zoneObject.onInitialize = function(zone)
     xi.treasure.initZone(zone)
     xi.cactuarRegimes.initializeBooks(zone)
+
+    -- NM Persistance
+    xi.mob.nmTODPersistCache(zone, ID.mob.ANEMONE)      -- Anemone #1
+    xi.mob.nmTODPersistCache(zone, ID.mob.ANEMONE + 59) -- Anemone #2
 end
 
 zoneObject.onZoneIn = function(player, prevZone)
