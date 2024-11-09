@@ -14632,6 +14632,24 @@ xi.cactuarRegimes.zoneData =
                 lvlRangeDialog = 'Target level range: 85 ~ 87',
                 zoneDialog     = 'Training Area: Crawlers\' Nest',
             },
+            [9] =
+            {
+                pageId     =  9,
+                obj1_count =  3,
+                obj2_count =  3,
+                obj3_count =  0,
+                obj4_count =  0,
+                min_level  =  1,
+                max_level  = 75,
+                expReward  = 1500,
+                gilReward  = 1500,
+                obj1Dialog     = 'Knight Crawlers',
+                obj2Dialog     = 'Crawler Hunters',
+                obj3Dialog     = nil,
+                obj4Dialog     = nil,
+                lvlRangeDialog = 'Target level range: 60 ~ 63',
+                zoneDialog     = 'Training Area: Crawlers\' Nest',
+            },
         }
     },
 
