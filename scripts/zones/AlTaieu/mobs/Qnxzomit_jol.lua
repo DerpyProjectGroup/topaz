@@ -8,6 +8,11 @@ local ID = zones[xi.zone.ALTAIEU]
 -----------------------------------
 local entity = {}
 
+entity.onMobEngage = function(mob)
+    mob:setMobMod(xi.mobMod.NO_STANDBACK, 1)
+    mob:setMobMod(xi.mobMod.SPECIAL_SKILL, 0)
+end
+
 entity.onMobDeath = function(mob, player, optParams)
 end
 

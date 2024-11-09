@@ -17,6 +17,7 @@ entity.onMobEngage = function(mob)
         end)
     end)
     mob:setMobMod(xi.mobMod.NO_STANDBACK, 1)
+    mob:setMobMod(xi.mobMod.SPECIAL_SKILL, 0)
     mob:addStatusEffectEx(xi.effect.FLEE, 0, 100, 0, 60)
 end
 

@@ -254,6 +254,8 @@ entity.onMobWeaponSkill = function(target, mob, skill)
 end
 
 entity.onMobDeath = function(mob, player, isKiller)
+    local jailerKills = player:getLocalVar('Cactuar_JOL_KILLS')
+    player:setLocalVar('Cactuar_JOL_KILLS', jailerKills + 1)
     for i = ID.mob.JAILER_OF_LOVE + 1, ID.mob.JAILER_OF_LOVE + 27 do
         local pet = GetMobByID(i)
         if pet:isSpawned() then
@@ -286,10 +288,10 @@ entity.onMobDespawn = function(mob)
                 end
             end
         end
-        SpawnMob(ID.mob.ABSOLUTE_VIRTUE)
+        --[[SpawnMob(ID.mob.ABSOLUTE_VIRTUE)
         if highestEnmityTarget then
             GetMobByID(ID.mob.ABSOLUTE_VIRTUE):updateEnmity(highestEnmityTarget)
-        end
+        end]]
     end
 end
 
