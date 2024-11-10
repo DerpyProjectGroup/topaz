@@ -26840,6 +26840,10 @@ INSERT INTO `mob_droplist` VALUES (4024,1,2,1000,16107,@COMMON);  -- Denali Bonn
 INSERT INTO `mob_droplist` VALUES (4024,1,2,1000,16106,@COMMON);  -- Askar Zucchetto
 INSERT INTO `mob_droplist` VALUES (4024,1,2,1000,16108,@COMMON);  -- Goliard Chapeau
 
+-- ZoneID: 65 Venomfang
+INSERT INTO `mob_droplist` VALUES (4025,1,1,1000,2817,@RARE);  -- Aptant: Pera
+INSERT INTO `mob_droplist` VALUES (4025,1,1,1000,2816,@RARE);  -- Aptant: Tachus
+
 
 /*!40000 ALTER TABLE `mob_droplist` ENABLE KEYS */;
 UNLOCK TABLES;

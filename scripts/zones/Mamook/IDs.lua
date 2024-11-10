@@ -44,6 +44,7 @@ zones[xi.zone.MAMOOK] =
         NIKILULU             = GetFirstID('Nikilulu'),
         MIKILURU             = GetFirstID('Mikiluru'),
         MIKIRULU             = GetFirstID('Mikirulu'),
+        VENOMFANG            = GetFirstID('Venomfang'),
         DEVOUT_RADOL_JA          = 17043532,
         DRAGONSCALED_BUGAAL_JA   = 17043626,
         HUNDREDFACED_HAPOOL_JA   = 17043665,

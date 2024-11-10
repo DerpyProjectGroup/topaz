@@ -13,6 +13,7 @@ zoneObject.onInitialize = function(zone)
     xi.mob.nmTODPersistCache(zone, ID.mob.DARTING_KACHAAL_JA)
     xi.mob.nmTODPersistCache(zone, ID.mob.DEVOUT_RADOL_JA)
     xi.mob.nmTODPersistCache(zone, ID.mob.GULOOL_JA_JA)
+    xi.mob.nmTODPersistCache(zone, ID.mob.VENOMFANG)
 end
 
 zoneObject.onZoneIn = function(player, prevZone)
