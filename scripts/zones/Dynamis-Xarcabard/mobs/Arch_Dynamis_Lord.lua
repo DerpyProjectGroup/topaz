@@ -35,6 +35,7 @@ entity.onMobSpawn = function(mob)
             { id = xi.jsa.CHAINSPELL,     hpp = 100 },
         },
     })
+    mob:delImmunity(xi.immunity.GRAVITY)
     if mob:getID(ID.mob.ARCH_DYNAMIS_LORD) then
     mob:setLocalVar('initial_Split', 0)
     end
