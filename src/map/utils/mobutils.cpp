@@ -507,11 +507,21 @@ namespace mobutils
                     mobHP *= 0.30f; // Retail captures have all pets at 30% of the mobs family of the same level
                 }
 
-                PMob->health.maxhp = (int16)(mobHP) * (1.f + PMob->getMobMod(MOBMOD_HP_SCALE) / 100.f);
+                if (PMob->getMobMod(MOBMOD_HP_SCALE) > 0)
+                {
+                   mobHP *= (float)PMob->getMobMod(MOBMOD_HP_SCALE) / 100.0f;
+                }
+
+                PMob->health.maxhp = (int16)(mobHP);
             }
             else
             {
-                PMob->health.maxhp = PMob->HPmodifier * (1.f + PMob->getMobMod(MOBMOD_HP_SCALE) / 100.f);
+                PMob->health.maxhp = PMob->HPmodifier;
+
+                if (PMob->getMobMod(MOBMOD_HP_SCALE) > 0)
+                {
+                    PMob->health.maxhp *= (float)PMob->getMobMod(MOBMOD_HP_SCALE) / 100.0f;
+                }
             }
 
             if (isNM)
