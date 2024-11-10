@@ -4449,6 +4449,22 @@ INSERT INTO `mob_skill_lists` VALUES ('Falsespinner_Bhudbrodd_Phase2',5413,2202)
 INSERT INTO `mob_skill_lists` VALUES ('Falsespinner_Bhudbrodd_Phase2',5413,2201); -- Orcish Counterstance
 INSERT INTO `mob_skill_lists` VALUES ('Falsespinner_Bhudbrodd_Phase2',5413,609); -- Battle Dance
 INSERT INTO `mob_skill_lists` VALUES ('Falsespinner_Bhudbrodd_Phase2',5413,1066); -- Fanatic Dance
+
+INSERT INTO `mob_skill_lists` VALUES ('Beetle_Rhinowrecker',5414,338);
+INSERT INTO `mob_skill_lists` VALUES ('Beetle_Rhinowrecker',5414,339);
+INSERT INTO `mob_skill_lists` VALUES ('Beetle_Rhinowrecker',5414,340);
+INSERT INTO `mob_skill_lists` VALUES ('Beetle_Rhinowrecker',5414,341);
+INSERT INTO `mob_skill_lists` VALUES ('Beetle_Rhinowrecker',5414,343);
+INSERT INTO `mob_skill_lists` VALUES ('Beetle_Rhinowrecker',5414,2823);
+
+INSERT INTO `mob_skill_lists` VALUES ('Worm_Enhanced',5415,424);
+INSERT INTO `mob_skill_lists` VALUES ('Worm_Enhanced',5415,425);
+INSERT INTO `mob_skill_lists` VALUES ('Worm_Enhanced',5415,426);
+INSERT INTO `mob_skill_lists` VALUES ('Worm_Enhanced',5415,427);
+INSERT INTO `mob_skill_lists` VALUES ('Worm_Enhanced',5415,428);
+INSERT INTO `mob_skill_lists` VALUES ('Worm_Enhanced',5415,429);
+INSERT INTO `mob_skill_lists` VALUES ('Worm_Enhanced',5415,1889);
+INSERT INTO `mob_skill_lists` VALUES ('Worm_Enhanced',5415,1839);
 -- ------------------------------------------------------------
 -- Start of Ambuscade section
 -- NOTE: The mobs are changed every update in the DATs, so using out-of-date

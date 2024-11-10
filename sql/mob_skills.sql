@@ -2454,7 +2454,7 @@ INSERT INTO `mob_skills` VALUES (2435,1697,'severing_fang',4,7.0,2000,1500,2049,
 INSERT INTO `mob_skills` VALUES (2436,1698,'sub-zero_smash',5,7.0,2000,1500,4,0,0,0,0,0,0);
 INSERT INTO `mob_skills` VALUES (2437,1699,'aqua_blast',4,7.0,2000,1800,2049,0,0,4,0,0,0);  -- TODO: Verify knockback value.
 INSERT INTO `mob_skills` VALUES (2438,1700,'frozen_mist',1,10.0,2000,2000,2049,0,0,0,0,0,0);
-INSERT INTO `mob_skills` VALUES (2439,1701,'hydro_wave',1,10.0,2000,2000,2049,0,0,0,0,0,0);
+INSERT INTO `mob_skills` VALUES (2439,1701,'hydro_wave',4,10.0,2000,2000,2049,0,0,0,0,0,0);
 INSERT INTO `mob_skills` VALUES (2440,1702,'ice_guillotine',4,7.0,2000,1500,2049,0,0,0,0,0,0);
 INSERT INTO `mob_skills` VALUES (2441,1703,'aqua_cannon',4,16.0,2000,1800,4,0,0,7,0,0,0);
 INSERT INTO `mob_skills` VALUES (2442,1714,'thorned_stance',1,18.0,2000,1000,4,0,0,0,0,0,0);
@@ -2660,7 +2660,7 @@ INSERT INTO `mob_skills` VALUES (2637,1813,'besiegers_bane',1,18.0,2000,1000,4,0
 -- INSERT INTO `mob_skills` VALUES (2642,2386,'vermilion_wind',0,7.0,2000,1500,4,0,0,0,0,0,0);
 -- INSERT INTO `mob_skills` VALUES (2643,2387,'tyrant_tusk',0,7.0,2000,1500,4,0,0,0,0,0,0);
 -- INSERT INTO `mob_skills` VALUES (2644,2388,'somnial_durance',0,7.0,2000,1500,4,0,0,0,0,0,0);
--- INSERT INTO `mob_skills` VALUES (2645,2389,'mud_stream',0,7.0,2000,1500,4,0,0,0,0,0,0);
+INSERT INTO `mob_skills` VALUES (2645,1839,'mud_stream',1,5.0,2000,2000,2049,0,0,0,0,0,0);
 -- INSERT INTO `mob_skills` VALUES (2646,2390,'rancor_smash',0,7.0,2000,1500,4,0,0,0,0,0,0);
 -- INSERT INTO `mob_skills` VALUES (2647,2391,'melancholy_jig',0,7.0,2000,1500,4,0,0,0,0,0,0);
 -- INSERT INTO `mob_skills` VALUES (2648,2392,'forlorn_impact',0,7.0,2000,1500,4,0,0,0,0,0,0);
@@ -2782,7 +2782,7 @@ INSERT INTO `mob_skills` VALUES (2761,1935,'chupa_blossom',1,10.0,2000,3000,4,0,
 -- INSERT INTO `mob_skills` VALUES (2764,2508,'black_cloud',0,7.0,2000,1500,4,0,0,0,0,0,0);
 -- INSERT INTO `mob_skills` VALUES (2765,2509,'blood_saber',0,7.0,2000,1500,4,0,0,0,0,0,0);
 -- INSERT INTO `mob_skills` VALUES (2766,2510,'malediction',0,7.0,2000,1500,4,0,0,0,0,0,0);
--- INSERT INTO `mob_skills` VALUES (2767,2511,'crepuscule_blade',0,7.0,2000,1500,4,0,0,0,0,0,0);
+-- INSERT INTO `mob_skills` VALUES (2767,1936,'crepuscule_blade',0,7.0,2000,1500,4,0,0,0,0,0,0);
 -- INSERT INTO `mob_skills` VALUES (2768,2512,'deathly_glare',0,7.0,2000,1500,4,0,0,0,0,0,0);
 -- INSERT INTO `mob_skills` VALUES (2769,1943,'blighted_bouquet',0,7.0,2000,1500,4,0,0,0,0,0,0);
 -- INSERT INTO `mob_skills` VALUES (2770,1944,'booming_bombination',0,7.0,2000,1500,4,0,0,0,0,0,0);
@@ -2838,7 +2838,7 @@ INSERT INTO `mob_skills` VALUES (2790,1962,'oblivions_mantle',1,15.0,2000,1000,4
 -- INSERT INTO `mob_skills` VALUES (2820,2564,'keratinous_crush',0,7.0,2000,1500,4,0,0,0,0,0,0);
 -- INSERT INTO `mob_skills` VALUES (2821,2565,'accurst_spear',0,7.0,2000,1500,4,0,0,0,0,0,0);
 -- INSERT INTO `mob_skills` VALUES (2822,2566,'eldritch_wind',0,7.0,2000,1500,4,0,0,0,0,0,0);
--- INSERT INTO `mob_skills` VALUES (2823,1986,'rhinowrecker',0,7.0,2000,1500,4,0,0,0,0,0,0);
+INSERT INTO `mob_skills` VALUES (2823,1986,'rhinowrecker',4,7.0,2000,2000,2049,0,0,5,0,0,0);
 -- INSERT INTO `mob_skills` VALUES (2824,2568,'cloudscourge',0,7.0,2000,1500,4,0,0,0,0,0,0);
 -- INSERT INTO `mob_skills` VALUES (2825,1985,'louring_skies',0,7.0,2000,1500,4,0,0,0,0,0,0); -- Corpselight (Gwynn Ap Nudd)
 -- INSERT INTO `mob_skills` VALUES (2826,1992,'exponential_burst',0,7.0,2000,1500,4,0,0,0,0,0,0);
