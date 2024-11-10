@@ -3206,7 +3206,7 @@ INSERT INTO `synth_recipes` VALUES (49938,1,0,0,0,0,0,41,0,0,0,4100,4242,13203,0
 INSERT INTO `synth_recipes` VALUES (49939,1,0,0,0,0,0,90,0,0,0,4100,4242,13705,0,0,0,0,0,0,0,850,506,1117,849,1,2,1,1,'Ogre Jerkin (desynth)');  -- 2021.11.15 Based on synth.  Sites that show are in agreement.
 INSERT INTO `synth_recipes` VALUES (49940,1,0,0,0,0,0,62,0,0,0,4100,4242,13546,0,0,0,0,0,0,0,855,855,855,855,1,1,1,1,'Hard Leather Ring (desynth)');
 INSERT INTO `synth_recipes` VALUES (49941,1,0,0,0,0,0,70,0,0,0,4100,4242,13591,0,0,0,0,0,0,0,820,820,820,820,1,1,1,1,'Behemoth Mantle (desynth)');  -- 2021.11.15 Based on synth.  Sites that show are in agreement.
--- INSERT INTO `synth_recipes` VALUES (49942,1,0,0,0,0,0,255,0,0,0,4098,4240,1196,0,0,0,0,0,0,0,879,879,879,879,1,1,1,1,'Qiqirn Cape (desynth)');  -- 2021.11.15 Sites agree about materials though disagree about level.  FFXIclopedia 12 JPWiki ??
+INSERT INTO `synth_recipes` VALUES (49942,1,0,0,0,0,0,12,0,0,0,4098,4240,1196,0,0,0,0,0,0,0,879,879,879,879,1,1,1,1,'Qiqirn Cape (desynth)');  -- 2021.11.15 Sites agree about materials though disagree about level.  FFXIclopedia 12 JPWiki ??
 INSERT INTO `synth_recipes` VALUES (49943,1,0,0,0,0,0,15,0,0,0,4100,4242,12441,0,0,0,0,0,0,0,850,852,852,852,1,1,2,2,'Lizard Helm (desynth)');  -- 2021.11.15 Level based on synth.  Items taken from FFXIclopedia though there is disagreement.  This makes the most sense based on synth.
 INSERT INTO `synth_recipes` VALUES (49944,1,0,0,0,0,0,57,0,0,0,4100,4242,13703,0,0,0,0,0,0,0,850,852,851,851,1,3,1,1,'Brigandine (desynth)');
 INSERT INTO `synth_recipes` VALUES (49945,1,0,0,0,0,0,91,0,0,0,4100,4242,14182,0,0,0,0,0,0,0,816,851,849,821,1,2,1,1,'Errant Pigaches (desynth)');
@@ -4792,8 +4792,12 @@ INSERT INTO `synth_recipes` VALUES (76013,1,0,0,0,0,0,0,89,0,0,4100,4242,13460,0
 INSERT INTO `synth_recipes` VALUES (76014,1,0,0,0,70,0,0,0,0,0,4100,4242,13983,0,0,0,0,0,0,0,745,745,745,745,1,1,2,2,'Gold Bangles (Desynth)');
 INSERT INTO `synth_recipes` VALUES (76015,1,0,0,0,70,0,0,0,0,0,4100,4242,13984,0,0,0,0,0,0,0,745,745,745,745,1,1,2,2,'Gold Bangles +1 (Desynth)');
 INSERT INTO `synth_recipes` VALUES (76016,1,0,0,0,98,0,0,0,0,0,4100,4242,2357,0,0,0,0,0,0,0,1227,1227,2275,2275,1,3,1,2,'Medusas Armlet (Desynth)');
-INSERT INTO `synth_recipes` VALUES (76017,1,0,0,98,0,0,0,0,0,0,4100,4242,2356,0,0,0,0,0,0,0,2302,686,2275,2275,1,2,2,3,'Gurfurlurs helmet  (Desynth)');
-INSERT INTO `synth_recipes` VALUES (76018,1,0,0,98,0,0,0,0,0,0,4100,4242,2355,0,0,0,0,0,0,0,654,686,686,812,1,1,2,1,'Ja Jas Chestplate  (Desynth)');
+INSERT INTO `synth_recipes` VALUES (76017,1,0,0,98,0,0,0,0,0,0,4100,4242,2356,0,0,0,0,0,0,0,2302,686,2275,2275,1,2,2,3,'Gurfurlurs helmet (Desynth)');
+INSERT INTO `synth_recipes` VALUES (76018,1,0,0,98,0,0,0,0,0,0,4100,4242,2355,0,0,0,0,0,0,0,654,686,686,812,1,1,2,1,'Ja Jas Chestplate (Desynth)');
+INSERT INTO `synth_recipes` VALUES (76019,1,0,0,24,0,0,0,0,0,0,4100,4242,17035,0,0,0,0,0,0,0,651,651,651,651,1,1,3,3,'Mace (Desynth)');
+INSERT INTO `synth_recipes` VALUES (76020,1,0,0,33,0,0,0,0,0,0,4100,4242,16473,0,0,0,0,0,0,0,652,652,652,652,1,1,1,1,'Kukri (Desynth)');
+INSERT INTO `synth_recipes` VALUES (76021,1,0,4,33,0,0,7,0,0,0,4100,4242,16966,0,0,0,0,0,0,0,852,818,651,657,1,1,1,1,'Tachi (Desynth)');
+INSERT INTO `synth_recipes` VALUES (76022,1,0,0,0,86,0,0,0,0,0,4100,4242,17065,0,0,0,0,0,0,0,652,652,745,746,1,1,1,1,'Platinum Rod (Desynth)');
 -- -----------
 -- RECIPES END
 
