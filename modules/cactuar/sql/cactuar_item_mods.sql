@@ -207,7 +207,28 @@ REPLACE INTO `item_equipment` (`itemId`, `name`, `level`, `ilevel`, `jobs`, `MId
 (14123,'zenith_pumps',73,0,1589788,107,0,0,256,0,0,0),
 (14124,'zenith_pumps_+1',73,0,1589788,107,0,0,256,0,0,0),
 (14247,'zenith_slacks',73,0,1589788,107,0,0,128,0,0,0),
-(14248,'zenith_slacks_+1',73,0,1589788,107,0,0,128,0,0,0);
+(14248,'zenith_slacks_+1',73,0,1589788,107,0,0,128,0,0,0),
+
+(11283,'oracles_robe',72,0,1589772,143,0,0,32,0,0,0),
+(11377,'oracles_pigaches',72,0,1589772,143,0,0,256,0,0,0),
+(15022,'oracles_gloves',72,0,1589772,143,0,0,64,0,0,0),
+(16156,'oracles_cap',72,0,1589772,143,0,0,16,0,0,0),
+(16342,'oracles_braconi',72,0,1589772,143,0,0,128,0,0,0),
+(14489,'nashira_manteel',75,0,573468,160,0,0,32,0,0,0),
+(14906,'nashira_gages',75,0,573468,160,0,0,64,0,0,0),
+(15241,'nashira_turban',75,0,573468,160,0,0,16,0,0,0),
+(15577,'nashira_seraweels',75,0,573468,160,0,0,128,0,0,0),
+(15662,'nashira_crackows',75,0,573468,160,0,0,256,0,0,0),
+(14880,'wise_gloves',72,0,524304,143,0,0,64,0,0,0),
+(14881,'wise_gloves_+1',72,0,524304,143,0,0,64,0,0,0),
+(14440,'chasuble',72,0,524304,143,0,0,32,0,0,0),
+(14441,'chasuble_+1',72,0,524304,143,0,0,32,0,0,0),
+(15190,'wise_cap',72,0,524304,143,0,0,16,0,0,0),
+(15191,'wise_cap_+1',72,0,524304,143,0,0,16,0,0,0),
+(15334,'wise_pigaches',72,0,524304,143,0,0,256,0,0,0),
+(15335,'wise_pigaches_+1',72,0,524304,143,0,0,256,0,0,0),
+(15396,'wise_braconi',72,0,524304,143,0,0,128,0,0,0),
+(15397,'wise_braconi_+1',72,0,524304,143,0,0,128,0,0,0);
 
 REPLACE INTO `item_mods` (`itemid`, `modid`, `value`) VALUES
 -- Melaco Mittens
@@ -256,7 +277,7 @@ REPLACE INTO `item_mods` (`itemid`, `modid`, `value`) VALUES
 -- Blessed Hammer
 (17422,5,10),   -- MP +10
 (17422,13,2),   -- MND +2
-(17422,374,5),  -- Cure Potency +5% 
+(17422,374,5),  -- Cure Potency +5%
 (18391,431,1),  -- ITEM_ADDEFFECT_TYPE: 1
 (18391,499,7),  -- ITEM_SUBEFFECT: 7
 (18391,500,10), -- ITEM_ADDEFFECT_DMG: 21
@@ -298,7 +319,7 @@ REPLACE INTO `item_mods` (`itemid`, `modid`, `value`) VALUES
 (16766,454,5), -- Song Effect Duration +5%
 
 -- Sniping Bow
-(17188,11,4),  -- AGI +4 Sniping Bow Cactuar Edit 
+(17188,11,4),  -- AGI +4 Sniping Bow Cactuar Edit
 (17188,27,-1), -- Enmity -1
 (17188,26,10), -- RACC +10
 (17188,24,5),  -- RATT +5
@@ -385,13 +406,13 @@ REPLACE INTO `item_mods` (`itemid`, `modid`, `value`) VALUES
 (11535,1,7),   -- DEF: 7
 (11535,11,2),  -- AGI: 2
 (11535,24,12), -- RATT: 12
-(11535,359,3), -- RAPID_SHOT +3
+(11535,359,3), -- RAPID_SHOT: 3
 
 -- Fowlers Mantle +1
 (11541,1,8),   -- DEF: 8
 (11541,11,3),  -- AGI: 3
 (11541,24,15), -- RATT: 15
-(11541,359,5), -- RAPID_SHOT +5
+(11541,359,5), -- RAPID_SHOT: 5
 
 -- Lyricists Gonnelle
 (11533,14,3),  -- CHR: 3
@@ -825,7 +846,79 @@ REPLACE INTO `item_mods` (`itemid`, `modid`, `value`) VALUES
 (11001,2,-25), -- HP: -25
 (11001,13,4),  -- MND: 4
 (11001,14,4),  -- CHR: 4
-(11001,170,4); -- FASTCAST: 4
+(11001,170,4), -- FASTCAST: 4
+
+-- Mercenarys Dastanas
+(14959,26,5), -- RAPID_SHOT: 5
+
+-- Volunteers Ring
+(15791,71,2), -- MPHEAL: 2
+
+-- Mercenarys Ring
+(15792,161,-300), -- DMGPHYS: -500
+
+-- Mirror Tiara
+(11473,27,-5),    -- ENMITY: -5
+(11473,163,-400), -- DMGMAGIC: -400
+
+-- Marabout Sandals
+(15760,32,4),  -- FIREATT: 4
+
+-- Llwyds Clogs
+(11390,3,6),  -- HPP: 6
+(11390,6,6),  -- MPP: 6
+
+-- Orca Strap
+(19039,23,5), -- ATT: 5
+(19039,362,5), -- JUMP_ATT_BONUS: 5
+
+-- Rainmaker
+(17963,8,5),  -- STR: 5
+(17963,73,2), -- STORETP: 2
+
+-- Catalyst
+(18597,487,10), -- MAG_BURST_BONUS: 10
+
+-- Viator Cape
+(16246,3,2), -- HPP: 2
+(16246,6,2), -- MPP: 2
+
+-- Grand Crossbow
+(19208,964,10), -- RANGED_CRIT_DMG_INCREASE: 10
+
+-- Danzo Tekko
+(15033,291,3), -- COUNTER: 3
+(15033,73,3), -- STORETP: 3
+
+-- Volunteers Belt
+(15898,296,2), -- CONSERVE_MP: 2
+
+-- Volunteers Khud
+(16082,374,3), -- CURE_POTENCY: 3
+
+-- Corsairs Scimitar
+(17737,23,7), -- ATT: 7
+(17737,24,7), -- RATT: 7
+
+-- Mercenarys Turban
+(16083,314,10), -- SHARPSHOT: 10
+
+-- Volunteers Nails
+(15710,833,3), -- SONG_RECAST_DELAY: 3
+
+-- Mercenarys Mantle
+(16222,384,2), -- HASTE_GEAR: 2
+
+-- Mercenarys Subligar
+(15624,291,4), -- COUNTER: 4
+
+-- Mercenarys Boots
+(15709,1038,5), -- DOUBLE_ATTACK_DMG: 5
+(15709,23,7), -- ATT: 7
+
+-- Volunteers Earring
+(15984,305,5); -- RECYCLE: 5
+
 
 REPLACE INTO `item_mods_pet` (`itemId`, `modId`, `value`, `petType`) VALUES
 
@@ -973,6 +1066,12 @@ REPLACE INTO `item_latents` (`itemId`, `modId`, `value`, `latentId`, `latentPara
 -- Expunger
 (17207,287,25,47,0),   -- Expunger DMG+25 when broken (500 WS points)
 (17207,165,2,47,0),    -- Expunger Crit Rate +2% when broken (500 WS points)
-(17207,964,10,47,0);   -- Expunger RANGED_CRIT_DMG_INCREASE + 10 when broken (500 WS points)
+(17207,964,10,47,0),   -- Expunger RANGED_CRIT_DMG_INCREASE + 10 when broken (500 WS points)
+
+-- Ryumon
+(18422,62,2,13,66), -- COPY_IMAGE: ATTP +2
+(18422,62,2,13,444),
+(18422,62,2,13,445),
+(18422,62,2,13,446);
 
 UNLOCK TABLES;

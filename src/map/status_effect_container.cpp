@@ -2052,6 +2052,12 @@ void CStatusEffectContainer::TickRegen(time_point tick)
                         {
                             perpetuation /= 2;
                         }
+
+                        // Evoker's Gages only work on Leviathan
+                        if (hands && hands->getID() == 14960 && PPet->m_PetID == PETID_LEVIATHAN)
+                        {
+                            perpetuation -= 1;
+                        }
                     }
 
                     perpetuation -= charutils::AvatarPerpetuationReduction(PChar);

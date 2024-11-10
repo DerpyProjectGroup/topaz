@@ -2267,6 +2267,8 @@ INSERT INTO `item_latents` VALUES (18407,27,-3,58,0);    -- Imperial Wand Enmity
 INSERT INTO `item_latents` VALUES (18407,287,2,58,0);    -- Imperial Wand DMG+2 in Assault
 INSERT INTO `item_latents` VALUES (18416,287,4,58,0);    -- Karasuageha DMG+4 in Assault
 INSERT INTO `item_latents` VALUES (18416,289,1,58,0);    -- Karasuageha Subtle Blow +1 in Assault
+
+-- Ryumon
 INSERT INTO `item_latents` VALUES (18422,62,1,13,66);
 INSERT INTO `item_latents` VALUES (18422,62,1,13,444);
 INSERT INTO `item_latents` VALUES (18422,62,1,13,445);
