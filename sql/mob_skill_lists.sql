@@ -3925,9 +3925,10 @@ INSERT INTO `mob_skill_lists` VALUE ('Nantina',2011,1617); -- blow
 
 INSERT INTO `mob_skill_lists` VALUE ('Stcemqestcint',2012,1612); -- gouging_branch
 
-INSERT INTO `mob_skill_lists` VALUES ('Avatar_Ifrit_WTB',2013,843); -- Waking the Beast, double punch
+INSERT INTO `mob_skill_lists` VALUES ('Avatar_Ifrit_WTB',2013,843); -- Waking the Beast, double_punch
 INSERT INTO `mob_skill_lists` VALUES ('Avatar_Ifrit_WTB',2013,844); -- Waking the Beast, crimson_howl
-INSERT INTO `mob_skill_lists` VALUES ('Avatar_Ifrit_WTB',2013,845); -- Waking the Beast, fire iv
+INSERT INTO `mob_skill_lists` VALUES ('Avatar_Ifrit_WTB',2013,845); -- Waking the Beast, fire_iv
+INSERT INTO `mob_skill_lists` VALUES ('Avatar_Ifrit_WTB',2013,846); -- Waking the Beast, flaming_crush
 INSERT INTO `mob_skill_lists` VALUES ('Avatar_Ifrit_WTB',2013,847); -- Waking the Beast, meteor_strike
 
 INSERT INTO `mob_skill_lists` VALUES ('Colo-Colo',2014,392); -- ultrasonics
@@ -3940,7 +3941,38 @@ INSERT INTO `mob_skill_lists` VALUES ('Furies',2015,393); -- sonic_boom
 INSERT INTO `mob_skill_lists` VALUES ('Furies',2015,1157); -- slipstream
 INSERT INTO `mob_skill_lists` VALUES ('Furies',2015,1158); -- turbulence
 
--- Next available ID: 2016
+INSERT INTO `mob_skill_lists` VALUES ('Avatar_Shiva_WTB',2016,879); -- Waking the Beast, sleepga
+INSERT INTO `mob_skill_lists` VALUES ('Avatar_Shiva_WTB',2016,878); -- Waking the Beast, frost_armor
+INSERT INTO `mob_skill_lists` VALUES ('Avatar_Shiva_WTB',2016,881); -- Waking the Beast, blizzard iv
+INSERT INTO `mob_skill_lists` VALUES ('Avatar_Shiva_WTB',2016,882); -- Waking the Beast, rush
+INSERT INTO `mob_skill_lists` VALUES ('Avatar_Shiva_WTB',2016,883); -- Waking the Beast, heavenly_strike
+
+-- Note garuda prime did not use predator_claws in over 100+ mobskills in retail captures
+INSERT INTO `mob_skill_lists` VALUES ('Avatar_Garuda_WTB',2017,869); -- Waking the Beast, whispering_wind
+INSERT INTO `mob_skill_lists` VALUES ('Avatar_Garuda_WTB',2017,870); -- Waking the Beast, hastega
+INSERT INTO `mob_skill_lists` VALUES ('Avatar_Garuda_WTB',2017,871); -- Waking the Beast, aerial_armor
+INSERT INTO `mob_skill_lists` VALUES ('Avatar_Garuda_WTB',2017,872); -- Waking the Beast, aero_iv
+INSERT INTO `mob_skill_lists` VALUES ('Avatar_Garuda_WTB',2017,874); -- Waking the Beast, wind_blade
+
+INSERT INTO `mob_skill_lists` VALUES ('Avatar_Ramuh_WTB',2018,888); -- Waking the Beast, thunderspark
+INSERT INTO `mob_skill_lists` VALUES ('Avatar_Ramuh_WTB',2018,889); -- Waking the Beast, lightning_armor
+INSERT INTO `mob_skill_lists` VALUES ('Avatar_Ramuh_WTB',2018,890); -- Waking the Beast, thunder_iv
+INSERT INTO `mob_skill_lists` VALUES ('Avatar_Ramuh_WTB',2018,891); -- Waking the Beast, chaotic_strike
+INSERT INTO `mob_skill_lists` VALUES ('Avatar_Ramuh_WTB',2018,892); -- Waking the Beast, thunderstorm
+
+INSERT INTO `mob_skill_lists` VALUES ('Avatar_Leviathan_WTB',2019,861); -- Waking the Beast, spring_water
+INSERT INTO `mob_skill_lists` VALUES ('Avatar_Leviathan_WTB',2019,862); -- Waking the Beast, slowga
+INSERT INTO `mob_skill_lists` VALUES ('Avatar_Leviathan_WTB',2019,863); -- Waking the Beast, water_iv
+INSERT INTO `mob_skill_lists` VALUES ('Avatar_Leviathan_WTB',2019,864); -- Waking the Beast, spinning_dive
+INSERT INTO `mob_skill_lists` VALUES ('Avatar_Leviathan_WTB',2019,865); -- Waking the Beast, grand_fall
+
+INSERT INTO `mob_skill_lists` VALUES ('Avatar_Titan_WTB',2020,852); -- Waking the Beast, megalith_throw
+INSERT INTO `mob_skill_lists` VALUES ('Avatar_Titan_WTB',2020,853); -- Waking the Beast, earthen_ward
+INSERT INTO `mob_skill_lists` VALUES ('Avatar_Titan_WTB',2020,854); -- Waking the Beast, stone_iv
+INSERT INTO `mob_skill_lists` VALUES ('Avatar_Titan_WTB',2020,855); -- Waking the Beast, mountain_buster
+INSERT INTO `mob_skill_lists` VALUES ('Avatar_Titan_WTB',2020,856); -- Waking the Beast, geocrush
+
+-- Next available ID: 2021
 
 -- ------------------------------------------------------------
 -- Start of Ambuscade section
