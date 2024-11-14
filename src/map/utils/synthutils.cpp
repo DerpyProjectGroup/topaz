@@ -238,9 +238,9 @@ namespace synthutils
         uint8 maxChanceHQ     = 50;
         uint8 randomRoll      = 0; // 1 to 100.
 
-        if (PChar->CraftContainer->getCraftType() == CRAFT_DESYNTHESIS) // If it's a desynth, lower base success rate.
+        if (PChar->CraftContainer->getCraftType() == CRAFT_DESYNTHESIS) // If it's a desynth, lower success rate.
         {
-            successRate = 45;
+            successRate = 75;  // Success rate still lower than regular crafts, however boosted to feel less bad.
             maxChanceHQ = 80;
         }
 
@@ -488,9 +488,9 @@ namespace synthutils
             // Chance penalties.
             uint8 penalty = 1;
 
-            if (PChar->CraftContainer->getCraftType() == CRAFT_DESYNTHESIS) // If it's a desynth, lower skill up rate
+            if (PChar->CraftContainer->getCraftType() == CRAFT_DESYNTHESIS) // If it's a desynth, higher skill up rate
             {
-                penalty += 1;
+                penalty -= 2;  // Desynthesis skill up rate higher than normal synthesis skill up rate as a QoL.
             }
 
             if (PChar->CraftContainer->getQuantity(0) == SYNTHESIS_FAIL) // If synth breaks, lower skill up rate
