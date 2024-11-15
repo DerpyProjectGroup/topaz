@@ -75,7 +75,7 @@ xi.reives.zoneData =
                     ceizakBattlegroundsID.npc.REIVE_COLLISION_OFFSET + 3,
                 },
             },
-    
+
             -- !pos -239 0.184 174 261
             [3] =
             {
@@ -100,7 +100,7 @@ xi.reives.zoneData =
                     ceizakBattlegroundsID.npc.REIVE_COLLISION_OFFSET + 5,
                 },
             },
-    
+
             -- !pos -280.499 0.409 182 261
             [4] =
             {
@@ -365,7 +365,7 @@ xi.reives.zoneData =
                     foretDeHennetielID.npc.REIVE_COLLISION_OFFSET + 9,
                 },
             },
-    
+
             -- !pos -16.6 -1.8 380 262
             [3] =
             {
@@ -385,7 +385,7 @@ xi.reives.zoneData =
                     foretDeHennetielID.npc.REIVE_COLLISION_OFFSET + 7,
                 },
             },
-    
+
             -- !pos -63 -2.1 418 262
             [4] =
             {
@@ -405,7 +405,7 @@ xi.reives.zoneData =
                     foretDeHennetielID.npc.REIVE_COLLISION_OFFSET + 5,
                 },
             },
-    
+
             -- !pos 343 -1.8 -299.4 262
             [5] =
             {
@@ -425,7 +425,7 @@ xi.reives.zoneData =
                     foretDeHennetielID.npc.REIVE_COLLISION_OFFSET + 19,
                 },
             },
-    
+
             -- !pos 296 -2.0 -261 262
             [6] =
             {
@@ -445,7 +445,7 @@ xi.reives.zoneData =
                     foretDeHennetielID.npc.REIVE_COLLISION_OFFSET + 17,
                 },
             },
-    
+
             -- !pos -16.5 -1.93 -219 262
             [7] =
             {
@@ -465,7 +465,7 @@ xi.reives.zoneData =
                     foretDeHennetielID.npc.REIVE_COLLISION_OFFSET + 15,
                 },
             },
-    
+
             -- !pos -63.4 -2.1 -181 262
             [8] =
             {
@@ -485,7 +485,7 @@ xi.reives.zoneData =
                     foretDeHennetielID.npc.REIVE_COLLISION_OFFSET + 13,
                 },
             },
-    
+
             -- !pos -380.9 -1.9 23 262
             [9] =
             {
@@ -505,7 +505,7 @@ xi.reives.zoneData =
                     foretDeHennetielID.npc.REIVE_COLLISION_OFFSET + 3,
                 },
             },
-    
+
             -- !pos -418.8 -2 -23.3 262
             [10] =
             {
@@ -865,7 +865,7 @@ xi.reives.zoneData =
                     morimarBasaltFieldsID.npc.REIVE_COLLISION_OFFSET + 5,
                 },
             },
-            
+
             -- !pos -3.5 0.106 60 265
             [2] =
             {
@@ -915,7 +915,7 @@ xi.reives.zoneData =
                     morimarBasaltFieldsID.npc.REIVE_COLLISION_OFFSET + 11,
                 },
             },
-            
+
             -- !pos -123 -15.89 -419.9 265  -- TODO: Need Fix for collision. Likely need a capture for the collision position.
             [4] =
             {
@@ -1322,7 +1322,7 @@ xi.reives.zoneData =
             },
         },
     },
-    
+
     [xi.zone.YAHSE_HUNTING_GROUNDS] =
     {
         reiveObjRespawnTime = 3600, -- 60 minutes
@@ -1378,7 +1378,7 @@ xi.reives.zoneData =
                     yahseHuntingGroundsID.npc.REIVE_COLLISION_OFFSET + 5,
                 },
             },
-    
+
             -- !pos 153 0.49 -19.7 260
             [3] =
             {
@@ -1401,7 +1401,7 @@ xi.reives.zoneData =
                     yahseHuntingGroundsID.npc.REIVE_COLLISION_OFFSET + 1,
                 },
             },
-    
+
             -- !pos -315.7 0.41 -221 260
             [4] =
             {
@@ -1426,7 +1426,7 @@ xi.reives.zoneData =
                     yahseHuntingGroundsID.npc.REIVE_COLLISION_OFFSET + 7,
                 },
             },
-    
+
             -- !pos 115 0.27 -176 260
             [5] =
             {

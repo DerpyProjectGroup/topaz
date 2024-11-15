@@ -164,6 +164,7 @@ xi.reives.enableReive = function(zoneID, reiveNum)
                 SpawnMob(entryId)  -- Spawn the reive obstacles
                 mob:setAnimation(xi.animation.CLOSE_DOOR)
             end
+
             mob:setAutoAttackEnabled(false)         -- Obstacles do not auto attack.
             mob:setMobAbilityEnabled(false)         -- Obstacles should not use mobskills.
             mob:setMobMod(xi.mobMod.NO_MOVE, 1)     -- Obstacles do not move.
