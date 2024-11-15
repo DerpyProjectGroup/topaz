@@ -33,9 +33,11 @@ zones[xi.zone.MARJAMI_RAVINE] =
     },
     mob =
     {
+        REIVE_MOB_OFFSET = GetFirstID('Monolithic_Boulder'),
     },
     npc =
     {
+        REIVE_COLLISION_OFFSET = GetFirstID('_7e0'),
     },
 }
 

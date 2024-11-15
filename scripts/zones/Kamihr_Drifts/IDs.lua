@@ -33,9 +33,11 @@ zones[xi.zone.KAMIHR_DRIFTS] =
     },
     mob =
     {
+        REIVE_MOB_OFFSET = GetFirstID('Icy_Palisade'),
     },
     npc =
     {
+        REIVE_COLLISION_OFFSET = GetFirstID('_7f0'),
     },
 }
 

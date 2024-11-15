@@ -19,9 +19,11 @@ zones[xi.zone.RAKAZNAR_INNER_COURT] =
     },
     mob =
     {
+        REIVE_MOB_OFFSET = GetFirstID('Heliotrope_Barrier'),
     },
     npc =
     {
+        REIVE_COLLISION_OFFSET = GetFirstID('_7o0'),
     },
 }
 
