@@ -937,7 +937,7 @@ xi.reives.zoneData =
                 collision =
                 {
                     morimarBasaltFieldsID.npc.REIVE_COLLISION_OFFSET + 12,
-                    morimarBasaltFieldsID.npc.REIVE_COLLISION_OFFSET + 13,
+                    -- TODO: Missing a blocker here.
                 },
             },
 
