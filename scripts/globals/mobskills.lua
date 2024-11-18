@@ -120,10 +120,25 @@ local function handleSinglePhysicalHit(mob, target, hitdamage, hitslanded, final
     then
         local pdif = math.random((minRatio * 1000), (maxRatio * 1000)) --generate random PDIF
         pdif = pdif / 1000 --multiplier set.
-        finaldmg = finaldmg + hitdamage * pdif
+        hitdamage = hitdamage * pdif
+
         -- also handle blocking
-        finaldmg = xi.combat.physical.handleBlock(target, mob, finaldmg)
+        local isBlockedWithShieldMastery = false
+        if xi.combat.physical.isBlocked(target, mob) then
+            hitdamage = hitdamage - xi.combat.physical.getDamageReductionForBlock(target, mob, hitdamage)
+
+            if target:hasTrait(xi.trait.SHIELD_MASTERY) then
+                isBlockedWithShieldMastery = true
+            end
+        end
+
+        if hitdamage > 0 and not isBlockedWithShieldMastery then
+            target:tryHitInterrupt(mob)
+        end
+
+        -- update the hitslanded and finaldmg
         hitslanded = hitslanded + 1
+        finaldmg = finaldmg + hitdamage
     end
 
     return hitslanded, finaldmg
@@ -331,16 +346,7 @@ end
 -- effect = xi.effect.WHATEVER if enfeeble
 -- statmod = the stat to account for resist (INT, MND, etc) e.g. xi.mod.INT
 -- This determines how much the monsters ability resists on the player.
-xi.mobskills.applyPlayerResistance = function(actor, effect, target, diff, bonusMacc, element)
-    local isEnfeeble = false
-
-    if
-        effect and
-        effect > 0
-    then
-        isEnfeeble = true
-    end
-
+xi.mobskills.applyPlayerResistance = function(actor, effectId, target, diff, bonusMacc, element)
     if not bonusMacc then
         bonusMacc = 0
     end
@@ -351,12 +357,7 @@ xi.mobskills.applyPlayerResistance = function(actor, effect, target, diff, bonus
         bonusMacc = bonusMacc + diff
     end
 
-    local magicAcc     = xi.combat.magicHitRate.calculateNonSpellMagicAccuracy(actor, target, 0, xi.skill.NONE, element, bonusMacc)
-    local magicEva     = xi.combat.magicHitRate.calculateTargetMagicEvasion(actor, target, element, isEnfeeble, 0, 0) -- false = not an enfeeble.
-    local magicHitRate = xi.combat.magicHitRate.calculateMagicHitRate(magicAcc, magicEva)
-    local resistRate   = xi.combat.magicHitRate.calculateResistRate(actor, target, xi.skill.NONE, element, magicHitRate, 0)
-
-    return resistRate
+    return xi.combat.magicHitRate.calculateResistRate(actor, target, 0, xi.skill.NONE, element, 0, effectId, bonusMacc)
 end
 
 xi.mobskills.mobAddBonuses = function(actor, target, damage, element, skill) -- used for SMN magical bloodpacts, despite the name.

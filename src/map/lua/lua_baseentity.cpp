@@ -6987,7 +6987,7 @@ uint16 CLuaBaseEntity::getFame(sol::object const& areaObj)
 /************************************************************************
  *  Function: addFame()
  *  Purpose : Adds a specified amount of fame to the player's balance
- *  Example : player:addFame(xi.quest.fame_area.WINDURST, 30)
+ *  Example : player:addFame(xi.fameArea.WINDURST, 30)
  *  Notes   :
  ************************************************************************/
 
@@ -7049,7 +7049,7 @@ void CLuaBaseEntity::addFame(sol::object const& areaObj, uint16 fame)
 /************************************************************************
  *  Function: setFame()
  *  Purpose : Sets the fame level for a player to a specified amount
- *  Example : player:setFame(xi.quest.fame_area.BASTOK, 1500)
+ *  Example : player:setFame(xi.fameArea.BASTOK, 1500)
  *  Notes   :
  ************************************************************************/
 
@@ -8813,18 +8813,24 @@ bool CLuaBaseEntity::delGil(int32 gil)
         return false;
     }
 
+    if (gil < 0)
+    {
+        ShowError("lua::delGil : Negative Gil (%i) passed to function", gil);
+        return false;
+    }
+
     bool result = false;
 
     CItem* PItem = static_cast<CCharEntity*>(m_PBaseEntity)->getStorage(LOC_INVENTORY)->GetItem(0);
 
-    if (PItem != nullptr && PItem->isType(ITEM_CURRENCY))
+    if (PItem != nullptr && PItem->isType(ITEM_CURRENCY) && (int32)PItem->getQuantity() >= gil)
     {
         auto* PChar = static_cast<CCharEntity*>(m_PBaseEntity);
         result      = charutils::UpdateItem(PChar, LOC_INVENTORY, 0, -gil) == 0xFFFF;
     }
     else
     {
-        ShowCritical("lua::delGil : No Gil in currency slot");
+        ShowCritical("lua::delGil : Not enough Gil in currency slot");
     }
 
     return result;
@@ -10958,7 +10964,7 @@ void CLuaBaseEntity::disableLevelSync()
     {
         if (PChar->PParty->GetSyncTarget() == PChar)
         {
-            PChar->PParty->SetSyncTarget("", 553);
+            PChar->PParty->SetSyncTarget("", MsgStd::LevelSyncRemoveLeftParty);
         }
         else
         {
@@ -11981,7 +11987,7 @@ void CLuaBaseEntity::addListener(std::string const& eventName, std::string const
  *  Function: removeListener()
  *  Purpose : Instructs the Event Handler to stop monitoring for an Event
  *  Example : pet:removeListener("AUTO_PATTERN_READER_TICK")
- *  Notes   : Used heavily in Pup Ability scripts
+ *  Notes   : Used heavily in PUP Ability scripts
  ************************************************************************/
 
 void CLuaBaseEntity::removeListener(std::string const& identifier)
@@ -12000,6 +12006,20 @@ void CLuaBaseEntity::removeListener(std::string const& identifier)
 void CLuaBaseEntity::triggerListener(std::string const& eventName, sol::variadic_args args)
 {
     m_PBaseEntity->PAI->EventHandler.triggerListener(eventName, sol::as_args(args));
+}
+
+/************************************************************************
+ *  Function: hasListener()
+ *  Purpose : true/false of whether or not the Event Handler is monitoring
+ *          : for a particular Event
+ *  Example : if mob:hasListener("COMBAT_TICK") then ...
+ *  Notes   : This uses the event name, not the unique identifier!
+ *          : This is just for the presence of an event in general, not a specific one
+ ************************************************************************/
+
+bool CLuaBaseEntity::hasListener(std::string const& eventName)
+{
+    return m_PBaseEntity->PAI->EventHandler.hasListener(eventName);
 }
 
 /************************************************************************
@@ -17226,6 +17246,20 @@ void CLuaBaseEntity::untargetableAndUnactionable(uint32 milliseconds)
     m_PBaseEntity->PAI->Untargetable(std::chrono::milliseconds(milliseconds), false);
 }
 
+void CLuaBaseEntity::tryHitInterrupt(CLuaBaseEntity* attacker)
+{
+    if (attacker)
+    {
+        auto* defenderBattle = dynamic_cast<CBattleEntity*>(m_PBaseEntity);
+        auto* attackerBattle = dynamic_cast<CBattleEntity*>(attacker->GetBaseEntity());
+
+        if (defenderBattle && attackerBattle)
+        {
+            defenderBattle->TryHitInterrupt(attackerBattle);
+        }
+    }
+}
+
 /************************************************************************
  *  Function: getPool()
  *  Purpose : Returns a Mob's Pool ID integer
@@ -18540,6 +18574,7 @@ void CLuaBaseEntity::Register()
     SOL_REGISTER("addListener", CLuaBaseEntity::addListener);
     SOL_REGISTER("removeListener", CLuaBaseEntity::removeListener);
     SOL_REGISTER("triggerListener", CLuaBaseEntity::triggerListener);
+    SOL_REGISTER("hasListener", CLuaBaseEntity::hasListener);
 
     SOL_REGISTER("getEntity", CLuaBaseEntity::getEntity);
     SOL_REGISTER("canChangeState", CLuaBaseEntity::canChangeState);
@@ -18812,6 +18847,7 @@ void CLuaBaseEntity::Register()
     SOL_REGISTER("hasPreventActionEffect", CLuaBaseEntity::hasPreventActionEffect);
     SOL_REGISTER("stun", CLuaBaseEntity::stun);
     SOL_REGISTER("untargetableAndUnactionable", CLuaBaseEntity::untargetableAndUnactionable);
+    SOL_REGISTER("tryHitInterrupt", CLuaBaseEntity::tryHitInterrupt);
 
     SOL_REGISTER("getPool", CLuaBaseEntity::getPool);
     SOL_REGISTER("getDropID", CLuaBaseEntity::getDropID);

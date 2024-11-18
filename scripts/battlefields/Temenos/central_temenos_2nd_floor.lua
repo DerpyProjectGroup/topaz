@@ -266,7 +266,7 @@ content.groups =
             'Mystic_Avatar_Carbuncle',
         },
         mobMods = { [xi.mobMod.DETECTION] = xi.detects.HEARING },
-        inParty = true,
+        isParty = true,
     },
 
     {

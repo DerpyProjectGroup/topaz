@@ -407,24 +407,6 @@ xi.spells.damage.calculateSDT = function(target, spellElement)
     return utils.clamp(sdt, 0, 3)
 end
 
--- This function is used to calculate Resist tiers. The resist tiers work differently for enfeebles (which usually affect duration, not potency) than for nukes.
--- This is for nukes damage only. If an spell happens to do both damage and apply an status effect, they are calculated separately.
-xi.spells.damage.calculateResist = function(caster, target, spellGroup, skillType, spellElement, statUsed, bonusMacc)
-    -- Get Caster Magic Accuracy.
-    local magicAcc = xi.combat.magicHitRate.calculateActorMagicAccuracy(caster, target, spellGroup, skillType, spellElement, statUsed, bonusMacc)
-
-    -- Get Target Magic Evasion.
-    local magicEva = xi.combat.magicHitRate.calculateTargetMagicEvasion(caster, target, spellElement, false, 0, 0) -- false = not an enfeeble.
-
-    -- Calculate Magic Hit Rate with the previous 2 values.
-    local magicHitRate = xi.combat.magicHitRate.calculateMagicHitRate(magicAcc, magicEva)
-
-    -- Calculate Resist Rate.
-    local resist = xi.combat.magicHitRate.calculateResistRate(caster, target, skillType, spellElement, magicHitRate, 0)
-
-    return resist
-end
-
 xi.spells.damage.calculateDayAndWeather = function(caster, spellId, spellElement)
     local dayAndWeather = 1 -- The variable we want to calculate
 
@@ -827,6 +809,15 @@ xi.spells.damage.calculateIfMagicBurst = function(target, spellElement, skillcha
         magicBurst = 1.25 + rankBonus + skillchainCount / 10
     end
 
+    -- Sengikori appears to add to base mb multiplier per JP wiki https://wiki.ffo.jp/html/20051.html
+    if
+        skillchainCount >= 1 and
+        target:getMod(xi.mod.SENGIKORI_MB_DMG_DEBUFF) > 0
+    then
+        magicBurst = magicBurst + target:getMod(xi.mod.SENGIKORI_MB_DMG_DEBUFF) / 100
+        target:setMod(xi.mod.SENGIKORI_MB_DMG_DEBUFF, 0) -- Consume the "Effect" upon magic burst.
+    end
+
     return magicBurst
 end
 
@@ -950,7 +941,7 @@ xi.spells.damage.useDamageSpell = function(caster, target, spell)
     local magicBurstBonus             = 1
 
     if nukeAbsorbOrNullify > 0 then
-        resist                      = xi.spells.damage.calculateResist(caster, target, spellGroup, skillType, spellElement, statUsed, bonusMacc)
+        resist                      = xi.combat.magicHitRate.calculateResistRate(caster, target, spellGroup, skillType, spellElement, statUsed, 0, bonusMacc)
         targetMagicDamageAdjustment = xi.spells.damage.calculateTMDA(target, spellElement)
 
         -- If spell is NOT blue magic OR (if its blue magic AND has status effect)

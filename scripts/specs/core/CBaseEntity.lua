@@ -2539,6 +2539,11 @@ end
 function CBaseEntity:triggerListener(eventName, ...)
 end
 
+---@param eventName string
+---@return boolean
+function CBaseEntity:hasListener(eventName)
+end
+
 ---@nodiscard
 ---@param targetID integer
 ---@return CBaseEntity?
@@ -3797,6 +3802,11 @@ end
 ---@param milliseconds integer
 ---@return nil
 function CBaseEntity:untargetableAndUnactionable(milliseconds)
+end
+
+---@param attacker CBaseEntity
+---@return nil
+function CBaseEntity:tryHitInterrupt(attacker)
 end
 
 ---@nodiscard

@@ -600,6 +600,7 @@ public:
     void addListener(std::string const& eventName, std::string const& identifier, sol::function const& func);
     void removeListener(std::string const& identifier);
     void triggerListener(std::string const& eventName, sol::variadic_args args);
+    bool hasListener(std::string const& eventName);
 
     auto getEntity(uint16 targetID) -> std::optional<CLuaBaseEntity>;
     bool canChangeState();
@@ -872,6 +873,7 @@ public:
     bool hasPreventActionEffect();
     void stun(uint32 milliseconds);
     void untargetableAndUnactionable(uint32 milliseconds);
+    void tryHitInterrupt(CLuaBaseEntity* attacker);
 
     uint32 getPool(); // Returns a mobs pool ID. If entity is not a mob, returns nil.
     uint32 getDropID();

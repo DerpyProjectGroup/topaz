@@ -29,9 +29,9 @@ zones[xi.zone.TALACCA_COVE] =
         PARTY_MEMBERS_HAVE_FALLEN     = 7673, -- All party members have fallen in battle. Now leaving the battlefield.
         THE_PARTY_WILL_BE_REMOVED     = 7680, -- If all party members' HP are still zero after # minute[/s], the party will be removed from the battlefield.
         IMPERIAL_ORDER_BREAKS         = 7688, -- The <item> breaks!
-        ENTERING_THE_BATTLEFIELD_FOR  = 7701, -- Entering the battlefield for [Call to Arms/Compliments to the Chef/Puppetmaster Blues/Breaking the Bonds of Fate/Legacy of the Lost/Legacy of the Lost]!
+        ENTERING_THE_BATTLEFIELD_FOR  = 7701, -- Entering the battlefield for [Call to Arms/Compliments to the Chef/Puppetmaster Blues/Breaking the Bonds of Fate/Legacy of the Lost/Legacy of the Lost/An Imperial Heist]!
         YOU_CAN_NOW_BECOME_A_CORSAIR  = 7799, -- You can now become a corsair!
-        NOBODY_COMES_TO_HELP          = 7850, -- Nobody comes to help.
+        NOBODY_COMES_TO_HELP          = 7850, -- Nobody comes to help. The Imp Bandsman looks dejected.
         HELP_HAS_ARRIVED              = 7851, -- Help has arrived!
     },
     mob =

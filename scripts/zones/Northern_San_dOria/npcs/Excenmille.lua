@@ -86,7 +86,7 @@ entity.onEventFinish = function(player, csid, option, npc)
         player:delKeyItem(xi.ki.RED_INSTITUTE_CARD)
         player:messageSpecial(ID.text.KEYITEM_LOST, xi.ki.RED_INSTITUTE_CARD)
         npcUtil.completeQuest(player, xi.questLog.SANDORIA, xi.quest.id.sandoria.TRUST_SANDORIA, {
-            ki = xi.ki.SAN_DORIA_TRUST_PERMIT,
+            keyItem = xi.ki.SAN_DORIA_TRUST_PERMIT,
             title = xi.title.THE_TRUSTWORTHY,
             var = 'SandoriaFirstTrust'
         })
@@ -97,7 +97,7 @@ entity.onEventFinish = function(player, csid, option, npc)
         player:delKeyItem(xi.ki.RED_INSTITUTE_CARD)
         player:messageSpecial(ID.text.KEYITEM_LOST, xi.ki.RED_INSTITUTE_CARD)
         npcUtil.completeQuest(player, xi.questLog.SANDORIA, xi.quest.id.sandoria.TRUST_SANDORIA, {
-            ki = xi.ki.SAN_DORIA_TRUST_PERMIT
+            keyItem = xi.ki.SAN_DORIA_TRUST_PERMIT
         })
     end
 end

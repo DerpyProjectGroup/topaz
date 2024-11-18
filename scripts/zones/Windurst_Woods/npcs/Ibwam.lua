@@ -87,7 +87,11 @@ entity.onEventFinish = function(player, csid, option, npc)
         npcUtil.giveKeyItem(player, xi.ki.GREEN_SENTINEL_BADGE)
     elseif
         csid == 739 and
-        npcUtil.completeQuest(player, xi.questLog.WINDURST, xi.quest.id.windurst.LURE_OF_THE_WILDCAT, { fame = 150, ki = xi.ki.GREEN_INVITATION_CARD, var = 'WildcatWindurst' })
+        npcUtil.completeQuest(player, xi.questLog.WINDURST, xi.quest.id.windurst.LURE_OF_THE_WILDCAT, {
+            keyItem = xi.ki.GREEN_INVITATION_CARD,
+            fame = 150,
+            var = 'WildcatWindurst'
+        })
     then
         player:delKeyItem(xi.ki.GREEN_SENTINEL_BADGE)
         player:messageSpecial(ID.text.KEYITEM_LOST, xi.ki.GREEN_SENTINEL_BADGE)

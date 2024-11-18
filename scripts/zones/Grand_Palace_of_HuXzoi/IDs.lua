@@ -36,7 +36,7 @@ zones[xi.zone.GRAND_PALACE_OF_HUXZOI] =
     },
     mob =
     {
-        JAILER_OF_TEMPERANCE_PH = GetTableOfIDs('Eozdei_Still', 5), -- Get the first 5 in the zone
+        JAILER_OF_TEMPERANCE_PH = utils.slice(GetTableOfIDs('Eozdei_Still'), 1, 5), -- Entries 1-5 of the table (1-indexed, inclusive)
         IXGHRAH                 = GetFirstID('Ixghrah'),
         JAILER_OF_TEMPERANCE    = GetFirstID('Jailer_of_Temperance'),
         IXAERN_MNK              = GetFirstID('Ixaern_MNK'),

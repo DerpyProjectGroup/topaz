@@ -1025,6 +1025,9 @@ function utils.mobTeleport(mob, hideDuration, pos, disAnim, reapAnim)
         return
     end
 
+    -- TODO: Temporary workaround
+    ---@diagnostic disable: param-type-mismatch
+
     mob:entityAnimationPacket(disAnim)
     mob:hideName(true)
     mob:setUntargetable(true)
@@ -1033,6 +1036,9 @@ function utils.mobTeleport(mob, hideDuration, pos, disAnim, reapAnim)
     mob:setMobAbilityEnabled(false)
     mob:setPos(pos, 0)
     mob:setSpeed(0)
+
+    -- TODO: Temporary workaround
+    ---@diagnostic enable: param-type-mismatch
 
     mob:timer(hideDuration, function(mobArg)
         mobArg:setPos(pos, 0)

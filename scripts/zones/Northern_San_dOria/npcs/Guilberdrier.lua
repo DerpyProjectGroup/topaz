@@ -42,7 +42,11 @@ entity.onEventFinish = function(player, csid, option, npc)
     then
         player:addQuest(xi.questLog.SANDORIA, xi.quest.id.sandoria.EXIT_THE_GAMBLER)
     elseif csid == 518 then
-        npcUtil.completeQuest(player, xi.questLog.SANDORIA, xi.quest.id.sandoria.EXIT_THE_GAMBLER, { ki = xi.ki.MAP_OF_KING_RANPERRES_TOMB, title = xi.title.DAYBREAK_GAMBLER, xp = 2000 })
+        npcUtil.completeQuest(player, xi.questLog.SANDORIA, xi.quest.id.sandoria.EXIT_THE_GAMBLER, {
+            keyItem = xi.ki.MAP_OF_KING_RANPERRES_TOMB,
+            exp = 2000,
+            title = xi.title.DAYBREAK_GAMBLER
+        })
     end
 end
 

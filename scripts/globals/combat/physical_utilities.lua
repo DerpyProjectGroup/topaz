@@ -910,29 +910,40 @@ xi.combat.physical.calculateBlockRate = function(defender, attacker)
     return blockRate
 end
 
-xi.combat.physical.handleBlock = function(defender, attacker, damage)
-    if
-        xi.combat.physical.canBlock(defender, attacker) and
-        xi.combat.physical.calculateBlockRate(defender, attacker) > math.random(100)
-    then
+xi.combat.physical.getDamageReductionForBlock = function(defender, attacker, damage)
+    -- save original damage for comparison
+    local originalDamage = damage
+
+    -- do not reduce if damage is negative
+    if damage > 0 then
         -- shield def bonus is a flat raw damage reduction that occurs before absorb
-        -- however do not reduce below 0 or if damage is negative
-        if damage > 0 then
-            damage = math.max(0, damage - defender:getMod(xi.mod.SHIELD_DEF_BONUS))
-        end
+        damage = math.max(0, damage - defender:getMod(xi.mod.SHIELD_DEF_BONUS))
 
         if defender:isPC() then
             local shield = defender:getEquippedItem(xi.slot.SUB)
-            local absorb = 100
-            absorb = utils.clamp(absorb - shield:getShieldAbsorptionRate(), 0, 100)
+            local absorb = utils.clamp(100 - shield:getShieldAbsorptionRate(), 0, 100)
             damage = math.floor(damage * (absorb / 100))
-            defender:trySkillUp(xi.skill.SHIELD, attacker:getMainLvl())
         else
             damage = math.floor(damage * 0.5)
         end
     end
 
-    return damage
+    -- return the difference between original and new damage
+    -- in other words the damage reduction (as a flat value)
+    return originalDamage - damage
+end
+
+xi.combat.physical.isBlocked = function(defender, attacker)
+    local blocked = false
+    if
+        xi.combat.physical.canBlock(defender, attacker) and
+        xi.combat.physical.calculateBlockRate(defender, attacker) > math.random(100)
+    then
+        defender:trySkillUp(xi.skill.SHIELD, attacker:getMainLvl())
+        blocked = true
+    end
+
+    return blocked
 end
 
 xi.combat.physical.isParried = function(defender, attacker)

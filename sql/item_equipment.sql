@@ -5915,7 +5915,7 @@ INSERT INTO `item_equipment` VALUES (16165,'storm_shield',70,0,2421,39,2,0,2,0,0
 INSERT INTO `item_equipment` VALUES (16166,'januwiyah_-1',73,0,193,54,4,0,2,0,0,0);
 INSERT INTO `item_equipment` VALUES (16167,'tariqah_-1',73,0,2421,53,2,0,2,0,0,0);
 INSERT INTO `item_equipment` VALUES (16168,'sentinel_shield',50,0,2385,47,3,0,2,0,0,0);
-INSERT INTO `item_equipment` VALUES (16169,'caballero_shield',70,0,193,22,3,0,2,0,0,0);
+INSERT INTO `item_equipment` VALUES (16169,'caballero_shield',70,0,193,24,3,0,2,0,0,0);
 INSERT INTO `item_equipment` VALUES (16170,'wivre_shield',58,0,193,30,3,0,2,0,0,0);
 INSERT INTO `item_equipment` VALUES (16171,'wivre_shield_+1',58,0,193,30,3,0,2,0,0,0);
 INSERT INTO `item_equipment` VALUES (16172,'iron_ram_shield',60,0,193,27,3,0,2,0,0,0);
@@ -11388,6 +11388,7 @@ INSERT INTO `item_equipment` VALUES (23349,'horos_t._shoes_+2',99,119,262144,304
 INSERT INTO `item_equipment` VALUES (23350,'peda._loafers_+2',99,119,524288,215,0,0,256,0,0,0);
 INSERT INTO `item_equipment` VALUES (23351,'bagua_sandals_+2',99,119,1048576,310,0,0,256,0,0,0);
 INSERT INTO `item_equipment` VALUES (23352,'futhark_boots_+2',99,119,2097152,339,0,0,256,0,0,0);
+INSERT INTO `item_equipment` VALUES (23364,'kas._sune-ate_+2',99,119,2048,293,0,0,256,0,0,0);
 INSERT INTO `item_equipment` VALUES (23375,'pummelers_mask_+3',99,119,1,64,0,0,16,0,0,0);
 INSERT INTO `item_equipment` VALUES (23376,'anch._crown_+3',99,119,2,66,0,0,16,0,0,0);
 INSERT INTO `item_equipment` VALUES (23377,'theophany_cap_+3',99,119,4,68,0,0,16,0,0,0);

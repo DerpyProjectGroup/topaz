@@ -280,6 +280,7 @@ namespace luautils
         // Load globals
         // Truly global files first
         lua.safe_script_file("./scripts/globals/common.lua");
+        lua.safe_script_file("./scripts/globals/utils.lua");
 
         // Load global enums
         for (auto const& entry : sorted_directory_iterator<std::filesystem::directory_iterator>("./scripts/enum"))
@@ -930,63 +931,45 @@ namespace luautils
             else
             {
                 ShowError(fmt::format("GetFirstID({}) in zone {}: Returning nil", name, zoneName));
-
                 return std::nullopt;
             }
         });
 
         std::unordered_map<std::string, sol::table> idLuaTables;
 
-        lua.set_function("GetTableOfIDs", [&](std::string const& name, std::optional<int> optRange, std::optional<int> optOffset) -> sol::table
+        lua.set_function("GetTableOfIDs", [&](std::string const& name) -> sol::table
         {
-            // Is it already built and cached?
+            // Is it already built and cached: return it
             if (idLuaTables.find(name) != idLuaTables.end())
             {
                 return idLuaTables[name];
             }
 
-            sol::table table = lua.create_table();
-
-            // Match first, +n following entries [start, start + n)
-            if (optRange)
+            // If we have no entries, bail out and return nil
+            if (lookup.find(name) == lookup.end())
             {
-                int range = *optRange;
-
-                // If we have no entries, bail out and return nil
-                if (lookup.find(name) == lookup.end())
-                {
-                    ShowError(fmt::format("GetTableOfIDs({}) in zone {}: Returning nil", name, zoneName));
-                    return sol::lua_nil;
-                }
-
-                auto entriesVec = lookup[name];
-
-                if (entriesVec.empty())
-                {
-                    ShowError(fmt::format("GetTableOfIDs({}) in zone {}: Returning empty table", name, zoneName));
-                    return table;
-                }
-
-                uint32 offset  = optOffset.value_or(0);
-                uint32 startId = entriesVec.front() + offset;
-                uint32 endId   = startId + range;
-
-                // TODO: Set this up to be able to iterate negatively too
-                for (std::size_t idx = startId; idx < endId; ++idx)
-                {
-                    table.add(idx);
-                }
+                ShowError(fmt::format("GetTableOfIDs({}) in zone {}: Returning nil", name, zoneName));
+                return sol::lua_nil;
             }
-            else // Look up all that match name
+
+            // Otherwise, let's start building it and then cache it
+            auto table = lua.create_table();
+
+            auto entriesVec = lookup[name];
+            if (entriesVec.empty())
             {
-                for (auto const& [lookupName, lookupVec] : lookup)
+                ShowError(fmt::format("GetTableOfIDs({}) in zone {}: Returning empty table", name, zoneName));
+                return table;
+            }
+
+            // Look up all that match name
+            for (auto const& [lookupName, lookupVec] : lookup)
+            {
+                if (name == lookupName)
                 {
-                    if (name == lookupName)
+                    for (auto const& entryId : lookupVec)
                     {
-                        for (auto const& entryId : lookupVec)
-                        {
-                            table.add(entryId);
-                        }
+                        table.add(entryId);
                     }
                 }
             }

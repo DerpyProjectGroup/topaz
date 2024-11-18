@@ -191,8 +191,8 @@ namespace settings
                 // block.
                 if (std::getenv(envKey.c_str()))
                 {
-                    auto value = std::string(std::getenv(envKey.c_str()));
-                    ShowInfo(fmt::format("Applying ENV VAR {}: {} -> {}", envKey, key, value));
+                    auto value = std::string(trim(std::getenv(envKey.c_str())));
+                    ShowInfo(fmt::format("Applying ENV VAR {} to {}", envKey, key));
 
                     // If we don't convert the PORTS to doubles (or ints), then the LUA
                     // doesn't interpret them correctly and it breaks everything.

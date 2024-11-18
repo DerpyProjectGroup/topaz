@@ -5303,11 +5303,12 @@ INSERT INTO `item_mods` VALUES (11154,27,-8); -- ENMITY: -8
 INSERT INTO `item_mods` VALUES (11154,105,7); -- MARKSMAN: 7
 
 -- Unkai Sune-Ate +2
-INSERT INTO `item_mods` VALUES (11155,1,28);  -- DEF: 28
-INSERT INTO `item_mods` VALUES (11155,8,8);   -- STR: 8
-INSERT INTO `item_mods` VALUES (11155,23,15); -- ATT: 15
-INSERT INTO `item_mods` VALUES (11155,25,15); -- ACC: 15
-INSERT INTO `item_mods` VALUES (11155,73,6);  -- STORETP: 6
+INSERT INTO `item_mods` VALUES (11155,1,28);    -- DEF: 28
+INSERT INTO `item_mods` VALUES (11155,8,8);     -- STR: 8
+INSERT INTO `item_mods` VALUES (11155,23,15);   -- ATT: 15
+INSERT INTO `item_mods` VALUES (11155,25,15);   -- ACC: 15
+INSERT INTO `item_mods` VALUES (11155,73,6);    -- STORETP: 6
+INSERT INTO `item_mods` VALUES (11155,1090,10); -- SENGIKORI_BONUS : 10
 
 -- Iga Kyahan +2
 INSERT INTO `item_mods` VALUES (11156,1,23);    -- DEF: 23
@@ -5983,11 +5984,12 @@ INSERT INTO `item_mods` VALUES (11254,27,-5); -- ENMITY: -5
 INSERT INTO `item_mods` VALUES (11254,105,5); -- MARKSMAN: 5
 
 -- Unkai Sune-Ate +1
-INSERT INTO `item_mods` VALUES (11255,1,26);  -- DEF: 26
-INSERT INTO `item_mods` VALUES (11255,8,5);   -- STR: 5
-INSERT INTO `item_mods` VALUES (11255,23,10); -- ATT: 10
-INSERT INTO `item_mods` VALUES (11255,25,10); -- ACC: 10
-INSERT INTO `item_mods` VALUES (11255,73,4);  -- STORETP: 4
+INSERT INTO `item_mods` VALUES (11255,1,26);   -- DEF: 26
+INSERT INTO `item_mods` VALUES (11255,8,5);    -- STR: 5
+INSERT INTO `item_mods` VALUES (11255,23,10);  -- ATT: 10
+INSERT INTO `item_mods` VALUES (11255,25,10);  -- ACC: 10
+INSERT INTO `item_mods` VALUES (11255,73,4);   -- STORETP: 4
+INSERT INTO `item_mods` VALUES (11255,1090,5); -- SENGIKORI_BONUS : 5
 
 -- Iga Kyahan +1
 INSERT INTO `item_mods` VALUES (11256,1,21);    -- DEF: 21
@@ -53421,7 +53423,7 @@ INSERT INTO `item_mods` VALUES (23363,384,400); -- HASTE_GEAR: 4%
 INSERT INTO `item_mods` VALUES (23363,841,8);   -- ALL_WSDMG_FIRST_HIT: 8
 -- TODO: Enhances "Unlimited Shot" effect
 
--- Kasuga sune-ate +2
+-- Kasuga Sune-Ate +2
 INSERT INTO `item_mods` VALUES (23364,1,106);   -- DEF: 106
 INSERT INTO `item_mods` VALUES (23364,2,35);    -- HP:  35
 INSERT INTO `item_mods` VALUES (23364,8,26);    -- STR: 26
@@ -53438,8 +53440,8 @@ INSERT INTO `item_mods` VALUES (23364,31,120);  -- MEVA: 120
 INSERT INTO `item_mods` VALUES (23364,68,95);   -- EVA:  95
 INSERT INTO `item_mods` VALUES (23364,384,300); -- HASTE_GEAR: 3%
 INSERT INTO `item_mods` VALUES (23364,944,12);  -- CONSERVE_TP: 12
--- TODO: Physical damage limit +7%
--- TODO: "Sengikori"+12
+INSERT INTO `item_mods` VALUES (23364,1090,12); -- SENGIKORI_BONUS : 12
+INSERT INTO `item_mods` VALUES (23364,1081,12); -- DAMAGE_LIMITP : 7
 
 -- Hattori Kyahan +2
 INSERT INTO `item_mods` VALUES (23365,1,93);    -- DEF: 93
@@ -72155,6 +72157,7 @@ INSERT INTO `item_mods` VALUES (27433,68,25);   -- EVA: 25
 INSERT INTO `item_mods` VALUES (27433,73,8);    -- STORETP: 8
 INSERT INTO `item_mods` VALUES (27433,306,10);  -- ZANSHIN: 10
 INSERT INTO `item_mods` VALUES (27433,384,300); -- HASTE_GEAR: 300
+INSERT INTO `item_mods` VALUES (27433,1090,10); -- SENGIKORI_BONUS : 10
 
 -- Kasuga Sune-Ate +1
 INSERT INTO `item_mods` VALUES (27434,1,86);    -- DEF: 86
@@ -72173,6 +72176,7 @@ INSERT INTO `item_mods` VALUES (27434,68,55);   -- EVA: 55
 INSERT INTO `item_mods` VALUES (27434,73,8);    -- STORETP: 8
 INSERT INTO `item_mods` VALUES (27434,306,11);  -- ZANSHIN: 11
 INSERT INTO `item_mods` VALUES (27434,384,300); -- HASTE_GEAR: 300
+INSERT INTO `item_mods` VALUES (27434,1090,11); -- SENGIKORI_BONUS : 11
 
 -- Hattori Kyahan
 INSERT INTO `item_mods` VALUES (27435,1,52);    -- DEF: 52

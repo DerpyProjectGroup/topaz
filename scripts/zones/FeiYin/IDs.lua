@@ -21,6 +21,7 @@ zones[xi.zone.FEIYIN] =
         MEMBERS_LEVELS_ARE_RESTRICTED      = 7202,  -- Your party is unable to participate because certain members' levels are restricted.
         FISHING_MESSAGE_OFFSET             = 7243,  -- You can't fish here.
         CHEST_UNLOCKED                     = 7374,  -- You unlock the chest!
+        ITS_FINALLY_OVER                   = 7416,  -- It is finally...over... Ahh... I can... I can see... Tavnazia... The land of wind...and light... My... My home...!
         SOFTLY_SHIMMERING_LIGHT            = 7500,  -- You see a softly shimmering light...
         YOU_REACH_OUT_TO_THE_LIGHT         = 7501,  -- You reach out to the light, and one facet of a curious seed-shaped emblem materializes on the back of your hand. It emanates an otherworldly [red/orange/yellow/green/cerulean/blue/golden/silver/white] radiance.
         THE_LIGHT_DWINDLES                 = 7502,  -- However, the light dwindles and grows dim almost at once...

@@ -5052,9 +5052,11 @@ void SmallPacket0x085(map_session_data_t* const PSession, CCharEntity* const PCh
             return;
         }
 
-        charutils::UpdateItem(PChar, LOC_INVENTORY, 0, quantity * PItem->getBasePrice());
+        const auto cost = quantity * PItem->getBasePrice();
+
+        charutils::UpdateItem(PChar, LOC_INVENTORY, 0, cost);
         charutils::UpdateItem(PChar, LOC_INVENTORY, slotID, -(int32)quantity);
-        ShowInfo("SmallPacket0x085: Player '%s' sold %u of itemID %u [to VENDOR] ", PChar->getName(), quantity, itemID);
+        ShowInfo("SmallPacket0x085: Player '%s' sold %u of itemID %u (Total: %u gil) [to VENDOR] ", PChar->getName(), quantity, itemID, cost);
         PChar->pushPacket(new CMessageStandardPacket(nullptr, itemID, quantity, MsgStd::Sell));
         PChar->pushPacket(new CInventoryFinishPacket());
         PChar->Container->setItem(PChar->Container->getSize() - 1, 0, -1, 0);
@@ -6581,6 +6583,8 @@ void SmallPacket0x0DE(map_session_data_t* const PSession, CCharEntity* const PCh
     _sql->EscapeString(message, PChar->bazaar.message.c_str());
 
     _sql->Query("UPDATE char_stats SET bazaar_message = '%s' WHERE charid = %u", message, PChar->id);
+
+    DebugBazaarsFmt("Bazaar Interaction [Set Message] - Character: {}, Message: '{}'", PChar->name, message);
 }
 
 /************************************************************************
@@ -7813,6 +7817,8 @@ void SmallPacket0x104(map_session_data_t* const PSession, CCharEntity* const PCh
         {
             PTarget->pushPacket(new CBazaarCheckPacket(PChar, BAZAAR_LEAVE));
         }
+
+        DebugBazaarsFmt("Bazaar Interaction [Leave Bazaar] - Buyer: {}, Seller: {}", PChar->name, PTarget->name);
     }
     PChar->BazaarID.clean();
 }
@@ -7866,6 +7872,8 @@ void SmallPacket0x105(map_session_data_t* const PSession, CCharEntity* const PCh
                 PChar->pushPacket(new CBazaarItemPacket(PItem, SlotID, PChar->loc.zone->GetTax()));
             }
         }
+
+        DebugBazaarsFmt("Bazaar Interaction [View Wares] - Buyer: {}, Seller: {}", PChar->name, PTarget->name);
     }
 }
 
@@ -7888,14 +7896,6 @@ void SmallPacket0x106(map_session_data_t* const PSession, CCharEntity* const PCh
         return;
     }
 
-    // Validate purchase quantity
-    if (Quantity < 1)
-    {
-        // Exploit attempt
-        ShowWarning("Player %s purchasing invalid quantity %u from Player %s bazaar! ", PChar->getName(), Quantity, PTarget->getName());
-        return;
-    }
-
     CItemContainer* PBazaar         = PTarget->getStorage(LOC_INVENTORY);
     CItemContainer* PBuyerInventory = PChar->getStorage(LOC_INVENTORY);
     if (PBazaar == nullptr || PBuyerInventory == nullptr)
@@ -7903,15 +7903,36 @@ void SmallPacket0x106(map_session_data_t* const PSession, CCharEntity* const PCh
         return;
     }
 
-    if (PChar->id == PTarget->id || PBuyerInventory->GetFreeSlotsCount() == 0)
-    {
-        PChar->pushPacket(new CBazaarPurchasePacket(PTarget, false));
-        return;
-    }
-
     CItem* PBazaarItem = PBazaar->GetItem(SlotID);
     if (PBazaarItem == nullptr || PBazaarItem->getReserve() > 0)
     {
+        return;
+    }
+
+    // Validate purchase quantity
+    if (Quantity < 1)
+    {
+        // Exploit attempt
+        ShowWarningFmt("Bazaar Interaction [Invalid Quantity] - Buyer: {}, Seller: {}, Item: {}, Qty: {}", PChar->name, PTarget->name, PBazaarItem->getName(), Quantity);
+        return;
+    }
+
+    if (PChar->id == PTarget->id || PBuyerInventory->GetFreeSlotsCount() == 0)
+    {
+        PChar->pushPacket(new CBazaarPurchasePacket(PTarget, false));
+
+        if (settings::get<bool>("logging.DEBUG_BAZAARS") && PChar->id == PTarget->id)
+        {
+            if (PChar->id == PTarget->id)
+            {
+                DebugBazaarsFmt("Bazaar Interaction [Purchase Failed / Self Bazaar] - Character: {}, Item: {}", PChar->name, PBazaarItem->getName());
+            }
+            if (PBuyerInventory->GetFreeSlotsCount() == 0)
+            {
+                DebugBazaarsFmt("Bazaar Interaction [Purchase Failed / Inventory Full] - Buyer: {}, Seller: {}, Item: {}", PChar->name, PTarget->name, PBazaarItem->getName());
+            }
+        }
+
         return;
     }
 
@@ -7932,9 +7953,11 @@ void SmallPacket0x106(map_session_data_t* const PSession, CCharEntity* const PCh
         // Validate this player can afford said item
         if (PCharGil->getQuantity() < PriceWithTax)
         {
-            // Exploit attempt
-            ShowWarning("Bazaar purchase exploit attempt by: %s", PChar->getName());
             PChar->pushPacket(new CBazaarPurchasePacket(PTarget, false));
+
+            // Exploit attempt
+            ShowWarningFmt("Bazaar Interaction [Insufficient Gil] - Buyer: {}, Seller: {}, Buyer Gil: {}, Price: {}", PChar->name, PTarget->name, PCharGil->getQuantity(), PriceWithTax);
+
             return;
         }
 
@@ -7960,6 +7983,8 @@ void SmallPacket0x106(map_session_data_t* const PSession, CCharEntity* const PCh
 
         PTarget->pushPacket(new CInventoryItemPacket(PBazaar->GetItem(SlotID), LOC_INVENTORY, SlotID));
         PTarget->pushPacket(new CInventoryFinishPacket());
+
+        DebugBazaarsFmt("Bazaar Interaction [Purchase Successful] - Buyer: {}, Seller: {}, Item: {}, Qty: {}, Cost: {}", PChar->name, PTarget->name, PItem->getName(), Quantity, PriceWithTax);
 
         bool BazaarIsEmpty = true;
 
@@ -7988,6 +8013,8 @@ void SmallPacket0x106(map_session_data_t* const PSession, CCharEntity* const PCh
                 if (BazaarIsEmpty)
                 {
                     PCustomer->pushPacket(new CBazaarClosePacket(PTarget));
+
+                    DebugBazaarsFmt("Bazaar Interaction [Bazaar Emptied] - Buyer: {}, Seller: {}", PChar->name, PTarget->name);
                 }
             }
         }
@@ -8057,6 +8084,8 @@ void SmallPacket0x10A(map_session_data_t* const PSession, CCharEntity* const PCh
 
         PChar->pushPacket(new CInventoryItemPacket(PItem, LOC_INVENTORY, slotID));
         PChar->pushPacket(new CInventoryFinishPacket());
+
+        DebugBazaarsFmt("Bazaar Interaction [Price Set] - Character: {}, Item: {}, Price: {}", PChar->name, PItem->getName(), price);
     }
 }
 
@@ -8076,12 +8105,16 @@ void SmallPacket0x10B(map_session_data_t* const PSession, CCharEntity* const PCh
         if (PCustomer != nullptr && PCustomer->id == PChar->BazaarCustomers[i].id)
         {
             PCustomer->pushPacket(new CBazaarClosePacket(PChar));
+
+            DebugBazaarsFmt("Bazaar Interaction [Leave Bazaar] - Buyer: {}, Seller: {}", PCustomer->name, PChar->name);
         }
     }
     PChar->BazaarCustomers.clear();
 
     PChar->isSettingBazaarPrices = true;
     PChar->updatemask |= UPDATE_HP;
+
+    DebugBazaarsFmt("Bazaar Interaction [Setting Prices] - Character: {}", PChar->name);
 }
 
 /************************************************************************

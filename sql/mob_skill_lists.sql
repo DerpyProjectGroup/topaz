@@ -3930,7 +3930,19 @@ INSERT INTO `mob_skill_lists` VALUES ('Avatar_Ifrit_WTB',2013,844); -- Waking th
 INSERT INTO `mob_skill_lists` VALUES ('Avatar_Ifrit_WTB',2013,845); -- Waking the Beast, fire iv
 INSERT INTO `mob_skill_lists` VALUES ('Avatar_Ifrit_WTB',2013,847); -- Waking the Beast, meteor_strike
 
--- Next available ID: 2014
+INSERT INTO `mob_skill_lists` VALUES ('Colo-Colo',2014,392); -- ultrasonics
+INSERT INTO `mob_skill_lists` VALUES ('Colo-Colo',2014,394); -- blood_drain
+INSERT INTO `mob_skill_lists` VALUES ('Colo-Colo',2014,1155); -- subsonics
+INSERT INTO `mob_skill_lists` VALUES ('Colo-Colo',2014,1156); -- marrow_drain
+
+INSERT INTO `mob_skill_lists` VALUES ('Furies',2015,395); -- jetstream
+INSERT INTO `mob_skill_lists` VALUES ('Furies',2015,393); -- sonic_boom
+INSERT INTO `mob_skill_lists` VALUES ('Furies',2015,1157); -- slipstream
+INSERT INTO `mob_skill_lists` VALUES ('Furies',2015,1158); -- turbulence
+
+INSERT INTO `mob_skill_lists` VALUES ('Mind_Hoarder',2016,524); -- mind_drain
+
+-- Next available ID: 2017
 
 INSERT INTO `mob_skill_lists` VALUES ('Supernal_Chapuli',2015,2945); -- natures_meditation
 INSERT INTO `mob_skill_lists` VALUES ('Supernal_Chapuli',2015,2946); -- sensilla_blades

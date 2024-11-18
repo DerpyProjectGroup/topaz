@@ -49,8 +49,8 @@ zones[xi.zone.CAEDARVA_MIRE] =
         CAEDARVA_TOAD         = GetFirstID('Caedarva_Toad'),
         CHIGOES =
         {
-            ['Wild_Karakul'] = GetTableOfIDs('Chigoe', 5),
-            ['Mosshorn']     = GetTableOfIDs('Chigoe', 5, 5),
+            ['Wild_Karakul'] = utils.slice(GetTableOfIDs('Chigoe'), 1, 5), -- Entries 1-5 of the table (1-indexed, inclusive)
+            ['Mosshorn']     = utils.slice(GetTableOfIDs('Chigoe'), 6, 10), -- Entries 6-10 of the table (1-indexed, inclusive)
         },
         EXPERIMENTAL_LAMIA    = GetFirstID('Experimental_Lamia'),
         JAZARAAT              = GetFirstID('Jazaraat'),

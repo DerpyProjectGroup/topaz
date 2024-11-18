@@ -20,11 +20,11 @@ zones[xi.zone.MAMOOK] =
         LOGGING_IS_POSSIBLE_HERE      = 7546, -- Logging is possible here if you have <item>.
         PARTY_MEMBERS_HAVE_FALLEN     = 7903, -- All party members have fallen in battle. Now leaving the battlefield.
         THE_PARTY_WILL_BE_REMOVED     = 7910, -- If all party members' HP are still zero after # minute[/s], the party will be removed from the battlefield.
-        IMPENDING_BATTLE              = 8059, -- You feel the rush of impending battle!
-        NUMEROUS_STRANDS              = 8656, -- Numerous strands of hair are scattered all over...
-        SICKLY_SWEET                  = 8658, -- A sickly sweet fragrance pervades the air...
-        DRAWS_NEAR                    = 8680, -- Something draws near!
-        COMMON_SENSE_SURVIVAL         = 9551, -- It appears that you have arrived at a new survival guide provided by the Adventurers' Mutual Aid Network. Common sense dictates that you should now be able to teleport here from similar tomes throughout the world.
+        IMPENDING_BATTLE              = 8067, -- You feel the rush of impending battle!
+        NUMEROUS_STRANDS              = 8664, -- Numerous strands of hair are scattered all over...
+        SICKLY_SWEET                  = 8666, -- A sickly sweet fragrance pervades the air...
+        DRAWS_NEAR                    = 8688, -- Something draws near!
+        COMMON_SENSE_SURVIVAL         = 9559, -- It appears that you have arrived at a new survival guide provided by the Adventurers' Mutual Aid Network. Common sense dictates that you should now be able to teleport here from similar tomes throughout the world.
     },
     mob =
     {

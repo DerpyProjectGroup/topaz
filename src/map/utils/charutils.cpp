@@ -703,8 +703,8 @@ namespace charutils
                 PChar->petZoningInfo.petType      = static_cast<PET_TYPE>(rset->getUInt("pet_type"));
                 PChar->petZoningInfo.petLevel     = rset->getUInt("pet_level");
                 PChar->petZoningInfo.respawnPet   = true;
-                PChar->petZoningInfo.jugSpawnTime = PChar->getCharVar("jugpet-spawn-time");
-                PChar->petZoningInfo.jugDuration  = PChar->getCharVar("jugpet-duration-seconds");
+                PChar->petZoningInfo.jugSpawnTime = static_cast<uint32>(PChar->getCharVar("jugpet-spawn-time"));
+                PChar->petZoningInfo.jugDuration  = static_cast<uint32>(PChar->getCharVar("jugpet-duration-seconds"));
 
                 // clear the charvars used for jug state
                 PChar->clearCharVarsWithPrefix("jugpet-");
@@ -2022,9 +2022,19 @@ namespace charutils
                 case SLOT_SUB:
                 {
                     CItemWeapon* weapon = dynamic_cast<CItemWeapon*>(PChar->getEquip(SLOT_MAIN));
+                    // NULL weapon can be unarmed weapon that just got unequipped
                     if (!weapon)
                     {
-                        return false;
+                        if (PItem->IsShield())
+                        {
+                            PChar->look.sub = PItem->getModelId();
+                            UpdateWeaponStyle(PChar, equipSlotID, PItem);
+                            break;
+                        }
+                        else
+                        {
+                            return false;
+                        }
                     }
                     else
                     {
@@ -2044,12 +2054,14 @@ namespace charutils
                             case SKILL_KATANA:
                             case SKILL_CLUB:
                             {
-                                bool isWeapon = PItem->isType(ITEM_WEAPON);
-                                if (isWeapon && (!charutils::hasTrait(PChar, TRAIT_DUAL_WIELD) || static_cast<CItemWeapon*>(PItem)->getSkillType() == SKILL_NONE))
+                                CItemWeapon* PNewItemWeapon = dynamic_cast<CItemWeapon*>(PItem);
+                                bool         isWeapon       = PItem->isType(ITEM_WEAPON);
+
+                                if (isWeapon && (!charutils::hasTrait(PChar, TRAIT_DUAL_WIELD) || (PNewItemWeapon && PNewItemWeapon->getSkillType() == SKILL_NONE)))
                                 {
                                     return false;
                                 }
-                                PChar->m_Weapons[SLOT_SUB] = static_cast<CItemWeapon*>(PItem);
+                                PChar->m_Weapons[SLOT_SUB] = PItem;
                                 // only set m_dualWield if equipping a weapon (not for example a shield)
                                 if (isWeapon)
                                 {
@@ -2146,7 +2158,7 @@ namespace charutils
             PChar->equip[equipSlotID]    = slotID;
             PChar->equipLoc[equipSlotID] = containerID;
 
-            // Changed Visibile Equipment
+            // Changed visible equipment
             if (equipSlotID >= SLOT_HEAD && equipSlotID <= SLOT_FEET)
             {
                 UpdateRemovedSlotsLook(PChar);
@@ -5015,7 +5027,7 @@ namespace charutils
                 PChar->jobs.exp[PChar->GetMJob()] = GetExpNEXTLevel(PChar->jobs.job[PChar->GetMJob()]) - 1;
                 if (PChar->PParty && PChar->PParty->GetSyncTarget() == PChar)
                 {
-                    PChar->PParty->SetSyncTarget("", 556);
+                    PChar->PParty->SetSyncTarget("", MsgStd::LevelSyncRemoveIneligibleExp);
                 }
             }
             else
@@ -5439,8 +5451,8 @@ namespace charutils
 
         // These two are jug only variables. We should probably move pet char stats into its own table, but in the meantime
         // we use charvars for jug specific things
-        PChar->setCharVar("jugpet-spawn-time", PChar->petZoningInfo.jugSpawnTime);
-        PChar->setCharVar("jugpet-duration-seconds", PChar->petZoningInfo.jugDuration);
+        PChar->setCharVar("jugpet-spawn-time", static_cast<int32>(PChar->petZoningInfo.jugSpawnTime));
+        PChar->setCharVar("jugpet-duration-seconds", static_cast<int32>(PChar->petZoningInfo.jugDuration));
     }
 
     /************************************************************************

@@ -185,7 +185,7 @@ local function dropChance(player)
     --end
 
     if player:hasStatusEffect(xi.effect.PROWESS_CASKET_RATE) then
-        prowessCasketsPower = casketProwessEffect:getPower()
+        prowessCasketsPower = casketProwessEffect:getPower() / 100
     end
 
     local rand = math.random()

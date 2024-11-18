@@ -90,7 +90,7 @@ entity.onEventFinish = function(player, csid, option, npc)
         player:delKeyItem(xi.ki.GREEN_INSTITUTE_CARD)
         player:messageSpecial(ID.text.KEYITEM_LOST, xi.ki.GREEN_INSTITUTE_CARD)
         npcUtil.completeQuest(player, xi.questLog.WINDURST, xi.quest.id.windurst.TRUST_WINDURST, {
-            ki = xi.ki.WINDURST_TRUST_PERMIT,
+            keyItem = xi.ki.WINDURST_TRUST_PERMIT,
             title = xi.title.THE_TRUSTWORTHY,
             var = 'WindurstFirstTrust' })
         player:messageSpecial(ID.text.CALL_MULTIPLE_ALTER_EGO)
@@ -100,7 +100,7 @@ entity.onEventFinish = function(player, csid, option, npc)
         player:delKeyItem(xi.ki.GREEN_INSTITUTE_CARD)
         player:messageSpecial(ID.text.KEYITEM_LOST, xi.ki.GREEN_INSTITUTE_CARD)
         npcUtil.completeQuest(player, xi.questLog.WINDURST, xi.quest.id.windurst.TRUST_WINDURST, {
-            ki = xi.ki.WINDURST_TRUST_PERMIT })
+            keyItem = xi.ki.WINDURST_TRUST_PERMIT })
     end
 end
 

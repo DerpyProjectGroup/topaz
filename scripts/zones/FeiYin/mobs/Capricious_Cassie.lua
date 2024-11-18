@@ -11,6 +11,10 @@ entity.onMobInitialize = function(mob)
     mob:setMobMod(xi.mobMod.DRAW_IN, 2)
 end
 
+entity.onMobSpawn = function(mob)
+    mob:setMobMod(xi.mobMod.ALWAYS_AGGRO, 1)
+end
+
 entity.onMobDeath = function(mob, player, optParams)
     player:addTitle(xi.title.CASSIENOVA)
 end

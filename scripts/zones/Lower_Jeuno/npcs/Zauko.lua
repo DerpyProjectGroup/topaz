@@ -96,7 +96,7 @@ entity.onEventFinish = function(player, csid, option, npc)
             -- repeat victory. offer membership card.
             params.fame = 15
             if option == 1 then
-                params.ki = xi.ki.LAMP_LIGHTERS_MEMBERSHIP_CARD
+                params.keyItem = xi.ki.LAMP_LIGHTERS_MEMBERSHIP_CARD
             end
         end
 

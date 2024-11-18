@@ -192,7 +192,7 @@ namespace battleutils
     {
         // Load all mob skills
         const char* specialQuery = "SELECT mob_skill_id, mob_anim_id, mob_skill_name, \
-        mob_skill_aoe, mob_skill_distance, mob_anim_time, mob_prepare_time, \
+        mob_skill_aoe, mob_skill_aoe_radius, mob_skill_distance, mob_anim_time, mob_prepare_time, \
         mob_valid_targets, mob_skill_flag, mob_skill_param, knockback, primary_sc, secondary_sc, tertiary_sc \
         FROM mob_skills";
 
@@ -206,16 +206,17 @@ namespace battleutils
                 PMobSkill->setAnimationID(_sql->GetIntData(1));
                 PMobSkill->setName(_sql->GetStringData(2));
                 PMobSkill->setAoe(_sql->GetIntData(3));
-                PMobSkill->setDistance(_sql->GetFloatData(4));
-                PMobSkill->setAnimationTime(_sql->GetIntData(5));
-                PMobSkill->setActivationTime(_sql->GetIntData(6));
-                PMobSkill->setValidTargets(_sql->GetIntData(7));
-                PMobSkill->setFlag(_sql->GetIntData(8));
-                PMobSkill->setParam(_sql->GetIntData(9));
-                PMobSkill->setKnockback(_sql->GetUIntData(10));
-                PMobSkill->setPrimarySkillchain(_sql->GetUIntData(11));
-                PMobSkill->setSecondarySkillchain(_sql->GetUIntData(12));
-                PMobSkill->setTertiarySkillchain(_sql->GetUIntData(13));
+                PMobSkill->setAoeRadius(_sql->GetIntData(4));
+                PMobSkill->setDistance(_sql->GetFloatData(5));
+                PMobSkill->setAnimationTime(_sql->GetIntData(6));
+                PMobSkill->setActivationTime(_sql->GetIntData(7));
+                PMobSkill->setValidTargets(_sql->GetIntData(8));
+                PMobSkill->setFlag(_sql->GetIntData(9));
+                PMobSkill->setParam(_sql->GetIntData(10));
+                PMobSkill->setKnockback(_sql->GetUIntData(11));
+                PMobSkill->setPrimarySkillchain(_sql->GetUIntData(12));
+                PMobSkill->setSecondarySkillchain(_sql->GetUIntData(13));
+                PMobSkill->setTertiarySkillchain(_sql->GetUIntData(14));
                 PMobSkill->setMsg(185); // standard damage message. Scripters will change this.
                 g_PMobSkillList[PMobSkill->getID()] = PMobSkill;
 
@@ -3992,6 +3993,13 @@ namespace battleutils
         {
             damage = (int32)(damage * (1.f + PChar->PMeritPoints->GetMeritValue(MERIT_INNIN_EFFECT, PChar) / 100.f));
         }
+
+        if (PDefender->getMod(Mod::SENGIKORI_SC_DMG_DEBUFF) > 0)
+        {
+            damage = static_cast<int32>(damage * (1.f + PDefender->getMod(Mod::SENGIKORI_SC_DMG_DEBUFF) / 100.f));
+            PDefender->setModifier(Mod::SENGIKORI_SC_DMG_DEBUFF, 0); // Consume the effect
+        }
+
         damage = damage * (10000 - resistance) / 10000;
         damage = MagicDmgTaken(PDefender, damage, appliedEle);
         if (damage > 0)

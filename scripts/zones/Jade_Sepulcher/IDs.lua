@@ -28,7 +28,7 @@ zones[xi.zone.JADE_SEPULCHER] =
         PARTY_MEMBERS_HAVE_FALLEN     = 7673, -- All party members have fallen in battle. Now leaving the battlefield.
         THE_PARTY_WILL_BE_REMOVED     = 7680, -- If all party members' HP are still zero after # minute[/s], the party will be removed from the battlefield.
         IMPERIAL_ORDER_BREAKS         = 7688, -- The <item> breaks!
-        ENTERING_THE_BATTLEFIELD_FOR  = 7701, -- Entering the battlefield for [Making a Mockery/Shadows of the Mind/The Beast Within/Moment of Truth/Puppet in Peril/Puppet in Peril/Tateeya's Worries]!
+        ENTERING_THE_BATTLEFIELD_FOR  = 7701, -- Entering the battlefield for [Making a Mockery/Shadows of the Mind/The Beast Within/Moment of Truth/Puppet in Peril/Puppet in Peril/Tateeya's Worries/An Imperial Heist]!
     },
     mob =
     {

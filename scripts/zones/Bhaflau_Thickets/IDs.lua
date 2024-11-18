@@ -41,8 +41,8 @@ zones[xi.zone.BHAFLAU_THICKETS] =
     {
         CHIGOES              =
         {
-            ['Marid']        = GetTableOfIDs('Chigoe', 5),
-            ['Grand_Marid']  = GetTableOfIDs('Chigoe', 5),
+            ['Marid']        = utils.slice(GetTableOfIDs('Chigoe'), 1, 5), -- Entries 1-5 of the table (1-indexed, inclusive)
+            ['Grand_Marid']  = utils.slice(GetTableOfIDs('Chigoe'), 1, 5), -- Entries 1-5 of the table (1-indexed, inclusive)
         },
         DEA                = GetFirstID('Dea'),
         EMERGENT_ELM       = GetFirstID('Emergent_Elm'),

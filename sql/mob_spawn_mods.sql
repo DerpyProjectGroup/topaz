@@ -1126,9 +1126,6 @@ INSERT INTO `mob_spawn_mods` VALUES (17596728,55,120,1); -- IDLE_DESPAWN: 120
 -- Light Elemental
 INSERT INTO `mob_spawn_mods` VALUES (17596729,55,300,1); -- IDLE_DESPAWN: 300
 
--- Altedour I Tavnazia
-INSERT INTO `mob_spawn_mods` VALUES (17612836,55,180,1); -- IDLE_DESPAWN: 180
-
 -- Mimic
 INSERT INTO `mob_spawn_mods` VALUES (17617157,55,120,1); -- IDLE_DESPAWN: 120
 
