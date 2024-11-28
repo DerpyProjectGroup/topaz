@@ -409,7 +409,7 @@ xi.instance.onEventUpdate = function(player, csid, option, npc)
     end
 end
 
--- 'Default' behaviour. It's up to each instance whether or not they want to use this logic
+-- 'Default' behavior. It's up to each instance whether or not they want to use this logic
 xi.instance.onInstanceCreatedCallback = function(player, instance)
     local zoneLookup = xi.instance.lookup[instance:getZone():getID()]
     local instanceId = instance:getID()

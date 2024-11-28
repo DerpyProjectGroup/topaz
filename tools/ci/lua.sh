@@ -70,7 +70,7 @@ global_objects=(
     Limbus
     SeasonalEvent
 
-    onBattlefieldHandlerInitialise
+    onBattlefieldHandlerInitialize
     applyResistanceAddEffect
 
     addBonuses

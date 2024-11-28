@@ -127,7 +127,7 @@ CInstance* CInstanceLoader::LoadInstance()
             ((CItemWeapon*)PMob->m_Weapons[SLOT_MAIN])->setDelay((_sql->GetIntData(18) * 1000) / 60);
             ((CItemWeapon*)PMob->m_Weapons[SLOT_MAIN])->setBaseDelay((_sql->GetIntData(18) * 1000) / 60);
 
-            PMob->m_Behaviour   = (uint16)_sql->GetIntData(19);
+            PMob->m_Behavior    = (uint16)_sql->GetIntData(19);
             PMob->m_Link        = (uint8)_sql->GetIntData(20);
             PMob->m_Type        = (uint8)_sql->GetIntData(21);
             PMob->m_Immunity    = (IMMUNITY)_sql->GetIntData(22);

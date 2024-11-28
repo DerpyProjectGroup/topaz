@@ -312,7 +312,7 @@ xi.darkixion.roamingMods = function(mob)
     mob:setLocalVar('charging', 0)
     mob:setLocalVar('double', 0)
     mob:setLocalVar('lastHit', 0)
-    mob:setBehaviour(0)
+    mob:setBehavior(0)
     mob:setAutoAttackEnabled(true)
     mob:setMobAbilityEnabled(true)
 end

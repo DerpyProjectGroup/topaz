@@ -179,8 +179,8 @@ void CMobController::TryLink()
         return;
     }
 
-    // handle pet behaviour on the targets behalf (faster than in ai_pet_dummy)
-    // Avatars defend masters by attacking mobs if the avatar isn't attacking anything currently (bodyguard behaviour)
+    // handle pet behavior on the targets behalf (faster than in ai_pet_dummy)
+    // Avatars defend masters by attacking mobs if the avatar isn't attacking anything currently (bodyguard behavior)
     if (PTarget->PPet != nullptr && PTarget->PPet->GetBattleTargetID() == 0)
     {
         if (PTarget->PPet->objtype == TYPE_PET && ((CPetEntity*)PTarget->PPet)->getPetType() == PET_TYPE::AVATAR)
@@ -270,7 +270,7 @@ bool CMobController::CanDetectTarget(CBattleEntity* PTarget, bool forceSight)
         return isTargetAndInRange || PMob->CanSeeTarget(PTarget);
     }
 
-    if ((PMob->m_Behaviour & BEHAVIOUR_AGGRO_AMBUSH) && currentDistance < 3 && !hasSneak)
+    if ((PMob->m_Behavior & BEHAVIOR_AGGRO_AMBUSH) && currentDistance < 3 && !hasSneak)
     {
         return true;
     }
@@ -629,7 +629,7 @@ void CMobController::FaceTarget(uint16 targid)
     {
         targ = PMob->GetEntity(targid);
     }
-    if (!(PMob->m_Behaviour & BEHAVIOUR_NO_TURN) && targ)
+    if (!(PMob->m_Behavior & BEHAVIOR_NO_TURN) && targ)
     {
         PMob->PAI->PathFind->LookAt(targ->loc.p);
     }
@@ -1356,7 +1356,7 @@ bool CMobController::CanMoveForward(float currentDistance)
         standbackRange = PMob->getMobMod(MOBMOD_STANDBACK_RANGE);
     }
 
-    if (PMob->m_Behaviour & BEHAVIOUR_STANDBACK && currentDistance < standbackRange && PMob->CanSeeTarget(PTarget))
+    if (PMob->m_Behavior & BEHAVIOR_STANDBACK && currentDistance < standbackRange && PMob->CanSeeTarget(PTarget))
     {
         return false;
     }

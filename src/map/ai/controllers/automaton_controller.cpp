@@ -43,7 +43,7 @@ CAutomatonController::CAutomatonController(CAutomatonEntity* PPet)
     setCooldowns();
     if (shouldStandBack())
     {
-        PAutomaton->m_Behaviour |= BEHAVIOUR_STANDBACK;
+        PAutomaton->m_Behavior |= BEHAVIOR_STANDBACK;
     }
 }
 
@@ -227,7 +227,7 @@ void CAutomatonController::Move()
 
     if ((shouldStandBack() && (currentDistance > 225)) || (PAutomaton->health.mp < 8 && PAutomaton->health.maxmp > 8))
     {
-        PAutomaton->m_Behaviour &= ~BEHAVIOUR_STANDBACK;
+        PAutomaton->m_Behavior &= ~BEHAVIOR_STANDBACK;
     }
 
     CPetController::Move();
@@ -1636,7 +1636,7 @@ bool CAutomatonController::Disengage()
     PTarget = nullptr;
     if (shouldStandBack())
     {
-        PAutomaton->m_Behaviour |= BEHAVIOUR_STANDBACK;
+        PAutomaton->m_Behavior |= BEHAVIOR_STANDBACK;
     }
     return CMobController::Disengage();
 }

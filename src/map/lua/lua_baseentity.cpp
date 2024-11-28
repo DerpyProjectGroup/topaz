@@ -14730,7 +14730,7 @@ void CLuaBaseEntity::trustPartyMessage(uint32 message_id)
  *  Function: addSimpleGambit()
  *  Purpose :
  *  Example : trust:addSimpleGambit(target, condition, condition_arg, reaction, selector, selector_arg)
- *  Notes   : Adds a behaviour to the gambit system
+ *  Notes   : Adds a behavior to the gambit system
  ************************************************************************/
 
 std::string CLuaBaseEntity::addSimpleGambit(uint16 targ, uint16 cond, uint32 condition_arg, uint16 react, uint16 select, uint32 selector_arg, sol::object const& retry)
@@ -14768,7 +14768,7 @@ std::string CLuaBaseEntity::addSimpleGambit(uint16 targ, uint16 cond, uint32 con
  *  Function: removeSimpleGambit()
  *  Purpose :
  *  Example : trust:removeSimpleGambit(id)
- *  Notes   : Removes a behaviour from the gambit system, using the id returned
+ *  Notes   : Removes a behavior from the gambit system, using the id returned
  *          : from addSimpleGambit
  ************************************************************************/
 
@@ -16634,39 +16634,39 @@ uint32 CLuaBaseEntity::getBattleTime()
 }
 
 /************************************************************************
- *  Function: getBehaviour()
+ *  Function: getBehavior()
  *  Purpose : Returns the current Mob behavior
- *  Example : mob:getBehaviour()
+ *  Example : mob:getBehavior()
  *  Notes   : Currently used in bitwise calculations for high-tier NM's
  ************************************************************************/
 
-uint16 CLuaBaseEntity::getBehaviour()
+uint16 CLuaBaseEntity::getBehavior()
 {
     if (m_PBaseEntity->objtype != TYPE_MOB)
     {
-        ShowWarning("Attempting to get behaviour for invalid entity type (%s).", m_PBaseEntity->getName());
+        ShowWarning("Attempting to get behavior for invalid entity type (%s).", m_PBaseEntity->getName());
         return 0;
     }
 
-    return static_cast<CMobEntity*>(m_PBaseEntity)->m_Behaviour;
+    return static_cast<CMobEntity*>(m_PBaseEntity)->m_Behavior;
 }
 
 /************************************************************************
- *  Function: setBehaviour()
+ *  Function: setBehavior()
  *  Purpose : Sets a particular behavior for a Mob
- *  Example : mob:setBehaviour(bit.bor(mob:getBehaviour(), xi.behavior.NO_TURN))
+ *  Example : mob:setBehavior(bit.bor(mob:getBehavior(), xi.behavior.NO_TURN))
  *  Notes   : Currently used in bitwise calculations for high-tier NM's
  ************************************************************************/
 
-void CLuaBaseEntity::setBehaviour(uint16 behavior)
+void CLuaBaseEntity::setBehavior(uint16 behavior)
 {
     if (m_PBaseEntity->objtype != TYPE_MOB)
     {
-        ShowWarning("Attempting to set behaviour for invalid entity type (%s).", m_PBaseEntity->getName());
+        ShowWarning("Attempting to set behavior for invalid entity type (%s).", m_PBaseEntity->getName());
         return;
     }
 
-    static_cast<CMobEntity*>(m_PBaseEntity)->m_Behaviour = behavior;
+    static_cast<CMobEntity*>(m_PBaseEntity)->m_Behavior = behavior;
 }
 
 /************************************************************************
@@ -17679,7 +17679,7 @@ auto CLuaBaseEntity::getChocoboRaisingInfo() -> sol::table
             last_update_age, \
             stage, \
             location, \
-            colour, \
+            color, \
             dominant_gene, \
             recessive_gene, \
             strength, \
@@ -17725,7 +17725,7 @@ auto CLuaBaseEntity::getChocoboRaisingInfo() -> sol::table
             table["last_update_age"] = _sql->GetUIntData(5);
             table["stage"]           = _sql->GetUIntData(6);
             table["location"]        = _sql->GetUIntData(7);
-            table["colour"]          = _sql->GetUIntData(8);
+            table["color"]           = _sql->GetUIntData(8);
 
             table["dominant_gene"]  = _sql->GetUIntData(9);
             table["recessive_gene"] = _sql->GetUIntData(10);
@@ -17774,7 +17774,7 @@ bool CLuaBaseEntity::setChocoboRaisingInfo(sol::table const& table)
                                 last_update_age = %u, \
                                 stage = %u, \
                                 location = %u, \
-                                colour = %u, \
+                                color = %u, \
                                 dominant_gene = %u, \
                                 recessive_gene = %u, \
                                 strength = %u, \
@@ -17802,7 +17802,7 @@ bool CLuaBaseEntity::setChocoboRaisingInfo(sol::table const& table)
                             table.get_or<uint32>("last_update_age", 0),
                             table.get_or<uint32>("stage", 1),
                             table.get_or<uint32>("location", 0),
-                            table.get_or<uint32>("colour", 0),
+                            table.get_or<uint32>("color", 0),
                             table.get_or<uint32>("dominant_gene", 0),
                             table.get_or<uint32>("recessive_gene", 0),
                             table.get_or<uint32>("strength", 0),
@@ -18834,8 +18834,8 @@ void CLuaBaseEntity::Register()
 
     SOL_REGISTER("getBattleTime", CLuaBaseEntity::getBattleTime);
 
-    SOL_REGISTER("getBehaviour", CLuaBaseEntity::getBehaviour);
-    SOL_REGISTER("setBehaviour", CLuaBaseEntity::setBehaviour);
+    SOL_REGISTER("getBehavior", CLuaBaseEntity::getBehavior);
+    SOL_REGISTER("setBehavior", CLuaBaseEntity::setBehavior);
     SOL_REGISTER("getLink", CLuaBaseEntity::getLink);
     SOL_REGISTER("setLink", CLuaBaseEntity::setLink);
     SOL_REGISTER("getRoamFlags", CLuaBaseEntity::getRoamFlags);

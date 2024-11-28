@@ -35,8 +35,8 @@ local despawnGroupCrates = function(crateGroup)
     end
 end
 
-function content:onBattlefieldInitialise(battlefield)
-    Limbus.onBattlefieldInitialise(self, battlefield)
+function content:onBattlefieldInitialize(battlefield)
+    Limbus.onBattlefieldInitialize(self, battlefield)
 
     -- Crates are always spawned with in fixed groups
     -- Randomize crate type order by shuffling setup functions

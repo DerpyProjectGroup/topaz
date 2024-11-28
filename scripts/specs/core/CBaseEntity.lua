@@ -3697,12 +3697,12 @@ end
 
 ---@nodiscard
 ---@return integer
-function CBaseEntity:getBehaviour()
+function CBaseEntity:getBehavior()
 end
 
 ---@param behavior integer
 ---@return nil
-function CBaseEntity:setBehaviour(behavior)
+function CBaseEntity:setBehavior(behavior)
 end
 
 ---@nodiscard

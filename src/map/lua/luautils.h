@@ -35,7 +35,7 @@ extern sol::state lua;
 // SOL_NO_CHECK_NUMBER_PRECISION = 1
 #include "sol/sol.hpp"
 
-// sol changes this behaviour to return 0 rather than truncating
+// sol changes this behavior to return 0 rather than truncating
 // we rely on that, so change it back
 #undef lua_tointeger
 #define lua_tointeger(L, n) static_cast<lua_Integer>(std::floor(lua_tonumber(L, n)))
@@ -213,7 +213,7 @@ namespace luautils
     void OnZoneIn(CCharEntity* PChar);
     void OnZoneOut(CCharEntity* PChar);
     void AfterZoneIn(CBaseEntity* PChar);
-    void OnZoneInitialise(uint16 ZoneID);
+    void OnZoneInitialize(uint16 ZoneID);
     void OnZoneTick(CZone* PZone);
     void OnTriggerAreaEnter(CCharEntity* PChar, CTriggerArea* PTriggerArea);
     void OnTriggerAreaLeave(CCharEntity* PChar, CTriggerArea* PTriggerArea);
@@ -282,8 +282,8 @@ namespace luautils
     void OnPathPoint(CBaseEntity* PEntity);
     void OnPathComplete(CBaseEntity* PEntity);
 
-    int32 OnBattlefieldHandlerInitialise(CZone* PZone);
-    void  OnBattlefieldInitialise(CBattlefield* PBattlefield); // what to do when initialising battlefield, battlefield:setLocalVar("lootId") here for any which have loot
+    int32 OnBattlefieldHandlerInitialize(CZone* PZone);
+    void  OnBattlefieldInitialize(CBattlefield* PBattlefield); // what to do when initialising battlefield, battlefield:setLocalVar("lootId") here for any which have loot
     void  OnBattlefieldTick(CBattlefield* PBattlefield);
     void  OnBattlefieldStatusChange(CBattlefield* PBattlefield);
 

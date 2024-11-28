@@ -278,7 +278,7 @@ bool _vsocket_init()
         }
     }
 #elif defined(HAVE_SETRLIMIT) && !defined(CYGWIN)
-    // NOTE: getrlimit and setrlimit have bogus behaviour in cygwin.
+    // NOTE: getrlimit and setrlimit have bogus behavior in cygwin.
     //       "Number of fds is virtually unlimited in cygwin" (sys/param.h)
     { // set socket limit to MAX_FD
         struct rlimit rlp;
@@ -305,7 +305,7 @@ bool _vsocket_init()
 
     sFD_ZERO(&readfds);
 
-    // initialise last send-receive tick
+    // initialize last send-receive tick
     last_tick = time(nullptr);
     return true;
 }

@@ -1811,7 +1811,7 @@ namespace luautils
         return true;
     }
 
-    void OnZoneInitialise(uint16 ZoneID)
+    void OnZoneInitialize(uint16 ZoneID)
     {
         TracyZoneScoped;
 
@@ -1826,7 +1826,7 @@ namespace luautils
         auto name     = PZone->getName();
         auto filename = fmt::format("./scripts/zones/{}/Zone.lua", name);
 
-        ShowTraceFmt("luautils::OnZoneInitialise: {}", name);
+        ShowTraceFmt("luautils::OnZoneInitialize: {}", name);
 
         CacheLuaObjectFromFile(filename);
 
@@ -3069,7 +3069,7 @@ namespace luautils
         }
     }
 
-    int32 OnBattlefieldHandlerInitialise(CZone* PZone)
+    int32 OnBattlefieldHandlerInitialize(CZone* PZone)
     {
         TracyZoneScoped;
 
@@ -3081,26 +3081,26 @@ namespace luautils
         int32 MaxAreas = 3;
 
         // TODO: This is loaded globally, fix this
-        auto onBattlefieldHandlerInitialise = lua["onBattlefieldHandlerInitialise"];
-        if (!onBattlefieldHandlerInitialise.valid())
+        auto onBattlefieldHandlerInitialize = lua["onBattlefieldHandlerInitialize"];
+        if (!onBattlefieldHandlerInitialize.valid())
         {
             return MaxAreas;
         }
 
         CLuaZone LuaZone(PZone);
 
-        auto result = onBattlefieldHandlerInitialise(CLuaZone(PZone));
+        auto result = onBattlefieldHandlerInitialize(CLuaZone(PZone));
         if (!result.valid())
         {
             sol::error err = result;
-            ShowError("luautils::onBattlefieldHandlerInitialise: %s", err.what());
+            ShowError("luautils::onBattlefieldHandlerInitialize: %s", err.what());
             return MaxAreas;
         }
 
         return result.get_type(0) == sol::type::number ? result.get<int32>(0) : MaxAreas;
     }
 
-    void OnBattlefieldInitialise(CBattlefield* PBattlefield)
+    void OnBattlefieldInitialize(CBattlefield* PBattlefield)
     {
         TracyZoneScoped;
 
@@ -3109,7 +3109,7 @@ namespace luautils
             return;
         }
 
-        invokeBattlefieldEvent(PBattlefield->GetID(), "onBattlefieldInitialise", CLuaBattlefield(PBattlefield));
+        invokeBattlefieldEvent(PBattlefield->GetID(), "onBattlefieldInitialize", CLuaBattlefield(PBattlefield));
     }
 
     void OnBattlefieldTick(CBattlefield* PBattlefield)

@@ -49,7 +49,7 @@ xi.av = xi.av or {}
 -- While this flag is in place, AV's won't drop any loot. Sorry!
 xi.av.experimental = true
 
--- Set to true to get local debug prints about AV's behaviour
+-- Set to true to get local debug prints about AV's behavior
 local debugAV = false
 local avdebug = utils.getDebugPlayerPrinter(debugAV)
 

@@ -55,8 +55,8 @@ local setupRecoverCrate = function(crateID, floor)
     end
 end
 
-function content:onBattlefieldInitialise(battlefield)
-    Limbus.onBattlefieldInitialise(self, battlefield)
+function content:onBattlefieldInitialize(battlefield)
+    Limbus.onBattlefieldInitialize(self, battlefield)
 
     local crateSetupFuncs =
     {

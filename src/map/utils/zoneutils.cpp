@@ -479,7 +479,7 @@ namespace zoneutils
                                 ((CItemWeapon*)PMob->m_Weapons[SLOT_MAIN])->setDelay((sql->GetIntData(19) * 1000) / 60);
                                 ((CItemWeapon*)PMob->m_Weapons[SLOT_MAIN])->setBaseDelay((sql->GetIntData(19) * 1000) / 60);
 
-                                PMob->m_Behaviour   = (uint16)sql->GetIntData(20);
+                                PMob->m_Behavior   = (uint16)sql->GetIntData(20);
                                 PMob->m_Link        = (uint8)sql->GetIntData(21);
                                 PMob->m_Type        = (uint8)sql->GetIntData(22);
                                 PMob->m_Immunity    = (IMMUNITY)sql->GetIntData(23);
@@ -648,7 +648,7 @@ namespace zoneutils
         // clang-format on
 
         ShowInfo("Loading Mob scripts");
-        // handle mob initialise functions after they're all loaded
+        // handle mob Initialize functions after they're all loaded
         // clang-format off
         ForEachZone([](CZone* PZone)
         {
@@ -804,7 +804,7 @@ namespace zoneutils
         {
             if (PZone.second->GetIP() != 0)
             {
-                luautils::OnZoneInitialise(PZone.second->GetID());
+                luautils::OnZoneInitialize(PZone.second->GetID());
             }
         }
 

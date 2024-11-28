@@ -132,7 +132,7 @@ entity.onMobFight = function(mob, target)
                 local spawnPos = zdeiOne:getSpawnPos()
                 mob:setMagicCastingEnabled(false)
                 mob:pathTo(spawnPos.x, spawnPos.y, spawnPos.z) -- go back to pedastal to heal
-                mob:setBehaviour(bit.bor(mob:getBehaviour(), xi.behavior.STANDBACK))
+                mob:setBehavior(bit.bor(mob:getBehavior(), xi.behavior.STANDBACK))
                 mob:timer(8000, function(mobArg)
                     if
                         mob:checkDistance(spawnPos.x, spawnPos.y, spawnPos.z) < 2 and
@@ -155,7 +155,7 @@ entity.onMobFight = function(mob, target)
                 local spawnPos = zdeiTwo:getSpawnPos()
                 mob:setMagicCastingEnabled(false)
                 mob:pathTo(spawnPos.x, spawnPos.y, spawnPos.z)
-                mob:setBehaviour(bit.bor(mob:getBehaviour(), xi.behavior.STANDBACK))
+                mob:setBehavior(bit.bor(mob:getBehavior(), xi.behavior.STANDBACK))
                 mob:timer(8000, function(mobArg)
                     if
                         mob:checkDistance(spawnPos.x, spawnPos.y, spawnPos.z) < 2 and

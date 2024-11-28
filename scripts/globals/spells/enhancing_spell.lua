@@ -467,7 +467,7 @@ xi.spells.enhancing.useEnhancingSpell = function(caster, target, spell)
     local tickTime        = pTable[spellId][8]
 
     ------------------------------------------------------------
-    -- Handle exceptions and weird behaviour here, before calculating anything.
+    -- Handle exceptions and weird behavior here, before calculating anything.
     ------------------------------------------------------------
     -- Bar-Element (They use addStatusEffect argument 6. Bar-Status current implementation doesn't.)
     if spellEffect >= xi.effect.BARFIRE and spellEffect <= xi.effect.BARWATER then

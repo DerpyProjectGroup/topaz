@@ -82,8 +82,8 @@ entity.onMobFight = function(mob, target)
             mob:addHP(mob:getMaxHP() * .05)
         end
 
-        if bit.band(mob:getBehaviour(), xi.behavior.NO_TURN) > 0 then -- disable no turning for the forced mobskills upon head growth
-            mob:setBehaviour(bit.band(mob:getBehaviour(), bit.bnot(xi.behavior.NO_TURN)))
+        if bit.band(mob:getBehavior(), xi.behavior.NO_TURN) > 0 then -- disable no turning for the forced mobskills upon head growth
+            mob:setBehavior(bit.band(mob:getBehavior(), bit.bnot(xi.behavior.NO_TURN)))
         end
 
         -- These need to be listed in reverse order as forced moves are added to the top of the queue.
@@ -104,8 +104,8 @@ entity.onMobFight = function(mob, target)
             mob:addHP(mob:getMaxHP() * .05)
         end
 
-        if bit.band(mob:getBehaviour(), xi.behavior.NO_TURN) > 0 then -- disable no turning for the forced mobskills upon head growth
-            mob:setBehaviour(bit.band(mob:getBehaviour(), bit.bnot(xi.behavior.NO_TURN)))
+        if bit.band(mob:getBehavior(), xi.behavior.NO_TURN) > 0 then -- disable no turning for the forced mobskills upon head growth
+            mob:setBehavior(bit.band(mob:getBehavior(), bit.bnot(xi.behavior.NO_TURN)))
         end
 
         -- Reverse order, same deal.

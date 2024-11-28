@@ -768,7 +768,7 @@ namespace mobutils
             SetupPetSkills(PMob);
         }
 
-        PMob->m_Behaviour |= PMob->getMobMod(MOBMOD_BEHAVIOR);
+        PMob->m_Behavior |= PMob->getMobMod(MOBMOD_BEHAVIOR);
 
         if (zoneType & ZONE_TYPE::DUNGEON)
         {
@@ -1569,7 +1569,7 @@ namespace mobutils
                 ((CItemWeapon*)PMob->m_Weapons[SLOT_MAIN])->setDelay((_sql->GetIntData(15) * 1000) / 60);
                 ((CItemWeapon*)PMob->m_Weapons[SLOT_MAIN])->setBaseDelay((_sql->GetIntData(15) * 1000) / 60);
 
-                PMob->m_Behaviour   = (uint16)_sql->GetIntData(16);
+                PMob->m_Behavior    = (uint16)_sql->GetIntData(16);
                 PMob->m_Link        = (uint8)_sql->GetIntData(17);
                 PMob->m_Type        = (uint8)_sql->GetIntData(18);
                 PMob->m_Immunity    = (IMMUNITY)_sql->GetIntData(19);
@@ -1730,7 +1730,7 @@ namespace mobutils
                 ((CItemWeapon*)PMob->m_Weapons[SLOT_MAIN])->setDelay((_sql->GetIntData(15) * 1000) / 60);
                 ((CItemWeapon*)PMob->m_Weapons[SLOT_MAIN])->setBaseDelay((_sql->GetIntData(15) * 1000) / 60);
 
-                PMob->m_Behaviour   = (uint16)_sql->GetIntData(16);
+                PMob->m_Behavior    = (uint16)_sql->GetIntData(16);
                 PMob->m_Link        = (uint8)_sql->GetIntData(17);
                 PMob->m_Type        = (uint8)_sql->GetIntData(18);
                 PMob->m_Immunity    = (IMMUNITY)_sql->GetIntData(19);

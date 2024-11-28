@@ -848,8 +848,8 @@ public:
 
     uint32 getBattleTime();
 
-    uint16 getBehaviour();
-    void   setBehaviour(uint16 behavior);
+    uint16 getBehavior();
+    void   setBehavior(uint16 behavior);
     uint8  getLink();
     void   setLink(uint8 link);
     uint16 getRoamFlags();

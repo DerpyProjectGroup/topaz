@@ -57,7 +57,7 @@ Application::Application(std::string const& serverName, int argc, char** argv)
     logging::InitializeLog(serverName, logName, false);
     lua_init();
     settings::init();
-    ShowInfo("Begin %s-server initialisation...", serverName);
+    ShowInfo("Begin %s-server Init...", serverName);
 
     debug::init();
 

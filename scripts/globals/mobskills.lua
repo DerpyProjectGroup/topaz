@@ -477,7 +477,7 @@ xi.mobskills.mobFinalAdjustments = function(dmg, mob, skill, target, attackType,
         skill:setMsg(xi.msg.basic.DAMAGE)
     end
 
-    --Handle shadows depending on shadow behaviour / attackType
+    --Handle shadows depending on shadow behavior / attackType
     if
         shadowbehav ~= xi.mobskills.shadowBehavior.WIPE_SHADOWS and
         shadowbehav ~= xi.mobskills.shadowBehavior.IGNORE_SHADOWS

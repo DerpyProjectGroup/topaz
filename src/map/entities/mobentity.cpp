@@ -90,7 +90,7 @@ CMobEntity::CMobEntity()
 , m_TrueDetection(false)
 , m_Link(0)
 , m_isAggroable(false)
-, m_Behaviour(BEHAVIOUR_NONE)
+, m_Behavior(BEHAVIOR_NONE)
 , m_SpawnType(SPAWNTYPE_NORMAL)
 , m_battlefieldID(0)
 , m_bcnmID(0)
@@ -535,7 +535,7 @@ bool CMobEntity::ValidTarget(CBattleEntity* PInitiator, uint16 targetFlags)
         return true;
     }
 
-    if (targetFlags & TARGET_PLAYER_DEAD && (m_Behaviour & BEHAVIOUR_RAISABLE) && isDead())
+    if (targetFlags & TARGET_PLAYER_DEAD && (m_Behavior & BEHAVIOR_RAISABLE) && isDead())
     {
         return true;
     }
@@ -547,7 +547,7 @@ bool CMobEntity::ValidTarget(CBattleEntity* PInitiator, uint16 targetFlags)
 
     if (targetFlags & TARGET_NPC)
     {
-        if (allegiance == PInitiator->allegiance && !(m_Behaviour & BEHAVIOUR_NOHELP) && !isCharmed)
+        if (allegiance == PInitiator->allegiance && !(m_Behavior & BEHAVIOR_NOHELP) && !isCharmed)
         {
             return true;
         }
@@ -1157,7 +1157,7 @@ void CMobEntity::FadeOut()
 void CMobEntity::OnDeathTimer()
 {
     TracyZoneScoped;
-    if (!(m_Behaviour & BEHAVIOUR_RAISABLE))
+    if (!(m_Behavior & BEHAVIOR_RAISABLE))
     {
         PAI->Despawn();
     }

@@ -237,7 +237,7 @@ void CTrustController::DoRoamTick(time_point tick)
             [[fallthrough]];
         default: // Something invalid set
         {
-            // Default retail behaviour: Master engages a monster and executes a melee swing
+            // Default retail behavior: Master engages a monster and executes a melee swing
             trustEngageCondition = PMaster->GetBattleTarget() && masterMeleeSwing;
             break;
         }

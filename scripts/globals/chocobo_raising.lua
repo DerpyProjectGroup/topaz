@@ -543,7 +543,7 @@ local stage =
     ADULT_4    = 7, -- Retired?
 }
 
-local colour =
+local color =
 {
     YELLOW = 0,
     BLACK  = 1,
@@ -743,7 +743,7 @@ xi.chocoboRaising.newChocobo = function(player, egg)
     newChoco.recessive_gene = 0 -- TODO
 
     -- TODO: Pick various stats based on genetics
-    newChoco.colour             = colour.YELLOW
+    newChoco.color             = color.YELLOW
     newChoco.strength           = 0
     newChoco.endurance          = 0
     newChoco.discernment        = 0
@@ -1054,7 +1054,7 @@ local handleCSUpdate = function(player, chocoState, doEventUpdate)
     if doEventUpdate then
         player:updateEventString(chocoState.first_name, chocoState.last_name, chocoState.first_name, chocoState.first_name,
             0, 0, 0, 0, 0, 0, 0, 0)
-        player:updateEvent(#chocoState.csList, csToPlay, 0, chocoState.colour, chocoState.stage, 0, currentAgeOfChocoboDuringCutscene, 1)
+        player:updateEvent(#chocoState.csList, csToPlay, 0, chocoState.color, chocoState.stage, 0, currentAgeOfChocoboDuringCutscene, 1)
     end
 
     return chocoState
@@ -1624,7 +1624,7 @@ xi.chocoboRaising.onEventUpdateVCSTrainer = function(player, csid, option, npc)
                     local itemData     = validFoods[itemId]
                     local hungerAmount = itemData[1]
                     local energyAmount = itemData[3]
-                    local glowColour   = itemData[10]
+                    local glowColor   = itemData[10]
 
                     player:messageSpecial(ID.text.CHOCOBO_FEEDING_ITEM, itemId, idx)
 
@@ -1652,10 +1652,10 @@ xi.chocoboRaising.onEventUpdateVCSTrainer = function(player, csid, option, npc)
 
                     -- If multiple items, glow is always green
                     if #chocoState.foodGiven > 1 then
-                        glowColour = glow.GREEN
+                        glowColor = glow.GREEN
                     end
 
-                    player:updateEvent(10, glowColour, 0, 0, reaction, numberToRank(chocoState.hunger), 0, 0)
+                    player:updateEvent(10, glowColor, 0, 0, reaction, numberToRank(chocoState.hunger), 0, 0)
                 end
 
                 chocoState.foodGiven = nil
@@ -1692,7 +1692,7 @@ xi.chocoboRaising.onEventUpdateVCSTrainer = function(player, csid, option, npc)
                 end
 
                 -- Event update parameters.
-                player:updateEvent(chocoState.colour, enlargedCrest, enlargedFeet, moreTailFeathers, chocoState.stage, 1, 0, 0)
+                player:updateEvent(chocoState.color, enlargedCrest, enlargedFeet, moreTailFeathers, chocoState.stage, 1, 0, 0)
             end,
 
             [46] = function() -- Ask about chocobo's condition (menu)

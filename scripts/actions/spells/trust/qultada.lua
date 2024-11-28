@@ -21,7 +21,7 @@ spellObject.onMobSpawn = function(mob)
     mob:addSimpleGambit(ai.t.TARGET, ai.c.ALWAYS, 0, ai.r.RATTACK, 0, 0, 10)
 
     -- Notable: Uses a balance of melee and ranged attacks.
-    -- TODO: Observe his WS behaviour on retail
+    -- TODO: Observe his WS behavior on retail
     mob:setTrustTPSkillSettings(ai.tp.OPENER, ai.s.RANDOM)
 
     -- https://forum.square-enix.com/ffxi/threads/49425-Dec-10-2015-%28JST%29-Version-Update?p=567979&viewfull=1#post567979

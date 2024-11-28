@@ -119,8 +119,8 @@ function Limbus:onEventFinishEnter(player, csid, option, npc)
 end
 
 ---@diagnostic disable-next-line: duplicate-set-field
-function Limbus:onBattlefieldInitialise(battlefield)
-    Battlefield.onBattlefieldInitialise(self, battlefield)
+function Limbus:onBattlefieldInitialize(battlefield)
+    Battlefield.onBattlefieldInitialize(self, battlefield)
     SetServerVariable(self.serverVar, battlefield:getTimeLimit() / 60)
     self:closeDoors()
 

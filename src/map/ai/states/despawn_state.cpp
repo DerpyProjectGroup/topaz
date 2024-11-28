@@ -29,7 +29,7 @@
 CDespawnState::CDespawnState(CBaseEntity* _PEntity, bool instantDespawn)
 : CState(_PEntity, _PEntity->targid)
 {
-    if (!instantDespawn && (_PEntity->status != STATUS_TYPE::DISAPPEAR && !(static_cast<CMobEntity*>(_PEntity)->m_Behaviour & BEHAVIOUR_NO_DESPAWN)))
+    if (!instantDespawn && (_PEntity->status != STATUS_TYPE::DISAPPEAR && !(static_cast<CMobEntity*>(_PEntity)->m_Behavior & BEHAVIOR_NO_DESPAWN)))
     {
         _PEntity->loc.zone->PushPacket(_PEntity, CHAR_INRANGE, new CEntityAnimationPacket(_PEntity, _PEntity, CEntityAnimationPacket::Fade_Out));
     }
@@ -37,7 +37,7 @@ CDespawnState::CDespawnState(CBaseEntity* _PEntity, bool instantDespawn)
 
 bool CDespawnState::Update(time_point tick)
 {
-    if (tick > GetEntryTime() + 3s && !IsCompleted() && !(static_cast<CMobEntity*>(m_PEntity)->m_Behaviour & BEHAVIOUR_NO_DESPAWN))
+    if (tick > GetEntryTime() + 3s && !IsCompleted() && !(static_cast<CMobEntity*>(m_PEntity)->m_Behavior & BEHAVIOR_NO_DESPAWN))
     {
         static_cast<CMobEntity*>(m_PEntity)->OnDespawn(*this);
         Complete();

@@ -30,7 +30,7 @@ xi.ability.adjustDamage = function(dmg, mob, skill, target, skilltype, skillpara
     -- this is for AoE because its only set once
     skill:setMsg(xi.msg.basic.USES_JA_TAKE_DAMAGE)
 
-    -- Handle shadows depending on shadow behaviour / skilltype
+    -- Handle shadows depending on shadow behavior / skilltype
     if
         shadowbehav ~= xi.mobskills.shadowBehavior.WIPE_SHADOWS and
         shadowbehav ~= xi.mobskills.shadowBehavior.IGNORE_SHADOWS
