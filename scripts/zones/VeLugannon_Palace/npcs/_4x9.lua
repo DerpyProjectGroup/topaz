@@ -1,6 +1,6 @@
 -----------------------------------
 -- Area: VeLugannon Palace
---  NPC: Door (Blue)
+--  NPC: Door (Blue)West Side
 -- !pos -160.000 -2.974 380.000 177
 -----------------------------------
 ---@type TNpcEntity
