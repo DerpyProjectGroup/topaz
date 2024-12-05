@@ -771,7 +771,8 @@ public:
 
     CParty*         PParty;
     CBattleEntity*  PPet;
-    CBattleEntity*  PMaster; // Owner/owner of the entity (applies to all combat entities)
+    CBattleEntity*  PPetNext; // Support for multiple pets on same master
+    CBattleEntity*  PMaster;  // Owner/owner of the entity (applies to all combat entities)
     CBattleEntity*  PLastAttacker;
     time_point      LastAttacked;
     battlehistory_t BattleHistory{}; // Stores info related to most recent combat actions taken towards this entity.
