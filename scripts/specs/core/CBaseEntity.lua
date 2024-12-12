@@ -892,6 +892,12 @@ function CBaseEntity:getEquippedItem(slot)
 end
 
 ---@nodiscard
+---@param equipmentID integer
+---@return boolean
+function CBaseEntity:hasEquipped(equipmentID)
+end
+
+---@nodiscard
 ---@param itemID integer
 ---@param location integer?
 ---@return boolean
@@ -2719,8 +2725,10 @@ end
 ---@param subType integer?
 ---@param subPower integer?
 ---@param tier integer?
+---@param SourceType integer?
+---@param SourceTypeParam integer?
 ---@return boolean
-function CBaseEntity:addStatusEffect(effectID, power, tick, duration, subType, subPower, tier)
+function CBaseEntity:addStatusEffect(effectID, power, tick, duration, subType, subPower, tier, SourceType, SourceTypeParam)
 end
 
 ---@param effect CStatusEffect
@@ -2774,6 +2782,14 @@ function CBaseEntity:getStatusEffect(StatusID, SubType)
 end
 
 ---@nodiscard
+---@param StatusID integer
+---@param SourceType integer
+---@param SourceTypeParam integer
+---@return CStatusEffect?
+function CBaseEntity:getStatusEffectBySource(StatusID, SourceType, SourceTypeParam)
+end
+
+---@nodiscard
 ---@return table
 function CBaseEntity:getStatusEffects()
 end
@@ -2817,8 +2833,10 @@ end
 
 ---@param StatusID integer
 ---@param SubType integer?
+---@param SourceType integer?
+---@param SourceTypeParam integer?
 ---@return boolean
-function CBaseEntity:delStatusEffect(StatusID, SubType)
+function CBaseEntity:delStatusEffect(StatusID, SubType, SourceType, SourceTypeParam)
 end
 
 ---@param flag integer

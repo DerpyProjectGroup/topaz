@@ -59,15 +59,11 @@ void data_session::read_func()
             {
                 session.serverIP = ref<uint32>(data_, 5);
 
-                auto   _sql          = std::make_unique<SqlConnection>();
-                uint32 numContentIds = 0;
-                int32  ret           = _sql->Query("SELECT content_ids FROM accounts WHERE id = %u", session.accountID);
-
-                numContentIds = _sql->NumRows();
-
-                if (ret != SQL_ERROR && numContentIds != 0 && _sql->NextRow() == SQL_SUCCESS)
+                uint32     numContentIds = 0;
+                const auto rset0         = db::query("SELECT content_ids FROM accounts WHERE id = %u", session.accountID);
+                if (rset0 && rset0->rowsCount() && rset0->next())
                 {
-                    numContentIds = _sql->GetUIntData(0);
+                    numContentIds = rset0->get<uint32>("content_ids");
                 }
                 else
                 {
@@ -91,8 +87,8 @@ void data_session::read_func()
                         WHERE accid = %i \
                     LIMIT %u";
 
-                ret = _sql->Query(pfmtQuery, session.accountID, numContentIds);
-                if (ret == SQL_ERROR)
+                const auto rset1 = db::query(pfmtQuery, session.accountID, numContentIds);
+                if (!rset1)
                 {
                     socket_.lowest_layer().close();
                     return;
@@ -110,20 +106,20 @@ void data_session::read_func()
                 int i = 0;
 
                 // Extract all the necessary information about each character from the database and load up the struct.
-                while (_sql->NextRow() != SQL_NO_DATA)
+                while (rset1->next())
                 {
                     char strCharName[16] = {}; // 15 characters + null terminator
                     std::memset(strCharName, 0, sizeof(strCharName));
 
-                    std::string dbCharName = _sql->GetStringData(1);
+                    std::string dbCharName = rset1->get<std::string>("charname");
                     std::memcpy(strCharName, dbCharName.c_str(), dbCharName.length());
 
-                    int32 gmlevel = _sql->GetIntData(36);
+                    int32 gmlevel = rset1->get<int32>("gmlevel");
                     if (maintMode == 0 || gmlevel > 0)
                     {
                         uint8 worldId = 0; // Use when multiple worlds are supported.
 
-                        uint32 charId    = _sql->GetUIntData(0);
+                        uint32 charId    = rset1->get<uint32>("charid");
                         uint32 contentId = charId; // Reusing the character ID as the content ID (which is also the name of character folder within the USER directory) at the moment
 
                         // The character ID is made up of two parts totalling 24 bits:
@@ -142,31 +138,31 @@ void data_session::read_func()
                         std::memcpy(characterInfo.character_name, &strCharName, 16);
                         std::memcpy(characterInfo.world_name, serverName.c_str(), std::clamp<size_t>(serverName.length(), 0, 15));
 
-                        uint16 zone = static_cast<uint16>(_sql->GetUIntData(2));
+                        uint16 zone = rset1->get<uint16>("pos_zone");
 
-                        uint8 MainJob    = static_cast<uint8>(_sql->GetUIntData(4));
-                        uint8 lvlMainJob = static_cast<uint8>(_sql->GetUIntData(13 + MainJob));
+                        uint8 MainJob    = rset1->get<uint8>("mjob");
+                        uint8 lvlMainJob = rset1->get<uint8>(13 + MainJob);
 
-                        characterInfo.character_info.mon_no     = static_cast<uint16>(_sql->GetUIntData(5)); // race
+                        characterInfo.character_info.mon_no     = rset1->get<uint16>("race");
                         characterInfo.character_info.mjob_no    = MainJob;
                         characterInfo.character_info.mjob_level = lvlMainJob;
-                        characterInfo.character_info.sjob_no    = static_cast<uint16>(_sql->GetUIntData(39));
-                        characterInfo.character_info.face_no    = static_cast<uint16>(_sql->GetUIntData(6)); // face, may not be calculated correctly?
-                        characterInfo.character_info.town_no    = static_cast<uint8>(_sql->GetUIntData(37)); // nation
+                        characterInfo.character_info.sjob_no    = rset1->get<uint16>("sjob");
+                        characterInfo.character_info.face_no    = rset1->get<uint16>("face"); // may not be calculated correctly?
+                        characterInfo.character_info.town_no    = rset1->get<uint8>("nation");
                         characterInfo.character_info.zone_no    = static_cast<uint8>(zone);
                         characterInfo.character_info.zone_no2   = static_cast<uint8>((zone >> 8) & 1);
-                        characterInfo.character_info.hair_no    = static_cast<uint8>(_sql->GetUIntData(6)); // face, may not be calculated correctly?
-                        characterInfo.character_info.size       = static_cast<uint8>(_sql->GetUIntData(38));
+                        characterInfo.character_info.hair_no    = rset1->get<uint8>("face"); // may not be calculated correctly?
+                        characterInfo.character_info.size       = rset1->get<uint8>("size");
 
                         // TODO: add check for DisplayHeadOffFlg
-                        characterInfo.character_info.GrapIDTbl[0] = static_cast<uint16>(_sql->GetUIntData(6));  // face, may not be calculated correctly?
-                        characterInfo.character_info.GrapIDTbl[1] = static_cast<uint16>(_sql->GetUIntData(7));  // head
-                        characterInfo.character_info.GrapIDTbl[2] = static_cast<uint16>(_sql->GetUIntData(8));  // body
-                        characterInfo.character_info.GrapIDTbl[3] = static_cast<uint16>(_sql->GetUIntData(9));  // hands
-                        characterInfo.character_info.GrapIDTbl[4] = static_cast<uint16>(_sql->GetUIntData(10)); // legs
-                        characterInfo.character_info.GrapIDTbl[5] = static_cast<uint16>(_sql->GetUIntData(11)); // feet
-                        characterInfo.character_info.GrapIDTbl[6] = static_cast<uint16>(_sql->GetUIntData(12)); // main
-                        characterInfo.character_info.GrapIDTbl[7] = static_cast<uint16>(_sql->GetUIntData(13)); // sub
+                        characterInfo.character_info.GrapIDTbl[0] = rset1->get<uint16>("face"); // may not be calculated correctly?
+                        characterInfo.character_info.GrapIDTbl[1] = rset1->get<uint16>("head");
+                        characterInfo.character_info.GrapIDTbl[2] = rset1->get<uint16>("body");
+                        characterInfo.character_info.GrapIDTbl[3] = rset1->get<uint16>("hands");
+                        characterInfo.character_info.GrapIDTbl[4] = rset1->get<uint16>("legs");
+                        characterInfo.character_info.GrapIDTbl[5] = rset1->get<uint16>("feet");
+                        characterInfo.character_info.GrapIDTbl[6] = rset1->get<uint16>("main");
+                        characterInfo.character_info.GrapIDTbl[7] = rset1->get<uint16>("sub");
 
                         // uList is sent through data socket (to xiloader)
                         uint32 uListOffset = 16 * (i + 1);
@@ -181,7 +177,7 @@ void data_session::read_func()
                     }
                 }
 
-                auto allowCharacterCreation = settings::get<uint8>("login.CHARACTER_CREATION");
+                const auto allowCharacterCreation = settings::get<uint8>("login.CHARACTER_CREATION");
                 if (allowCharacterCreation)
                 {
                     // make extra char slots available if no characters are occupying the slots and their max content IDs supports it
@@ -269,19 +265,15 @@ void data_session::read_func()
             uint16 PrevZone = 0;
             uint16 gmlevel  = 0;
 
-            auto _sql = std::make_unique<SqlConnection>();
-
-            if (_sql->Query("SELECT zoneip, zoneport, zoneid, pos_prevzone, gmlevel, accid, charname \
+            const auto rset = db::query("SELECT zoneip, zoneport, zoneid, pos_prevzone, gmlevel, accid, charname \
                                              FROM zone_settings, chars \
                                              WHERE IF(pos_zone = 0, zoneid = pos_prevzone, zoneid = pos_zone) AND charid = %u AND accid = %u",
-                            charid, session.accountID) != SQL_ERROR &&
-                _sql->NumRows() != 0)
+                                        charid, session.accountID);
+            if (rset && rset->rowsCount() && rset->next())
             {
-                _sql->NextRow();
-
-                ZoneID   = static_cast<uint16>(_sql->GetUIntData(2));
-                PrevZone = static_cast<uint16>(_sql->GetUIntData(3));
-                gmlevel  = static_cast<uint16>(_sql->GetUIntData(4));
+                ZoneID   = rset->get<uint16>("zoneid");
+                PrevZone = rset->get<uint16>("pos_prevzone");
+                gmlevel  = rset->get<uint16>("gmlevel");
 
                 // new char only (first login from char create)
                 if (session.justCreatedNewChar)
@@ -289,8 +281,8 @@ void data_session::read_func()
                     key3[16] += 6;
                 }
 
-                inet_pton(AF_INET, (const char*)_sql->GetData(0), &ZoneIP);
-                ZonePort = (uint16)_sql->GetUIntData(1);
+                inet_pton(AF_INET, rset->get<std::string>("zoneip").c_str(), &ZoneIP);
+                ZonePort = rset->get<uint16>("zoneport");
 
                 characterSelectionResponse.server_ip   = ZoneIP;
                 characterSelectionResponse.server_port = ZonePort;
@@ -298,7 +290,7 @@ void data_session::read_func()
                 char strCharName[PacketNameLength] = {}; // 15 characters + null terminator
                 std::memset(strCharName, 0, sizeof(strCharName));
 
-                std::string dbCharName = _sql->GetStringData(6);
+                std::string dbCharName = rset->get<std::string>("charname");
                 std::memcpy(strCharName, dbCharName.c_str(), std::clamp<size_t>(dbCharName.length(), 3, PacketNameLength - 1));
                 std::memcpy(characterSelectionResponse.character_name, &strCharName, 16);
 
@@ -312,49 +304,44 @@ void data_session::read_func()
                 // Check the number of sessions
                 uint16 sessionCount = 0;
 
-                if (_sql->Query("SELECT COUNT(client_addr) \
+                const auto rset0 = db::query("SELECT COUNT(client_addr) \
                                 FROM accounts_sessions \
                                 WHERE client_addr = %u",
-                                accountIP) != SQL_ERROR &&
-                    _sql->NumRows() != 0)
+                                             accountIP);
+                if (rset0 && rset0->rowsCount() != 0 && rset0->next())
                 {
-                    _sql->NextRow();
-                    sessionCount = (uint16)_sql->GetIntData(0);
+                    sessionCount = rset0->get<uint16>("COUNT(client_addr)");
                 }
 
-                bool hasActiveSession = false;
-
-                if (_sql->Query("SELECT * \
+                bool       hasActiveSession = false;
+                const auto rset1            = db::query("SELECT * \
                                 FROM accounts_sessions \
                                 WHERE accid = %u AND client_port != '0'",
-                                session.accountID) != SQL_ERROR &&
-                    _sql->NumRows() != 0)
+                                                        session.accountID);
+                if (rset1 && rset1->rowsCount() != 0 && rset1->next())
                 {
-                    _sql->NextRow();
                     hasActiveSession = true;
                 }
 
                 // If client was zoning out but was never seen at the destination, wait 30 seconds before allowing login again
-                if (_sql->Query("SELECT * \
+                const auto rset2 = db::query("SELECT * \
                                 FROM accounts_sessions \
                                 WHERE accid = %u AND client_port = '0' AND last_zoneout_time >= SUBTIME(NOW(), \"00:00:30\")",
-                                session.accountID) != SQL_ERROR &&
-                    _sql->NumRows() != 0)
+                                             session.accountID);
+                if (rset2 && rset2->rowsCount() != 0 && rset2->next())
                 {
-                    _sql->NextRow();
                     hasActiveSession = true;
                 }
 
                 uint64 exceptionTime = 0;
 
-                if (_sql->Query("SELECT UNIX_TIMESTAMP(exception) \
+                const auto rset3 = db::query("SELECT UNIX_TIMESTAMP(exception) \
                                 FROM ip_exceptions \
                                 WHERE accid = %u",
-                                session.accountID) != SQL_ERROR &&
-                    _sql->NumRows() != 0)
+                                             session.accountID);
+                if (rset3 && rset3->rowsCount() != 0 && rset3->next())
                 {
-                    _sql->NextRow();
-                    exceptionTime = _sql->GetUInt64Data(0);
+                    exceptionTime = rset3->get<uint64>("UNIX_TIMESTAMP(exception)");
                 }
 
                 uint64 timeStamp    = std::chrono::duration_cast<std::chrono::seconds>(server_clock::now().time_since_epoch()).count();
@@ -387,22 +374,22 @@ void data_session::read_func()
                 {
                     if (PrevZone == 0)
                     {
-                        _sql->Query("UPDATE chars SET pos_prevzone = %d WHERE charid = %u", ZoneID, charid);
+                        db::query("UPDATE chars SET pos_prevzone = %d WHERE charid = %u", ZoneID, charid);
                     }
                     auto searchPort                       = settings::get<uint16>("network.SEARCH_PORT");
                     characterSelectionResponse.cache_ip   = session.serverIP; // search-server ip
                     characterSelectionResponse.cache_port = searchPort;
 
                     // If the session was not processed by the game server, then it must be deleted.
-                    _sql->Query("DELETE FROM accounts_sessions WHERE accid = %u AND client_port = 0", session.accountID);
+                    db::query("DELETE FROM accounts_sessions WHERE accid = %u AND client_port = 0", session.accountID);
 
                     char session_key[sizeof(key3) * 2 + 1];
                     bin2hex(session_key, key3, sizeof(key3));
 
-                    if (_sql->Query("INSERT INTO accounts_sessions(accid,charid,session_key,server_addr,server_port,client_addr, version_mismatch) "
-                                    "VALUES(%u,%u,x'%s',%u,%u,%u,%u)",
-                                    session.accountID, charid, session_key, ZoneIP, ZonePort, accountIP,
-                                    session.versionMismatch ? 1 : 0) == SQL_ERROR)
+                    if (!db::query("INSERT INTO accounts_sessions(accid,charid,session_key,server_addr,server_port,client_addr, version_mismatch) "
+                                   "VALUES(%u,%u,x'%s',%u,%u,%u,%u)",
+                                   session.accountID, charid, session_key, ZoneIP, ZonePort, accountIP,
+                                   session.versionMismatch ? 1 : 0))
                     {
                         if (auto data = session.view_session.get())
                         {
@@ -413,8 +400,8 @@ void data_session::read_func()
                         }
                     }
 
-                    _sql->Query("UPDATE char_flags SET disconnecting = 0 WHERE charid = %u", charid);
-                    _sql->Query("UPDATE char_stats SET zoning = 2 WHERE charid = %u", charid);
+                    db::query("UPDATE char_flags SET disconnecting = 0 WHERE charid = %u", charid);
+                    db::query("UPDATE char_stats SET zoning = 2 WHERE charid = %u", charid);
                 }
                 else
                 {
@@ -465,9 +452,9 @@ void data_session::read_func()
                 char timeAndDate[128];
                 strftime(timeAndDate, sizeof(timeAndDate), "%Y:%m:%d %H:%M:%S", &convertedTime);
 
-                if (_sql->Query("INSERT INTO account_ip_record(login_time,accid,charid,client_ip) \
+                if (!db::query("INSERT INTO account_ip_record(login_time,accid,charid,client_ip) \
                             VALUES ('%s', %u, %u, '%s')",
-                                timeAndDate, session.accountID, charid, loginHelpers::ip2str(accountIP)) == SQL_ERROR)
+                               timeAndDate, session.accountID, charid, loginHelpers::ip2str(accountIP)))
                 {
                     ShowError("data_session: Could not write info to account_ip_record.");
                 }

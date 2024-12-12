@@ -67,7 +67,7 @@ void handler_session::do_read()
         }
         else
         {
-            DebugSockets("async_read_some error in from IP {}:\n{}", ipAddress, ec.message());
+            DebugSockets(fmt::format("async_read_some error in from IP {} ({}: {})", ipAddress, ec.value(), ec.message()));
             handle_error(ec, self);
         }
     });

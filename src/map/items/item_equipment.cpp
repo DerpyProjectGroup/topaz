@@ -56,15 +56,15 @@ void CItemEquipment::LoadAugmentData()
     {
         while (rset->next())
         {
-            const auto augmentId = rset->getUInt("augmentId");
+            const auto augmentId = rset->get<uint16>("augmentId");
 
             sAugmentData[augmentId] = AugmentDataRow{
-                .augmentId  = static_cast<uint16>(augmentId),
-                .multiplier = static_cast<uint16>(rset->getUInt("multiplier")),
-                .modId      = static_cast<uint16>(rset->getUInt("modId")),
-                .value      = static_cast<int16>(rset->getInt("value")),
-                .isPet      = static_cast<uint8>(rset->getUInt("isPet")),
-                .petType    = static_cast<uint8>(rset->getUInt("petType")),
+                .augmentId  = augmentId,
+                .multiplier = rset->get<uint16>("multiplier"),
+                .modId      = rset->get<uint16>("modId"),
+                .value      = rset->get<int16>("value"),
+                .isPet      = rset->get<uint8>("isPet"),
+                .petType    = rset->get<uint8>("petType"),
             };
         }
     }

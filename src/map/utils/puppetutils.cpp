@@ -88,7 +88,7 @@ namespace puppetutils
                 PChar->PAutomaton = new CAutomatonEntity();
                 PChar->PAutomaton->saveModifiers();
 
-                PChar->PAutomaton->name = rset->getString("name");
+                PChar->PAutomaton->name = rset->get<std::string>("name");
                 automaton_equip_t tempEquip;
                 db::extractFromBlob(rset, "equipped_attachments", tempEquip);
 

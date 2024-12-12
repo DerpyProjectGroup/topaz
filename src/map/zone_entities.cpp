@@ -1519,9 +1519,10 @@ void CZoneEntities::ZoneServer(time_point tick)
                 PMob->PParty->RemoveMember(PMob);
             }
 
-            for (EntityList_t::const_iterator it = m_charList.begin(); it != m_charList.end(); ++it)
+            for (EntityList_t::const_iterator charIterator = m_charList.begin(); charIterator != m_charList.end(); ++charIterator)
             {
-                CCharEntity* PChar = static_cast<CCharEntity*>(it->second);
+                // This is safe because m_charList only receives inserts of CCharEntity
+                CCharEntity* PChar = static_cast<CCharEntity*>(charIterator->second);
 
                 if (PChar->PClaimedMob == PMob)
                 {
@@ -1583,9 +1584,10 @@ void CZoneEntities::ZoneServer(time_point tick)
         // This is only valid for dynamic entities
         if (PNpc->status == STATUS_TYPE::DISAPPEAR && PNpc->m_bReleaseTargIDOnDisappear)
         {
-            for (EntityList_t::const_iterator it = m_charList.begin(); it != m_charList.end(); ++it)
+            for (EntityList_t::const_iterator charIterator = m_charList.begin(); charIterator != m_charList.end(); ++charIterator)
             {
-                CCharEntity* PChar = (CCharEntity*)it->second;
+                // This is safe because m_charList only receives inserts of CCharEntity
+                CCharEntity* PChar = static_cast<CCharEntity*>(charIterator->second);
                 if (PChar->SpawnNPCList.find(PNpc->id) != PChar->SpawnNPCList.end())
                 {
                     PChar->SpawnNPCList.erase(PNpc->id);
@@ -1673,9 +1675,10 @@ void CZoneEntities::ZoneServer(time_point tick)
                     }
                 }
 
-                for (EntityList_t::const_iterator it = m_charList.begin(); it != m_charList.end(); ++it)
+                for (EntityList_t::const_iterator charIterator = m_charList.begin(); charIterator != m_charList.end(); ++charIterator)
                 {
-                    CCharEntity* PChar = (CCharEntity*)it->second;
+                    // This is safe because m_charList only receives inserts of CCharEntity
+                    CCharEntity* PChar = static_cast<CCharEntity*>(charIterator->second);
                     if (distance(PChar->loc.p, PTrust->loc.p) < 50)
                     {
                         PChar->SpawnTRUSTList.erase(PTrust->id);
@@ -1698,9 +1701,10 @@ void CZoneEntities::ZoneServer(time_point tick)
     std::vector<CCharEntity*> charsToWarp       = {};
     std::vector<CCharEntity*> charsToChangeZone = {};
 
-    for (EntityList_t::const_iterator it = m_charList.begin(); it != m_charList.end(); ++it)
+    for (EntityList_t::const_iterator charIterator = m_charList.begin(); charIterator != m_charList.end(); ++charIterator)
     {
-        CCharEntity* PChar = static_cast<CCharEntity*>(it->second);
+        // This is safe because m_charList only receives inserts of CCharEntity
+        CCharEntity* PChar = static_cast<CCharEntity*>(charIterator->second);
 
         ShowTrace(fmt::format("CZoneEntities::ZoneServer: Char: {} ({})", PChar->getName(), PChar->id).c_str());
 
@@ -1714,7 +1718,11 @@ void CZoneEntities::ZoneServer(time_point tick)
                 PChar->StatusEffectContainer->TickEffects(tick);
             }
             PChar->PAI->Tick(tick);
-            PChar->PTreasurePool->CheckItems(tick);
+
+            if (PChar->PTreasurePool)
+            {
+                PChar->PTreasurePool->CheckItems(tick);
+            }
         }
 
         // Else-if chain so only one end-result can be processed.

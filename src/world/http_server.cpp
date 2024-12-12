@@ -208,7 +208,7 @@ void HTTPServer::LockingUpdate()
             auto rset = db::preparedStmt("SELECT COUNT(*) AS `count` FROM accounts_sessions");
             if (rset && rset->next())
             {
-                apiDataCache.activeSessionCount = rset->getUInt("count");
+                apiDataCache.activeSessionCount = rset->get<uint32>("count");
             }
         }
 
@@ -217,7 +217,7 @@ void HTTPServer::LockingUpdate()
             auto rset = db::preparedStmt("SELECT COUNT(DISTINCT client_addr) AS `count` FROM accounts_sessions");
             if (rset && rset->next())
             {
-                apiDataCache.activeUniqueIPCount = rset->getUInt("count");
+                apiDataCache.activeUniqueIPCount = rset->get<uint32>("count");
             }
         }
 
@@ -232,8 +232,8 @@ void HTTPServer::LockingUpdate()
             {
                 while (rset->next())
                 {
-                    auto zoneId = rset->getUInt("pos_zone");
-                    auto count  = rset->getUInt("count");
+                    auto zoneId = rset->get<uint16>("pos_zone");
+                    auto count  = rset->get<uint32>("count");
 
                     apiDataCache.zonePlayerCounts[zoneId] = count;
                 }

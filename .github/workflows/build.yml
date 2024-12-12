@@ -33,6 +33,7 @@ jobs:
       name: Get Changed Files
       uses: Ana06/get-changed-files@v2.3.0
       with:
+        format: "json"
         filter: |
           modules/**
           src/**
@@ -42,8 +43,9 @@ jobs:
     - name: List Changed Files
       if: always()
       run: |
-        for changed_file in ${{ steps.changed-files.outputs.all }}; do
-          echo "${changed_file}"
+        readarray -t removed_files <<<"$(jq -r '.[]' <<<'${{ steps.changed-files.outputs.all }}')"
+        for removed_file in ${removed_files[@]}; do
+            echo "${removed_file}"
         done
     - name: Git Formatting Checks
       if: github.event_name == 'pull_request'
@@ -88,7 +90,7 @@ jobs:
           exit 1
         fi
         exit 0
-    - name: CPP Formatting Checks (clang-format-15)
+    - name: Run CPP Formatting Checks (clang-format-15)
       if: always()
       run: |
         clang-format-15 -version
@@ -100,9 +102,19 @@ jobs:
             fi
           fi
         done
-        git diff --color >> cpp_formatting_checks.txt
-        git reset --hard
-        if [ -s cpp_formatting_checks.txt ]
+        git diff >> cpp_formatting_checks.txt
+        git diff --color >> cpp_formatting_checks_color.txt
+    - name: Upload CPP Formatting Diff (clang-format-15)
+      if: hashFiles('cpp_formatting_checks.txt') != ''
+      uses: actions/upload-artifact@v4
+      with:
+        name: clang_format_diff
+        path: |
+          cpp_formatting_checks.txt
+    - name: Report CPP Formatting Checks (clang-format-15)
+      if: always()
+      run: |
+        if [ -s cpp_formatting_checks_color.txt ]
         then
           echo ""
           echo "You have errors in your C++ code formatting."
@@ -110,17 +122,11 @@ jobs:
           echo "You can either fix the formatting by hand or use clang-format."
           echo "(You can safely ignore warnings about \$TERM and tput)"
           echo ""
-          cat cpp_formatting_checks.txt | diff-so-fancy || true
+          cat cpp_formatting_checks_color.txt | diff-so-fancy || true
           exit 1
         fi
+        git reset --hard
         exit 0
-    - name: Upload CPP Formatting Diff
-      if: hashFiles('cpp_formatting_checks.txt') != ''
-      uses: actions/upload-artifact@v4
-      with:
-        name: clang_format_diff
-        path: |
-          cpp_formatting_checks.txt
     - name: Lua Checks
       if: always()
       run: |

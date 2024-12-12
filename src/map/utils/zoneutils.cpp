@@ -316,12 +316,14 @@ namespace zoneutils
                     {
                         while (rset->next())
                         {
-                            if (!luautils::IsContentEnabled(rset->getString("content_tag").c_str()))
+                            // If there is no content tag, always load the NPC
+                            const auto contentTagFound = !rset->isNull("content_tag");
+                            if (contentTagFound && !luautils::IsContentEnabled(rset->get<std::string>("content_tag").c_str()))
                             {
                                 continue;
                             }
 
-                            uint32 NpcID = rset->getUInt("npcid");
+                            uint32 NpcID = rset->get<uint32>("npcid");
 
                             if (!(PZone->GetTypeMask() & ZONE_TYPE::INSTANCED))
                             {
@@ -329,31 +331,31 @@ namespace zoneutils
                                 PNpc->targid     = NpcID & 0xFFF;
                                 PNpc->id         = NpcID;
 
-                                PNpc->name       = rset->getString("name");          // Internal name
-                                PNpc->packetName = rset->getString("polutils_name"); // Name sent to the client (when applicable)
+                                PNpc->name       = rset->get<std::string>("name");          // Internal name
+                                PNpc->packetName = rset->get<std::string>("polutils_name"); // Name sent to the client (when applicable)
 
-                                PNpc->loc.p.rotation = (uint8)rset->getUInt("pos_rot");
-                                PNpc->loc.p.x        = rset->getFloat("pos_x");
-                                PNpc->loc.p.y        = rset->getFloat("pos_y");
-                                PNpc->loc.p.z        = rset->getFloat("pos_z");
-                                PNpc->loc.p.moving   = (uint16)rset->getUInt("flag");
+                                PNpc->loc.p.rotation = rset->get<uint8>("pos_rot");
+                                PNpc->loc.p.x        = rset->get<float>("pos_x");
+                                PNpc->loc.p.y        = rset->get<float>("pos_y");
+                                PNpc->loc.p.z        = rset->get<float>("pos_z");
+                                PNpc->loc.p.moving   = rset->get<uint16>("flag");
 
-                                PNpc->m_TargID = rset->getUInt("flag") >> 16;
+                                PNpc->m_TargID = rset->get<uint32>("flag") >> 16;
 
-                                PNpc->speed    = (uint8)rset->getInt("speed");    // Overwrites baseentity.cpp's defined speed
-                                PNpc->speedsub = (uint8)rset->getInt("speedsub"); // Overwrites baseentity.cpp's defined speedsub
+                                PNpc->speed    = rset->get<uint8>("speed");    // Overwrites baseentity.cpp's defined speed
+                                PNpc->speedsub = rset->get<uint8>("speedsub"); // Overwrites baseentity.cpp's defined speedsub
 
-                                PNpc->animation    = (uint8)rset->getInt("animation");
-                                PNpc->animationsub = (uint8)rset->getInt("animationsub");
+                                PNpc->animation    = rset->get<uint8>("animation");
+                                PNpc->animationsub = rset->get<uint8>("animationsub");
 
-                                PNpc->namevis = (uint8)rset->getInt("namevis");
-                                PNpc->status  = static_cast<STATUS_TYPE>(rset->getInt("status"));
-                                PNpc->m_flags = rset->getInt("entityFlags");
+                                PNpc->namevis = rset->get<uint8>("namevis");
+                                PNpc->status  = static_cast<STATUS_TYPE>(rset->get<uint8>("status"));
+                                PNpc->m_flags = rset->get<uint32>("entityFlags");
 
                                 db::extractFromBlob(rset, "look", PNpc->look);
 
-                                PNpc->name_prefix = (uint8)rset->getInt("name_prefix");
-                                PNpc->widescan    = (uint8)rset->getInt("widescan");
+                                PNpc->name_prefix = rset->get<uint8>("name_prefix");
+                                PNpc->widescan    = rset->get<uint8>("widescan");
 
                                 PZone->InsertNPC(PNpc);
                             }

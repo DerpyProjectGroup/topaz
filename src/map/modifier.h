@@ -35,6 +35,8 @@ enum class Mod
     CURSE_PCT    = 1094, // Curse HP/MP reduction term, -1 = - 1% HP/MP
     BASE_HP      = 1095, // Base HP bonus (like merits)
     BASE_MP      = 1096, // Base MP bonus (like merits)
+    FOOD_HP      = 1130, // Food HP (this is added after curse)
+    FOOD_MP      = 1131, // Food MP (this is added after curse)
 
     STR = 8,  // Strength
     DEX = 9,  // Dexterity
@@ -1071,7 +1073,7 @@ enum class Mod
     // The spares take care of finding the next ID to use so long as we don't forget to list IDs that have been freed up by refactoring.
     // 570 through 825 used by WS DMG mods these are not spares.
     //
-    // SPARE IDs: 1130 and onward
+    // SPARE IDs: 1132 and onward
 };
 
 // temporary workaround for using enum class as unordered_map key until compilers support it

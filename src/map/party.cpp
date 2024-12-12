@@ -160,7 +160,7 @@ void CParty::DisbandParty(bool playerInitiated)
         {
             uint8 data[4]{};
             ref<uint32>(data, 0) = m_PartyID;
-            message::send(MSG_PT_DISBAND, data, sizeof data, nullptr);
+            message::send(MSG_PT_DISBAND, data, sizeof(data), nullptr);
         }
     }
     else if (m_PartyType == PARTY_MOBS)
@@ -217,12 +217,12 @@ void CParty::AssignPartyRole(const std::string& MemberName, uint8 role)
     if (m_PAlliance)
     {
         ref<uint32>(data, 0) = m_PAlliance->m_AllianceID;
-        message::send(MSG_ALLIANCE_RELOAD, data, sizeof data, nullptr);
+        message::send(MSG_ALLIANCE_RELOAD, data, sizeof(data), nullptr);
     }
     else
     {
         ref<uint32>(data, 0) = m_PartyID;
-        message::send(MSG_PT_RELOAD, data, sizeof data, nullptr);
+        message::send(MSG_PT_RELOAD, data, sizeof(data), nullptr);
     }
 }
 
@@ -353,12 +353,12 @@ void CParty::RemoveMember(CBattleEntity* PEntity)
                 if (m_PAlliance)
                 {
                     ref<uint32>(data, 0) = m_PAlliance->m_AllianceID;
-                    message::send(MSG_ALLIANCE_RELOAD, data, sizeof data, nullptr);
+                    message::send(MSG_ALLIANCE_RELOAD, data, sizeof(data), nullptr);
                 }
                 else
                 {
                     ref<uint32>(data, 0) = m_PartyID;
-                    message::send(MSG_PT_RELOAD, data, sizeof data, nullptr);
+                    message::send(MSG_PT_RELOAD, data, sizeof(data), nullptr);
                 }
 
                 if (PChar->PTreasurePool != nullptr && PChar->PTreasurePool->GetPoolType() != TREASUREPOOL_ZONE)
@@ -609,12 +609,12 @@ void CParty::AddMember(CBattleEntity* PEntity)
         if (m_PAlliance)
         {
             ref<uint32>(data, 0) = m_PAlliance->m_AllianceID;
-            message::send(MSG_ALLIANCE_RELOAD, data, sizeof data, nullptr);
+            message::send(MSG_ALLIANCE_RELOAD, data, sizeof(data), nullptr);
         }
         else
         {
             ref<uint32>(data, 0) = m_PartyID;
-            message::send(MSG_PT_RELOAD, data, sizeof data, nullptr);
+            message::send(MSG_PT_RELOAD, data, sizeof(data), nullptr);
         }
 
         ReloadTreasurePool(PChar);
@@ -681,12 +681,12 @@ void CParty::AddMember(uint32 id)
         if (m_PAlliance)
         {
             ref<uint32>(data, 0) = m_PAlliance->m_AllianceID;
-            message::send(MSG_ALLIANCE_RELOAD, data, sizeof data, nullptr);
+            message::send(MSG_ALLIANCE_RELOAD, data, sizeof(data), nullptr);
         }
         else
         {
             ref<uint32>(data, 0) = m_PartyID;
-            message::send(MSG_PT_RELOAD, data, sizeof data, nullptr);
+            message::send(MSG_PT_RELOAD, data, sizeof(data), nullptr);
         }
 
         /*if (PChar->nameflags.flags & FLAG_INVITE)

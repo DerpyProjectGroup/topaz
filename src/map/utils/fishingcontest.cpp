@@ -202,10 +202,10 @@ namespace fishingcontest
                 if (rankGroup > 0)
                 {
                     std::string Query = "INSERT INTO char_fishing_contest_history (charid, contest_rank_{}) "
-                                        "VALUES ({}, 1) ON DUPLICATE KEY UPDATE contest_rank_{} = contest_rank_{} + 1;";
-                    auto        ret   = db::query(fmt::format(Query, rankGroup, charID, rankGroup, rankGroup));
+                                        "VALUES ({}, 1) ON DUPLICATE KEY UPDATE contest_rank_{} = contest_rank_{} + 1";
+                    auto        rset  = db::query(fmt::format(Query, rankGroup, charID, rankGroup, rankGroup));
 
-                    if (!ret)
+                    if (!rset)
                     {
                         ShowWarning("Unable to update player [%s] fishing reward history.", entry.name);
                     }
@@ -345,21 +345,21 @@ namespace fishingcontest
 
         // Update the DB with the current contest data (in case the contest is changed)
         const char* Query = "UPDATE `fishing_contest` SET "
-                            "status = (?), "        // Status
-                            "criteria = (?), "      // Criteria
-                            "measure = (?), "       // Measure
-                            "fishid = (?), "        // Fish ID
-                            "starttime = (?), "     // Start Time
-                            "nextstagetime = (?);"; // Stage Change Time
+                            "status = (?), "       // Status
+                            "criteria = (?), "     // Criteria
+                            "measure = (?), "      // Measure
+                            "fishid = (?), "       // Fish ID
+                            "starttime = (?), "    // Start Time
+                            "nextstagetime = (?)"; // Stage Change Time
 
-        auto ret = db::preparedStmt(Query, static_cast<uint8>(CurrentFishingContest.status),
-                                    static_cast<uint8>(CurrentFishingContest.criteria),
-                                    static_cast<uint8>(CurrentFishingContest.measure),
-                                    CurrentFishingContest.fishId,
-                                    CurrentFishingContest.startTime,
-                                    CurrentFishingContest.changeTime);
+        auto rset = db::preparedStmt(Query, static_cast<uint8>(CurrentFishingContest.status),
+                                     static_cast<uint8>(CurrentFishingContest.criteria),
+                                     static_cast<uint8>(CurrentFishingContest.measure),
+                                     CurrentFishingContest.fishId,
+                                     CurrentFishingContest.startTime,
+                                     CurrentFishingContest.changeTime);
 
-        if (!ret)
+        if (!rset)
         {
             ShowDebug("Error writing fishing contest data to database.");
             return false;
@@ -379,21 +379,21 @@ namespace fishingcontest
 
         // Update the DB with the current contest data (in case the contest is changed)
         std::string Query = "INSERT INTO `fishing_contest` VALUES ("
-                            "(?), "  // Status
-                            "(?), "  // Criteria
-                            "(?), "  // Measure
-                            "(?), "  // Fish ID
-                            "(?), "  // Start Time
-                            "(?));"; // Stage Change Time
+                            "(?), " // Status
+                            "(?), " // Criteria
+                            "(?), " // Measure
+                            "(?), " // Fish ID
+                            "(?), " // Start Time
+                            "(?))"; // Stage Change Time
 
-        auto ret = db::preparedStmt(Query, static_cast<uint8>(CurrentFishingContest.status),
-                                    static_cast<uint8>(CurrentFishingContest.criteria),
-                                    static_cast<uint8>(CurrentFishingContest.measure),
-                                    CurrentFishingContest.fishId,
-                                    CurrentFishingContest.startTime,
-                                    CurrentFishingContest.changeTime);
+        auto rset = db::preparedStmt(Query, static_cast<uint8>(CurrentFishingContest.status),
+                                     static_cast<uint8>(CurrentFishingContest.criteria),
+                                     static_cast<uint8>(CurrentFishingContest.measure),
+                                     CurrentFishingContest.fishId,
+                                     CurrentFishingContest.startTime,
+                                     CurrentFishingContest.changeTime);
 
-        if (!ret)
+        if (!rset)
         {
             ShowDebug("Error writing fishing contest data to database.");
             return false;
@@ -421,23 +421,23 @@ namespace fishingcontest
         std::string Query = "REPLACE INTO `fishing_contest_entries` "
                             "(charid, mjob, sjob, mlevel, slevel, race, allegiance, fishRank, score, submitTime, contestRank, share) "
                             "SELECT charid, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} "
-                            "FROM chars WHERE charname = '{}';";
+                            "FROM chars WHERE charname = '{}'";
 
-        auto ret = db::query(fmt::format(Query,
-                                         entry->mjob,
-                                         entry->sjob,
-                                         entry->mlvl,
-                                         entry->slvl,
-                                         entry->race,
-                                         entry->allegiance,
-                                         entry->fishRank,
-                                         entry->score,
-                                         entry->submitTime,
-                                         entry->contestRank,
-                                         entry->share,
-                                         entry->name));
+        auto rset = db::query(fmt::format(Query,
+                                          entry->mjob,
+                                          entry->sjob,
+                                          entry->mlvl,
+                                          entry->slvl,
+                                          entry->race,
+                                          entry->allegiance,
+                                          entry->fishRank,
+                                          entry->score,
+                                          entry->submitTime,
+                                          entry->contestRank,
+                                          entry->share,
+                                          entry->name));
 
-        if (!ret)
+        if (!rset)
         {
             ShowDebug("Error writing fishing contest data to database.");
             return false;
@@ -494,10 +494,10 @@ namespace fishingcontest
         {
             // Remove from the database
             const char* Query = "DELETE FROM `fishing_contest_entries` \
-                                 WHERE `charid` = {};";
-            auto        ret   = db::query(fmt::format(Query, PChar->id));
+                                 WHERE `charid` = {}";
+            auto        rset  = db::query(fmt::format(Query, PChar->id));
 
-            if (!ret)
+            if (!rset)
             {
                 ShowError("Failed to remove entry from fishing entry database.");
                 return false;
@@ -538,10 +538,10 @@ namespace fishingcontest
 
         std::string Query = "UPDATE fishing_contest_entries "
                             "SET claimed = 1 "
-                            "WHERE charid = (?);";
+                            "WHERE charid = (?)";
 
-        auto ret = db::preparedStmt(Query, PChar->id);
-        if (!ret)
+        auto rset = db::preparedStmt(Query, PChar->id);
+        if (!rset)
         {
             ShowDebug("Unable to remove award on fishing contest for player %s.", PChar->getName());
             return false;
@@ -563,17 +563,17 @@ namespace fishingcontest
 
         std::string Query = "SELECT contest_rank_1, contest_rank_2, contest_rank_3, contest_rank_4 "
                             "FROM char_fishing_contest_history "
-                            "WHERE charid = (?);";
-        auto        ret   = db::preparedStmt(Query, PChar->id);
+                            "WHERE charid = (?)";
+        auto        rset  = db::preparedStmt(Query, PChar->id);
 
-        if (ret && ret->rowsCount() > 0 && ret->next())
+        if (rset && rset->rowsCount() > 0 && rset->next())
         {
             // If there is no char in the history table, this is fine
             // It means the player has never place, and will receive a table of 0s
-            history.rank1 = ret->getInt("contest_rank_1");
-            history.rank2 = ret->getInt("contest_rank_2");
-            history.rank3 = ret->getInt("contest_rank_3");
-            history.rank4 = ret->getInt("contest_rank_4");
+            history.rank1 = rset->get<uint16>("contest_rank_1");
+            history.rank2 = rset->get<uint16>("contest_rank_2");
+            history.rank3 = rset->get<uint16>("contest_rank_3");
+            history.rank4 = rset->get<uint16>("contest_rank_4");
         }
 
         return history;
@@ -609,24 +609,24 @@ namespace fishingcontest
     void InitNewContest(uint16 fishId, FISHING_CONTEST_CRITERIA criteria, FISHING_CONTEST_MEASURE measure)
     {
         // Clear any table data involving this contest
-        std::string Query = "DELETE FROM `fishing_contest`;";
-        auto        ret   = db::query(Query);
-
-        if (!ret)
         {
-            ShowDebug("Error removing contest data.");
-            return;
+            const auto rset = db::query("DELETE FROM `fishing_contest`");
+            if (!rset)
+            {
+                ShowDebug("Error removing contest data.");
+                return;
+            }
         }
 
         // Clear the fishing contest entries from cache and database
-        FishingContestEntries.clear();
-        Query = "DELETE FROM `fishing_contest_entries`;";
-        ret   = db::query(Query);
-
-        if (!ret)
         {
-            ShowDebug("Error removing contest entry data.");
-            return;
+            FishingContestEntries.clear();
+            const auto rset = db::query("DELETE FROM `fishing_contest_entries`");
+            if (!rset)
+            {
+                ShowDebug("Error removing contest entry data.");
+                return;
+            }
         }
 
         // Clamp vars, just in case
@@ -649,20 +649,20 @@ namespace fishingcontest
     {
         // load the overhead contest parameters
         std::string Query = "SELECT status, criteria, measure, fishid, starttime, nextstagetime "
-                            "FROM fishing_contest;";
+                            "FROM fishing_contest";
 
-        auto ret = db::preparedStmt(Query);
+        auto rset = db::preparedStmt(Query);
 
-        if (ret && ret->rowsCount() > 0 && ret->next())
+        if (rset && rset->rowsCount() > 0 && rset->next())
         {
-            CurrentFishingContest.status     = static_cast<FISHING_CONTEST_STATUS>(ret->getInt("status"));
-            CurrentFishingContest.criteria   = static_cast<FISHING_CONTEST_CRITERIA>(ret->getInt("criteria"));
-            CurrentFishingContest.measure    = static_cast<FISHING_CONTEST_MEASURE>(ret->getInt("measure"));
-            CurrentFishingContest.fishId     = ret->getInt("fishid");
-            CurrentFishingContest.startTime  = ret->getInt("starttime");
-            CurrentFishingContest.changeTime = ret->getInt("nextstagetime");
+            CurrentFishingContest.status     = static_cast<FISHING_CONTEST_STATUS>(rset->get<uint8>("status"));
+            CurrentFishingContest.criteria   = static_cast<FISHING_CONTEST_CRITERIA>(rset->get<uint8>("criteria"));
+            CurrentFishingContest.measure    = static_cast<FISHING_CONTEST_MEASURE>(rset->get<uint8>("measure"));
+            CurrentFishingContest.fishId     = rset->get<uint16>("fishid");
+            CurrentFishingContest.startTime  = rset->get<uint32>("starttime");
+            CurrentFishingContest.changeTime = rset->get<uint32>("nextstagetime");
         }
-        else if (ret->rowsCount() == 0)
+        else if (rset->rowsCount() == 0)
         {
             // No contests found in the database, so we need to create one
             InitNewContest();
@@ -689,32 +689,33 @@ namespace fishingcontest
                             "FROM fishing_contest_entries e "
                             "LEFT JOIN chars c "
                             "ON c.charid = e.charid "
-                            "ORDER BY contestRank;";
+                            "ORDER BY contestRank";
 
-        auto ret = db::preparedStmt(Query);
+        auto rset = db::preparedStmt(Query);
 
-        if (ret && ret->rowsCount() > 0)
+        if (rset && rset->rowsCount() > 0)
         {
             // Clear the current entry data
             FishingContestEntries.clear();
 
-            while (ret->next())
+            while (rset->next())
             {
                 FishingContestEntry entry;
 
-                std::strncpy(entry.name, ret->getString("charname").c_str(), ret->getString("charname").size());
-                entry.mjob        = ret->getInt("mjob");
-                entry.sjob        = ret->getInt("sjob");
-                entry.mlvl        = ret->getInt("mlevel");
-                entry.slvl        = ret->getInt("slevel");
-                entry.race        = ret->getInt("race");
-                entry.allegiance  = ret->getInt("allegiance");
-                entry.fishRank    = ret->getInt("fishRank");
-                entry.score       = ret->getInt("score");
-                entry.submitTime  = ret->getInt("submitTime");
-                entry.contestRank = ret->getInt("contestRank");
-                entry.share       = ret->getInt("share");
-                entry.dataset_b   = ret->getInt("share");
+                std::strncpy(entry.name, rset->get<std::string>("charname").c_str(), rset->get<std::string>("charname").size());
+
+                entry.mjob        = rset->get<uint8>("mjob");
+                entry.sjob        = rset->get<uint8>("sjob");
+                entry.mlvl        = rset->get<uint8>("mlevel");
+                entry.slvl        = rset->get<uint8>("slevel");
+                entry.race        = rset->get<uint8>("race");
+                entry.allegiance  = rset->get<uint8>("allegiance");
+                entry.fishRank    = rset->get<uint8>("fishRank");
+                entry.score       = rset->get<uint32>("score");
+                entry.submitTime  = rset->get<uint32>("submitTime");
+                entry.contestRank = rset->get<uint8>("contestRank");
+                entry.share       = rset->get<uint8>("share");
+                entry.dataset_b   = rset->get<uint8>("share");
 
                 FishingContestEntries.push_back(entry);
             }

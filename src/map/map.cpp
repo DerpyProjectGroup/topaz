@@ -386,7 +386,7 @@ int32 do_init(int32 argc, char** argv)
         // our own SQL connection.
         {
             auto otherSql  = std::make_unique<SqlConnection>();
-            auto query = "UPDATE %s SET %s %u WHERE charid = %u;";
+            auto query = "UPDATE %s SET %s %u WHERE charid = %u";
             otherSql->Query(query, "chars", "gmlevel =", PChar->m_GMlevel, PChar->id);
         }
 
@@ -801,7 +801,7 @@ int32 recv_parse(int8* buff, size_t* buffsize, sockaddr_in* from, map_session_da
                 uint8 data[4]{};
                 ref<uint32>(data, 0) = CharID;
 
-                message::send(MSG_KILL_SESSION, data, sizeof data, nullptr);
+                message::send(MSG_KILL_SESSION, data, sizeof(data), nullptr);
             }
         }
 

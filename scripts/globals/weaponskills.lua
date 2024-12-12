@@ -513,8 +513,8 @@ xi.weaponskills.calculateRawWSDmg = function(attacker, target, wsID, tp, action,
     local hitsDone                = 1
     local hitdmg                  = 0
     local finaldmg                = 0
-    local mainhandTPGain          = xi.combat.tp.getSingleWeaponTPReturn(attacker, xi.slot.MAIN)
-    local subTPGain               = xi.combat.tp.getSingleWeaponTPReturn(attacker, xi.slot.SUB)
+    local mainhandTPGain          = xi.combat.tp.getSingleWeaponTPReturn(attacker, xi.slot.MAIN) -- TODO: are these calculated wrong? ((delay1+delay2)/2 * 1 - DW%) = tp return for both hands?
+    local subTPGain               = xi.combat.tp.getSingleWeaponTPReturn(attacker, xi.slot.SUB)  --
     local isJump                  = wsParams.isJump or false
     local attackerTPMult          = wsParams.attackerTPMult or 1
     calcParams.hitsLanded         = 0
@@ -595,34 +595,6 @@ xi.weaponskills.calculateRawWSDmg = function(attacker, target, wsID, tp, action,
         subTPGain    = mainhandTPGain
     end
 
-    -- Do the extra hit for our offhand if applicable
-    if calcParams.extraOffhandHit and finaldmg < targetHp then
-        calcParams.hitsLanded = 0
-        local offhandDmg      = calcParams.weaponDamage[2] + wsMods
-        hitdmg, calcParams    = getSingleHitDamage(attacker, target, offhandDmg, ftp, wsParams, calcParams)
-
-        if calcParams.melee then
-            hitdmg = modifyMeleeHitDamage(attacker, target, calcParams.attackInfo, wsParams, hitdmg)
-        end
-
-        if hitdmg > 0 then
-            attacker:trySkillUp(offhandSkill, targetLvl)
-
-            if isJump then
-                attacker:addTP(subTPGain * attackerTPMult)
-            end
-        end
-
-        finaldmg = finaldmg + hitdmg
-        hitsDone = hitsDone + 1
-
-        calcParams.tpHitsLanded      = calcParams.tpHitsLanded + calcParams.hitsLanded
-        calcParams.offhandHitsLanded = calcParams.hitsLanded
-
-        numOffhandMultis = getMultiAttacks(attacker, target, wsParams, false, true)
-        numMultiProcs    = numOffhandMultis > 0 and numMultiProcs + 1 or numMultiProcs
-    end
-
     calcParams.guaranteedHit = false -- Accuracy bonus from SA/TA applies only to first main and offhand hit
 
     dmg = mainBase
@@ -648,10 +620,17 @@ xi.weaponskills.calculateRawWSDmg = function(attacker, target, wsID, tp, action,
             end
         end
 
+        -- When dual wielding, the mainhand appears to count the second hit as a TP hit unless it's a 1 hit WS where the offhand will gain TP
+        -- Needs better verification
+        if calcParams.extraOffhandHit and hitsDone == 1 then
+            calcParams.tpHitsLanded = calcParams.tpHitsLanded + calcParams.hitsLanded
+        else -- Otherwise, add a hit to the "extra" hits which is 10 tp each
+            calcParams.mainHitsLanded = calcParams.mainHitsLanded + calcParams.hitsLanded
+        end
+
         finaldmg                  = finaldmg + hitdmg
         hitsDone                  = hitsDone + 1
         mainhandHitsDone          = mainhandHitsDone + 1
-        calcParams.mainHitsLanded = calcParams.mainHitsLanded + calcParams.hitsLanded
 
         -- Check each hit for multis, but stop after we get 2 multi procs
         if numMultiProcs < 2 then
@@ -680,14 +659,56 @@ xi.weaponskills.calculateRawWSDmg = function(attacker, target, wsID, tp, action,
             end
         end
 
+        -- When dual wielding, the mainhand appears to count the second hit as a TP hit unless it's a 1 hit WS where the offhand will gain TP
+        -- Needs better verification, in this case (1 hit ws with multis)  a DA/TA/QA may not count as TP hit and we'd move this into the offhand hit proc.
+        -- Either way, this won't "cheat" players out of TP in the current implementation.
+        if calcParams.extraOffhandHit and hitsDone == 1 then
+            calcParams.tpHitsLanded = calcParams.tpHitsLanded + calcParams.hitsLanded
+        else -- Otherwise, add a hit to the "extra" hits which is 10 tp each
+            calcParams.mainHitsLanded = calcParams.mainHitsLanded + calcParams.hitsLanded
+        end
+
         finaldmg                  = finaldmg + hitdmg
         hitsDone                  = hitsDone + 1
         mainhandMultiHitsDone     = mainhandMultiHitsDone + 1
-        calcParams.mainHitsLanded = calcParams.mainHitsLanded + calcParams.hitsLanded
+    end
+
+    -- Do the extra hit for our offhand if applicable
+    if calcParams.extraOffhandHit and hitsDone < 8 and finaldmg < targetHp then
+        calcParams.hitsLanded = 0
+        local offhandDmg      = calcParams.weaponDamage[2] + wsMods
+        hitdmg, calcParams    = getSingleHitDamage(attacker, target, offhandDmg, ftp, wsParams, calcParams)
+
+        if calcParams.melee then
+            hitdmg = modifyMeleeHitDamage(attacker, target, calcParams.attackInfo, wsParams, hitdmg)
+        end
+
+        if hitdmg > 0 then
+            attacker:trySkillUp(offhandSkill, targetLvl)
+
+            if isJump then
+                attacker:addTP(subTPGain * attackerTPMult)
+            end
+        end
+
+        -- If this is the second swing of the WS (1 hit ws) the offhand appears to count for TP gain
+        -- Needs better verification
+        if calcParams.extraOffhandHit and hitsDone == 1 then
+            calcParams.tpHitsLanded = calcParams.tpHitsLanded + calcParams.hitsLanded
+        else -- Otherwise, add a hit to the "extra" hits which is 10 tp each
+            calcParams.offhandHitsLanded = calcParams.hitsLanded
+        end
+
+        finaldmg = finaldmg + hitdmg
+        hitsDone = hitsDone + 1
+
+        numOffhandMultis = getMultiAttacks(attacker, target, wsParams, false, true)
+        numMultiProcs    = numOffhandMultis > 0 and numMultiProcs + 1 or numMultiProcs
     end
 
     -- Proc any offhand multi attacks.
     local offhandMultiHitsDone = 0
+
     while hitsDone < 8 and offhandMultiHitsDone < numOffhandMultis and finaldmg < targetHp do
         local offhandDmg      = calcParams.weaponDamage[2] + wsMods
         calcParams.hitsLanded = 0
@@ -712,11 +733,6 @@ xi.weaponskills.calculateRawWSDmg = function(attacker, target, wsID, tp, action,
     end
 
     calcParams.extraHitsLanded = calcParams.mainHitsLanded + calcParams.offhandHitsLanded
-
-    -- Remove the TP hit landed from the count if it did -- otherwise we would gain extra TP
-    if calcParams.tpHitsLanded > 1 then
-        calcParams.extraHitsLanded = calcParams.extraHitsLanded - 1
-    end
 
     -- Factor in "all hits" bonus damage mods
     -- TODO: does this apply to every hit of a multi hit WS as it's coming in to account for potentially excess damage here?

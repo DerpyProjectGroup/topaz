@@ -23,6 +23,7 @@
 
 #include "autotranslate.h"
 #include "common/async.h"
+#include "common/database.h"
 #include "common/utils.h"
 #include "entities/charentity.h"
 #include "lua/lua_baseentity.h"
@@ -215,14 +216,10 @@ int32 CCommandHandler::call(sol::state& lua, CCharEntity* PChar, const std::stri
             std::string cmdlinestr = autotranslate::replaceBytes(commandline);
 
             // clang-format off
-            Async::getInstance()->query([name, cmdname, cmdlinestr](SqlConnection* _sql)
+            Async::getInstance()->submit([name, cmdname, cmdlinestr]()
             {
-                auto escaped_name        = _sql->EscapeString(name);
-                auto escaped_cmdname     = _sql->EscapeString(cmdname);
-                auto escaped_commandline = _sql->EscapeString(cmdlinestr);
-
-                const char* fmtQuery = "INSERT into audit_gm (date_time,gm_name,command,full_string) VALUES(current_timestamp(),'%s','%s','%s')";
-                if (_sql->Query(fmtQuery, escaped_name.data(), escaped_cmdname.data(), escaped_commandline.data()) == SQL_ERROR)
+                const auto query = "INSERT into audit_gm (date_time, gm_name, command, full_string) VALUES(current_timestamp(), ?, ?, ?)";
+                if (!db::preparedStmt(query, db::escapeString(name), db::escapeString(cmdname), db::escapeString(cmdlinestr)))
                 {
                     ShowError("cmdhandler::call: Failed to log GM command.");
                 }

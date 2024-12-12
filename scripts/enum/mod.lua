@@ -34,6 +34,8 @@ xi.mod =
     CURSE_PCT                       = 1094, -- Curse HP/MP reduction term, -1 = - 1% HP/MP
     BASE_HP                         = 1095, -- Base HP bonus (like merits)
     BASE_MP                         = 1096, -- Base MP bonus (like merits)
+    FOOD_HP                         = 1130, -- Food HP (this is added after curse)
+    FOOD_MP                         = 1131, -- Food MP (this is added after curse)
 
     TWOHAND_STR                     = 218, -- Same as STR, but only active when using a two handed weapon (e.g. Hasso)
 
