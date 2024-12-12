@@ -33,6 +33,7 @@ zones[xi.zone.VELUGANNON_PALACE] =
         MIMIC            = GetFirstID('Mimic'),
         BRIGANDISH_BLADE = GetFirstID('Brigandish_Blade'),
         STEAM_CLEANER    = GetFirstID('Steam_Cleaner'),
+        ZIPACNA          = GetFirstID('Zipacna'),
     },
     npc =
     {
