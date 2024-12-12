@@ -322,10 +322,10 @@ namespace blueutils
     {
         if (PChar->GetMJob() == JOB_BLU || PChar->GetSJob() == JOB_BLU)
         {
-            auto set_blue_spells = db::encodeToBlob(PChar->m_SetBlueSpells);
-            auto query           = fmt::format("UPDATE chars SET set_blue_spells = '{}' WHERE charid = {} LIMIT 1",
-                                               set_blue_spells, PChar->id);
-            db::query(query);
+            auto                     set_blue_spells = db::encodeToBlob(PChar->m_SetBlueSpells);
+            std::basic_istream<char> blobStream(&set_blue_spells);
+            auto                     rset     = db::preparedStmt("UPDATE chars SET set_blue_spells = ? WHERE charid = ? LIMIT 1",
+                                                             blobStream, PChar->id);
         }
     }
 

@@ -38,6 +38,7 @@
 #endif
 
 #include <conncpp.hpp>
+#include <istream>
 
 #ifdef WIN32
 #pragma warning(pop)
@@ -46,6 +47,16 @@
 // @note Everything in sql:: database-land is 1-indexed, not 0-indexed.
 namespace db
 {
+    // https://stackoverflow.com/a/1449527
+    class blobstream : public std::streambuf
+    {
+    public:
+        blobstream(char* buffer, std::size_t size)
+        {
+            setg(buffer, buffer, buffer + size);
+        }
+    };
+
     //
     // Forward declarations
     //
@@ -235,7 +246,8 @@ namespace db
         template <typename T>
         void bindValue(std::unique_ptr<sql::PreparedStatement>& stmt, int& counter, T&& value)
         {
-            DebugSQL(fmt::format("binding {}: {}", counter, value));
+            // TODO: create custom printer for std::istream here. Does not build with this debug statement currently.
+            //DebugSQL(fmt::format("binding {}: {}", counter, value));
 
             if constexpr (std::is_same_v<std::decay_t<T>, int32>)
             {
@@ -288,6 +300,10 @@ namespace db
             else if constexpr (std::is_same_v<std::decay_t<T>, char*>)
             {
                 stmt->setString(counter, value);
+            }
+            else if constexpr (std::is_same_v<std::decay_t<T>, std::istream>)
+            {
+                stmt->setBlob(counter, &value);
             }
             else
             {
@@ -495,61 +511,13 @@ namespace db
     //       a query string with fmt::format for use with db::query.
     //       See blueutils::SaveSetSpells for an example.
     template <typename T>
-    auto encodeToBlob(T& source)
+    db::blobstream encodeToBlob(T& source)
     {
         static_assert(std::is_trivially_copyable_v<T>, "T must be trivially copyable");
 
         TracyZoneScoped;
 
-        // Convert struct to vector of chars
-        std::vector<char> blob(sizeof(T));
-        std::memcpy(blob.data(), &source, sizeof(T));
-
-        // Escape characters in the blob
-        std::string result;
-        result.reserve(blob.size() * 2); // Reserving space for maximum possible expansion
-
-        for (const char ch : blob)
-        {
-            switch (ch)
-            {
-                case '\0': // Null character
-                    result += "\\0";
-                    break;
-                case '\'': // Single quote
-                    result += "\\'";
-                    break;
-                case '\"': // Double quote
-                    result += "\\\"";
-                    break;
-                case '\b': // Backspace
-                    result += "\\b";
-                    break;
-                case '\n': // Newline
-                    result += "\\n";
-                    break;
-                case '\r': // Carriage return
-                    result += "\\r";
-                    break;
-                case '\t': // Tab
-                    result += "\\t";
-                    break;
-                case '\x1A': // Ctrl-Z
-                    result += "\\Z";
-                    break;
-                case '\\': // Backslash
-                    result += "\\\\";
-                    break;
-                case '%': // Percent (reserved by sprintf, etc.)
-                    result += "%%";
-                    break;
-                default:
-                    result += ch;
-                    break;
-            }
-        }
-
-        return result;
+        return blobstream(reinterpret_cast<char*>(&source), sizeof(T));
     }
 
     // @brief Extract a struct from a blob string.

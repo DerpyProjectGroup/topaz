@@ -225,41 +225,46 @@ void monstrosity::WriteMonstrosityData(CCharEntity* PChar)
     }
 
     const char* Query = "REPLACE INTO char_monstrosity SET "
-                        "charid = '%u', "
-                        "current_monstrosity_id = '%d', "
-                        "current_monstrosity_species = '%d', "
-                        "current_monstrosity_name_prefix_1 = '%d', "
-                        "current_monstrosity_name_prefix_2 = '%d', "
-                        "current_exp = '%d', "
-                        "equip = '%s', "
-                        "levels = '%s', "
-                        "instincts = '%s', "
-                        "variants = '%s', "
-                        "belligerency = '%d', "
-                        "entry_x = '%.3f', "
-                        "entry_y = '%.3f', "
-                        "entry_z = '%.3f', "
-                        "entry_rot = '%u', "
-                        "entry_zone_id = '%d', "
-                        "entry_mjob = '%d', "
-                        "entry_sjob = '%d'";
+                        "charid = ?, "
+                        "current_monstrosity_id = ?, "
+                        "current_monstrosity_species = ?, "
+                        "current_monstrosity_name_prefix_1 = ?, "
+                        "current_monstrosity_name_prefix_2 = ?, "
+                        "current_exp = ?, "
+                        "equip = ?, "
+                        "levels = ?, "
+                        "instincts = ?, "
+                        "variants = ?, "
+                        "belligerency = ?, "
+                        "entry_x = ?, "
+                        "entry_y = ?, "
+                        "entry_z = ?, "
+                        "entry_rot = ?, "
+                        "entry_zone_id = ?, "
+                        "entry_mjob = ?, "
+                        "entry_sjob = ?";
 
-    const auto equipEscaped     = db::encodeToBlob(PChar->m_PMonstrosity->EquippedInstincts);
-    const auto levelsEscaped    = db::encodeToBlob(PChar->m_PMonstrosity->levels);
-    const auto instinctsEscaped = db::encodeToBlob(PChar->m_PMonstrosity->instincts);
-    const auto variantsEscaped  = db::encodeToBlob(PChar->m_PMonstrosity->variants);
+    auto equip     = db::encodeToBlob(PChar->m_PMonstrosity->EquippedInstincts);
+    auto levels    = db::encodeToBlob(PChar->m_PMonstrosity->levels);
+    auto instincts = db::encodeToBlob(PChar->m_PMonstrosity->instincts);
+    auto variants  = db::encodeToBlob(PChar->m_PMonstrosity->variants);
 
-    db::query(Query,
+    std::basic_istream<char> equipStream(&equip);
+    std::basic_istream<char> levelsStream(&equip);
+    std::basic_istream<char> instinctsStream(&equip);
+    std::basic_istream<char> variantsStream(&equip);
+
+    db::preparedStmt(Query,
               PChar->id,
               PChar->m_PMonstrosity->MonstrosityId,
               PChar->m_PMonstrosity->Species,
               PChar->m_PMonstrosity->NamePrefix1,
               PChar->m_PMonstrosity->NamePrefix2,
               PChar->m_PMonstrosity->CurrentExp,
-              equipEscaped.c_str(),
-              levelsEscaped.c_str(),
-              instinctsEscaped.c_str(),
-              variantsEscaped.c_str(),
+              equipStream,
+              levelsStream,
+              instinctsStream,
+              variantsStream,
               static_cast<uint8>(PChar->m_PMonstrosity->Belligerency),
               PChar->m_PMonstrosity->EntryPos.x,
               PChar->m_PMonstrosity->EntryPos.y,
