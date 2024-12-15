@@ -5595,8 +5595,16 @@ namespace battleutils
         }
     }
 
-    bool DrawIn(CBattleEntity* PTarget, CMobEntity* PMob, float offset)
+    bool DrawIn(CBattleEntity* PTarget, CMobEntity* PMob, float offset, float drawInRange)
     {
+        // Check if time to draw in again, if not then exit
+        uint64 timeStamp = std::chrono::time_point_cast<std::chrono::seconds>(server_clock::now()).time_since_epoch().count();
+
+        if (timeStamp - PMob->GetLocalVar("DrawInTime") < 2)
+        {
+            return false;
+        }
+
         position_t& pos        = PMob->loc.p;
         position_t  nearEntity = nearPosition(pos, offset, (float)0);
 
@@ -5622,19 +5630,13 @@ namespace battleutils
         // Move the target a little higher, just in case
         nearEntity.y -= 1.0f;
 
-        bool  success        = false;
-        float drawInDistance = (float)(PMob->getMobMod(MOBMOD_DRAW_IN) > 1 ? PMob->getMobMod(MOBMOD_DRAW_IN) : PMob->GetMeleeRange() * 2);
+        bool success = false;
 
-        if (std::chrono::time_point_cast<std::chrono::seconds>(server_clock::now()).time_since_epoch().count() - PMob->GetLocalVar("DrawInTime") < 2)
-        {
-            return false;
-        }
-
-        std::function<void(CBattleEntity*)> drawInFunc = [PMob, drawInDistance, &nearEntity, &success](CBattleEntity* PMember)
+        const auto drawInFunc = [PMob, drawInRange, &nearEntity, &success](CBattleEntity* PMember)
         {
             float pDistance = distance(PMob->loc.p, PMember->loc.p);
 
-            if (PMob->loc.zone == PMember->loc.zone && pDistance > drawInDistance && PMember->status != STATUS_TYPE::CUTSCENE_ONLY)
+            if (PMob->loc.zone == PMember->loc.zone && pDistance > drawInRange && PMember->status != STATUS_TYPE::CUTSCENE_ONLY)
             {
                 // don't draw in dead players for now!
                 // see tractor
@@ -5645,9 +5647,21 @@ namespace battleutils
                 else
                 {
                     // draw in!
-                    PMember->loc.p.x = nearEntity.x;
-                    PMember->loc.p.y = nearEntity.y;
-                    PMember->loc.p.z = nearEntity.z;
+                    // Certain families (such as Wyrms) draw in in front of where they are looking
+                    if (PMob->getMobMod(MOBMOD_DRAW_IN_FRONT))
+                    {
+                        PMember->loc.p.x = nearEntity.x;
+                        PMember->loc.p.y = nearEntity.y;
+                        PMember->loc.p.z = nearEntity.z;
+                    }
+                    // Default behavior is to draw in to middle of hit box.
+                    else
+                    {
+                        PMember->loc.p.x = PMob->loc.p.x;
+                        PMember->loc.p.y = nearEntity.y;
+                        PMember->loc.p.z = PMob->loc.p.z;
+                        PMember->loc.p.rotation = PMob->loc.p.rotation;
+                    }
 
                     if (PMember->objtype == TYPE_PC)
                     {

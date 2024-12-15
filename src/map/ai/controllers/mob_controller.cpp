@@ -708,9 +708,19 @@ void CMobController::Move()
         if (((currentDistance > closeDistance) || move) && PMob->PAI->CanFollowPath())
         {
             // TODO: can this be moved to scripts entirely?
-            if (PMob->getMobMod(MOBMOD_DRAW_IN) > 0)
+            if (PMob->getMobMod(MOBMOD_DRAW_IN))
             {
-                if (currentDistance >= PMob->GetMeleeRange() * 2 && battleutils::DrawIn(PTarget, PMob, PMob->GetMeleeRange() - 0.2f))
+                uint8 drawInRange = PMob->getMobMod(MOBMOD_DRAW_IN_CUSTOM_RANGE) > 0 ? PMob->getMobMod(MOBMOD_DRAW_IN_CUSTOM_RANGE) : PMob->GetMeleeRange() * 2;
+
+                // Draw in when target is farther than 2x melee range
+                if (currentDistance > drawInRange && battleutils::DrawIn(PTarget, PMob, PMob->GetMeleeRange() - 0.2f, drawInRange))
+                {
+                    FaceTarget();
+                    return;
+                }
+                // If i'm bound/can't move, draw in the moment they leave my melee range
+                else if (PMob->getMobMod(MOBMOD_DRAW_IN_BIND) && (PMob->speed == 0 || PMob->getMobMod(MOBMOD_NO_MOVE)) &&
+                    currentDistance > PMob->GetMeleeRange() && battleutils::DrawIn(PTarget, PMob, PMob->GetMeleeRange() - 1.2f, PMob->GetMeleeRange()))
                 {
                     FaceTarget();
                     return;

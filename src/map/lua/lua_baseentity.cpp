@@ -17172,7 +17172,8 @@ void CLuaBaseEntity::drawIn(sol::variadic_args va)
         return;
     }
 
-    auto mobObj = dynamic_cast<CMobEntity*>(m_PBaseEntity);
+    auto   mobObj      = dynamic_cast<CMobEntity*>(m_PBaseEntity);
+    float  drawInRange = mobObj->GetMeleeRange() * 2;
 
     if (va.size() == 0)
     {
@@ -17182,7 +17183,7 @@ void CLuaBaseEntity::drawIn(sol::variadic_args va)
         {
             return;
         }
-        battleutils::DrawIn(defaultTarget, mobObj, mobObj->GetMeleeRange() - 0.2f);
+        battleutils::DrawIn(defaultTarget, mobObj, mobObj->GetMeleeRange() - 0.2f, drawInRange);
         return;
     }
 
@@ -17204,7 +17205,7 @@ void CLuaBaseEntity::drawIn(sol::variadic_args va)
 
     if (PTarget)
     {
-        battleutils::DrawIn(PTarget, mobObj, mobObj->GetMeleeRange() - 0.2f);
+        battleutils::DrawIn(PTarget, mobObj, mobObj->GetMeleeRange() - 0.2f, drawInRange);
     }
 
     return;
