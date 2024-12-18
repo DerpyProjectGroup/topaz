@@ -2332,7 +2332,7 @@ namespace battleutils
                 auto* sub_weapon = dynamic_cast<CItemWeapon*>(PAttacker->m_Weapons[SLOT_SUB]);
 
                 if (sub_weapon && sub_weapon->getDmgType() > DAMAGE_TYPE::NONE && sub_weapon->getDmgType() < DAMAGE_TYPE::HTH &&
-                    weapon->getSkillType() != SKILL_HAND_TO_HAND)
+                    (!weapon || (weapon && weapon->getSkillType() != SKILL_HAND_TO_HAND)))
                 {
                     delay = delay / 2;
                 }
@@ -2498,7 +2498,7 @@ namespace battleutils
                 auto* sub_weapon = dynamic_cast<CItemWeapon*>(PAttacker->m_Weapons[SLOT_SUB]);
 
                 if (sub_weapon && sub_weapon->getDmgType() > DAMAGE_TYPE::NONE && sub_weapon->getDmgType() < DAMAGE_TYPE::HTH &&
-                    weapon->getSkillType() != SKILL_HAND_TO_HAND)
+                    (!weapon || (weapon && weapon->getSkillType() != SKILL_HAND_TO_HAND)))
                 {
                     delay /= 2;
                 }

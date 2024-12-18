@@ -7262,12 +7262,18 @@ namespace charutils
                 PChar->resetPetZoningInfo();
             }
 
-            PSession->shuttingDown = 1;
+            if (PSession)
+            {
+                PSession->shuttingDown = 1;
+            }
             _sql->Query("UPDATE char_stats SET zoning = 0 WHERE charid = %u", PChar->id);
         }
         else
         {
-            PSession->shuttingDown = 2;
+            if (PSession)
+            {
+                PSession->shuttingDown = 2;
+            }
             _sql->Query("UPDATE char_stats SET zoning = 1 WHERE charid = %u", PChar->id);
             charutils::CheckEquipLogic(PChar, SCRIPT_CHANGEZONE, PChar->getZone());
         }
