@@ -27,24 +27,6 @@ extern uint8 PacketSize[512];
 
 extern std::function<void(map_session_data_t* const, CCharEntity* const, CBasicPacket&)> PacketParser[512];
 
-struct TransactionWrapper
-{
-    TransactionWrapper(std::function<void()> commitFn)
-    {
-        db::transactionStart();
-        try
-        {
-            commitFn();
-            db::transactionCommit();
-        }
-        catch (std::exception& e)
-        {
-            db::transactionRollback();
-            ShowError("Transaction failed: %s", e.what());
-        }
-    }
-};
-
 class AHAnnouncementModule : public CPPModule
 {
     void OnInit() override
@@ -97,7 +79,7 @@ class AHAnnouncementModule : public CPPModule
                         {
                             bool itemPurchasedSuccessfully = false;
                             // clang-format off
-                            TransactionWrapper wrapper([&]() -> void
+                            db::transaction([&]()
                             {
                                 // Get the row id of the item we're buying
                                 const auto rowId = [&]() -> uint32
@@ -169,10 +151,9 @@ class AHAnnouncementModule : public CPPModule
                                         if (sellerId)
                                         {
                                             // Sanitize name
-                                            std::string name  = PItem->getName();
-                                            auto        parts = split(name, "_");
-                                            name              = "";
-                                            name += std::accumulate(std::begin(parts), std::end(parts), std::string(),
+                                            auto name  = PItem->getName();
+                                            auto parts = split(name, "_");
+                                            name       = std::accumulate(std::begin(parts), std::end(parts), std::string(),
                                             [](std::string const& ss, std::string const& s)
                                             {
                                                 return ss.empty() ? s : ss + " " + s;
@@ -182,12 +163,16 @@ class AHAnnouncementModule : public CPPModule
                                             // Send message to seller!
                                             message::send(sellerId, std::make_unique<CChatMessagePacket>(PChar, MESSAGE_SYSTEM_3,
                                                 fmt::format("Your '{}' has sold to {} for {} gil!", name, PChar->name, price).c_str(), ""));
+
+                                            return db::TransactionResult::Commit;
                                         }
 
                                         itemPurchasedSuccessfully = true;
                                     }
                                 }
-                            }); // TransactionWrapper
+
+                                return db::TransactionResult::Rollback;
+                            });
                             // clang-format on
 
                             if (itemPurchasedSuccessfully)
