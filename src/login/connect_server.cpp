@@ -81,8 +81,10 @@ ConnectServer::ConnectServer(int argc, char** argv)
         handler<view_session> view(io_context, settings::get<uint32>("network.LOGIN_VIEW_PORT"));
         handler<data_session> data(io_context, settings::get<uint32>("network.LOGIN_DATA_PORT"));
         asio::steady_timer    cleanup_callback(io_context, std::chrono::minutes(15));
+        asio::steady_timer    tick_callback(io_context, std::chrono::seconds(1)); // Start at one second, TaskMgr will report back with future delays
 
         cleanup_callback.async_wait(std::bind(&ConnectServer::periodicCleanup, this, std::placeholders::_1, &cleanup_callback));
+        tick_callback.async_wait(std::bind(&ConnectServer::tick_callback, this, std::placeholders::_1, &tick_callback));
 
         // NOTE: io_context.run() takes over and blocks this thread. Anything after this point will only fire
         // if io_context finishes!
@@ -157,6 +159,21 @@ void ConnectServer::periodicCleanup(const asio::error_code& error, asio::steady_
             // reset timer
             timer->expires_at(timer->expiry() + std::chrono::minutes(15));
             timer->async_wait(std::bind(&ConnectServer::periodicCleanup, this, std::placeholders::_1, timer));
+        }
+    }
+}
+
+void ConnectServer::tick_callback(const asio::error_code& error, asio::steady_timer* timer)
+{
+    if (!error)
+    {
+        if (Application::IsRunning())
+        {
+            duration next = CTaskMgr::getInstance()->DoTimer(server_clock::now());
+
+            // Reset timer
+            timer->expires_after(next);
+            timer->async_wait(std::bind(&ConnectServer::tick_callback, this, std::placeholders::_1, timer));
         }
     }
 }
