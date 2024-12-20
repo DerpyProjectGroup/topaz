@@ -727,10 +727,10 @@ void CZoneEntities::SpawnTRUSTs(CCharEntity* PChar)
     TracyZoneScoped;
     for (EntityList_t::const_iterator TrustItr = m_trustList.begin(); TrustItr != m_trustList.end(); ++TrustItr)
     {
-        if (CTrustEntity* PCurrentTrust = dynamic_cast<CTrustEntity*>(TrustItr->second))
+        if (CTrustEntity* PCurrentTrust = entity_cast<CTrustEntity*>(TrustItr->second))
         {
             SpawnIDList_t::iterator SpawnTrustItr = PChar->SpawnTRUSTList.find(PCurrentTrust->id);
-            CCharEntity*            PMaster       = dynamic_cast<CCharEntity*>(PCurrentTrust->PMaster);
+            CCharEntity*            PMaster       = entity_cast<CCharEntity*>(PCurrentTrust->PMaster);
 
             // Is this trust "visible" to the player?
             if (PCurrentTrust->status == STATUS_TYPE::NORMAL && distance(PChar->loc.p, PCurrentTrust->loc.p) <= 50)
@@ -1471,7 +1471,7 @@ void CZoneEntities::ZoneServer(time_point tick)
     EntityList_t::iterator   it = m_mobList.begin();
     while (it != m_mobList.end())
     {
-        CMobEntity* PMob = dynamic_cast<CMobEntity*>(it->second);
+        CMobEntity* PMob = entity_cast<CMobEntity*>(it->second);
         if (!PMob)
         {
             ++it;
@@ -1560,7 +1560,7 @@ void CZoneEntities::ZoneServer(time_point tick)
     {
         for (auto PMobCurrentIter : m_mobList)
         {
-            CMobEntity* PCurrentMob = dynamic_cast<CMobEntity*>(PMobCurrentIter.second);
+            CMobEntity* PCurrentMob = entity_cast<CMobEntity*>(PMobCurrentIter.second);
             if (PCurrentMob != nullptr && PCurrentMob->isAlive() && PMob->allegiance != PCurrentMob->allegiance && distance(PMob->loc.p, PCurrentMob->loc.p) <= 50)
             {
                 CMobController* PController = static_cast<CMobController*>(PCurrentMob->PAI->GetController());
@@ -1651,7 +1651,7 @@ void CZoneEntities::ZoneServer(time_point tick)
     it = m_trustList.begin();
     while (it != m_trustList.end())
     {
-        if (CTrustEntity* PTrust = dynamic_cast<CTrustEntity*>(it->second))
+        if (CTrustEntity* PTrust = entity_cast<CTrustEntity*>(it->second))
         {
             ShowTrace(fmt::format("CZoneEntities::ZoneServer: Trust: {} ({})", PTrust->getName(), PTrust->id).c_str());
 

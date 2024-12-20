@@ -451,7 +451,7 @@ void CZoneInstance::CheckTriggerAreas()
     {
         for (const auto& [targid, PEntity] : PInstance->m_charList)
         {
-            auto* PChar = dynamic_cast<CCharEntity*>(PEntity);
+            auto* PChar = entity_cast<CCharEntity*>(PEntity);
             if (!PChar)
             {
                 continue;
@@ -494,7 +494,7 @@ void CZoneInstance::ForEachChar(const std::function<void(CCharEntity*)>& func)
     {
         for (const auto& [targid, PEntity] : PInstance->GetCharList())
         {
-            if (auto* PChar = dynamic_cast<CCharEntity*>(PEntity))
+            if (auto* PChar = entity_cast<CCharEntity*>(PEntity))
             {
                 func(PChar);
             }
@@ -507,7 +507,7 @@ void CZoneInstance::ForEachCharInstance(CBaseEntity* PEntity, const std::functio
     TracyZoneScoped;
     for (const auto& [_, PEntity] : PEntity->PInstance->GetCharList())
     {
-        if (auto* PChar = dynamic_cast<CCharEntity*>(PEntity))
+        if (auto* PChar = entity_cast<CCharEntity*>(PEntity))
         {
             func(PChar);
         }
@@ -519,7 +519,7 @@ void CZoneInstance::ForEachMobInstance(CBaseEntity* PEntity, const std::function
     TracyZoneScoped;
     for (const auto& [_, PEntity] : PEntity->PInstance->m_mobList)
     {
-        if (auto* PMob = dynamic_cast<CMobEntity*>(PEntity))
+        if (auto* PMob = entity_cast<CMobEntity*>(PEntity))
         {
             func(PMob);
         }

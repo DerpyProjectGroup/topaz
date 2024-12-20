@@ -226,6 +226,15 @@ struct EntityID_t
     // TODO: Store an incremental u64 as a UUID for the entity for disambiguation in the case of dynamic entities that might have the same targid.
 };
 
+class CBaseEntity;
+class CCharEntity;
+class CNpcEntity;
+class CMobEntity;
+class CPetEntity;
+class CShipEntity;
+class CTrustEntity;
+class CFellowEntity;
+
 class CAIContainer;
 class CBattlefield;
 class CInstance;
@@ -249,6 +258,82 @@ struct location_t
     {
     }
 };
+
+// Cast the target entity pointer to the requested entity pointer type.
+// We use this because dynamic_cast will succeed for any derived class, not just the requested class.
+// ie. A Trust will dynamic_cast to all of: CBattleEntity, CMobEntity, and CTrustEntity, but objtype will only be TYPE_TRUST.
+template <typename TRequested, typename TBase>
+constexpr auto entity_cast(TBase basePtr) -> TRequested
+{
+    static_assert(std::is_pointer_v<TRequested>, "TRequested must be a pointer type.");
+    static_assert(std::is_base_of_v<CBaseEntity, std::remove_pointer_t<TRequested>>, "TRequested must be derived from CBaseEntity.");
+
+    if (basePtr == nullptr || basePtr->objtype == TYPE_NONE)
+    {
+        ShowWarning("entity_cast: Invalid entity pointer.");
+        return nullptr;
+    }
+
+    switch (basePtr->objtype)
+    {
+        case TYPE_PC:
+            if constexpr (std::is_same_v<std::remove_pointer_t<TRequested>, CCharEntity>)
+            {
+                return static_cast<CCharEntity*>(basePtr);
+            }
+            break;
+        case TYPE_NPC:
+            if constexpr (std::is_same_v<std::remove_pointer_t<TRequested>, CNpcEntity>)
+            {
+                return static_cast<CNpcEntity*>(basePtr);
+            }
+            break;
+        case TYPE_MOB:
+            if constexpr (std::is_same_v<std::remove_pointer_t<TRequested>, CMobEntity>)
+            {
+                return static_cast<CMobEntity*>(basePtr);
+            }
+            break;
+        case TYPE_PET:
+            if constexpr (std::is_same_v<std::remove_pointer_t<TRequested>, CPetEntity>)
+            {
+                return static_cast<CPetEntity*>(basePtr);
+            }
+            break;
+        case TYPE_SHIP:
+            if constexpr (std::is_same_v<std::remove_pointer_t<TRequested>, CShipEntity>)
+            {
+                return static_cast<CShipEntity*>(basePtr);
+            }
+            break;
+        case TYPE_TRUST:
+            if constexpr (std::is_same_v<std::remove_pointer_t<TRequested>, CTrustEntity>)
+            {
+                return static_cast<CTrustEntity*>(basePtr);
+            }
+            break;
+        case TYPE_FELLOW:
+            if constexpr (std::is_same_v<std::remove_pointer_t<TRequested>, CFellowEntity>)
+            {
+                return static_cast<CFellowEntity*>(basePtr);
+            }
+            break;
+        default:
+            // Fall through to the warning.
+            break;
+    }
+
+    // TODO: We're now in an error state. We could use this opportunity to exhaustively dynamic_cast to all possible derived classes
+    // and print a warning with the results.
+
+    const auto baseName      = typeid(TBase).name();
+    const auto requestedName = typeid(TRequested).name();
+    const auto errString     = fmt::format("entity_cast: Failed to cast entity from base type '{}' to requested type '{}'.", baseName, requestedName);
+
+    ShowWarning(errString);
+
+    return nullptr;
+}
 
 /************************************************************************
  *                                                                       *
@@ -299,7 +384,7 @@ public:
     void   SetModelId(uint16 modelId); // Set new modelid
     uint16 GetModelId() const;         // Get the modelid
 
-    virtual void HandleErrorMessage(std::unique_ptr<CBasicPacket>&){};
+    virtual void HandleErrorMessage(std::unique_ptr<CBasicPacket>&) {};
 
     bool IsDynamicEntity() const;
 
