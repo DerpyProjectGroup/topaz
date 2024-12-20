@@ -15692,15 +15692,21 @@ bool CLuaBaseEntity::isExceedingElementalCapacity()
 
 auto CLuaBaseEntity::getAllRuneEffects() -> sol::table
 {
-    auto*               PEntity        = static_cast<CBattleEntity*>(m_PBaseEntity);
+    auto* PEntity = dynamic_cast<CBattleEntity*>(m_PBaseEntity);
+    if (!PEntity)
+    {
+        ShowWarning("Invalid Entity (NPC: %s) calling function.", m_PBaseEntity->getName());
+        return sol::lua_nil;
+    }
+
     std::vector<EFFECT> runeEffectList = PEntity->StatusEffectContainer->GetAllRuneEffects();
 
     auto table = lua.create_table();
-
     for (const auto& runeEffect : runeEffectList)
     {
         table.add(runeEffect);
     }
+
     return table;
 }
 
@@ -15713,8 +15719,13 @@ auto CLuaBaseEntity::getAllRuneEffects() -> sol::table
 
 uint8 CLuaBaseEntity::getActiveRuneCount()
 {
-    auto* PEntity = static_cast<CBattleEntity*>(m_PBaseEntity);
-    return PEntity->StatusEffectContainer->GetActiveRuneCount();
+    if (auto* PEntity = dynamic_cast<CBattleEntity*>(m_PBaseEntity))
+    {
+        return PEntity->StatusEffectContainer->GetActiveRuneCount();
+    }
+
+    ShowWarning("Invalid Entity (NPC: %s) calling function.", m_PBaseEntity->getName());
+    return 0;
 }
 
 /************************************************************************
@@ -15726,8 +15737,13 @@ uint8 CLuaBaseEntity::getActiveRuneCount()
 
 uint16 CLuaBaseEntity::getHighestRuneEffect()
 {
-    auto* PEntity = static_cast<CBattleEntity*>(m_PBaseEntity);
-    return PEntity->StatusEffectContainer->GetHighestRuneEffect();
+    if (auto* PEntity = dynamic_cast<CBattleEntity*>(m_PBaseEntity))
+    {
+        return PEntity->StatusEffectContainer->GetHighestRuneEffect();
+    }
+
+    ShowWarning("Invalid Entity (NPC: %s) calling function.", m_PBaseEntity->getName());
+    return 0;
 }
 
 /************************************************************************
@@ -15739,8 +15755,13 @@ uint16 CLuaBaseEntity::getHighestRuneEffect()
 
 uint16 CLuaBaseEntity::getNewestRuneEffect()
 {
-    auto* PEntity = static_cast<CBattleEntity*>(m_PBaseEntity);
-    return PEntity->StatusEffectContainer->GetNewestRuneEffect();
+    if (auto* PEntity = dynamic_cast<CBattleEntity*>(m_PBaseEntity))
+    {
+        return PEntity->StatusEffectContainer->GetNewestRuneEffect();
+    }
+
+    ShowWarning("Invalid Entity (NPC: %s) calling function.", m_PBaseEntity->getName());
+    return 0;
 }
 
 /************************************************************************
@@ -15752,8 +15773,14 @@ uint16 CLuaBaseEntity::getNewestRuneEffect()
 
 void CLuaBaseEntity::removeOldestRune()
 {
-    auto* PEntity = static_cast<CBattleEntity*>(m_PBaseEntity);
-    PEntity->StatusEffectContainer->RemoveOldestRune();
+    if (auto* PEntity = dynamic_cast<CBattleEntity*>(m_PBaseEntity))
+    {
+        PEntity->StatusEffectContainer->RemoveOldestRune();
+    }
+    else
+    {
+        ShowWarning("Invalid Entity (NPC: %s) calling function.", m_PBaseEntity->getName());
+    }
 }
 
 /************************************************************************
@@ -15765,8 +15792,14 @@ void CLuaBaseEntity::removeOldestRune()
 
 void CLuaBaseEntity::removeNewestRune()
 {
-    auto* PEntity = static_cast<CBattleEntity*>(m_PBaseEntity);
-    PEntity->StatusEffectContainer->RemoveNewestRune();
+    if (auto* PEntity = dynamic_cast<CBattleEntity*>(m_PBaseEntity))
+    {
+        PEntity->StatusEffectContainer->RemoveNewestRune();
+    }
+    else
+    {
+        ShowWarning("Invalid Entity (NPC: %s) calling function.", m_PBaseEntity->getName());
+    }
 }
 
 /************************************************************************
@@ -15778,8 +15811,14 @@ void CLuaBaseEntity::removeNewestRune()
 
 void CLuaBaseEntity::removeAllRunes()
 {
-    auto* PEntity = static_cast<CBattleEntity*>(m_PBaseEntity);
-    PEntity->StatusEffectContainer->RemoveAllRunes();
+    if (auto* PEntity = dynamic_cast<CBattleEntity*>(m_PBaseEntity))
+    {
+        PEntity->StatusEffectContainer->RemoveAllRunes();
+    }
+    else
+    {
+        ShowWarning("Invalid Entity (NPC: %s) calling function.", m_PBaseEntity->getName());
+    }
 }
 
 /************************************************************************
@@ -15791,12 +15830,6 @@ void CLuaBaseEntity::removeAllRunes()
 
 void CLuaBaseEntity::setMobLevel(uint8 level)
 {
-    if (m_PBaseEntity->objtype != TYPE_MOB)
-    {
-        ShowWarning("Attempting to set mob level for invalid entity type (%s, %d).", m_PBaseEntity->getName(), level);
-        return;
-    }
-
     if (auto* PMob = dynamic_cast<CMobEntity*>(m_PBaseEntity))
     {
         PMob->SetMLevel(level);
@@ -15807,6 +15840,11 @@ void CLuaBaseEntity::setMobLevel(uint8 level)
 
         mobutils::CalculateMobStats(PMob);
         mobutils::GetAvailableSpells(PMob);
+    }
+    else
+    {
+        ShowWarning("Attempting to set mob level for invalid entity type (%s, %d).", m_PBaseEntity->getName(), level);
+        return;
     }
 }
 
@@ -15819,14 +15857,13 @@ void CLuaBaseEntity::setMobLevel(uint8 level)
 
 uint8 CLuaBaseEntity::getEcosystem()
 {
-    if (m_PBaseEntity->objtype == TYPE_NPC)
+    if (auto* PBattle = dynamic_cast<CBattleEntity*>(m_PBaseEntity))
     {
-        ShowWarning("Invalid Entity (NPC: %s) calling function.", m_PBaseEntity->getName());
-        return 0;
+        return static_cast<uint8>(PBattle->m_EcoSystem);
     }
 
-    auto* PBattle = static_cast<CBattleEntity*>(m_PBaseEntity);
-    return static_cast<uint8>(PBattle->m_EcoSystem);
+    ShowWarning("Invalid Entity (NPC: %s) calling function.", m_PBaseEntity->getName());
+    return 0;
 }
 
 /************************************************************************
@@ -15897,13 +15934,13 @@ bool CLuaBaseEntity::isMobType(uint8 mobType)
 
 bool CLuaBaseEntity::isUndead()
 {
-    if (m_PBaseEntity->objtype == TYPE_NPC)
+    if (auto* PBattle = dynamic_cast<CBattleEntity*>(m_PBaseEntity))
     {
-        ShowWarning("Invalid Entity (NPC: %s) calling function.", m_PBaseEntity->getName());
-        return false;
+        return PBattle->m_EcoSystem == ECOSYSTEM::UNDEAD;
     }
 
-    return static_cast<CBattleEntity*>(m_PBaseEntity)->m_EcoSystem == ECOSYSTEM::UNDEAD;
+    ShowWarning("Invalid Entity (NPC: %s) calling function.", m_PBaseEntity->getName());
+    return false;
 }
 
 /************************************************************************
@@ -15931,9 +15968,12 @@ bool CLuaBaseEntity::isNM()
 
 uint8 CLuaBaseEntity::getModelSize()
 {
-    auto* PEntity = static_cast<CBattleEntity*>(m_PBaseEntity);
+    if (auto* PEntity = dynamic_cast<CBattleEntity*>(m_PBaseEntity))
+    {
+        return PEntity->m_ModelRadius;
+    }
 
-    return PEntity->m_ModelRadius;
+    return 0;
 }
 
 /************************************************************************
@@ -16276,6 +16316,7 @@ bool CLuaBaseEntity::hasTrait(uint16 traitID)
         return PBattleEntity->hasTrait(traitID);
     }
 
+    ShowWarning("Invalid entity passed to function: %s", m_PBaseEntity->getName());
     return false;
 }
 
@@ -16288,7 +16329,13 @@ bool CLuaBaseEntity::hasTrait(uint16 traitID)
 
 bool CLuaBaseEntity::hasImmunity(uint32 immunityID)
 {
-    return static_cast<CBattleEntity*>(m_PBaseEntity)->hasImmunity(immunityID);
+    if (auto* PBattle = dynamic_cast<CBattleEntity*>(m_PBaseEntity))
+    {
+        return static_cast<CBattleEntity*>(m_PBaseEntity)->hasImmunity(immunityID);
+    }
+
+    ShowWarning("Invalid entity passed to function: %s", m_PBaseEntity->getName());
+    return false;
 }
 
 /************************************************************************
@@ -16814,13 +16861,14 @@ void CLuaBaseEntity::setRoamFlags(uint16 newRoamFlags)
 
 std::optional<CLuaBaseEntity> CLuaBaseEntity::getTarget()
 {
-    if (m_PBaseEntity->objtype == TYPE_NPC)
+    auto* PBattle = dynamic_cast<CBattleEntity*>(m_PBaseEntity);
+    if (!PBattle)
     {
         ShowWarning("Invalid Entity (NPC: %s) calling function.", m_PBaseEntity->getName());
         return std::nullopt;
     }
 
-    auto* PBattleTarget{ m_PBaseEntity->GetEntity(static_cast<CBattleEntity*>(m_PBaseEntity)->GetBattleTargetID()) };
+    auto* PBattleTarget{ m_PBaseEntity->GetEntity(PBattle->GetBattleTargetID()) };
 
     if (PBattleTarget)
     {
@@ -17005,7 +17053,7 @@ void CLuaBaseEntity::useJobAbility(uint16 skillID, sol::object const& pet)
     if ((pet != sol::lua_nil) && pet.is<CLuaBaseEntity*>())
     {
         CLuaBaseEntity* PLuaBaseEntity = pet.as<CLuaBaseEntity*>();
-        PTarget                        = static_cast<CBattleEntity*>(PLuaBaseEntity->m_PBaseEntity);
+        PTarget                        = dynamic_cast<CBattleEntity*>(PLuaBaseEntity->m_PBaseEntity);
     }
 
     // clang-format off
@@ -17236,7 +17284,12 @@ void CLuaBaseEntity::weaknessTrigger(uint8 level)
 
 void CLuaBaseEntity::restoreFromChest(CLuaBaseEntity* PLuaBaseEntity, uint32 restoreType)
 {
-    CCharEntity* PChar = (CCharEntity*)m_PBaseEntity;
+    auto* PChar = dynamic_cast<CCharEntity*>(m_PBaseEntity);
+    if (!PChar)
+    {
+        ShowWarning("Invalid entity type calling function (%s).", m_PBaseEntity->getName());
+        return;
+    }
 
     if (PLuaBaseEntity != nullptr)
     {
@@ -17290,13 +17343,14 @@ void CLuaBaseEntity::restoreFromChest(CLuaBaseEntity* PLuaBaseEntity, uint32 res
 
 bool CLuaBaseEntity::hasPreventActionEffect()
 {
-    if (m_PBaseEntity->objtype == TYPE_NPC)
+    auto* PBattle = dynamic_cast<CBattleEntity*>(m_PBaseEntity);
+    if (!PBattle)
     {
         ShowWarning("Invalid Entity (NPC: %s) calling function.", m_PBaseEntity->getName());
         return false;
     }
 
-    return static_cast<CBattleEntity*>(m_PBaseEntity)->StatusEffectContainer->HasPreventActionEffect();
+    return PBattle->StatusEffectContainer->HasPreventActionEffect();
 }
 
 /************************************************************************
@@ -17402,16 +17456,15 @@ void CLuaBaseEntity::setDropID(uint32 dropID)
 
 void CLuaBaseEntity::addTreasure(uint16 itemID, sol::object const& arg1, sol::object const& arg2)
 {
-    if (m_PBaseEntity->objtype != TYPE_PC)
+    if (itemID == 0)
     {
-        ShowWarning("Invalid entity type calling function (%s).", m_PBaseEntity->getName());
         return;
     }
 
-    CCharEntity* PChar = static_cast<CCharEntity*>(m_PBaseEntity);
-
-    if (itemID == 0)
+    auto* PChar = dynamic_cast<CCharEntity*>(m_PBaseEntity);
+    if (!PChar)
     {
+        ShowWarning("Invalid entity type calling function (%s).", m_PBaseEntity->getName());
         return;
     }
 
@@ -17571,13 +17624,12 @@ int16 CLuaBaseEntity::getTHlevel()
 
 uint32 CLuaBaseEntity::getAvailableTraverserStones()
 {
-    if (m_PBaseEntity->objtype != TYPE_PC)
+    if (auto* PChar = dynamic_cast<CCharEntity*>(m_PBaseEntity))
     {
-        return 0;
+        return charutils::getAvailableTraverserStones(PChar);
     }
 
-    auto* PChar = static_cast<CCharEntity*>(m_PBaseEntity);
-    return charutils::getAvailableTraverserStones(PChar);
+    return 0;
 }
 
 /************************************************************************
@@ -17587,13 +17639,12 @@ uint32 CLuaBaseEntity::getAvailableTraverserStones()
 
 time_t CLuaBaseEntity::getTraverserEpoch()
 {
-    if (m_PBaseEntity->objtype != TYPE_PC)
+    if (auto* PChar = dynamic_cast<CCharEntity*>(m_PBaseEntity))
     {
-        return 0;
+        return charutils::getTraverserEpoch(PChar);
     }
 
-    auto* PChar = static_cast<CCharEntity*>(m_PBaseEntity);
-    return charutils::getTraverserEpoch(PChar);
+    return 0;
 }
 
 /************************************************************************
@@ -17603,13 +17654,10 @@ time_t CLuaBaseEntity::getTraverserEpoch()
 
 void CLuaBaseEntity::setTraverserEpoch()
 {
-    if (m_PBaseEntity->objtype != TYPE_PC)
+    if (auto* PChar = dynamic_cast<CCharEntity*>(m_PBaseEntity))
     {
-        return;
+        charutils::setTraverserEpoch(PChar);
     }
-
-    auto* PChar = static_cast<CCharEntity*>(m_PBaseEntity);
-    charutils::setTraverserEpoch(PChar);
 }
 
 /************************************************************************
@@ -17619,13 +17667,12 @@ void CLuaBaseEntity::setTraverserEpoch()
 
 uint32 CLuaBaseEntity::getClaimedTraverserStones()
 {
-    if (m_PBaseEntity->objtype != TYPE_PC)
+    if (auto* PChar = dynamic_cast<CCharEntity*>(m_PBaseEntity))
     {
-        return 0;
+        return charutils::getClaimedTraverserStones(PChar);
     }
 
-    auto* PChar = static_cast<CCharEntity*>(m_PBaseEntity);
-    return charutils::getClaimedTraverserStones(PChar);
+    return 0;
 }
 
 /************************************************************************
@@ -17635,13 +17682,10 @@ uint32 CLuaBaseEntity::getClaimedTraverserStones()
 
 void CLuaBaseEntity::addClaimedTraverserStones(uint16 numStones)
 {
-    if (m_PBaseEntity->objtype != TYPE_PC)
+    if (auto* PChar = dynamic_cast<CCharEntity*>(m_PBaseEntity))
     {
-        return;
+        charutils::addClaimedTraverserStones(PChar, numStones);
     }
-
-    auto* PChar = static_cast<CCharEntity*>(m_PBaseEntity);
-    charutils::addClaimedTraverserStones(PChar, numStones);
 }
 
 /************************************************************************
@@ -17651,13 +17695,10 @@ void CLuaBaseEntity::addClaimedTraverserStones(uint16 numStones)
 
 void CLuaBaseEntity::setClaimedTraverserStones(uint16 totalStones)
 {
-    if (m_PBaseEntity->objtype != TYPE_PC)
+    if (auto* PChar = dynamic_cast<CCharEntity*>(m_PBaseEntity))
     {
-        return;
+        charutils::setClaimedTraverserStones(PChar, totalStones);
     }
-
-    auto* PChar = static_cast<CCharEntity*>(m_PBaseEntity);
-    charutils::setClaimedTraverserStones(PChar, totalStones);
 }
 
 /************************************************************************
@@ -17670,9 +17711,8 @@ void CLuaBaseEntity::setClaimedTraverserStones(uint16 totalStones)
 uint32 CLuaBaseEntity::getHistory(uint8 index)
 {
     uint32 outStat = 0;
-    if (m_PBaseEntity->objtype == TYPE_PC)
+    if (auto* PChar = dynamic_cast<CCharEntity*>(m_PBaseEntity))
     {
-        auto* PChar = static_cast<CCharEntity*>(m_PBaseEntity);
         switch (index)
         {
             case ENEMIES_DEFEATED:
@@ -17721,6 +17761,7 @@ uint32 CLuaBaseEntity::getHistory(uint8 index)
                 break;
         }
     }
+
     return outStat;
 }
 
@@ -18049,7 +18090,7 @@ auto CLuaBaseEntity::getContestRewardStatus() -> sol::table
     reward["rank"]  = 0;
     reward["share"] = 0;
 
-    if (auto PChar = dynamic_cast<CCharEntity*>(m_PBaseEntity))
+    if (auto* PChar = dynamic_cast<CCharEntity*>(m_PBaseEntity))
     {
         std::string Query = "SELECT contestrank, share "
                             "FROM   fishing_contest_entries "
@@ -18077,7 +18118,7 @@ auto CLuaBaseEntity::getContestRankHistory() -> sol::table
     table["rank3"]     = 0;
     table["rank4to10"] = 0;
 
-    if (auto PChar = dynamic_cast<CCharEntity*>(m_PBaseEntity))
+    if (auto* PChar = dynamic_cast<CCharEntity*>(m_PBaseEntity))
     {
         FishingContestHistory history = fishingcontest::GetFishingContestHistory(PChar);
         table["rank1"]                = history.rank1;
