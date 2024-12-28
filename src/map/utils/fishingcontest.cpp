@@ -652,8 +652,13 @@ namespace fishingcontest
                             "FROM fishing_contest";
 
         auto rset = db::preparedStmt(Query);
+        if (!rset)
+        {
+            ShowError("Error loading fishing contest data from database.");
+            return;
+        }
 
-        if (rset && rset->rowsCount() > 0 && rset->next())
+        if (rset->rowsCount() > 0 && rset->next())
         {
             CurrentFishingContest.status     = static_cast<FISHING_CONTEST_STATUS>(rset->get<uint8>("status"));
             CurrentFishingContest.criteria   = static_cast<FISHING_CONTEST_CRITERIA>(rset->get<uint8>("criteria"));

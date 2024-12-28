@@ -211,11 +211,7 @@ void view_session::read_func()
 
                 // Check if the name is already in use by another character
                 const auto rset0 = db::query("SELECT charname FROM chars WHERE charname LIKE '%s'", nameStr);
-                if (!rset0)
-                {
-                    invalidNameReason = "Internal entity name query failed.";
-                }
-                else if (rset0->rowsCount() != 0)
+                if (rset0 && rset0->rowsCount() != 0)
                 {
                     invalidNameReason = "Name already in use.";
                 }
@@ -233,11 +229,7 @@ void view_session::read_func()
                         "SELECT * FROM results WHERE REPLACE(REPLACE(UPPER(`name`), '-', ''), '_', '') LIKE REPLACE(REPLACE(UPPER('%s'), '-', ''), '_', '')";
 
                     const auto rset1 = db::query(query, nameStr);
-                    if (!rset1)
-                    {
-                        invalidNameReason = "Internal entity name query failed";
-                    }
-                    else if (rset1->rowsCount() != 0)
+                    if (rset1 && rset1->rowsCount() != 0)
                     {
                         invalidNameReason = "Name already in use.";
                     }

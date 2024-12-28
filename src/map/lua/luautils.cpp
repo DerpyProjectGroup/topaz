@@ -5542,17 +5542,22 @@ namespace luautils
     {
         uint16 id   = 0;
         auto   rset = db::preparedStmt("SELECT itemid FROM item_basic WHERE name LIKE ? OR sortname LIKE ?", name, name);
+        if (!rset)
+        {
+            ShowWarning("Failed to look up item ID for %s", name.c_str());
+            return id;
+        }
 
-        const uint16 rowCount = (rset && rset->rowsCount()) ? static_cast<uint16>(rset->rowsCount()) : 0U;
+        const uint16 rowCount = rset->rowsCount() ? static_cast<uint16>(rset->rowsCount()) : 0U;
 
-        if (rset && rowCount == 1) // Found a single result
+        if (rowCount == 1) // Found a single result
         {
             while (rset->next())
             {
                 id = rset->get<uint16>("itemid");
             }
         }
-        else if (rset && rowCount > 1)
+        else if (rowCount > 1)
         {
             // 0xFFFF is gil, so we will always return a value less than that as a warning
             id = 0xFFFF - rowCount + 1;
