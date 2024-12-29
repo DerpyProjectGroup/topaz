@@ -31,7 +31,7 @@
 class Async : public Singleton<Async>, private ts::task_system
 {
 public:
-    void submit(std::function<void()> const& func);
+    void submit(const std::function<void()>& func);
 
 protected:
     Async();

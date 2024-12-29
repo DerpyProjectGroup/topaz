@@ -39,7 +39,7 @@ namespace settings
     // so we can pass them to the lua settings properly typed.
     bool isNumber(const std::string& stringValue)
     {
-        for (char const c : stringValue)
+        for (const char c : stringValue)
         {
             if (std::isdigit(c) == 0)
             {
@@ -58,7 +58,7 @@ namespace settings
     void init()
     {
         // Load defaults
-        for (auto const& entry : sorted_directory_iterator<std::filesystem::directory_iterator>("./settings/default/"))
+        for (const auto& entry : sorted_directory_iterator<std::filesystem::directory_iterator>("./settings/default/"))
         {
             auto path     = entry.relative_path();
             auto isLua    = path.extension() == ".lua";
@@ -121,7 +121,7 @@ namespace settings
         }
 
         // Load user settings
-        for (auto const& entry : sorted_directory_iterator<std::filesystem::directory_iterator>("./settings/"))
+        for (const auto& entry : sorted_directory_iterator<std::filesystem::directory_iterator>("./settings/"))
         {
             auto path     = entry.relative_path();
             auto isLua    = path.extension() == ".lua";

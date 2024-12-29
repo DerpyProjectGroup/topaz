@@ -127,7 +127,7 @@ namespace logging
         "trace",
     };
 
-    void InitializeLog(std::string const& serverName, std::string const& logFile, bool appendDate)
+    void InitializeLog(const std::string& serverName, const std::string& logFile, bool appendDate)
     {
         ServerName = serverName;
 
@@ -168,7 +168,7 @@ namespace logging
         spdlog::shutdown();
     }
 
-    void SetPattern(std::string const& str)
+    void SetPattern(const std::string& str)
     {
         // https://github.com/gabime/spdlog/wiki/3.-Custom-formatting
         auto formatter = std::make_unique<spdlog::pattern_formatter>();
@@ -180,7 +180,7 @@ namespace logging
         spdlog::set_formatter(std::move(formatter));
     }
 
-    void AddBacktrace(std::string const& str)
+    void AddBacktrace(const std::string& str)
     {
         BacktraceBuffer.enqueue(str);
     }

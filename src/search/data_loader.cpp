@@ -110,7 +110,7 @@ std::vector<ahItem*> CDataLoader::GetAHItemsToCategory(uint8 AHCategoryID, const
                                  "WHERE aH = %u "
                                  "GROUP BY item_basic.itemid "
                                  "%s",
-                                 selectFrom, AHCategoryID, OrderByString);
+        selectFrom, AHCategoryID, OrderByString);
 
     auto rset = db::query(fmtQuery);
     if (rset && rset->rowsCount())
@@ -242,17 +242,16 @@ std::list<SearchEntity*> CDataLoader::GetPlayersList(search_req sr, int* count)
         filterQry.append(fmt::sprintf(" AND (seacom_type & 0xF0) = %u", sr.commentType, sr.commentType));
     }
 
-    std::string fmtQuery =
-        "SELECT charid, partyid, charname, pos_zone, pos_prevzone, nation, rank_sandoria, rank_bastok, "
-        "rank_windurst, race, mjob, sjob, mlvl, slvl, languages, settings, seacom_type, disconnecting, gmHiddenEnabled "
-        "FROM accounts_sessions "
-        "LEFT JOIN accounts_parties USING (charid) "
-        "LEFT JOIN chars USING (charid) "
-        "LEFT JOIN char_look USING (charid) "
-        "LEFT JOIN char_stats USING (charid) "
-        "LEFT JOIN char_profile USING(charid) "
-        "LEFT JOIN char_flags USING(charid) "
-        "WHERE charname IS NOT NULL ";
+    std::string fmtQuery = "SELECT charid, partyid, charname, pos_zone, pos_prevzone, nation, rank_sandoria, rank_bastok, "
+                           "rank_windurst, race, mjob, sjob, mlvl, slvl, languages, settings, seacom_type, disconnecting, gmHiddenEnabled "
+                           "FROM accounts_sessions "
+                           "LEFT JOIN accounts_parties USING (charid) "
+                           "LEFT JOIN chars USING (charid) "
+                           "LEFT JOIN char_look USING (charid) "
+                           "LEFT JOIN char_stats USING (charid) "
+                           "LEFT JOIN char_profile USING(charid) "
+                           "LEFT JOIN char_flags USING(charid) "
+                           "WHERE charname IS NOT NULL ";
 
     fmtQuery.append(filterQry);
     fmtQuery.append(" ORDER BY charname ASC");
@@ -482,18 +481,17 @@ std::list<SearchEntity*> CDataLoader::GetPartyList(uint32 PartyID, uint32 Allian
 {
     std::list<SearchEntity*> PartyList;
 
-    const char* query =
-        "SELECT charid, partyid, charname, pos_zone, nation, rank_sandoria, rank_bastok, rank_windurst, race, settings, mjob, sjob, mlvl, slvl, languages, seacom_type, disconnecting "
-        "FROM accounts_sessions "
-        "LEFT JOIN accounts_parties USING(charid) "
-        "LEFT JOIN chars USING(charid) "
-        "LEFT JOIN char_look USING(charid) "
-        "LEFT JOIN char_stats USING(charid) "
-        "LEFT JOIN char_profile USING(charid) "
-        "LEFT JOIN char_flags USING(charid) "
-        "WHERE IF (allianceid <> 0, allianceid IN (SELECT allianceid FROM accounts_parties WHERE charid = %u) , partyid = %u) "
-        "ORDER BY charname ASC "
-        "LIMIT 64";
+    const char* query = "SELECT charid, partyid, charname, pos_zone, nation, rank_sandoria, rank_bastok, rank_windurst, race, settings, mjob, sjob, mlvl, slvl, languages, seacom_type, disconnecting "
+                        "FROM accounts_sessions "
+                        "LEFT JOIN accounts_parties USING(charid) "
+                        "LEFT JOIN chars USING(charid) "
+                        "LEFT JOIN char_look USING(charid) "
+                        "LEFT JOIN char_stats USING(charid) "
+                        "LEFT JOIN char_profile USING(charid) "
+                        "LEFT JOIN char_flags USING(charid) "
+                        "WHERE IF (allianceid <> 0, allianceid IN (SELECT allianceid FROM accounts_parties WHERE charid = %u) , partyid = %u) "
+                        "ORDER BY charname ASC "
+                        "LIMIT 64";
 
     auto rset = db::query(query, (!AllianceID ? PartyID : AllianceID), (!PartyID ? AllianceID : PartyID));
     if (rset && rset->rowsCount())
@@ -745,7 +743,7 @@ void CDataLoader::ExpireAHItems(uint16 expireAgeInDays)
 
             const auto query2 = fmt::format("INSERT INTO delivery_box (charid, charname, box, itemid, itemsubid, quantity, senderid, sender) VALUES "
                                             "({}, '{}', 1, {}, 0, {}, 0, 'AH-Jeuno')",
-                                            listing.sellerID, listing.sellerName, listing.itemID, listing.ahStack == 1 ? listing.itemStack : 1);
+                listing.sellerID, listing.sellerName, listing.itemID, listing.ahStack == 1 ? listing.itemStack : 1);
 
             const auto [rset2, affectedRows] = db::preparedStmtWithAffectedRows(query2);
             if (rset2 && affectedRows > 0)

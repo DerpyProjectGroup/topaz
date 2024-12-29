@@ -42,10 +42,10 @@ std::atomic<bool> gProcessLoaded = false;
 
 SqlConnection::SqlConnection()
 : SqlConnection(settings::get<std::string>("network.SQL_LOGIN").c_str(),
-                settings::get<std::string>("network.SQL_PASSWORD").c_str(),
-                settings::get<std::string>("network.SQL_HOST").c_str(),
-                settings::get<uint16>("network.SQL_PORT"),
-                settings::get<std::string>("network.SQL_DATABASE").c_str())
+      settings::get<std::string>("network.SQL_PASSWORD").c_str(),
+      settings::get<std::string>("network.SQL_HOST").c_str(),
+      settings::get<uint16>("network.SQL_PORT"),
+      settings::get<std::string>("network.SQL_DATABASE").c_str())
 {
     // Just forwarding the default credentials to the next constructor
 }
@@ -288,7 +288,7 @@ size_t SqlConnection::EscapeString(char* out_to, const char* from)
     return EscapeStringLen(out_to, from, strlen(from));
 }
 
-std::string SqlConnection::EscapeString(std::string const& input)
+std::string SqlConnection::EscapeString(const std::string& input)
 {
     TracyZoneScoped;
     std::string escaped_full_string;

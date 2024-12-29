@@ -31,17 +31,19 @@ namespace loginHelpers
         return authenticatedSessions_;
     }
 
-    bool isStringMalformed(std::string const& str, std::size_t max_length)
+    bool isStringMalformed(const std::string& str, std::size_t max_length)
     {
         const bool isEmpty        = str.empty();
         const bool isTooLong      = str.size() > max_length;
-        const bool hasInvalidChar = std::any_of(str.cbegin(), str.cend(), [](char const& c)
-                                                { return c < 0x20; });
+        const bool hasInvalidChar = std::any_of(str.cbegin(), str.cend(), [](const char& c)
+        {
+            return c < 0x20;
+        });
 
         return isEmpty || isTooLong || hasInvalidChar;
     }
 
-    session_t& get_authenticated_session(std::string const& ipAddr, std::string const& sessionHash)
+    session_t& get_authenticated_session(const std::string& ipAddr, const std::string& sessionHash)
     {
         return authenticatedSessions_[ipAddr][sessionHash]; // NOTE: Will construct if doesn't exist
     }
@@ -90,21 +92,21 @@ namespace loginHelpers
         uint16 mask = EXPANSION_DISPLAY::BASE_GAME;
 
         std::map<std::string, uint16> expansions = {
-            { "login.RISE_OF_ZILART", EXPANSION_DISPLAY::RISE_OF_ZILART },
-            { "login.CHAINS_OF_PROMATHIA", EXPANSION_DISPLAY::CHAINS_OF_PROMATHIA },
+            { "login.RISE_OF_ZILART",          EXPANSION_DISPLAY::RISE_OF_ZILART          },
+            { "login.CHAINS_OF_PROMATHIA",     EXPANSION_DISPLAY::CHAINS_OF_PROMATHIA     },
             { "login.TREASURES_OF_AHT_URGHAN", EXPANSION_DISPLAY::TREASURES_OF_AHT_URGHAN },
-            { "login.WINGS_OF_THE_GODDESS", EXPANSION_DISPLAY::WINGS_OF_THE_GODDESS },
-            { "login.A_CRYSTALLINE_PROPHECY", EXPANSION_DISPLAY::A_CRYSTALLINE_PROPHECY },
-            { "login.A_MOOGLE_KUPOD_ETAT", EXPANSION_DISPLAY::A_MOOGLE_KUPOD_ETAT },
-            { "login.A_SHANTOTTO_ASCENSION", EXPANSION_DISPLAY::A_SHANTOTTO_ASCENSION },
-            { "login.VISIONS_OF_ABYSSEA", EXPANSION_DISPLAY::VISIONS_OF_ABYSSEA },
-            { "login.SCARS_OF_ABYSSEA", EXPANSION_DISPLAY::SCARS_OF_ABYSSEA },
-            { "login.HEROES_OF_ABYSSEA", EXPANSION_DISPLAY::HEROES_OF_ABYSSEA },
-            { "login.SEEKERS_OF_ADOULIN", EXPANSION_DISPLAY::SEEKERS_OF_ADOULIN },
+            { "login.WINGS_OF_THE_GODDESS",    EXPANSION_DISPLAY::WINGS_OF_THE_GODDESS    },
+            { "login.A_CRYSTALLINE_PROPHECY",  EXPANSION_DISPLAY::A_CRYSTALLINE_PROPHECY  },
+            { "login.A_MOOGLE_KUPOD_ETAT",     EXPANSION_DISPLAY::A_MOOGLE_KUPOD_ETAT     },
+            { "login.A_SHANTOTTO_ASCENSION",   EXPANSION_DISPLAY::A_SHANTOTTO_ASCENSION   },
+            { "login.VISIONS_OF_ABYSSEA",      EXPANSION_DISPLAY::VISIONS_OF_ABYSSEA      },
+            { "login.SCARS_OF_ABYSSEA",        EXPANSION_DISPLAY::SCARS_OF_ABYSSEA        },
+            { "login.HEROES_OF_ABYSSEA",       EXPANSION_DISPLAY::HEROES_OF_ABYSSEA       },
+            { "login.SEEKERS_OF_ADOULIN",      EXPANSION_DISPLAY::SEEKERS_OF_ADOULIN      },
         };
 
         // apply the expansion masks where available
-        for (auto const& expansion : expansions)
+        for (const auto& expansion : expansions)
         {
             if (settings::get<bool>(expansion.first))
             {
@@ -119,7 +121,7 @@ namespace loginHelpers
         uint16 mask = 0;
 
         std::map<std::string, uint16> features = {
-            { "login.SECURE_TOKEN", FEATURE_DISPLAY::SECURE_TOKEN }, // This needs to be broken out into auth calls once TOTP is supported
+            { "login.SECURE_TOKEN",   FEATURE_DISPLAY::SECURE_TOKEN   }, // This needs to be broken out into auth calls once TOTP is supported
             { "login.MOG_WARDROBE_3", FEATURE_DISPLAY::MOG_WARDROBE_3 },
             { "login.MOG_WARDROBE_4", FEATURE_DISPLAY::MOG_WARDROBE_4 },
             { "login.MOG_WARDROBE_5", FEATURE_DISPLAY::MOG_WARDROBE_5 },
@@ -129,7 +131,7 @@ namespace loginHelpers
         };
 
         // apply the feature masks where available
-        for (auto const& feature : features)
+        for (const auto& feature : features)
         {
             if (settings::get<bool>(feature.first))
             {
@@ -143,28 +145,28 @@ namespace loginHelpers
     int32 saveCharacter(uint32 accid, uint32 charid, char_mini* createchar)
     {
         if (!db::query("INSERT INTO chars(charid,accid,charname,pos_zone,nation) VALUES(%u,%u,'%s',%u,%u)",
-                       charid, accid, str(createchar->m_name), createchar->m_zone, createchar->m_nation))
+                charid, accid, str(createchar->m_name), createchar->m_zone, createchar->m_nation))
         {
             ShowDebug(fmt::format("lobby_ccsave: char<{}>, accid: {}, charid: {}", str(createchar->m_name), accid, charid));
             return -1;
         }
 
         if (!db::query("INSERT INTO char_look(charid,face,race,size) VALUES(%u,%u,%u,%u)",
-                       charid, createchar->m_look.face, createchar->m_look.race, createchar->m_look.size))
+                charid, createchar->m_look.face, createchar->m_look.race, createchar->m_look.size))
         {
             ShowDebug(fmt::format("lobby_cLook: char<{}>, charid: {}", str(createchar->m_name), charid));
             return -1;
         }
 
         if (!db::query("INSERT INTO char_stats(charid,mjob) VALUES(%u,%u)",
-                       charid, createchar->m_mjob))
+                charid, createchar->m_mjob))
         {
             ShowDebug(fmt::format("lobby_cStats: charid: {}", charid));
             return -1;
         }
 
         if (!db::query("INSERT INTO char_exp(charid) VALUES(%u) ON DUPLICATE KEY UPDATE charid = charid",
-                       charid, createchar->m_mjob))
+                charid, createchar->m_mjob))
         {
             return -1;
         }
@@ -175,31 +177,31 @@ namespace loginHelpers
         }
 
         if (!db::query("INSERT INTO char_jobs(charid) VALUES(%u) ON DUPLICATE KEY UPDATE charid = charid",
-                       charid, createchar->m_mjob))
+                charid, createchar->m_mjob))
         {
             return -1;
         }
 
         if (!db::query("INSERT INTO char_points(charid) VALUES(%u) ON DUPLICATE KEY UPDATE charid = charid",
-                       charid, createchar->m_mjob))
+                charid, createchar->m_mjob))
         {
             return -1;
         }
 
         if (!db::query("INSERT INTO char_unlocks(charid) VALUES(%u) ON DUPLICATE KEY UPDATE charid = charid",
-                       charid, createchar->m_mjob))
+                charid, createchar->m_mjob))
         {
             return -1;
         }
 
         if (!db::query("INSERT INTO char_profile(charid) VALUES(%u) ON DUPLICATE KEY UPDATE charid = charid",
-                       charid, createchar->m_mjob))
+                charid, createchar->m_mjob))
         {
             return -1;
         }
 
         if (!db::query("INSERT INTO char_storage(charid) VALUES(%u) ON DUPLICATE KEY UPDATE charid = charid",
-                       charid, createchar->m_mjob))
+                charid, createchar->m_mjob))
         {
             return -1;
         }
@@ -217,7 +219,7 @@ namespace loginHelpers
         if (settings::get<bool>("main.NEW_CHARACTER_CUTSCENE"))
         {
             if (!db::query("INSERT INTO char_vars(charid, varname, value) VALUES(%u, '%s', %u)",
-                           charid, "HQuest[newCharacterCS]notSeen", 1))
+                    charid, "HQuest[newCharacterCS]notSeen", 1))
             {
                 return -1;
             }
@@ -243,7 +245,7 @@ namespace loginHelpers
         if (mjob != createchar.m_mjob)
         {
             ShowInfo(fmt::format("{} attempted to create invalid starting job {} substituting {}",
-                                 session.requestedNewCharacterName, mjob, createchar.m_mjob));
+                session.requestedNewCharacterName, mjob, createchar.m_mjob));
         }
 
         createchar.m_nation = ref<uint8>(buf, 54);
@@ -316,7 +318,7 @@ namespace loginHelpers
         }
     }
 
-    std::string getHashFromPacket(std::string const& ip_str, char* data)
+    std::string getHashFromPacket(const std::string& ip_str, char* data)
     {
         std::string hash = std::string(data + 12, 16);
 

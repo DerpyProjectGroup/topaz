@@ -35,12 +35,12 @@ void queue_message_broadcast(MSGSERVTYPE type, zmq::message_t* extra, zmq::messa
 
 auto pop_external_processing_message() -> std::optional<HandleableMessage>;
 
-void message_server_init(bool const& requestExit);
+void message_server_init(const bool& requestExit);
 void message_server_close();
 
 struct message_server_wrapper_t
 {
-    message_server_wrapper_t(std::atomic_bool const& requestExit)
+    message_server_wrapper_t(const std::atomic_bool& requestExit)
     : m_thread(std::make_unique<nonstd::jthread>(std::bind(message_server_init, std::ref(requestExit))))
     {
     }

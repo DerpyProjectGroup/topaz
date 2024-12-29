@@ -182,9 +182,9 @@ time_t stall_time = 60;
 int32 makeConnection(uint32 ip, uint16 port, int32 type)
 {
     TracyZoneScoped;
-    struct sockaddr_in remote_address
-    {
-    };
+
+    struct sockaddr_in remote_address{};
+
     int32 fd     = 0;
     int32 result = 0;
 
@@ -204,14 +204,12 @@ int32 makeConnection(uint32 ip, uint16 port, int32 type)
     if (fd >= MAX_FD)
     { // socket number too big
         ShowError("make_connection: New socket #%d is greater than can we handle! Increase the value of MAX_FD (currently %d) for your OS to fix this!",
-                  fd, MAX_FD);
+            fd, MAX_FD);
         sClose(fd);
         return -1;
     }
 
-    struct linger opt
-    {
-    };
+    struct linger opt{};
     opt.l_onoff  = 0; // SO_DONTLINGER
     opt.l_linger = 0; // Do not care
     if (sSetsockopt(fd, SOL_SOCKET, SO_LINGER, (char*)&opt, sizeof(opt)))
@@ -422,7 +420,7 @@ static int connect_check_(uint32 ip)
     int             connect_ok = 0;
 
     // Search the allow list
-    for (auto const& entry : access_allow)
+    for (const auto& entry : access_allow)
     {
         if ((ip & entry.mask) == (entry.ip & entry.mask))
         {
@@ -430,16 +428,16 @@ static int connect_check_(uint32 ip)
             {
                 ShowInfo(
                     fmt::format("connect_check: Found match from allow list:{} IP:{} Mask:{}",
-                                ip2str(ip),
-                                ip2str(entry.ip),
-                                ip2str(entry.mask)));
+                        ip2str(ip),
+                        ip2str(entry.ip),
+                        ip2str(entry.mask)));
             }
             is_allowip = 1;
             break;
         }
     }
     // Search the deny list
-    for (auto const& entry : access_deny)
+    for (const auto& entry : access_deny)
     {
         if ((ip & entry.mask) == (entry.ip & entry.mask))
         {
@@ -447,9 +445,9 @@ static int connect_check_(uint32 ip)
             {
                 ShowInfo(
                     fmt::format("connect_check: Found match from deny list:{} IP:{} Mask:{}",
-                                ip2str(ip),
-                                ip2str(entry.ip),
-                                ip2str(entry.mask)));
+                        ip2str(ip),
+                        ip2str(entry.ip),
+                        ip2str(entry.mask)));
             }
             is_denyip = 1;
             break;
@@ -598,10 +596,10 @@ int access_ipmask(const char* str, AccessControl* acc)
     else
     {
         if (((n = sscanf(str, "%u.%u.%u.%u/%u.%u.%u.%u", a, a + 1, a + 2, a + 3, m, m + 1, m + 2, m + 3)) != 8 && // not an ip + standard mask
-             (n = sscanf(str, "%u.%u.%u.%u/%u", a, a + 1, a + 2, a + 3, m)) != 5 &&                               // not an ip + bit mask
-             (n = sscanf(str, "%u.%u.%u.%u", a, a + 1, a + 2, a + 3)) != 4) ||                                    // not an ip
-            a[0] > 255 ||
-            a[1] > 255 || a[2] > 255 || a[3] > 255 ||                             // invalid ip
+                (n = sscanf(str, "%u.%u.%u.%u/%u", a, a + 1, a + 2, a + 3, m)) != 5 &&                            // not an ip + bit mask
+                (n = sscanf(str, "%u.%u.%u.%u", a, a + 1, a + 2, a + 3)) != 4)
+            ||                                                                    // not an ip
+            a[0] > 255 || a[1] > 255 || a[2] > 255 || a[3] > 255 ||               // invalid ip
             (n == 8 && (m[0] > 255 || m[1] > 255 || m[2] > 255 || m[3] > 255)) || // invalid standard mask
             (n == 5 && m[0] > 32))
         { // invalid bit mask
@@ -785,7 +783,7 @@ int connect_client(int listen_fd, sockaddr_in& client_address)
     if (fd >= MAX_FD)
     { // socket number too big
         ShowError("connect_client: New socket #%d is greater than can we handle! Increase the value of MAX_FD (currently %d) for your OS to fix this!",
-                  fd, MAX_FD);
+            fd, MAX_FD);
         sClose(fd);
         return -1;
     }
@@ -809,9 +807,8 @@ int connect_client(int listen_fd, sockaddr_in& client_address)
 int32 makeListenBind_tcp(const char* ip, uint16 port, RecvFunc connect_client)
 {
     TracyZoneScoped;
-    struct sockaddr_in server_address
-    {
-    };
+    struct sockaddr_in server_address{};
+
     int fd     = 0;
     int result = 0;
 
@@ -834,7 +831,7 @@ int32 makeListenBind_tcp(const char* ip, uint16 port, RecvFunc connect_client)
     if (fd >= MAX_FD)
     { // socket number too big
         ShowError("make_listen_bind: New socket #%d is greater than can we handle! Increase the value of MAX_FD (currently %d) for your OS to fix this!",
-                  fd, MAX_FD);
+            fd, MAX_FD);
         sClose(fd);
         return -1;
     }
@@ -927,7 +924,7 @@ void do_close_tcp(int32 fd)
 /// <param name="access_list">The access list that we are parsing for individual entries.</param>
 /// <returns>std::vector<AccessControl> collection that contains all AccessControl entries.</returns>
 ///
-std::vector<AccessControl> get_access_list(std::string const& access_list)
+std::vector<AccessControl> get_access_list(const std::string& access_list)
 {
     // with the provided comma delimited access list, we will convert into a
     // vector of string entries
@@ -1210,9 +1207,8 @@ void set_nonblocking(int fd, unsigned long yes)
 int32 makeBind_udp(uint32 ip, uint16 port)
 {
     TracyZoneScoped;
-    struct sockaddr_in server_address
-    {
-    };
+    struct sockaddr_in server_address{};
+
     int fd     = 0;
     int result = 0;
 
@@ -1232,7 +1228,7 @@ int32 makeBind_udp(uint32 ip, uint16 port)
     if (fd >= MAX_FD)
     { // socket number too big
         ShowError("make_listen_bind: New socket #%d is greater than can we handle! Increase the value of MAX_FD (currently %d) for your OS to fix this!",
-                  fd, MAX_FD);
+            fd, MAX_FD);
         sClose(fd);
         return -1;
     }

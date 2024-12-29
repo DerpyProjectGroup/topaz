@@ -60,10 +60,10 @@ public:
     };
 
     CTask* AddTask(CTask*);
-    CTask* AddTask(std::string const& InitName, time_point InitTick, std::any InitData, TASKTYPE InitType, TaskFunc_t InitFunc, duration InitInterval = 1s);
+    CTask* AddTask(const std::string& InitName, time_point InitTick, std::any InitData, TASKTYPE InitType, TaskFunc_t InitFunc, duration InitInterval = 1s);
 
     duration DoTimer(time_point tick);
-    void     RemoveTask(std::string const& TaskName);
+    void     RemoveTask(const std::string& TaskName);
 
 protected:
     CTaskMgr() = default;
@@ -75,13 +75,13 @@ private:
 class CTaskMgr::CTask
 {
 public:
-    CTask(std::string const& InitName, time_point InitTick, std::any InitData, TASKTYPE InitType, TaskFunc_t InitFunc, duration InitInterval = 1s)
+    CTask(const std::string& InitName, time_point InitTick, std::any InitData, TASKTYPE InitType, TaskFunc_t InitFunc, duration InitInterval = 1s)
     : m_name(InitName)
     , m_type(InitType)
     , m_tick(InitTick)
     , m_interval(InitInterval)
     , m_data(InitData)
-    , m_func(InitFunc){};
+    , m_func(InitFunc) {};
 
     std::string m_name;
     TASKTYPE    m_type;

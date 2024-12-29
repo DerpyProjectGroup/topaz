@@ -95,7 +95,7 @@ struct SearchCommInfo
     uint16 port;
 };
 
-void TaskManagerThread(bool const& requestExit);
+void TaskManagerThread(const bool& requestExit);
 
 int32 ah_cleanup(time_point tick, CTaskMgr::CTask* PTask);
 
@@ -132,7 +132,7 @@ std::string socketToString(SOCKET socket)
     return std::string(ipstr);
 }
 
-bool isSocketInUse(std::string const& ipAddressStr)
+bool isSocketInUse(const std::string& ipAddressStr)
 {
     // clang-format off
     if (gIPAddressWhitelist.read([ipAddressStr](auto const& ipWhitelist)
@@ -153,7 +153,7 @@ bool isSocketInUse(std::string const& ipAddressStr)
     // clang-format on
 }
 
-void removeSocketFromSet(std::string const& ipAddressStr)
+void removeSocketFromSet(const std::string& ipAddressStr)
 {
     // clang-format off
     if (gIPAddressWhitelist.read([ipAddressStr](auto const& ipWhitelist)
@@ -174,7 +174,7 @@ void removeSocketFromSet(std::string const& ipAddressStr)
     // clang-format on
 }
 
-void addSocketToSet(std::string const& ipAddressStr)
+void addSocketToSet(const std::string& ipAddressStr)
 {
     // clang-format off
     if (gIPAddressWhitelist.read([ipAddressStr](auto const& ipWhitelist)
@@ -263,9 +263,7 @@ int32 main(int32 argc, char** argv)
     SOCKET ClientSocket = INVALID_SOCKET;
 
     struct addrinfo* result = nullptr;
-    struct addrinfo  hints
-    {
-    };
+    struct addrinfo  hints{};
 
 #ifdef WIN32
     // Initialize Winsock
@@ -375,11 +373,11 @@ int32 main(int32 argc, char** argv)
     {
         ShowInfo("AH task to return items older than %u days is running", expireDays);
         CTaskMgr::getInstance()->AddTask("ah_cleanup", server_clock::now(), nullptr, CTaskMgr::TASK_INTERVAL, ah_cleanup,
-                                         std::chrono::seconds(settings::get<uint32>("search.EXPIRE_INTERVAL")));
+            std::chrono::seconds(settings::get<uint32>("search.EXPIRE_INTERVAL")));
     }
 
     sol::table accessWhitelist = lua["xi"]["settings"]["search"]["ACCESS_WHITELIST"].get_or_create<sol::table>();
-    for (auto const& [_, value] : accessWhitelist)
+    for (const auto& [_, value] : accessWhitelist)
     {
         // clang-format off
         auto str = value.as<std::string>();
@@ -616,7 +614,7 @@ void TCPComm(SOCKET socket)
     }
 
     ShowInfo("Search Request: %s (%u), size: %u, ip: %s",
-             searchTypeToString(PTCPRequest.getPacketType()), PTCPRequest.getPacketType(), PTCPRequest.getSize(), clientIP);
+        searchTypeToString(PTCPRequest.getPacketType()), PTCPRequest.getPacketType(), PTCPRequest.getSize(), clientIP);
 
     switch (PTCPRequest.getPacketType())
     {
@@ -1117,7 +1115,7 @@ search_req _HandleSearchRequest(CTCPRequestPacket& PTCPRequest)
  *                                                                       *
  ************************************************************************/
 
-void TaskManagerThread(bool const& requestExit)
+void TaskManagerThread(const bool& requestExit)
 {
     duration next;
     while (!requestExit)

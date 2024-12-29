@@ -53,12 +53,12 @@ namespace settings
 
 namespace logging
 {
-    void InitializeLog(std::string const& serverName, std::string const& logFile, bool appendDate);
+    void InitializeLog(const std::string& serverName, const std::string& logFile, bool appendDate);
     void ShutDown();
 
-    void SetPattern(std::string const& str);
+    void SetPattern(const std::string& str);
 
-    void AddBacktrace(std::string const& str);
+    void AddBacktrace(const std::string& str);
     auto GetBacktrace() -> std::vector<std::string>;
 } // namespace logging
 

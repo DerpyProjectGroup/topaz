@@ -51,11 +51,8 @@ namespace
 
     constexpr bool isBcryptHash(const std::string& passHash)
     {
-        return std::size(passHash) == 60 &&
-               passHash[0] == '$' &&
-               passHash[1] == '2' &&
-               (passHash[2] == 'a' || passHash[2] == 'b' || passHash[2] == 'y' || passHash[2] == 'x') && // bcrypt hash versions
-               passHash[3] == '$';
+        return std::size(passHash) == 60 && passHash[0] == '$' && passHash[1] == '2' && (passHash[2] == 'a' || passHash[2] == 'b' || passHash[2] == 'y' || passHash[2] == 'x') && // bcrypt hash versions
+            passHash[3] == '$';
     }
 } // namespace
 
@@ -243,7 +240,7 @@ void auth_session::read_func()
                                         FROM accounts_sessions JOIN accounts \
                                         ON accounts_sessions.accid = accounts.id \
                                         WHERE accounts.id = %d",
-                                                accountID);
+                        accountID);
 
                     if (rset && rset->rowsCount() == 1)
                     {
@@ -333,7 +330,7 @@ void auth_session::read_func()
             if (!settings::get<bool>("login.ACCOUNT_CREATION"))
             {
                 ShowWarningFmt("login_parse: New account attempt <{}> but is disabled in settings.",
-                               username);
+                    username);
                 ref<uint8>(data_, 0) = LOGIN_ERROR_CREATE_DISABLED;
                 do_write(1);
                 return;
@@ -379,7 +376,7 @@ void auth_session::read_func()
 
                 const auto rset2 = db::query("INSERT INTO accounts(id,login,password,timecreate,timelastmodify,status,priv) \
                                 VALUES(%d,'%s','%s','%s',NULL,%d,%d)",
-                                             accid, username, BCrypt::generateHash(password), strtimecreate, ACCOUNT_STATUS_CODE::NORMAL, ACCOUNT_PRIVILEGE_CODE::USER);
+                    accid, username, BCrypt::generateHash(password), strtimecreate, ACCOUNT_STATUS_CODE::NORMAL, ACCOUNT_PRIVILEGE_CODE::USER);
                 if (!rset2)
                 {
                     ref<uint8>(data_, 0) = LOGIN_ERROR_CREATE;
@@ -457,7 +454,7 @@ void auth_session::read_func()
             const auto rset = db::query("SELECT accounts.id, accounts.status \
                                     FROM accounts \
                                     WHERE accounts.login = '%s'",
-                                        username);
+                username);
             if (rset == nullptr || rset->rowsCount() == 0)
             {
                 ShowWarningFmt("login_parse: user <{}> could not be found using the provided information. Aborting.", username);
@@ -496,7 +493,7 @@ void auth_session::read_func()
                 db::query("UPDATE accounts SET accounts.timelastmodify = NULL WHERE accounts.id = %d", accid);
 
                 const auto rset2 = db::query("UPDATE accounts SET accounts.password = '%s' WHERE accounts.id = %d",
-                                             BCrypt::generateHash(updated_password), accid);
+                    BCrypt::generateHash(updated_password), accid);
                 if (!rset2)
                 {
                     ShowWarningFmt("login_parse: Error trying to update password in database for user <{}>.", username);

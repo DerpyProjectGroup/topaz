@@ -28,7 +28,7 @@ Async::Async()
 {
 }
 
-void Async::submit(std::function<void()> const& func)
+void Async::submit(const std::function<void()>& func)
 {
     // clang-format off
     this->schedule([func]()

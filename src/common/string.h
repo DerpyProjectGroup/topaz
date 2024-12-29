@@ -50,7 +50,7 @@ namespace marshal
             buffer[std::min(index, capacity - 1)] = '\0';
         }
 
-        void assign(std::string const& text)
+        void assign(const std::string& text)
         {
             auto index = std::min(text.length(), capacity);
             std::copy_n(text.begin(), index, buffer);
@@ -66,16 +66,16 @@ namespace marshal
 
         // Copy
         template <std::size_t R, bool C>
-        string(string<R, C> const& other)
+        string(const string<R, C>& other)
         : string(std::string(other))
         {
         }
-        string(char const* text)
+        string(const char* text)
         : string(std::string(text))
         {
         }
 
-        string(std::string const& text)
+        string(const std::string& text)
         {
             assign(text);
         }
@@ -115,17 +115,17 @@ namespace marshal
             return buffer + capacity;
         }
 
-        char const* cbegin()
+        const char* cbegin()
         {
             return buffer;
         }
 
-        char const* cend()
+        const char* cend()
         {
             return buffer + capacity;
         }
 
-        char const* data()
+        const char* data()
         {
             return buffer;
         }
@@ -141,13 +141,13 @@ namespace marshal
 
         // Stream operators
         template <std::size_t N, bool C>
-        friend std::ostream operator<<(std::ostream& stream, string const& str);
+        friend std::ostream operator<<(std::ostream& stream, const string& str);
         template <std::size_t N, bool C>
         friend std::istream operator>>(std::istream& stream, string& str);
     };
 
     template <std::size_t N, bool C>
-    std::ostream& operator<<(std::ostream& stream, string<N, C> const& str)
+    std::ostream& operator<<(std::ostream& stream, const string<N, C>& str)
     {
         return stream << std::string(str);
     }
