@@ -50,9 +50,7 @@ ConnectServer::ConnectServer(int argc, char** argv)
     // clang-format on
 
 #ifndef _WIN32
-    struct rlimit limits
-    {
-    };
+    struct rlimit limits{};
 
     uint32 newRLimit = 10240;
 
@@ -129,9 +127,7 @@ void ConnectServer::periodicCleanup(const asio::error_code& error, asio::steady_
                 session_t& session = sessionIterator->second;
 
                 // If it's been 15 minutes, erase it from the session list
-                if (!session.data_session &&
-                    !session.view_session &&
-                    (server_clock::now() - session.authorizedTime) > std::chrono::minutes(15))
+                if (!session.data_session && !session.view_session && (server_clock::now() - session.authorizedTime) > std::chrono::minutes(15))
                 {
                     sessionIterator = ipAddrIterator->second.erase(sessionIterator);
                 }

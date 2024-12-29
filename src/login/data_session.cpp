@@ -74,8 +74,7 @@ void data_session::read_func()
                     return;
                 }
 
-                const char* pfmtQuery =
-                    "SELECT charid, charname, pos_zone, pos_prevzone, mjob,\
+                const char* pfmtQuery = "SELECT charid, charname, pos_zone, pos_prevzone, mjob,\
                         race, face, head, body, hands, legs, feet, main, sub,\
                         war, mnk, whm, blm, rdm, thf, pld, drk, bst, brd, rng,\
                         sam, nin, drg, smn, blu, cor, pup, dnc, sch, geo, run, \
@@ -268,7 +267,7 @@ void data_session::read_func()
             const auto rset = db::query("SELECT zoneip, zoneport, zoneid, pos_prevzone, gmlevel, accid, charname \
                                              FROM zone_settings, chars \
                                              WHERE IF(pos_zone = 0, zoneid = pos_prevzone, zoneid = pos_zone) AND charid = %u AND accid = %u",
-                                        charid, session.accountID);
+                charid, session.accountID);
             if (rset && rset->rowsCount() && rset->next())
             {
                 ZoneID   = rset->get<uint16>("zoneid");
@@ -299,7 +298,7 @@ void data_session::read_func()
                 characterSelectionResponse.server_id     = (charid >> 16) & 0xFF; // Looks wrong? shouldn't this be a server index?
 
                 ShowInfo(fmt::format("data_session: zoneid:({}), zoneip:({}), zoneport:({}) for char:({})",
-                                     ZoneID, loginHelpers::ip2str(ntohl(ZoneIP)), ZonePort, charid));
+                    ZoneID, loginHelpers::ip2str(ntohl(ZoneIP)), ZonePort, charid));
 
                 // Check the number of sessions
                 uint16 sessionCount = 0;
@@ -307,7 +306,7 @@ void data_session::read_func()
                 const auto rset0 = db::query("SELECT COUNT(client_addr) \
                                 FROM accounts_sessions \
                                 WHERE client_addr = %u",
-                                             accountIP);
+                    accountIP);
                 if (rset0 && rset0->rowsCount() != 0 && rset0->next())
                 {
                     sessionCount = rset0->get<uint16>("COUNT(client_addr)");
@@ -317,7 +316,7 @@ void data_session::read_func()
                 const auto rset1            = db::query("SELECT * \
                                 FROM accounts_sessions \
                                 WHERE accid = %u AND client_port != '0'",
-                                                        session.accountID);
+                               session.accountID);
                 if (rset1 && rset1->rowsCount() != 0 && rset1->next())
                 {
                     hasActiveSession = true;
@@ -327,7 +326,7 @@ void data_session::read_func()
                 const auto rset2 = db::query("SELECT * \
                                 FROM accounts_sessions \
                                 WHERE accid = %u AND client_port = '0' AND last_zoneout_time >= SUBTIME(NOW(), \"00:00:30\")",
-                                             session.accountID);
+                    session.accountID);
                 if (rset2 && rset2->rowsCount() != 0 && rset2->next())
                 {
                     hasActiveSession = true;
@@ -338,7 +337,7 @@ void data_session::read_func()
                 const auto rset3 = db::query("SELECT UNIX_TIMESTAMP(exception) \
                                 FROM ip_exceptions \
                                 WHERE accid = %u",
-                                             session.accountID);
+                    session.accountID);
                 if (rset3 && rset3->rowsCount() != 0 && rset3->next())
                 {
                     exceptionTime = rset3->get<uint64>("UNIX_TIMESTAMP(exception)");
@@ -388,8 +387,8 @@ void data_session::read_func()
 
                     if (!db::query("INSERT INTO accounts_sessions(accid,charid,session_key,server_addr,server_port,client_addr, version_mismatch) "
                                    "VALUES(%u,%u,x'%s',%u,%u,%u,%u)",
-                                   session.accountID, charid, session_key, ZoneIP, ZonePort, accountIP,
-                                   session.versionMismatch ? 1 : 0))
+                            session.accountID, charid, session_key, ZoneIP, ZonePort, accountIP,
+                            session.versionMismatch ? 1 : 0))
                     {
                         if (auto data = session.view_session.get())
                         {
@@ -454,7 +453,7 @@ void data_session::read_func()
 
                 if (!db::query("INSERT INTO account_ip_record(login_time,accid,charid,client_ip) \
                             VALUES ('%s', %u, %u, '%s')",
-                               timeAndDate, session.accountID, charid, loginHelpers::ip2str(accountIP)))
+                        timeAndDate, session.accountID, charid, loginHelpers::ip2str(accountIP)))
                 {
                     ShowError("data_session: Could not write info to account_ip_record.");
                 }

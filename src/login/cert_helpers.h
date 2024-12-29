@@ -106,9 +106,9 @@ namespace certificateHelpers
             /* X509_NAME_add_entry_by_txt(name, "C", MBSTRING_ASC,
                                        (unsigned char*)"CA", -1, -1, 0);*/
             X509_NAME_add_entry_by_txt(name, "O", MBSTRING_ASC,
-                                       (unsigned char*)"LSB self-signed certificate for login server", -1, -1, 0);
+                (unsigned char*)"LSB self-signed certificate for login server", -1, -1, 0);
             X509_NAME_add_entry_by_txt(name, "CN", MBSTRING_ASC,
-                                       commonNameIpAddr, -1, -1, 0);
+                commonNameIpAddr, -1, -1, 0);
 
             X509_set_issuer_name(x509, name);
 

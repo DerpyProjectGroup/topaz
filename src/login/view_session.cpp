@@ -58,7 +58,7 @@ void view_session::read_func()
             uint32 accountID = 0;
 
             const auto rset = db::query("SELECT accid FROM chars WHERE charid = %u AND charname = '%s' LIMIT 1",
-                                        requestedCharacterID, requestedCharacter);
+                requestedCharacterID, requestedCharacter);
             if (rset && rset->rowsCount() != 0 && rset->next())
             {
                 accountID                    = rset->get<uint32>("accid");
@@ -115,7 +115,7 @@ void view_session::read_func()
             uint32 charID = ref<uint32>(data_, 0x20);
 
             ShowInfo(fmt::format("attempt to delete char:<{}> from ip:<{}>",
-                                 charID, ipAddress));
+                charID, ipAddress));
 
             uint32 accountID = 0;
 
@@ -137,7 +137,7 @@ void view_session::read_func()
             // This allows character recovery.
 
             db::query("UPDATE chars SET accid = 0, original_accid = %i WHERE charid = %i AND accid = %i",
-                      session.accountID, charID, session.accountID);
+                session.accountID, charID, session.accountID);
         }
         break;
         case 0x21: // 33: Registering character name onto the lobby server
@@ -223,14 +223,13 @@ void view_session::read_func()
                 // (optional) Check if the name is in use by NPC or Mob entities
                 if (settings::get<bool>("login.DISABLE_MOB_NPC_CHAR_NAMES"))
                 {
-                    auto query =
-                        "WITH results AS "
-                        "( "
-                        "    SELECT polutils_name AS `name` FROM npc_list "
-                        "    UNION "
-                        "    SELECT packet_name AS `name` FROM mob_pools "
-                        ") "
-                        "SELECT * FROM results WHERE REPLACE(REPLACE(UPPER(`name`), '-', ''), '_', '') LIKE REPLACE(REPLACE(UPPER('%s'), '-', ''), '_', '')";
+                    auto query = "WITH results AS "
+                                 "( "
+                                 "    SELECT polutils_name AS `name` FROM npc_list "
+                                 "    UNION "
+                                 "    SELECT packet_name AS `name` FROM mob_pools "
+                                 ") "
+                                 "SELECT * FROM results WHERE REPLACE(REPLACE(UPPER(`name`), '-', ''), '_', '') LIKE REPLACE(REPLACE(UPPER('%s'), '-', ''), '_', '')";
 
                     const auto rset1 = db::query(query, nameStr);
                     if (!rset1)
@@ -249,7 +248,7 @@ void view_session::read_func()
                 if (auto badWordsList = loginSettingsTable.get_or<sol::table>("BANNED_WORDS_LIST", sol::lua_nil); badWordsList.valid())
                 {
                     auto potentialName = to_upper(nameStr);
-                    for (auto const& entry : badWordsList)
+                    for (const auto& entry : badWordsList)
                     {
                         auto badWord = to_upper(entry.second.as<std::string>());
                         if (potentialName.find(badWord) != std::string::npos)

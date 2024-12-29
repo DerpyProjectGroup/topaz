@@ -78,9 +78,9 @@ namespace loginHelpers
         UNUSED_FEATURE_9 = 0x8000,
     };
 
-    bool isStringMalformed(std::string const& str, std::size_t max_length);
+    bool isStringMalformed(const std::string& str, std::size_t max_length);
 
-    session_t& get_authenticated_session(std::string const& ipAddr, std::string const& sessionHash);
+    session_t& get_authenticated_session(const std::string& ipAddr, const std::string& sessionHash);
 
     // hostname/ip conversion functions
     std::string ip2str(uint32 ip);
@@ -100,5 +100,5 @@ namespace loginHelpers
 
     void PrintPacket(const char* data, uint32 size);
 
-    std::string getHashFromPacket(std::string const& ip_str, char* data);
+    std::string getHashFromPacket(const std::string& ip_str, char* data);
 } // namespace loginHelpers
