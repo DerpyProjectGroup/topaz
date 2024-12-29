@@ -378,6 +378,7 @@ jobs:
         with open("modules/init.txt", "w") as f:
             f.write("custom\n")
             f.write("era\n")
+            f.write("example\n")
             f.write("renamer\n")
         EOF
     - name: Configure CMake
@@ -389,6 +390,15 @@ jobs:
       shell: cmd
       run: |
         cmake --build build -j4
+    - name: Archive Executables
+      uses: actions/upload-artifact@v4
+      with:
+        name: windows_modules_executables
+        path: |
+          xi_connect.exe
+          xi_map.exe
+          xi_search.exe
+          xi_world.exe
 
   MacOS_64bit:
     needs: Sanity_Checks
