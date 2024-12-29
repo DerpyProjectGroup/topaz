@@ -70,9 +70,9 @@ bool ConquestSystem::handleMessage(HandleableMessage&& message)
         default:
         {
             ShowDebug(fmt::format("Message: unknown conquest type received: {} from {}:{}",
-                                  static_cast<uint8>(conquestMsgType),
-                                  message.from_addr.s_addr,
-                                  message.from_port));
+                static_cast<uint8>(conquestMsgType),
+                message.from_addr.s_addr,
+                message.from_port));
         }
         break;
     }
@@ -223,7 +223,7 @@ bool ConquestSystem::updateInfluencePoints(int points, unsigned int nation, REGI
 
     auto rset2 = db::query("UPDATE conquest_system SET sandoria_influence = %d, bastok_influence = %d, "
                            "windurst_influence = %d, beastmen_influence = %d WHERE region_id = %u",
-                           influences[0], influences[1], influences[2], influences[3], static_cast<uint8>(region));
+        influences[0], influences[1], influences[2], influences[3], static_cast<uint8>(region));
 
     return !rset2;
 }

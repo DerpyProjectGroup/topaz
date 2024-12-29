@@ -140,7 +140,7 @@ void message_server_parse(MSGSERVTYPE type, zmq::message_t* extra, zmq::message_
         }
 
         ShowDebug(fmt::format("Message: Received message {} ({}) from {}:{}",
-                              msgTypeToStr(type), static_cast<uint8>(type), str(from_address), from_port));
+            msgTypeToStr(type), static_cast<uint8>(type), str(from_address), from_port));
 
         while (rset->next())
         {
@@ -315,7 +315,7 @@ void message_server_parse(MSGSERVTYPE type, zmq::message_t* extra, zmq::message_
     }
 }
 
-void message_server_listen(bool const& requestExit)
+void message_server_listen(const bool& requestExit)
 {
     while (!requestExit)
     {
@@ -396,7 +396,7 @@ void cache_zone_settings()
     std::copy(yellMapEndpointSet.begin(), yellMapEndpointSet.end(), std::back_inserter(yellMapEndpoints));
 }
 
-void message_server_init(bool const& requestExit)
+void message_server_init(const bool& requestExit)
 {
     TracySetThreadName("Message Server (ZMQ)");
 
@@ -409,8 +409,8 @@ void message_server_init(bool const& requestExit)
     zSocket->set(zmq::sockopt::rcvtimeo, 500);
 
     auto server = fmt::format("tcp://{}:{}",
-                              settings::get<std::string>("network.ZMQ_IP"),
-                              settings::get<std::string>("network.ZMQ_PORT"));
+        settings::get<std::string>("network.ZMQ_IP"),
+        settings::get<std::string>("network.ZMQ_PORT"));
 
     ShowInfo("Starting ZMQ Server on %s", server.c_str());
 
