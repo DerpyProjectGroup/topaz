@@ -56,7 +56,7 @@ public:
 
     // NOTE: If you capture things in this function, make sure they're protected (locked or atomic)!
     // NOTE: If you're going to print, use fmt::print, rather than ShowInfo etc.
-    void RegisterCommand(std::string const& name, std::string const& description, std::function<void(std::vector<std::string>&)> func);
+    void RegisterCommand(const std::string& name, const std::string& description, std::function<void(std::vector<std::string>&)> func);
 
     // Call this to stop processing commands
     void stop();

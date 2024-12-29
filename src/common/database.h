@@ -56,7 +56,7 @@ namespace db
         class ResultSetWrapper;
     }
 
-    auto escapeString(std::string const& str) -> std::string;
+    auto escapeString(const std::string& str) -> std::string;
 
     auto getConnection() -> std::unique_ptr<sql::Connection>;
 
@@ -150,7 +150,7 @@ namespace db
     };
 
     template <typename WrapperPtrT, typename T>
-    void extractFromBlob(WrapperPtrT const& rset, std::string const& blobKey, T& destination);
+    void extractFromBlob(const WrapperPtrT& rset, const std::string& blobKey, T& destination);
 
     namespace detail
     {
@@ -349,7 +349,7 @@ namespace db
             //
 
             template <typename WrapperPtrT, typename T>
-            friend void db::extractFromBlob(WrapperPtrT const& rset, std::string const& blobKey, T& destination);
+            friend void db::extractFromBlob(const WrapperPtrT& rset, const std::string& blobKey, T& destination);
 
         private:
             std::unique_ptr<sql::ResultSet> resultSet;
@@ -457,7 +457,7 @@ namespace db
             binder(stmt, counter, blobs, std::forward<Args>(rest)...);
         }
 
-        auto timer(std::string const& query) -> xi::final_action<std::function<void()>>;
+        auto timer(const std::string& query) -> xi::final_action<std::function<void()>>;
 
         auto isConnectionIssue(const std::exception& e) -> bool;
     } // namespace detail
@@ -466,7 +466,7 @@ namespace db
     // @param query The query string to execute.
     // @return A unique pointer to the result set of the query.
     // @note Everything in database-land is 1-indexed, not 0-indexed.
-    auto queryStr(std::string const& rawQuery) -> std::unique_ptr<db::detail::ResultSetWrapper>;
+    auto queryStr(const std::string& rawQuery) -> std::unique_ptr<db::detail::ResultSetWrapper>;
 
     // @brief Execute a query with the given query string and sprintf-style arguments.
     // @param query The query string to execute.
@@ -474,7 +474,7 @@ namespace db
     // @return A unique pointer to the result set of the query.
     // @note Everything in database-land is 1-indexed, not 0-indexed.
     template <typename... Args>
-    auto query(std::string const& query, Args&&... args) -> std::unique_ptr<db::detail::ResultSetWrapper>
+    auto query(const std::string& query, Args&&... args) -> std::unique_ptr<db::detail::ResultSetWrapper>
     {
         TracyZoneScoped;
         try
@@ -498,7 +498,7 @@ namespace db
     // @note If the query hasn't been seen before it will generate a prepared statement for it to be used immediately and in the future.
     // @note Everything in database-land is 1-indexed, not 0-indexed.
     template <typename... Args>
-    auto preparedStmt(std::string const& rawQuery, Args&&... args) -> std::unique_ptr<db::detail::ResultSetWrapper>
+    auto preparedStmt(const std::string& rawQuery, Args&&... args) -> std::unique_ptr<db::detail::ResultSetWrapper>
     {
         TracyZoneScoped;
         TracyZoneString(rawQuery);
@@ -570,7 +570,7 @@ namespace db
     // @note This is a workaround for the fact that MariaDB's C++ connector hasn't yet implemented ResultSet::rowUpdated(), ResultSet::rowInserted(),
     //       and ResultSet::rowDeleted().
     template <typename... Args>
-    auto preparedStmtWithAffectedRows(std::string const& rawQuery, Args&&... args) -> std::pair<std::unique_ptr<db::detail::ResultSetWrapper>, std::size_t>
+    auto preparedStmtWithAffectedRows(const std::string& rawQuery, Args&&... args) -> std::pair<std::unique_ptr<db::detail::ResultSetWrapper>, std::size_t>
     {
         TracyZoneScoped;
         TracyZoneString(rawQuery);
@@ -660,7 +660,7 @@ namespace db
     // @param blobKey The key of the blob in the result set.
     // @param destination The struct to extract the blob into.
     template <typename WrapperPtrT, typename T>
-    void extractFromBlob(WrapperPtrT const& rset, std::string const& blobKey, T& destination)
+    void extractFromBlob(const WrapperPtrT& rset, const std::string& blobKey, T& destination)
     {
         static_assert(std::is_trivially_copyable_v<T>, "T must be trivially copyable");
 
@@ -687,7 +687,7 @@ namespace db
     // @brief Escape a string for use in a query.
     // @param str The string to escape.
     // @return The escaped string.
-    auto escapeString(std::string const& str) -> std::string;
+    auto escapeString(const std::string& str) -> std::string;
 
     // @brief Get the database schema.
     // @return The database schema.

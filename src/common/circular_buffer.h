@@ -22,9 +22,9 @@ private:
 public:
     CircularBuffer(std::size_t max_size)
     : buffer(std::unique_ptr<T[]>(new T[max_size]))
-    , max_size(max_size){};
+    , max_size(max_size) {};
 
-    void enqueue(T const& item)
+    void enqueue(const T& item)
     {
         std::lock_guard lock(mutex);
 

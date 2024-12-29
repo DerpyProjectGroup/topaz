@@ -36,13 +36,13 @@ namespace
 
     // Replacement map similar to str_replace in PHP
     const std::unordered_map<char, std::string> replacements = {
-        { '\\', "\\\\" },
-        { '\0', "\\0" },
-        { '\n', "\\n" },
-        { '\r', "\\r" },
-        { '\'', "\\'" },
-        { '\"', "\\\"" },
-        { '\x1a', "\\Z" }
+        { '\\',   "\\\\" },
+        { '\0',   "\\0"  },
+        { '\n',   "\\n"  },
+        { '\r',   "\\r"  },
+        { '\'',   "\\'"  },
+        { '\"',   "\\\"" },
+        { '\x1a', "\\Z"  }
     };
 
     const std::vector<std::string> connectionIssues = {
@@ -119,7 +119,7 @@ mutex_guarded<db::detail::State>& db::detail::getState()
     return state;
 }
 
-auto db::detail::timer(std::string const& query) -> xi::final_action<std::function<void()>>
+auto db::detail::timer(const std::string& query) -> xi::final_action<std::function<void()>>
 {
     // clang-format off
     const auto start = hires_clock::now();
@@ -142,7 +142,7 @@ auto db::detail::timer(std::string const& query) -> xi::final_action<std::functi
     // clang-format on
 }
 
-auto db::queryStr(std::string const& rawQuery) -> std::unique_ptr<db::detail::ResultSetWrapper>
+auto db::queryStr(const std::string& rawQuery) -> std::unique_ptr<db::detail::ResultSetWrapper>
 {
     TracyZoneScoped;
     TracyZoneString(rawQuery);
@@ -190,7 +190,7 @@ auto db::queryStr(std::string const& rawQuery) -> std::unique_ptr<db::detail::Re
     // clang-format on
 }
 
-auto db::escapeString(std::string const& str) -> std::string
+auto db::escapeString(const std::string& str) -> std::string
 {
     std::string escapedStr;
 

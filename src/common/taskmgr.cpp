@@ -38,7 +38,7 @@ CTaskMgr::~CTaskMgr()
     }
 }
 
-CTaskMgr::CTask* CTaskMgr::AddTask(std::string const& InitName, time_point InitTick, std::any InitData, TASKTYPE InitType, TaskFunc_t InitFunc, duration InitInterval)
+CTaskMgr::CTask* CTaskMgr::AddTask(const std::string& InitName, time_point InitTick, std::any InitData, TASKTYPE InitType, TaskFunc_t InitFunc, duration InitInterval)
 {
     TracyZoneScoped;
     return AddTask(new CTask(InitName, InitTick, std::move(InitData), InitType, InitFunc, InitInterval));
@@ -51,7 +51,7 @@ CTaskMgr::CTask* CTaskMgr::AddTask(CTask* PTask)
     return PTask;
 }
 
-void CTaskMgr::RemoveTask(std::string const& TaskName)
+void CTaskMgr::RemoveTask(const std::string& TaskName)
 {
     TracyZoneScoped;
     // m_TaskList is a priority_queue, so we can't directly pull members out of it.

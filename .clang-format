@@ -13,7 +13,7 @@ AlignConsecutiveAssignments:
   AlignFunctionPointers: false
   PadOperators: true
 AlignConsecutiveBitFields:
-  Enabled: true
+  Enabled: false
   AcrossEmptyLines: false
   AcrossComments: false
   AlignCompound: false

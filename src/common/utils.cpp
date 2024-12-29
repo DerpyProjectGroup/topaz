@@ -37,25 +37,6 @@
 #include <intrin.h>
 #endif
 
-//--------------------------------------------------
-// Return numerical value of a switch configuration
-// on/off, english, fran<E7>ais, deutsch, espa<F1>ol
-//--------------------------------------------------
-int config_switch(const char* str)
-{
-    if (strcmpi(str, "true") == 0 || strcmpi(str, "on") == 0 || strcmpi(str, "yes") == 0 || strcmpi(str, "oui") == 0 || strcmpi(str, "ja") == 0 ||
-        strcmpi(str, "si") == 0)
-    {
-        return 1;
-    }
-    if (strcmpi(str, "false") == 0 || strcmpi(str, "off") == 0 || strcmpi(str, "no") == 0 || strcmpi(str, "non") == 0 || strcmpi(str, "nein") == 0)
-    {
-        return 0;
-    }
-
-    return (int)strtol(str, nullptr, 0);
-}
-
 int32 checksum(unsigned char* buf, uint32 buflen, char checkhash[16])
 {
     unsigned char hash[16];
@@ -740,7 +721,7 @@ std::string UnpackSoultrapperName(uint8 input[])
     return output;
 }
 
-std::string escape(std::string const& s)
+std::string escape(const std::string& s)
 {
     std::size_t n = s.length();
     std::string escaped;
@@ -756,7 +737,7 @@ std::string escape(std::string const& s)
     return escaped;
 }
 
-std::vector<std::string> split(std::string const& s, std::string const& delimiter)
+std::vector<std::string> split(const std::string& s, const std::string& delimiter)
 {
     std::size_t pos_start = 0;
     std::size_t pos_end   = 0;
@@ -776,7 +757,7 @@ std::vector<std::string> split(std::string const& s, std::string const& delimite
     return res;
 }
 
-std::string to_lower(std::string const& s)
+std::string to_lower(const std::string& s)
 {
     // clang-format off
     std::string data = s;
@@ -789,7 +770,7 @@ std::string to_lower(std::string const& s)
     return data;
 }
 
-std::string to_upper(std::string const& s)
+std::string to_upper(const std::string& s)
 {
     // clang-format off
     std::string data = s;
@@ -803,7 +784,7 @@ std::string to_upper(std::string const& s)
 }
 
 // https://stackoverflow.com/questions/313970/how-to-convert-an-instance-of-stdstring-to-lower-case
-std::string trim(std::string const& str, std::string const& whitespace)
+std::string trim(const std::string& str, const std::string& whitespace)
 {
     const auto strBegin = str.find_first_not_of(whitespace);
     if (strBegin == std::string::npos)
@@ -830,17 +811,17 @@ void rtrim(std::string& s)
 }
 
 // Returns true if the given str matches the given pattern using standard regex
-bool matches(std::string const& target, std::string const& pattern)
+bool matches(const std::string& target, const std::string& pattern)
 {
     return std::regex_match(target, std::regex(pattern));
 }
 
-bool starts_with(std::string const& target, std::string const& pattern)
+bool starts_with(const std::string& target, const std::string& pattern)
 {
     return target.rfind(pattern, 0) != std::string::npos;
 }
 
-std::string replace(std::string const& target, std::string const& search, std::string const& replace)
+std::string replace(const std::string& target, const std::string& search, const std::string& replace)
 {
     try
     {
@@ -939,12 +920,12 @@ void crash()
     *ptr = 0xDEAD;
 }
 
-std::unique_ptr<FILE> utils::openFile(std::string const& path, std::string const& mode)
+std::unique_ptr<FILE> utils::openFile(const std::string& path, const std::string& mode)
 {
     return std::unique_ptr<FILE>(fopen(path.c_str(), mode.c_str()));
 }
 
-std::string utils::toASCII(std::string const& target, unsigned char replacement)
+std::string utils::toASCII(const std::string& target, unsigned char replacement)
 {
     std::string out;
     out.reserve(target.size());

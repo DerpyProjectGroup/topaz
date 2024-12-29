@@ -135,7 +135,7 @@ std::string lua_to_string_depth(const sol::object& obj, std::size_t depth)
 
             // Stringify everything first
             std::vector<std::string> stringVec;
-            for (auto const& [keyObj, valObj] : table)
+            for (const auto& [keyObj, valObj] : table)
             {
                 if (keyObj.get_type() == sol::type::string)
                 {
@@ -206,7 +206,7 @@ void lua_print(sol::variadic_args va)
 std::string lua_fmt(const std::string& fmtStr, sol::variadic_args va)
 {
     fmt::dynamic_format_arg_store<fmt::format_context> store;
-    for (auto const& arg : va)
+    for (const auto& arg : va)
     {
         switch (arg.get_type())
         {

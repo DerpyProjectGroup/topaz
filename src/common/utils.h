@@ -40,7 +40,6 @@ constexpr size_t SignatureStringLength = 16; // encoded signature string size //
 constexpr size_t LinkshellStringLength = 20; // encoded linkshell string size // 19 characters + null terminator
 
 int32 checksum(uint8* buf, uint32 buflen, char checkhash[16]);
-int   config_switch(const char* str);
 bool  bin2hex(char* output, unsigned char* input, size_t count);
 
 float           distance(const position_t& A, const position_t& B, bool ignoreVertical = false);                     // distance between positions. Use only horizontal plane (x and z) if ignoreVertical is set.
@@ -89,15 +88,15 @@ void        DecodeStringSignature(const std::string& signature, char* target);
 void        PackSoultrapperName(std::string name, uint8 output[]);
 std::string UnpackSoultrapperName(uint8 input[]);
 
-auto escape(std::string const& s) -> std::string;
-auto split(std::string const& s, std::string const& delimiter = " ") -> std::vector<std::string>;
-auto to_lower(std::string const& s) -> std::string;
-auto to_upper(std::string const& s) -> std::string;
+auto escape(const std::string& s) -> std::string;
+auto split(const std::string& s, const std::string& delimiter = " ") -> std::vector<std::string>;
+auto to_lower(const std::string& s) -> std::string;
+auto to_upper(const std::string& s) -> std::string;
 auto trim(const std::string& str, const std::string& whitespace = " \t") -> std::string;
 void rtrim(std::string& s);
-bool matches(std::string const& target, std::string const& pattern);
-bool starts_with(std::string const& target, std::string const& pattern);
-auto replace(std::string const& target, std::string const& search, std::string const& replace) -> std::string;
+bool matches(const std::string& target, const std::string& pattern);
+bool starts_with(const std::string& target, const std::string& pattern);
+auto replace(const std::string& target, const std::string& search, const std::string& replace) -> std::string;
 
 look_t stringToLook(std::string str);
 
@@ -123,8 +122,8 @@ std::set<std::filesystem::path> sorted_directory_iterator(std::string path_name)
 
 namespace utils
 {
-    auto openFile(std::string const& path, std::string const& mode) -> std::unique_ptr<FILE>;
-    auto toASCII(std::string const& target, unsigned char replacement = '\0') -> std::string;
+    auto openFile(const std::string& path, const std::string& mode) -> std::unique_ptr<FILE>;
+    auto toASCII(const std::string& target, unsigned char replacement = '\0') -> std::string;
 } // namespace utils
 
 // clang-format off

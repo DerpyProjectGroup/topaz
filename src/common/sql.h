@@ -142,7 +142,7 @@ public:
     /// Escapes a string.
     ///
     /// @return The escaped string
-    std::string EscapeString(std::string const& input);
+    std::string EscapeString(const std::string& input);
 
     /// Executes a query.
     /// Any previous result is freed.
@@ -201,7 +201,7 @@ public:
     /// Establishes keepalive (periodic ping) on the connection
     ///
     /// @return the keepalive timer id, or INVALID_TIMER
-    int32 Keepalive(std::string const& keepalive_name);
+    int32 Keepalive(const std::string& keepalive_name);
 
     /// Gets the data of a column.
     /// The data remains valid until the next row is fetched or the result is freed.

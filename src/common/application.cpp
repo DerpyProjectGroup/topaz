@@ -30,7 +30,7 @@
 #include <windows.h>
 #endif
 
-Application::Application(std::string const& serverName, int argc, char** argv)
+Application::Application(const std::string& serverName, int argc, char** argv)
 : m_ServerName(serverName)
 , m_RequestExit(false)
 , gArgParser(std::make_unique<argparse::ArgumentParser>(argv[0]))

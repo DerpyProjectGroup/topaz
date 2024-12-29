@@ -662,7 +662,7 @@ public:
         m_zone   = 0;
         m_nation = 0;
     };
-    ~char_mini(){};
+    ~char_mini() {};
 };
 
 // https://github.com/atom0s/XiPackets/tree/main/world/client/0x000A
