@@ -1575,3 +1575,16 @@ xi.helm.onTrigger = function(player, helmType)
     local info = helmInfo[helmType]
     player:messageSpecial(zones[zoneId].text[info.message], info.tool)
 end
+
+xi.helm.weatherChange = function(currentWeather, neededWeather, pointTable)
+    local status = xi.status.DISAPPEAR
+    if utils.contains(currentWeather, neededWeather) then
+        status = xi.status.NORMAL
+    end
+
+    for point = 1, #pointTable do
+        if GetNPCByID(pointTable[point]):getStatus() ~= status then
+            GetNPCByID(pointTable[point]):setStatus(status)
+        end
+    end
+end
