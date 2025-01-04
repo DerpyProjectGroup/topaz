@@ -67,6 +67,21 @@ end
 zoneObject.onZoneWeatherChange = function(weather)
     -- Harvesting points only appear during rainy weather
     xi.helm.weatherChange(weather, { xi.weather.RAIN, xi.weather.SQUALL }, ID.npc.HARVESTING)
+
+    -- NM Bayawak only spawns during fire weather
+    local bayawak = GetMobByID(ID.mob.BAYAWAK)
+    if bayawak then
+        if weather == xi.weather.HOT_SPELL or weather == xi.weather.HEAT_WAVE then
+            DisallowRespawn(bayawak:getID(), false)
+    
+            -- Spawn if respawn is up
+            if os.time() > bayawak:getLocalVar("respawn") then
+                SpawnMob(bayawak:getID())
+            end
+        else
+            DisallowRespawn(bayawak:getID(), true)
+        end
+    end
 end
 
 return zoneObject
