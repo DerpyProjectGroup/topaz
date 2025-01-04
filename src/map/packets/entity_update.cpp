@@ -119,7 +119,7 @@ void CEntityUpdatePacket::updateWith(CBaseEntity* PEntity, ENTITYUPDATE type, ui
         ref<uint16>(0x18) = PEntity->loc.p.moving;
         ref<uint16>(0x1A) = PEntity->m_TargID << 1;
         ref<uint8>(0x1C)  = PEntity->speed;
-        ref<uint8>(0x1D)  = PEntity->speedsub;
+        ref<uint8>(0x1D)  = PEntity->animationSpeed;
     }
 
     if (PEntity->allegiance == ALLEGIANCE_TYPE::PLAYER && PEntity->status == STATUS_TYPE::UPDATE)

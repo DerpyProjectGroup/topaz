@@ -82,7 +82,7 @@ end
 
 local function MobTakeAoEShadow(mob, target, max)
     -- TODO: Use actual NIN skill, not this function
-    if target:getMainJob() == xi.job.NIN and math.random() < 0.6 then
+    if target:getMainJob() == xi.job.NIN and math.random(1, 100) <= 60 then
         max = max - 1
         if max < 1 then
             max = 1
@@ -241,13 +241,13 @@ xi.mobskills.mobPhysicalMove = function(mob, target, skill, numHits, accMod, dmg
 
     firstHitChance = utils.clamp(firstHitChance, 35, 95)
 
-    if (math.random() * 100) <= firstHitChance then
+    if (math.random(1, 100)) <= firstHitChance then
         -- use helper function check for parry guard and blocking and handle the hit
         hitslanded, finaldmg = handleSinglePhysicalHit(mob, target, hitdamage, hitslanded, finaldmg, tpEffect, minRatio, maxRatio)
     end
 
     while hitsdone < numHits do
-        if (math.random() * 100) <= hitrate then --it hit
+        if (math.random(1, 100)) <= hitrate then --it hit
             hitslanded, finaldmg = handleSinglePhysicalHit(mob, target, hitdamage, hitslanded, finaldmg, tpEffect, minRatio, maxRatio)
         end
 

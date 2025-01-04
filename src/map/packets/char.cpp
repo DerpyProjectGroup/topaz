@@ -91,7 +91,7 @@ void CCharPacket::updateWith(CCharEntity* PChar, ENTITYUPDATE type, uint8 update
         packet.z   = PChar->loc.p.y; // Intentionally Swapped
 
         packet.Speed     = PChar->UpdateSpeed();
-        packet.SpeedBase = PChar->speedsub;
+        packet.SpeedBase = PChar->animationSpeed;
 
         packet.Flags0.MovTime     = PChar->loc.p.moving;
         packet.Flags0.RunMode     = 0;                      // Unknown

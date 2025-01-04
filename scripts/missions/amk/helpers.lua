@@ -76,7 +76,7 @@ xi.amk.helpers.cardianOrbDrop = function(mob, player, orb)
 
         -- Chance ranges from 4% to 25.8% (based on max mob lvl of 44)
         local dropChance = (3 * mob:getMainLvl()) + (30 * utils.clamp(partySize, 1, 6)) - 10
-        local roll = math.random(1000)
+        local roll = math.random(1, 1000)
 
         if roll < dropChance then
             mob:setLocalVar('Mission[10][5]cardianOrbDrop', 1)

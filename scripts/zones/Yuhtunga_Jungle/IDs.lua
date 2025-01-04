@@ -64,6 +64,7 @@ zones[xi.zone.YUHTUNGA_JUNGLE] =
         NASUS_OFFSET         = GetFirstID('Nasus'),
         SIREN                = GetFirstID('Siren'),
         TURTLERIDER          = GetFirstID('Meww_the_Turtlerider'),
+        BAYAWAK              = GetFirstID('Bayawak'),
     },
     npc =
     {

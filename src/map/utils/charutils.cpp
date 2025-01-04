@@ -6860,7 +6860,7 @@ namespace charutils
     {
         TracyZoneScoped;
 
-        auto fmtQuery = "UPDATE char_unlocks SET traverser_start = unix_timestamp() WHERE charid = %u";
+        auto fmtQuery = "UPDATE char_unlocks SET traverser_start = CURRENT_TIMESTAMP() WHERE charid = %u";
 
         _sql->Query(fmtQuery, PChar->id);
     }

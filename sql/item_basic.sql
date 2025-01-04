@@ -2002,7 +2002,7 @@ INSERT INTO `item_basic` VALUES (2040,0,'melee_gloves_-1','mel._gloves_-1',1,615
 INSERT INTO `item_basic` VALUES (2041,0,'melee_hose_-1','mel._hose_-1',1,61508,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (2042,0,'melee_gaiters_-1','mel._gaiters_-1',1,61508,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (2043,0,'clerics_cap_-1','clr._cap_-1',1,61508,@NONE,1,0);
-INSERT INTO `item_basic` VALUES (2044,0,'clerics_briault_-1','clr._briault_-1',1,61508,@NONE,1,0);
+INSERT INTO `item_basic` VALUES (2044,0,'clerics_bliaut_-1','clr._bliaut_-1',1,61508,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (2045,0,'clerics_mitts_-1','clr._mitts_-1',1,61508,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (2046,0,'clerics_pantaloons_-1','clr._pantaln._-1',1,61508,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (2047,0,'clerics_duckbills_-1','clr._duckbills_-1',1,61508,@NONE,1,0);
@@ -8102,7 +8102,7 @@ INSERT INTO `item_basic` VALUES (10668,0,'etoile_tiara_+2','etoile_tiara_+2',1,6
 INSERT INTO `item_basic` VALUES (10669,0,'argute_mortarboard_+2','argute_m.board_+2',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (10670,0,'warriors_lorica_+2','war._lorica_+2',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (10671,0,'melee_cyclas_+2','mel._cyclas_+2',1,63552,@NONE,1,0);
-INSERT INTO `item_basic` VALUES (10672,0,'clerics_briault_+2','clr._briault_+2',1,63552,@NONE,1,0);
+INSERT INTO `item_basic` VALUES (10672,0,'clerics_bliaut_+2','clr._bliaut_+2',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (10673,0,'sorcerers_coat_+2','src._coat_+2',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (10674,0,'duelists_tabard_+2','dls._tabard_+2',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (10675,0,'assassins_vest_+2','asn._vest_+2',1,63552,@NONE,1,0);
@@ -10046,7 +10046,7 @@ INSERT INTO `item_basic` VALUES (12636,0,'mithran_separates','mithran_separates'
 INSERT INTO `item_basic` VALUES (12637,0,'galkan_surcoat','galkan_surcoat',1,30800,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (12638,0,'fighters_lorica','fighters_lorica',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (12639,0,'temple_cyclas','temple_cyclas',1,63552,@NONE,1,0);
-INSERT INTO `item_basic` VALUES (12640,0,'healers_briault','healers_briault',1,63552,@NONE,1,0);
+INSERT INTO `item_basic` VALUES (12640,0,'healers_bliaut','healers_bliaut',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (12641,0,'wizards_coat','wizards_coat',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (12642,0,'warlocks_tabard','warlocks_tabard',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (12643,0,'rogues_vest','rogues_vest',1,63552,@NONE,1,0);
@@ -11878,7 +11878,7 @@ INSERT INTO `item_basic` VALUES (14471,0,'tarutaru_top','tarutaru_top',1,63568,@
 INSERT INTO `item_basic` VALUES (14472,0,'tarutaru_top_+1','tarutaru_top_+1',1,63568,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (14473,0,'fighters_lorica_+1','ftr._lorica_+1',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (14474,0,'temple_cyclas_+1','tpl._cyclas_+1',1,63552,@NONE,1,0);
-INSERT INTO `item_basic` VALUES (14475,0,'healers_briault_+1','hlr._briault_+1',1,63552,@NONE,1,0);
+INSERT INTO `item_basic` VALUES (14475,0,'healers_bliaut_+1','hlr._bliaut_+1',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (14476,0,'wizards_coat_+1','wzd._coat_+1',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (14477,0,'warlocks_tabard_+1','wlk._tabard_+1',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (14478,0,'rogues_vest_+1','rog._vest_+1',1,63552,@NONE,1,0);
@@ -11905,7 +11905,7 @@ INSERT INTO `item_basic` VALUES (14498,0,'crow_jupon','crow_jupon',1,2084,@BODY,
 INSERT INTO `item_basic` VALUES (14499,0,'raven_jupon','raven_jupon',1,2080,@BODY,0,8261);
 INSERT INTO `item_basic` VALUES (14500,0,'warriors_lorica_+1','war._lorica_+1',1,63556,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (14501,0,'melee_cyclas_+1','mel._cyclas_+1',1,63556,@NONE,1,0);
-INSERT INTO `item_basic` VALUES (14502,0,'clerics_briault_+1','clr._briault_+1',1,63556,@NONE,1,0);
+INSERT INTO `item_basic` VALUES (14502,0,'clerics_bliaut_+1','clr._bliaut_+1',1,63556,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (14503,0,'sorcerers_coat_+1','src._coat_+1',1,63556,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (14504,0,'duelists_tabard_+1','dls._tabard_+1',1,63556,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (14505,0,'assassins_vest_+1','asn._vest_+1',1,63556,@NONE,1,0);
@@ -12492,7 +12492,7 @@ INSERT INTO `item_basic` VALUES (15085,0,'wyrm_armet','wyrm_armet',1,63556,@NONE
 INSERT INTO `item_basic` VALUES (15086,0,'summoners_horn','summoners_horn',1,63556,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (15087,0,'warriors_lorica','warriors_lorica',1,63556,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (15088,0,'melee_cyclas','melee_cyclas',1,63556,@NONE,1,0);
-INSERT INTO `item_basic` VALUES (15089,0,'clerics_briault','clerics_briault',1,63556,@NONE,1,0);
+INSERT INTO `item_basic` VALUES (15089,0,'clerics_bliaut','clerics_bliaut',1,63556,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (15090,0,'sorcerers_coat','sorcerers_coat',1,63556,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (15091,0,'duelists_tabard','duelists_tabard',1,63556,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (15092,0,'assassins_vest','assassins_vest',1,63556,@NONE,1,0);
@@ -18902,7 +18902,7 @@ INSERT INTO `item_basic` VALUES (23105,0,'azimuth_hood_+2','azimuth_hood_+2',1,6
 INSERT INTO `item_basic` VALUES (23106,0,'erilaz_galea_+2','erilaz_galea_+2',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (23107,0,'pummelers_lorica_+2','pumm._lorica_+2',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (23108,0,'anchorites_cyclas_+2','anch._cyclas_+2',1,63552,@NONE,1,0);
-INSERT INTO `item_basic` VALUES (23109,0,'theophany_briault_+2','theo._briault_+2',1,63552,@NONE,1,0);
+INSERT INTO `item_basic` VALUES (23109,0,'theophany_bliaut_+2','theo._bliaut_+2',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (23110,0,'spaekonas_coat_+2','spaekonas_coat_+2',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (23111,0,'atrophy_tabard_+2','atrophy_tabard_+2',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (23112,0,'pillagers_vest_+2','pillagers_vest_+2',1,63552,@NONE,1,0);
@@ -18925,7 +18925,7 @@ INSERT INTO `item_basic` VALUES (23128,0,'geomancy_tunic_+2','geomancy_tunic_+2'
 INSERT INTO `item_basic` VALUES (23129,0,'runeist_coat_+2','runeist_coat_+2',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (23130,0,'agoge_lorica_+2','agoge_lorica_+2',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (23131,0,'hesychasts_cyclas_+2','hes._cyclas_+2',1,63552,@NONE,1,0);
-INSERT INTO `item_basic` VALUES (23132,0,'piety_briault_+2','piety_briault_+2',1,63552,@NONE,1,0);
+INSERT INTO `item_basic` VALUES (23132,0,'piety_bliaut_+2','piety_bliaut_+2',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (23133,0,'archmages_coat_+2','arch._coat_+2',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (23134,0,'vitiation_tabard_+2','viti._tabard_+2',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (23135,0,'plunderers_vest_+2','plunderers_vest_+2',1,63552,@NONE,1,0);
@@ -19237,7 +19237,7 @@ INSERT INTO `item_basic` VALUES (23440,0,'azimuth_hood_+3','azimuth_hood_+3',1,6
 INSERT INTO `item_basic` VALUES (23441,0,'erilaz_galea_+3','erilaz_galea_+3',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (23442,0,'pummelers_lorica_+3','pumm._lorica_+3',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (23443,0,'anchorites_cyclas_+3','anch._cyclas_+3',1,63552,@NONE,1,0);
-INSERT INTO `item_basic` VALUES (23444,0,'theophany_briault_+3','theo._briault_+3',1,63552,@NONE,1,0);
+INSERT INTO `item_basic` VALUES (23444,0,'theophany_bliaut_+3','theo._bliaut_+3',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (23445,0,'spaekonas_coat_+3','spaekonas_coat_+3',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (23446,0,'atrophy_tabard_+3','atrophy_tabard_+3',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (23447,0,'pillagers_vest_+3','pillagers_vest_+3',1,63552,@NONE,1,0);
@@ -19260,7 +19260,7 @@ INSERT INTO `item_basic` VALUES (23463,0,'geomancy_tunic_+3','geomancy_tunic_+3'
 INSERT INTO `item_basic` VALUES (23464,0,'runeist_coat_+3','runeist_coat_+3',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (23465,0,'agoge_lorica_+3','agoge_lorica_+3',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (23466,0,'hesychasts_cyclas_+3','hes._cyclas_+3',1,63552,@NONE,1,0);
-INSERT INTO `item_basic` VALUES (23467,0,'piety_briault_+3','piety_briault_+3',1,63552,@NONE,1,0);
+INSERT INTO `item_basic` VALUES (23467,0,'piety_bliaut_+3','piety_bliaut_+3',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (23468,0,'archmages_coat_+3','arch._coat_+3',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (23469,0,'vitiation_tabard_+3','viti._tabard_+3',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (23470,0,'plunderers_vest_+3','plunderers_vest_+3',1,63552,@NONE,1,0);
@@ -20700,8 +20700,8 @@ INSERT INTO `item_basic` VALUES (26800,0,'agoge_lorica','agoge_lorica',1,63552,@
 INSERT INTO `item_basic` VALUES (26801,0,'agoge_lorica_+1','agoge_lorica_+1',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (26802,0,'hesychasts_cyclas','hes._cyclas',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (26803,0,'hesychasts_cyclas_+1','hes._cyclas_+1',1,63552,@NONE,1,0);
-INSERT INTO `item_basic` VALUES (26804,0,'piety_briault','piety_briault',1,63552,@NONE,1,0);
-INSERT INTO `item_basic` VALUES (26805,0,'piety_briault_+1','piety_briault_+1',1,63552,@NONE,1,0);
+INSERT INTO `item_basic` VALUES (26804,0,'piety_bliaut','piety_bliaut',1,63552,@NONE,1,0);
+INSERT INTO `item_basic` VALUES (26805,0,'piety_bliaut_+1','piety_bliaut_+1',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (26806,0,'archmages_coat','arch._coat',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (26807,0,'archmages_coat_+1','arch._coat_+1',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (26808,0,'vitiation_tabard','vitiation_tabard',1,63552,@NONE,1,0);
@@ -21688,7 +21688,7 @@ INSERT INTO `item_basic` VALUES (27805,0,'rustic_maillot_+1','rustic_maillot_+1'
 INSERT INTO `item_basic` VALUES (27806,0,'shoal_maillot_+1','shoal_maillot_+1',1,64600,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (27807,0,'pummelers_lorica','pummelers_lorica',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (27808,0,'anchorites_cyclas','anchorites_cyclas',1,63552,@NONE,1,0);
-INSERT INTO `item_basic` VALUES (27809,0,'theophany_briault','theo._briault',1,63552,@NONE,1,0);
+INSERT INTO `item_basic` VALUES (27809,0,'theophany_bliaut','theo._bliaut',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (27810,0,'spaekonas_coat','spaekonas_coat',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (27811,0,'atrophy_tabard','atrophy_tabard',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (27812,0,'pillagers_vest','pillagers_vest',1,63552,@NONE,1,0);
@@ -21709,7 +21709,7 @@ INSERT INTO `item_basic` VALUES (27826,0,'maxixi_casaque','maxixi_casaque',1,635
 INSERT INTO `item_basic` VALUES (27827,0,'academics_gown','academics_gown',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (27828,0,'pummelers_lorica_+1','pumm._lorica_+1',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (27829,0,'anchorites_cyclas_+1','anch._cyclas_+1',1,63552,@NONE,1,0);
-INSERT INTO `item_basic` VALUES (27830,0,'theophany_briault_+1','theo._briault_+1',1,63552,@NONE,1,0);
+INSERT INTO `item_basic` VALUES (27830,0,'theophany_bliaut_+1','theo._bliaut_+1',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (27831,0,'spaekonas_coat_+1','spae._coat_+1',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (27832,0,'atrophy_tabard_+1','atrophy_tabard_+1',1,63552,@NONE,1,0);
 INSERT INTO `item_basic` VALUES (27833,0,'pillagers_vest_+1','pillagers_vest_+1',1,63552,@NONE,1,0);

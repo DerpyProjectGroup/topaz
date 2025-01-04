@@ -2555,7 +2555,7 @@ INSERT INTO `item_mods` VALUES (10671,11,8);  -- AGI: 8
 INSERT INTO `item_mods` VALUES (10671,291,2); -- COUNTER: 2
 INSERT INTO `item_mods` VALUES (10671,370,2); -- REGEN: 2
 
--- Clerics Briault +2
+-- Clerics Bliaut +2
 INSERT INTO `item_mods` VALUES (10672,1,55);   -- DEF: 55
 INSERT INTO `item_mods` VALUES (10672,5,41);   -- MP: 41
 INSERT INTO `item_mods` VALUES (10672,27,-5);  -- ENMITY: -5
@@ -13337,7 +13337,7 @@ INSERT INTO `item_mods` VALUES (12639,25,5);    -- ACC: 5
 INSERT INTO `item_mods` VALUES (12639,1026,50); -- CHAKRA_MULT: 50 -- M = 0.5
 INSERT INTO `item_mods` VALUES (12639,1027,1);  -- CHAKRA_REMOVAL: 1
 
--- Healers Briault
+-- Healers Bliaut
 INSERT INTO `item_mods` VALUES (12640,1,40);   -- DEF: 40
 INSERT INTO `item_mods` VALUES (12640,5,15);   -- MP: 15
 INSERT INTO `item_mods` VALUES (12640,17,10);  -- WIND_RES: 10
@@ -22254,7 +22254,7 @@ INSERT INTO `item_mods` VALUES (14474,25,5);    -- ACC: 5
 INSERT INTO `item_mods` VALUES (14474,1026,50); -- CHAKRA_MULT: 50 -- M = 0.5
 INSERT INTO `item_mods` VALUES (14474,1027,1);  -- CHAKRA_REMOVAL: 1
 
--- Healers Briault +1
+-- Healers Bliaut +1
 INSERT INTO `item_mods` VALUES (14475,1,40);   -- DEF: 40
 INSERT INTO `item_mods` VALUES (14475,5,35);   -- MP: 35
 INSERT INTO `item_mods` VALUES (14475,27,-4);  -- ENMITY: -4
@@ -22431,7 +22431,7 @@ INSERT INTO `item_mods` VALUES (14501,10,6);  -- VIT: 6
 INSERT INTO `item_mods` VALUES (14501,72,6);  -- HPHEAL: 6
 INSERT INTO `item_mods` VALUES (14501,370,1); -- REGEN: 1
 
--- Clerics Briault +1
+-- Clerics Bliaut +1
 INSERT INTO `item_mods` VALUES (14502,1,43);   -- DEF: 43
 INSERT INTO `item_mods` VALUES (14502,5,29);   -- MP: 29
 INSERT INTO `item_mods` VALUES (14502,27,-3);  -- ENMITY: -3
@@ -25500,7 +25500,7 @@ INSERT INTO `item_mods` VALUES (15088,10,5);  -- VIT: 5
 INSERT INTO `item_mods` VALUES (15088,72,6);  -- HPHEAL: 6
 INSERT INTO `item_mods` VALUES (15088,370,1); -- REGEN: 1
 
--- Clerics Briault
+-- Clerics Bliaut
 INSERT INTO `item_mods` VALUES (15089,1,42);   -- DEF: 42
 INSERT INTO `item_mods` VALUES (15089,5,24);   -- MP: 24
 INSERT INTO `item_mods` VALUES (15089,27,-2);  -- ENMITY: -2
@@ -48235,7 +48235,7 @@ INSERT INTO `item_mods` VALUES (23108,421,4);   -- CRIT_DMG_INCREASE: 4
 INSERT INTO `item_mods` VALUES (23108,1026,64); -- CHAKRA_MULT: 64 -- M = 0.64
 INSERT INTO `item_mods` VALUES (23108,1027,1);  -- CHAKRA_REMOVAL: 1
 
--- Theophany Briault +2
+-- Theophany Bliaut +2
 INSERT INTO `item_mods` VALUES (23109,1,135);   -- DEF: 135
 INSERT INTO `item_mods` VALUES (23109,2,81);    -- HP: 81
 INSERT INTO `item_mods` VALUES (23109,5,88);    -- MP: 88
@@ -54304,7 +54304,7 @@ INSERT INTO `item_mods` VALUES (23443,421,8);   -- CRIT_DMG_INCREASE: 8
 INSERT INTO `item_mods` VALUES (23443,1026,66); -- CHAKRA_MULT: 66 -- M = 0.66
 INSERT INTO `item_mods` VALUES (23443,1027,1);  -- CHAKRA_REMOVAL: 1
 
--- Theophany Briault +3
+-- Theophany Bliaut +3
 INSERT INTO `item_mods` VALUES (23444,1,145);   -- DEF: 145
 INSERT INTO `item_mods` VALUES (23444,2,91);    -- HP: 91
 INSERT INTO `item_mods` VALUES (23444,5,98);    -- MP: 98
@@ -64148,7 +64148,7 @@ INSERT INTO `item_mods` VALUES (26803,291,3);   -- COUNTER: 3
 INSERT INTO `item_mods` VALUES (26803,370,3);   -- REGEN: 3
 INSERT INTO `item_mods` VALUES (26803,384,400); -- HASTE_GEAR: 400
 
--- Piety Briault
+-- Piety Bliaut
 INSERT INTO `item_mods` VALUES (26804,1,88);    -- DEF: 88
 INSERT INTO `item_mods` VALUES (26804,2,25);    -- HP: 25
 INSERT INTO `item_mods` VALUES (26804,5,70);    -- MP: 70
@@ -64167,7 +64167,7 @@ INSERT INTO `item_mods` VALUES (26804,369,2);   -- REFRESH: 2
 INSERT INTO `item_mods` VALUES (26804,384,200); -- HASTE_GEAR: 200
 INSERT INTO `item_mods` VALUES (26804,838,28);  -- REGEN_MULTIPLIER: 28
 
--- Piety Briault +1
+-- Piety Bliaut +1
 INSERT INTO `item_mods` VALUES (26805,1,124);   -- DEF: 124
 INSERT INTO `item_mods` VALUES (26805,2,54);    -- HP: 54
 INSERT INTO `item_mods` VALUES (26805,5,85);    -- MP: 85
@@ -75223,7 +75223,7 @@ INSERT INTO `item_mods` VALUES (27808,384,400); -- HASTE_GEAR: 400
 INSERT INTO `item_mods` VALUES (27808,1026,60); -- CHAKRA_MULT: 60 -- M = 0.6
 INSERT INTO `item_mods` VALUES (27808,1027,1);  -- CHAKRA_REMOVAL: 1
 
--- Theophany Briault
+-- Theophany Bliaut
 INSERT INTO `item_mods` VALUES (27809,1,89);    -- DEF: 89
 INSERT INTO `item_mods` VALUES (27809,2,25);    -- HP: 25
 INSERT INTO `item_mods` VALUES (27809,5,49);    -- MP: 49
@@ -75622,7 +75622,7 @@ INSERT INTO `item_mods` VALUES (27829,384,400); -- HASTE_GEAR: 400
 INSERT INTO `item_mods` VALUES (27829,1026,62); -- CHAKRA_MULT: 62 -- M = 0.62
 INSERT INTO `item_mods` VALUES (27829,1027,1);  -- CHAKRA_REMOVAL: 1
 
--- Theophany Briault +1
+-- Theophany Bliaut +1
 INSERT INTO `item_mods` VALUES (27830,1,125);   -- DEF: 125
 INSERT INTO `item_mods` VALUES (27830,2,54);    -- HP: 54
 INSERT INTO `item_mods` VALUES (27830,5,59);    -- MP: 59

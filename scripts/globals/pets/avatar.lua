@@ -419,7 +419,7 @@ xi.pets.avatar.getLightSpiritSpell = function(pet)
             for hpColor = 1, 3 do
                 if
                     tempHPP < 25 * hpColor and
-                    math.random(100) < 50
+                    math.random(1, 100) <= 50
                 then
                     hpp = tempHPP
                     cureTarget = member

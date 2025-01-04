@@ -100,7 +100,7 @@ local itemList =
     {
         xi.item.WARRIORS_CUISSES,
         xi.item.MELEE_CYCLAS,
-        xi.item.CLERICS_BRIAULT,
+        xi.item.CLERICS_BLIAUT,
         xi.item.SORCERERS_COAT,
         xi.item.DUELISTS_TABARD,
         xi.item.ASSASSINS_CULOTTES,

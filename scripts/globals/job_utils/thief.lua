@@ -344,7 +344,7 @@ xi.job_utils.thief.useMug = function(player, target, ability, action)
 
     if
         target:isMob() and
-        math.random(100) < mugChance and
+        math.random(1, 100) <= mugChance and
         target:getMobMod(xi.mobMod.MUG_GIL) > 0
     then
         local purse    = target:getMobMod(xi.mobMod.MUG_GIL)
@@ -401,7 +401,7 @@ xi.job_utils.thief.useSteal = function(player, target, ability, action)
         stolen = target:getStealItem()
     end
 
-    if target:isMob() and math.random(100) < stealChance and stolen ~= 0 then
+    if target:isMob() and math.random(1, 100) <= stealChance and stolen ~= 0 then
         player:addItem(stolen)
         target:itemStolen()
         ability:setMsg(xi.msg.basic.STEAL_SUCCESS) -- Item stolen successfully
@@ -420,7 +420,7 @@ xi.job_utils.thief.useSteal = function(player, target, ability, action)
         -- local effectStealSuccess = false
         if resist > 0.0625 then
             local auraStealChance = math.min(player:getMerit(xi.merit.AURA_STEAL), 95)
-            if math.random(100) < auraStealChance then
+            if math.random(1, 100) <= auraStealChance then
                 local targetShadows = target:getMod(xi.mod.UTSUSEMI)
 
                 stolen = player:stealStatusEffect(target)
@@ -444,8 +444,8 @@ xi.job_utils.thief.useSteal = function(player, target, ability, action)
             stolen per merit.
 
             if (effect ~= xi.effect.NONE or stolen ~= 0) and player:getMod(xi.mod.AUGMENTS_AURA_STEAL) > 0 then
-                if math.random(100) < auraStealChance then
-                    if stolenEffect2 ~= nil and math.random(100) < auraStealChance then
+                if math.random(1, 100) <= auraStealChance then
+                    if stolenEffect2 ~= nil and math.random(1, 100) <= auraStealChance then
                         player:stealStatusEffect(target)
                     else
                         target:dispelStatusEffect()

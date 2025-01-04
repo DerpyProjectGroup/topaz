@@ -57,7 +57,7 @@ entity.onMobEngage = function(mob, target)
     mob:setMobMod(xi.mobMod.NO_MOVE, 0)
     mob:setLocalVar('changeTime', 0)
     local firstCast = { 144, 149, 154, 164, 169 }
-    mob:castSpell(firstCast[math.random(#firstCast)])
+    mob:castSpell(firstCast[math.random(1, #firstCast)])
 end
 
 entity.onMobFight = function(mob, target)

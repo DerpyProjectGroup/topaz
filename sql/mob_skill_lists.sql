@@ -1081,7 +1081,8 @@ INSERT INTO `mob_skill_lists` VALUES ('ArmoredTroll',247,1896);
 INSERT INTO `mob_skill_lists` VALUES ('ArmoredTroll',247,1897);
 INSERT INTO `mob_skill_lists` VALUES ('ArmoredTroll',247,1898);
 INSERT INTO `mob_skill_lists` VALUES ('ArmoredTroll',247,1899);
--- 248 to 249: free
+INSERT INTO `mob_skill_lists` VALUES ('Pyuu_the_Spatemaker',248,770); -- Jumping Thrust
+INSERT INTO `mob_skill_lists` VALUES ('Bayawak',249,367); -- Fireball
 INSERT INTO `mob_skill_lists` VALUES ('Uragnite_shell',250,1571); -- gas_shell
 INSERT INTO `mob_skill_lists` VALUES ('Uragnite_shell',250,1572); -- venom_shell
 INSERT INTO `mob_skill_lists` VALUES ('Uragnite',251,1573); -- palsynyxis

@@ -134,8 +134,9 @@ CInstance* CInstanceLoader::LoadInstance()
             PMob->m_EcoSystem   = (ECOSYSTEM)_sql->GetIntData(23);
             PMob->m_ModelRadius = (float)_sql->GetIntData(24);
 
-            PMob->speed    = (uint8)_sql->GetIntData(25);
-            PMob->speedsub = (uint8)_sql->GetIntData(25);
+            PMob->baseSpeed      = (uint8)_sql->GetIntData(25);
+            PMob->speed          = (uint8)_sql->GetIntData(25);
+            PMob->animationSpeed = (uint8)_sql->GetIntData(25);
 
             PMob->strRank = (uint8)_sql->GetIntData(26);
             PMob->dexRank = (uint8)_sql->GetIntData(27);
@@ -258,10 +259,11 @@ CInstance* CInstanceLoader::LoadInstance()
 
                 PNpc->m_TargID = _sql->GetUIntData(6) >> 16; // "quite likely"
 
-                PNpc->speed        = (uint8)_sql->GetIntData(7);
-                PNpc->speedsub     = (uint8)_sql->GetIntData(8);
-                PNpc->animation    = (uint8)_sql->GetIntData(9);
-                PNpc->animationsub = (uint8)_sql->GetIntData(10);
+                PNpc->baseSpeed      = (uint8)_sql->GetIntData(8);
+                PNpc->speed          = (uint8)_sql->GetIntData(7);
+                PNpc->animationSpeed = (uint8)_sql->GetIntData(8);
+                PNpc->animation      = (uint8)_sql->GetIntData(9);
+                PNpc->animationsub   = (uint8)_sql->GetIntData(10);
 
                 PNpc->namevis = (uint8)_sql->GetIntData(11);
                 PNpc->status  = static_cast<STATUS_TYPE>(_sql->GetIntData(12));

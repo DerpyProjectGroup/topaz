@@ -299,16 +299,14 @@ int32 CBattleEntity::GetMaxMP() const
 
 uint8 CBattleEntity::UpdateSpeed(bool run)
 {
-    uint8 baseSpeed   = speedsub;
     int16 outputSpeed = 0;
 
     // Mount speed. Independent from regular speed and unaffected by most things.
-    // Note: retail treats mounted speed as double what it actually is! 40 is in fact retail accurate!
     if (isMounted())
     {
-        baseSpeed   = 40 + settings::get<int8>("map.MOUNT_SPEED_MOD");
-        outputSpeed = baseSpeed * (100 + getMod(Mod::MOUNT_MOVE)) / 100;
-        speed       = std::clamp<uint8>(outputSpeed, std::numeric_limits<uint8>::min(), std::numeric_limits<uint8>::max());
+        outputSpeed = settings::get<uint8>("map.MOUNT_SPEED") / 2;
+        outputSpeed *= (100 + getMod(Mod::MOUNT_MOVE)) / 100;
+        speed = std::clamp<uint8>(outputSpeed, std::numeric_limits<uint8>::min(), std::numeric_limits<uint8>::max());
 
         return speed;
     }
@@ -355,7 +353,7 @@ uint8 CBattleEntity::UpdateSpeed(bool run)
     // Set cap if a PC (Default 80).
     if (objtype == TYPE_PC)
     {
-        outputSpeed = std::clamp<int16>(outputSpeed, 0, 80);
+        outputSpeed = std::clamp<int16>(outputSpeed, 0, settings::get<uint8>("map.SPEED_LIMIT"));
     }
 
     // Speed cap can be bypassed. Ex. Feast of swords. GM speed.

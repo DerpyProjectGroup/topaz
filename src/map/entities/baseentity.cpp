@@ -39,7 +39,7 @@ CBaseEntity::CBaseEntity()
 , m_TargID(0)
 , animation(0)
 , animationsub(0)
-, speedsub(50 + settings::get<int8>("map.SPEED_MOD"))
+, baseSpeed(settings::get<uint8>("map.BASE_SPEED"))
 , namevis(0)
 , allegiance(ALLEGIANCE_TYPE::MOB)
 , updatemask(0)
@@ -53,7 +53,8 @@ CBaseEntity::CBaseEntity()
 , m_nextUpdateTimer(std::chrono::steady_clock::now())
 {
     TracyZoneScoped;
-    speed = speedsub;
+    speed          = baseSpeed;
+    animationSpeed = static_cast<uint8>(std::clamp<float>((baseSpeed / settings::get<float>("map.ANIMATION_SPEED_DIVISOR")), std::numeric_limits<uint8>::min(), std::numeric_limits<uint8>::max()));
 }
 
 CBaseEntity::~CBaseEntity()

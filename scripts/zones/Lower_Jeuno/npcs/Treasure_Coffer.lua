@@ -1715,7 +1715,7 @@ local function givePrize(player, ki)
             p = p.prizes
             -- determine prize
             local prize = nil
-            local roll = math.random(p[#p].cutoff)
+            local roll = math.random(1, p[#p].cutoff)
             for i = 1, #p do
                 if roll <= p[i].cutoff then
                     prize = p[i]

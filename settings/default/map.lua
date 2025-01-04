@@ -105,12 +105,18 @@ xi.settings.map =
     -- Enable/disable jobs other than BST and RNG having widescan
     ALL_JOBS_WIDESCAN = true,
 
-    -- Modifier to apply to player speed. 0 is the retail accurate default. Negative numbers will reduce it.
-    SPEED_MOD = 0,
+    -- Base player movement speed
+    BASE_SPEED = 50,
 
-    -- Modifier to apply to mount speed. 0 is the retail accurate default. Negative numbers will reduce it.
-    -- Note retail treats the mounted speed as double what it actually is.
-    MOUNT_SPEED_MOD = 0,
+    -- Player movement speed limit
+    SPEED_LIMIT = 80,
+
+    -- Mount speed, expressed as player speed. Can surpass speed limit.
+    MOUNT_SPEED = 80,
+
+    -- Player animation speed divisor
+    -- Raising this increases the players movement animation speed
+    ANIMATION_SPEED_DIVISOR = 1.0,
 
     -- Multiplier for speed of engaged mobs when their target is out of range.
     -- The default for almost all mobs on retail is 2.5x their normal speed.

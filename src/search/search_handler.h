@@ -24,6 +24,7 @@
 #include <asio/ts/buffer.hpp>
 #include <asio/ts/internet.hpp>
 #include <common/logging.h>
+#include <map>
 #include <unordered_set>
 
 #include "common/blowfish.h"
@@ -46,7 +47,7 @@ class search_handler
 : public std::enable_shared_from_this<search_handler>
 {
 public:
-    search_handler(asio::ip::tcp::socket socket, asio::io_context& io_context, shared_guarded<std::unordered_set<std::string>>& in_IPAddressInUseList, shared_guarded<std::unordered_set<std::string>>& in_IPAddressWhitelist);
+    search_handler(asio::ip::tcp::socket socket, asio::io_context& io_context, shared_guarded<std::map<std::string, uint16_t>>& IPAddressesInUseList, shared_guarded<std::unordered_set<std::string>>& IPAddressWhitelist);
 
     ~search_handler();
 
@@ -56,7 +57,7 @@ public:
 
     void handle_error(std::error_code ec, std::shared_ptr<search_handler> self);
 
-    void do_write(uint16_t length);
+    void do_write();
 
     void read_func(uint16_t length);
 
@@ -82,17 +83,19 @@ private:
     // A single IP should only have one request in flight at a time, so we are going to
     // be tracking the IP addresses of incoming requests and if we haven't cleared the
     // record for it - we block until it's done
-    shared_guarded<std::unordered_set<std::string>>& IPAddressesInUse_;
+    shared_guarded<std::map<std::string, uint16_t>>& IPAddressesInUse_;
 
     // NOTE: We're only using the read-lock for this
     shared_guarded<std::unordered_set<std::string>>& IPAddressWhitelist_;
 
-    // Used to block this thread when IP address is being served if it's not whitelisted
-    asio::steady_timer timer;
+    // Deadline timer to drop a read
+    asio::steady_timer deadline_;
 
-    bool isIPAddressInUse(std::string const& ipAddrressStr);
-    void addToUsedIPAddresses(std::string const& ipAddressStr);
-    void removeFromUsedIPAddresses(std::string const& ipAddressStr);
+    void checkDeadline();
+
+    uint16_t getNumSessionsInUse(std::string const& ipAddressStr);
+    void     addToUsedIPAddresses(std::string const& ipAddressStr);
+    void     removeFromUsedIPAddresses(std::string const& ipAddressStr);
 
     bool validatePacket(uint16_t length);
     void decrypt(uint16_t length);
@@ -107,4 +110,6 @@ private:
     auto _HandleSearchRequest() -> search_req;
 
     blowfish_t blowfish;
+
+    std::deque<searchPacket> searchPackets;
 };

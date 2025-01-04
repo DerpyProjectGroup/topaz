@@ -8778,9 +8778,9 @@ INSERT INTO `mob_groups` VALUES (24,2647,123,'Meww_the_Turtlerider',0,128,1666,4
 INSERT INTO `mob_groups` VALUES (25,6845,123,'Pyuu_the_Spatemaker',0,128,3296,8700,10000,73,73,0);
 INSERT INTO `mob_groups` VALUES (26,2491,123,'Makara',330,0,1229,0,0,35,38,0);
 INSERT INTO `mob_groups` VALUES (27,3393,123,'Rose_Garden',0,128,2123,5000,0,50,50,0);
-INSERT INTO `mob_groups` VALUES (28,4252,123,'Voluptuous_Vilma',0,128,2589,6000,0,52,53,0);
+INSERT INTO `mob_groups` VALUES (28,4252,123,'Voluptuous_Vilma',0,128,2589,5200,0,52,53,0);
 INSERT INTO `mob_groups` VALUES (29,2168,123,'Jungle_Coeurl',330,0,1420,0,0,35,38,0);
-INSERT INTO `mob_groups` VALUES (30,6846,123,'Bayawak',0,128,0,0,0,0,0,0);
+INSERT INTO `mob_groups` VALUES (30,6846,123,'Bayawak',0,128,1349,0,0,67,70,0);
 INSERT INTO `mob_groups` VALUES (31,1705,123,'Goblin_Reaper',330,0,1142,0,0,42,47,0);
 INSERT INTO `mob_groups` VALUES (32,6659,123,'Goblin_Digger',330,0,1040,0,0,35,38,0);
 INSERT INTO `mob_groups` VALUES (33,1983,123,'Hobgoblin_Warrior',0,128,0,0,0,40,45,0);
@@ -10653,7 +10653,7 @@ INSERT INTO `mob_groups` VALUES (9,6296,155,'Orcish_Cupholder',960,0,283,0,0,81,
 INSERT INTO `mob_groups` VALUES (10,6287,155,'Orcish_Farkiller',960,0,283,0,0,81,82,0);
 INSERT INTO `mob_groups` VALUES (11,6297,155,'Orcish_Imperial_Guard',960,0,1884,0,5000,81,82,0);
 INSERT INTO `mob_groups` VALUES (12,5227,155,'Doyen_Quadav',960,0,695,0,9999,80,82,0);
-INSERT INTO `mob_groups` VALUES (13,5229,155,'Meteor_Quadav',960,0,1666,0,9999,81,82,0);
+INSERT INTO `mob_groups` VALUES (13,5229,155,'Meteor_Quadav',960,0,1665,0,9999,81,82,0);
 INSERT INTO `mob_groups` VALUES (14,6249,155,'Steel_Quadav',960,0,1378,0,9999,81,82,0);
 INSERT INTO `mob_groups` VALUES (15,6257,155,'Baetyl_Quadav',960,0,0,0,0,81,82,0);
 INSERT INTO `mob_groups` VALUES (16,6235,155,'Platinum_Quadav',960,0,669,0,0,80,82,0);

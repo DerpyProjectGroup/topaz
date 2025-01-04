@@ -352,8 +352,9 @@ namespace petutils
                 break;
         }
 
-        PMob->speed    = petStats->speed;
-        PMob->speedsub = petStats->speed;
+        PMob->baseSpeed      = petStats->speed;
+        PMob->speed          = petStats->speed;
+        PMob->animationSpeed = petStats->speed;
 
         PMob->UpdateHealth();
         PMob->health.tp = 0;

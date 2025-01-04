@@ -969,7 +969,7 @@ xi.combat.physical.isBlocked = function(defender, attacker)
     local blocked = false
     if
         xi.combat.physical.canBlock(defender, attacker) and
-        xi.combat.physical.calculateBlockRate(defender, attacker) > math.random(100)
+        xi.combat.physical.calculateBlockRate(defender, attacker) > math.random(1, 100)
     then
         defender:trySkillUp(xi.skill.SHIELD, attacker:getMainLvl())
         blocked = true
@@ -982,7 +982,7 @@ xi.combat.physical.isParried = function(defender, attacker)
     local parried = false
     if
         xi.combat.physical.canParry(defender, attacker) and
-        xi.combat.physical.calculateParryRate(defender, attacker) > math.random(100)
+        xi.combat.physical.calculateParryRate(defender, attacker) > math.random(1, 100)
     then
         parried = true
         if defender:isPC() then
@@ -1002,7 +1002,7 @@ xi.combat.physical.isGuarded = function(defender, attacker)
     local guarded = false
     if
         xi.combat.physical.canGuard(defender, attacker) and
-        xi.combat.physical.calculateGuardRate(defender, attacker) > math.random(100)
+        xi.combat.physical.calculateGuardRate(defender, attacker) > math.random(1, 100)
     then
         guarded = true
         if defender:isPC() then

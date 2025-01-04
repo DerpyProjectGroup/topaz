@@ -79,6 +79,18 @@ local ids =
     ESCHA_RUAUN           = 66,
     MISAREAUX_CONFLUENCE  = 67,
     TIDAL_TALISMAN        = 69,
+    REPUBLIC_EARRING      = 70,
+    FEDERATION_EARRING    = 71,
+    KINGDOM_EARRING       = 72,
+    MHAURA_EARRING        = 73,
+    SELBINA_EARRING       = 74,
+    KAZHAM_EARRING        = 75,
+    RABAO_EARRING         = 76,
+    DUCHY_EARRING         = 77,
+    EMPIRE_EARRING        = 78,
+    SAFEHOLD_EARRING      = 79,
+    NORG_EARRING          = 80,
+    NASHMAU_EARRING       = 81,
 }
 xi.teleport.id = ids
 
@@ -148,7 +160,19 @@ xi.teleport.destination =
     [ids.ESCHA_ZITAH]           = {     -338,        6,     -225, 172, 288 },
     [ids.QUFIM_CONFLUENCE]      = {     -203,      -20,       81,  76, 126 },
     [ids.ESCHA_RUAUN]           = {   -0.371,  -34.279, -466.980, 192, 289 },
-    [ids.MISAREAUX_CONFLUENCE]  = {  -57.385,  -21.460,  568.941, 160,  25 }
+    [ids.MISAREAUX_CONFLUENCE]  = {  -57.385,  -21.460,  568.941, 160,  25 },
+    [ids.REPUBLIC_EARRING]      = { -283.069,  -10.000, -114.626, 193, 235 }, -- Bastok Markets
+    [ids.FEDERATION_EARRING]    = {  -31.574,   -5.000,  128.133, 128, 238 }, -- Windurst Waters
+    [ids.KINGDOM_EARRING]       = {  -83.203,    1.000,  -63.128, 193, 230 }, -- Southern San d'Oria
+    [ids.MHAURA_EARRING]        = {  -12.668,  -15.804,   82.383, 183, 249 }, -- Mhaura
+    [ids.SELBINA_EARRING]       = {   36.000,  -10.579,   32.000,  59, 248 }, -- Selbina
+    [ids.KAZHAM_EARRING]        = {   73.932,  -13.000,  -95.506, 254, 250 }, -- Kazham
+    [ids.RABAO_EARRING]         = {  -21.341,    0.000,  -77.773, 187, 247 }, -- Rabao
+    [ids.DUCHY_EARRING]         = {  -95.200,    0.000,  156.054, 244, 244 }, -- Upper Jeuno
+    [ids.EMPIRE_EARRING]        = {  -13.905,    0.000,  -20.873, 193,  50 }, -- Aht Urhgan Whitegate
+    [ids.SAFEHOLD_EARRING]      = {   -7.737,  -28.012,  111.883, 128,  26 }, -- Tavnazian Safehold
+    [ids.NORG_EARRING]          = {  -24.375,    0.389,  -48.209, 207, 252 }, -- Norg
+    [ids.NASHMAU_EARRING]       = {   -7.710,    0.000,  -43.301, 193,  53 }, -- Nashmau
 }
 
 xi.teleport.type =
