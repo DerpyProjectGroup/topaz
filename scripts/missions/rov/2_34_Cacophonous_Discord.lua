@@ -4,12 +4,6 @@
 -----------------------------------
 -- !addmission 13 122
 -----------------------------------
-require('scripts/globals/keyitems')
-require('scripts/globals/missions')
-require('scripts/globals/rhapsodies')
-require('scripts/globals/zone')
-require('scripts/globals/interaction/mission')
------------------------------------
 
 local mission = Mission:new(xi.mission.log_id.ROV, xi.mission.id.rov.CACOPHONOUS_DISCORD)
 

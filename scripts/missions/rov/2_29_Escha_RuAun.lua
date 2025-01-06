@@ -5,10 +5,6 @@
 -- !addmission 13 110
 -- Undulating Confluence : !pos -48.977 -23.309 572.489 25
 -----------------------------------
-require('scripts/globals/missions')
-require('scripts/globals/zone')
-require('scripts/globals/interaction/mission')
------------------------------------
 
 local mission = Mission:new(xi.mission.log_id.ROV, xi.mission.id.rov.ESCHA_RUAUN)
 

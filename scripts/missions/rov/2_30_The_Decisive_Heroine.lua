@@ -5,13 +5,6 @@
 -- !addmission 13 114
 -- qm_rov2_30 : !pos -46.955 -40 -419.356 289
 -----------------------------------
-require('scripts/globals/keyitems')
-require('scripts/globals/missions')
-require('scripts/globals/npc_util')
-require('scripts/globals/utils')
-require('scripts/globals/zone')
-require('scripts/globals/interaction/mission')
------------------------------------
 
 local mission = Mission:new(xi.mission.log_id.ROV, xi.mission.id.rov.THE_DECISIVE_HEROINE)
 

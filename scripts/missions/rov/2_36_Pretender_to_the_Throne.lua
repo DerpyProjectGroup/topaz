@@ -5,13 +5,6 @@
 -- !addmission 13 126
 -- qm_rov2_35 : !pos -1.302 -54.038 -603.471 289
 -----------------------------------
-require('scripts/globals/keyitems')
-require('scripts/globals/missions')
-require('scripts/globals/rhapsodies')
-require('scripts/globals/utils')
-require('scripts/globals/zone')
-require('scripts/globals/interaction/mission')
------------------------------------
 local eschaRuAunID = require('scripts/zones/Escha_RuAun/IDs')
 -----------------------------------
 

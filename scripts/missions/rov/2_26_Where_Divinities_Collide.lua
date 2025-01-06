@@ -4,10 +4,6 @@
 -----------------------------------
 -- !addmission 13 104
 -----------------------------------
-require('scripts/globals/missions')
-require('scripts/globals/zone')
-require('scripts/globals/interaction/mission')
------------------------------------
 
 local mission = Mission:new(xi.mission.log_id.ROV, xi.mission.id.rov.WHERE_DIVINITIES_COLLIDE)
 

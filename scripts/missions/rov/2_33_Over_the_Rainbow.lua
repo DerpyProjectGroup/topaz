@@ -5,12 +5,6 @@
 -- !addmission 13 120
 -- Shantotto : !pos 122 -2 112 239
 -----------------------------------
-require('scripts/globals/keyitems')
-require('scripts/globals/missions')
-require('scripts/globals/rhapsodies')
-require('scripts/globals/zone')
-require('scripts/globals/interaction/mission')
------------------------------------
 
 local mission = Mission:new(xi.mission.log_id.ROV, xi.mission.id.rov.OVER_THE_RAINBOW)
 

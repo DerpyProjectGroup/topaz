@@ -5,11 +5,6 @@
 -- !addmission 13 124
 -- qm_rov2_35 : !pos -1.302 -54.038 -603.471 289
 -----------------------------------
-require('scripts/globals/missions')
-require('scripts/globals/rhapsodies')
-require('scripts/globals/zone')
-require('scripts/globals/interaction/mission')
------------------------------------
 
 local mission = Mission:new(xi.mission.log_id.ROV, xi.mission.id.rov.EDDIES_OF_DESPAIR_II)
 

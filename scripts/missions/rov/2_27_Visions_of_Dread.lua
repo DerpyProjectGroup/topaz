@@ -4,10 +4,6 @@
 -----------------------------------
 -- !addmission 13 106
 -----------------------------------
-require('scripts/globals/missions')
-require('scripts/globals/zone')
-require('scripts/globals/interaction/mission')
------------------------------------
 
 local mission = Mission:new(xi.mission.log_id.ROV, xi.mission.id.rov.VISIONS_OF_DREAD)
 
