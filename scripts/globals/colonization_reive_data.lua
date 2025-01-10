@@ -916,7 +916,7 @@ xi.reives.zoneData =
                 },
             },
 
-            -- !pos -123 -15.89 -419.9 265  -- TODO: Need Fix for collision. Likely need a capture for the collision position.
+            -- !pos -123 -15.89 -419.9 265
             [4] =
             {
                 mob =
@@ -937,7 +937,7 @@ xi.reives.zoneData =
                 collision =
                 {
                     morimarBasaltFieldsID.npc.REIVE_COLLISION_OFFSET + 12,
-                    -- TODO: Missing a blocker here.
+                    morimarBasaltFieldsID.npc.REIVE_COLLISION_OFFSET + 13,
                 },
             },
 
