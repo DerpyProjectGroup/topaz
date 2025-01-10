@@ -632,15 +632,15 @@ xi.reives.zoneData =
             {
                 mob =
                 {
-                    marjamiRavineID.mob.REIVE_MOB_OFFSET,
-                    marjamiRavineID.mob.REIVE_MOB_OFFSET + 1,
                     marjamiRavineID.mob.REIVE_MOB_OFFSET + 2,
                     marjamiRavineID.mob.REIVE_MOB_OFFSET + 3,
+                    marjamiRavineID.mob.REIVE_MOB_OFFSET + 4,
+                    marjamiRavineID.mob.REIVE_MOB_OFFSET + 5,
                 },
                 obstacles =
                 {
-                    marjamiRavineID.mob.REIVE_MOB_OFFSET + 4,
-                    marjamiRavineID.mob.REIVE_MOB_OFFSET + 5,
+                    marjamiRavineID.mob.REIVE_MOB_OFFSET,
+                    marjamiRavineID.mob.REIVE_MOB_OFFSET + 1,
                 },
                 collision =
                 {
