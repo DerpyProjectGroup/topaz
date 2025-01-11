@@ -85,6 +85,11 @@ xi.settings.main =
     MONSTROSITY_PVP_MODE        = 0,
     MONSTROSITY_PVP_ZONE_BYPASS = 0, -- Show the full zone teleport menu from Feretory while Belligerency is flagged.
 
+    -- A.M.A.N. Trove (Heavily in development, use at your own risk!)
+    ENABLE_AMAN_TROVE           = 0,
+    AMAN_TROVE_MINIMUM_AGE_DAYS = 45, -- Minimum character age in days before a character can interact with A.M.A.N. Trove
+    AMAN_TROVE_MINIMUM_LEVEL    = 99, -- Minimum level required to interact with A.M.A.N. Trove (inclusive)
+
     -- TREASURE CASKETS
     -- Retail droprate = 0.1 (10%) with no other effects active
     -- Set to 0 to disable caskets.

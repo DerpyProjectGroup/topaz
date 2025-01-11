@@ -96,12 +96,10 @@ xi.roe.records =
         reward = { sparks = 100, exp = 500 }
     },
 
-    --[[ TODO
     [1447] =
     { -- Exploring the Trove
         reward =  { sparks = 100, exp = 500 }
     },
-    ]]
 
     [1448] =
     { -- Assist Channel
