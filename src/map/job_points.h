@@ -388,8 +388,8 @@ public:
     uint16 GetJobPointsByJob(uint8 jobID);        // get current job points for a players specified job
     void   SetJobPoints(int16 amount);            // Set job points for current job
 
-    void AddJobPoints(uint8 jobID, uint16 amount);// Add jobpoints to a players specififed job 
-    void DelJobPoints(uint8 jobID, int16 amount); // Del jobpoints to a players specified job
+    void AddJobPoints(uint8 jobID, uint16 amount); // Add jobpoints to a players specififed job
+    void DelJobPoints(uint8 jobID, int16 amount);  // Del jobpoints to a players specified job
 
     JobPoints_t*    GetJobPointsByType(JOBPOINT_TYPE jpType);
     JobPointType_t* GetJobPointType(JOBPOINT_TYPE jpType);

@@ -125,7 +125,7 @@ uint16 CJobPoints::GetJobPoints()
 uint16 CJobPoints::GetJobPointsByJob(uint8 jobID)
 {
     const char* Query = "SELECT job_points FROM char_job_points WHERE charid='%u' AND jobid='%u'";
-    int ret = _sql->Query(Query, m_PChar->id, jobID);
+    int         ret   = _sql->Query(Query, m_PChar->id, jobID);
 
     if (ret != SQL_ERROR && _sql->NextRow() == SQL_SUCCESS)
     {
