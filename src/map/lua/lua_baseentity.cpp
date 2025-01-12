@@ -8721,6 +8721,62 @@ void CLuaBaseEntity::setJobPoints(uint16 amount)
 }
 
 /************************************************************************
+ *  Function: addJobPoints()
+ *  Purpose : Adds job points to a player based on job, amount entered
+ *  Example : player:addJobPoints(17, 30)
+ *  Notes   : Used for GM command
+ ************************************************************************/
+void CLuaBaseEntity::addJobPoints(uint8 jobID, uint16 amount)
+{
+    if (m_PBaseEntity->objtype != TYPE_PC)
+    {
+        ShowDebug("Warning: Attempt to add Job Points for non-PC type!");
+        return;
+    }
+
+    CCharEntity* PChar = static_cast<CCharEntity*>(m_PBaseEntity);
+
+    PChar->PJobPoints->AddJobPoints(jobID, amount);
+    PChar->pushPacket<CMenuJobPointsPacket>(PChar);
+}
+
+/************************************************************************
+ *  Function: delJobPoints()
+ *  Purpose : Deletes job points from a player based on job, amount entered
+ *  Example : player:delJobPoints(17, 30)
+ *  Notes   : Used in NPC Oboro
+ ************************************************************************/
+void CLuaBaseEntity::delJobPoints(uint8 jobID, uint16 amount)
+{
+    if (m_PBaseEntity->objtype != TYPE_PC)
+    {
+        ShowDebug("Warning: Attempt to delete Job Points from non-PC type!");
+        return;
+    }
+
+    CCharEntity* PChar = static_cast<CCharEntity*>(m_PBaseEntity);
+
+    PChar->PJobPoints->DelJobPoints(jobID, amount);
+    PChar->pushPacket<CMenuJobPointsPacket>(PChar);
+}
+
+/************************************************************************
+ *  Function: getJobPoints()
+ *  Purpose : Gets the jobs points from a player based on a specific job entered
+ *  Example : player:getJobPoints(17)
+ *  Notes   : Used in NPC Oboro
+ ************************************************************************/
+uint16 CLuaBaseEntity::getJobPoints(JOBTYPE jobID)
+{
+    if (m_PBaseEntity->objtype == TYPE_PC)
+    {
+        CCharEntity* PChar = static_cast<CCharEntity*>(m_PBaseEntity);
+        return PChar->PJobPoints->GetJobPointsByJob(jobID);
+    }
+    return 0;
+}
+
+/************************************************************************
  *  Function: masterJob()
  *  Purpose : Fully masters / unlocks player's current job
  *  Example : player:masterJob()
@@ -18740,6 +18796,9 @@ void CLuaBaseEntity::Register()
     SOL_REGISTER("addCapacityPoints", CLuaBaseEntity::addCapacityPoints);
     SOL_REGISTER("setCapacityPoints", CLuaBaseEntity::setCapacityPoints);
     SOL_REGISTER("setJobPoints", CLuaBaseEntity::setJobPoints);
+    SOL_REGISTER("addJobPoints", CLuaBaseEntity::addJobPoints);
+    SOL_REGISTER("delJobPoints", CLuaBaseEntity::delJobPoints);
+    SOL_REGISTER("getJobPoints", CLuaBaseEntity::getJobPoints);
     SOL_REGISTER("masterJob", CLuaBaseEntity::masterJob);
 
     SOL_REGISTER("getGil", CLuaBaseEntity::getGil);

@@ -433,6 +433,9 @@ public:
     uint16 getSpentJobPoints();
     uint8  getJobPointLevel(uint16 jpType);
     void   setJobPoints(uint16 amount);
+    void   addJobPoints(uint8 jobID, uint16 amount);
+    void   delJobPoints(uint8 jobID, uint16 amount);
+    uint16 getJobPoints(JOBTYPE jobID);
     void   setCapacityPoints(uint16 amount);
     void   masterJob();
 

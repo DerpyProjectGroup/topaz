@@ -1818,6 +1818,23 @@ end
 function CBaseEntity:getJobPointLevel(jpType)
 end
 
+---@param jobId integer
+---@param amount integer
+---@return nil
+function CBaseEntity:addJobPoints(jobID, amount)
+end
+
+---@param jobId integer
+---@param amount integer
+---@return nil
+function CBaseEntity:delJobPoints(jobID, amount)
+end
+
+---@param jobId integer
+---@return integer
+function CBaseEntity:getJobPoints(jobID)
+end
+
 ---@param amount integer
 ---@return nil
 function CBaseEntity:setJobPoints(amount)
