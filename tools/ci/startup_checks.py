@@ -22,7 +22,6 @@ def main():
         ["xi_world", "--log", "world-server.log"], stdout=subprocess.PIPE
     )
 
-
     print("Sleeping for 5 minutes...")
 
     time.sleep(300)
@@ -32,6 +31,7 @@ def main():
     has_seen_output = False
     error = False
     for proc in {p0, p1, p2, p3}:
+        made_it_to_ready = False
         print(proc.args[0])
         proc.send_signal(signal.SIGTERM)
         for line in io.TextIOWrapper(proc.stdout, encoding="utf-8"):
@@ -44,6 +44,13 @@ def main():
             ):
                 print("^^^")
                 error = True
+
+            if "ready to work" in line:
+                made_it_to_ready = True
+
+        if not made_it_to_ready:
+            print("ERROR: Did not make it to ready state!")
+            error = True
 
     if not has_seen_output:
         print("ERROR: Did not get any output!")
