@@ -425,6 +425,7 @@ public:
         pushPacket(std::make_unique<T>(std::forward<Args>(args)...));
     }
 
+    bool          isPacketFiltered(CBasicPacket*);
     void          pushPacket(CBasicPacket*);                                                     // Adding a copy of a package to the PacketList
     void          pushPacket(std::unique_ptr<CBasicPacket>);                                     // Push packet to packet list
     void          updateCharPacket(CCharEntity* PChar, ENTITYUPDATE type, uint8 updatemask);     // Push or update a char packet

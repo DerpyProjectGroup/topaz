@@ -406,6 +406,17 @@ void CCharEntity::clearPacketList()
     }
 }
 
+bool CCharEntity::isPacketFiltered(CBasicPacket* packet)
+{
+    // Filter others synthesis results
+    if (packet->getType() == 0x70 && playerConfig.MessageFilter.others_synthesis_and_fishing_results)
+    {
+        return true;
+    }
+
+    return false;
+}
+
 void CCharEntity::pushPacket(CBasicPacket* packet)
 {
     TracyZoneScoped;
@@ -413,6 +424,11 @@ void CCharEntity::pushPacket(CBasicPacket* packet)
     TracyZoneHex16(packet->getType());
 
     moduleutils::OnPushPacket(this, packet);
+
+    if (CCharEntity::isPacketFiltered(packet))
+    {
+        return;
+    }
 
     if (packet->getType() == 0x5B)
     {
