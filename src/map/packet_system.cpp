@@ -3434,12 +3434,9 @@ void SmallPacket0x04E(map_session_data_t* const PSession, CCharEntity* const PCh
         {
             if (slotid < PChar->m_ah_history.size())
             {
-                bool isAutoCommitOn = db::getAutoCommit();
-
                 AuctionHistory_t canceledItem = PChar->m_ah_history[slotid];
 
-                if (db::setAutoCommit(false) && db::transactionStart())
-                {
+                if (db::transaction([&](){
                     const auto [rset, affectedRows] = db::preparedStmtWithAffectedRows("DELETE FROM auction_house WHERE seller = ? AND itemid = ? AND stack = ? AND price = ? AND sale = 0 LIMIT 1",
                                                                                        PChar->id, canceledItem.itemid, canceledItem.stack, canceledItem.price);
                     if (rset && affectedRows)
@@ -3450,11 +3447,7 @@ void SmallPacket0x04E(map_session_data_t* const PSession, CCharEntity* const PCh
                             uint8 SlotID = charutils::AddItem(PChar, LOC_INVENTORY, canceledItem.itemid, (canceledItem.stack != 0 ? PDelItem->getStackSize() : 1), true);
                             if (SlotID != ERROR_SLOTID)
                             {
-                                db::transactionCommit();
-                                PChar->pushPacket<CAuctionHousePacket>(action, 0, PChar, slotid, false);
-                                PChar->pushPacket<CInventoryFinishPacket>();
-                                db::setAutoCommit(isAutoCommitOn);
-                                return;
+                                return db::TransactionResult::Commit;
                             }
                         }
                     }
@@ -3463,11 +3456,15 @@ void SmallPacket0x04E(map_session_data_t* const PSession, CCharEntity* const PCh
                         ShowError("Failed to return item id %u stack %u to char. ", canceledItem.itemid, canceledItem.stack);
                     }
 
-                    db::transactionRollback();
-                    db::setAutoCommit(isAutoCommitOn);
+                    return db::TransactionResult::Rollback;
+                }))
+                {
+                    PChar->pushPacket<CAuctionHousePacket>(action, 0, PChar, slotid, false);
+                    PChar->pushPacket<CInventoryFinishPacket>();
+                    return;
                 }
             }
-            // Let client know something went wrong
+            // Fallthrough: Let client know something went wrong
             PChar->pushPacket<CAuctionHousePacket>(action, 0xE5, PChar, slotid, true); // Inventory full, unable to remove msg
         }
         break;
