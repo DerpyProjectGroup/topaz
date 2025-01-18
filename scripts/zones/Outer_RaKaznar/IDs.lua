@@ -27,9 +27,11 @@ zones[xi.zone.OUTER_RAKAZNAR] =
     },
     mob =
     {
+        REIVE_MOB_OFFSET = GetFirstID('Amaranth_Barrier'),
     },
     npc =
     {
+        REIVE_COLLISION_OFFSET = GetFirstID('_7m0'),
     },
 }
 

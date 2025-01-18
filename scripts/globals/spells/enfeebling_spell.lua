@@ -378,7 +378,7 @@ xi.spells.enfeebling.useEnfeeblingSpell = function(caster, target, spell)
     local resistStages = pTable[spellId][column.RESIST_STAGES]
     local message      = pTable[spellId][column.MESSAGE_OFFSET]
     local bonusMacc    = pTable[spellId][column.BONUS_MACC]
-    local resistRate   = xi.combat.magicHitRate.calculateResistRate(caster, target, spellGroup, skillType, spellElement, statUsed, spellEffect, bonusMacc)
+    local resistRate   = xi.combat.magicHitRate.calculateResistRate(caster, target, spellGroup, skillType, 0, spellElement, statUsed, spellEffect, bonusMacc)
 
     if spellEffect ~= xi.effect.NONE then
         -- Stymie
@@ -404,7 +404,7 @@ xi.spells.enfeebling.useEnfeeblingSpell = function(caster, target, spell)
         local rankModifier        = target:getMod(immunobreakModifier)
 
         if spellElement ~= xi.element.NONE then
-            resistRank = target:getMod(xi.combat.element.resistRankMod[spellElement])
+            resistRank = target:getMod(xi.combat.element.getElementalResistanceRankModifier(spellElement))
         end
 
         if

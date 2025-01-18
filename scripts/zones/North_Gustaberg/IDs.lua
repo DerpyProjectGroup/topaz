@@ -40,6 +40,7 @@ zones[xi.zone.NORTH_GUSTABERG] =
         ALREADY_POSSESS_TEMP          = 8083,  -- You already possess that temporary item.
         NO_COMBINATION                = 8088,  -- You were unable to enter a combination.
         VOIDWALKER_DESPAWN            = 8119,  -- The monster fades before your eyes, a look of disappointment on its face.
+        TIME_ELAPSED                  = 8195,  -- Time Elapsed: / [hour/hours] (Vanadiel Time) / [minute/minutes] and [second/seconds] (Earth time)
         REGIME_REGISTERED             = 10410, -- New training regime registered!
         VOIDWALKER_NO_MOB             = 11529, -- The <keyitem> quivers ever so slightly, but emits no light. There seem to be no monsters in the area.
         VOIDWALKER_MOB_TOO_FAR        = 11530, -- The <keyitem> quivers ever so slightly and emits a faint light. There seem to be no monsters in the immediate vicinity.

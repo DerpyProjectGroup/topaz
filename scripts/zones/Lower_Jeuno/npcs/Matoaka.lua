@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Lower Jeuno
 --  NPC: Matoaka
--- Standard Merchant NPC
 -----------------------------------
 local ID = zones[xi.zone.LOWER_JEUNO]
 -----------------------------------

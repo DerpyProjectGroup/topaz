@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Windurst Waters (S)
 --  NPC: Door Acolyte hostel
--- Type: Quest NPC
 -- !pos 146.619, -8.525, 242.874 94
 -----------------------------------
 ---@type TNpcEntity

@@ -26,8 +26,8 @@
 #include "common/mmo.h"
 #include "packets/action.h"
 
-#include "status_effect.h"
 #include "entities/battleentity.h"
+#include "status_effect.h"
 
 enum ADDTYPE
 {

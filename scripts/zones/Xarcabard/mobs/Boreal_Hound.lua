@@ -5,7 +5,6 @@
 -- !pos -21 -25 -490 112
 -----------------------------------
 local ID = zones[xi.zone.XARCABARD]
-mixins = { require('scripts/mixins/draw_in') }
 -----------------------------------
 ---@type TMobEntity
 local entity = {}
@@ -89,10 +88,40 @@ entity.onMobEngage = function(mob)
 end
 
 entity.onMobSpawn = function(mob)
+    mob:setMobMod(xi.mobMod.ALWAYS_AGGRO, 1)
+    mob:addImmunity(xi.immunity.SILENCE)
+    mob:addImmunity(xi.immunity.PARALYZE)
     mob:setSpeed(baseSpeed)
     -- Failsafe to make sure NPC is down when NM is up
     if xi.settings.main.OLDSCHOOL_G2 then
         GetNPCByID(ID.npc.BOREAL_HOUND_QM):showNPC(0)
+    end
+end
+
+entity.onMobFight = function(mob, target)
+    local drawInTable =
+    {
+        conditions =
+        {
+            target:getXPos() > -11 and target:getZPos() > -465,
+        },
+        position = mob:getPos(),
+        offset = 5,
+        degrees = 180,
+        wait = 2,
+    }
+
+    if drawInTable.conditions[1] then
+        mob:setMobMod(xi.mobMod.NO_MOVE, 1)
+        -- If player is farther than melee range, then deaggro. Otherwise draw-in
+        if mob:checkDistance(target) > 10 then
+            mob:setMobMod(xi.mobMod.NO_MOVE, 0)
+            mob:disengage()
+        else
+            utils.drawIn(target, drawInTable)
+        end
+    else
+        mob:setMobMod(xi.mobMod.NO_MOVE, 0)
     end
 end
 

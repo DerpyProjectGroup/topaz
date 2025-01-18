@@ -703,6 +703,8 @@ public:
     }
     CBattleEntity* GetBattleTarget();
 
+    bool hasEnmityEXPENSIVE() const; // Returns true if own notoriety container is not empty or mob in zone has entity listed as battle target
+
     /* State callbacks */
     /* Auto attack */
     virtual bool OnAttack(CAttackState&, action_t&);

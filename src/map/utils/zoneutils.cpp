@@ -470,7 +470,7 @@ namespace zoneutils
                                 PMob->m_maxLevel = (uint8)sql->GetIntData(13);
 
                                 uint16 sqlModelID[10];
-                                memcpy(&sqlModelID, sql->GetData(14), 20);
+                                std::memcpy(&sqlModelID, sql->GetData(14), 20);
                                 PMob->look = look_t(sqlModelID);
 
                                 PMob->SetMJob(sql->GetIntData(15));

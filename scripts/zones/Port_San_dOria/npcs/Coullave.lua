@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Port San d'Oria
 --  NPC: Coullave
--- Standard Merchant NPC
 -----------------------------------
 local ID = zones[xi.zone.PORT_SAN_DORIA]
 -----------------------------------

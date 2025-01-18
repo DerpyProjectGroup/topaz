@@ -8018,7 +8018,7 @@ INSERT INTO `mob_groups` VALUES (7,2043,112,'Ice_Elemental',330,4,1347,0,0,48,50
 INSERT INTO `mob_groups` VALUES (8,868,112,'Cursed_Weapon',330,0,548,0,0,43,45,0);
 INSERT INTO `mob_groups` VALUES (9,913,112,'Dark_Elemental',330,4,568,0,0,48,50,0);
 INSERT INTO `mob_groups` VALUES (10,991,112,'Demon_Pawn',330,0,621,0,0,48,52,0);
-INSERT INTO `mob_groups` VALUES (11,6027,112,'Barbaric_Weapon',0,32,3098,8500,0,73,74,0);
+INSERT INTO `mob_groups` VALUES (11,6027,112,'Barbaric_Weapon',0,32,3098,6700,0,73,74,0);
 INSERT INTO `mob_groups` VALUES (12,5851,112,'Timeworn_Warrior',0,32,3062,5000,0,57,58,0);
 INSERT INTO `mob_groups` VALUES (13,1252,112,'Ereshkigal',86400,0,788,3000,0,48,50,0);
 INSERT INTO `mob_groups` VALUES (14,453,112,'Blizzard_Gigas',330,0,296,0,0,45,48,0);
@@ -8028,10 +8028,10 @@ INSERT INTO `mob_groups` VALUES (17,1594,112,'Gigass_Tiger',0,128,0,0,0,38,42,0)
 INSERT INTO `mob_groups` VALUES (18,1874,112,'Hail_Gigas',330,0,1269,0,0,45,48,0);
 INSERT INTO `mob_groups` VALUES (19,997,112,'Demon_Wizard',330,0,621,0,0,48,52,0);
 INSERT INTO `mob_groups` VALUES (20,988,112,'Demon_Knight',330,0,616,0,0,48,52,0);
-INSERT INTO `mob_groups` VALUES (21,5423,112,'Duke_Focalor',5400,0,2943,0,0,52,58,0);
+INSERT INTO `mob_groups` VALUES (21,5423,112,'Duke_Focalor',5400,0,2943,4400,0,51,53,0);
 INSERT INTO `mob_groups` VALUES (22,995,112,'Demon_Warlock',330,0,624,0,0,50,52,0);
 INSERT INTO `mob_groups` VALUES (23,994,112,'Demons_Elemental',0,128,0,0,0,43,45,0);
-INSERT INTO `mob_groups` VALUES (24,3576,112,'Shadow_Eye',0,32,2226,0,0,48,49,0);
+INSERT INTO `mob_groups` VALUES (24,3576,112,'Shadow_Eye',0,32,2226,6800,0,48,49,0);
 INSERT INTO `mob_groups` VALUES (25,693,112,'Chaos_Elemental',0,128,452,0,0,42,42,0);
 INSERT INTO `mob_groups` VALUES (26,510,112,'Boreal_Hound',300,0,0,26000,0,53,53,0);
 INSERT INTO `mob_groups` VALUES (27,509,112,'Boreal_Coeurl',300,0,0,26000,0,53,53,0);
@@ -8886,7 +8886,7 @@ INSERT INTO `mob_groups` VALUES (59,3951,124,'Tonberry_Creeper_G',0,128,3226,0,0
 INSERT INTO `mob_groups` VALUES (60,3958,124,'Tonberry_Hexer_G',0,128,3226,0,0,50,55,0);
 INSERT INTO `mob_groups` VALUES (61,3954,124,'Tonberry_Decimator',0,128,3226,0,0,55,55,0);
 
-INSERT INTO `mob_groups` VALUES (62,1174,124,'Edacious_Opo-opo',0,128,744,0,0,60,60,0);
+INSERT INTO `mob_groups` VALUES (62,1174,124,'Edacious_Opo-opo',0,128,744,5800,0,60,60,0);
 INSERT INTO `mob_groups` VALUES (63,2201,124,'Kedgebelly_Kate',0,128,0,0,0,1,1,0);
 INSERT INTO `mob_groups` VALUES (64,0,124,'Woodland_Mender',0,128,0,0,0,0,0,0);
 

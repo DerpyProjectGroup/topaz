@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Port Windurst
 --  NPC: Kususu
--- Standard Merchant NPC
 -----------------------------------
 local ID = zones[xi.zone.PORT_WINDURST]
 -----------------------------------

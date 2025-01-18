@@ -103,6 +103,9 @@ zones[xi.zone.BASTOK_MINES] =
         },
         EXPLORER_MOOGLE    = GetFirstID('Explorer_Moogle'),
         LELEROON_BLUE_DOOR = GetFirstID('Door_House'),
+        AZETTE             = GetFirstID('Azette'),
+        QUELLE             = GetFirstID('Quelle'),
+        EULAPHE            = GetFirstID('Eulaphe'),
     },
 }
 

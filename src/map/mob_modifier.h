@@ -28,19 +28,19 @@ Gets mapped for convenience in scripts/enum/mobMod.lua -- always edit both
 
 enum MOBMODIFIER : int
 {
-    MOBMOD_NONE           = 0,
-    MOBMOD_GIL_MIN        = 1,  // minimum gil drop -- spawn mod only
-    MOBMOD_GIL_MAX        = 2,  // maximum gil drop -- spawn mod only
-    MOBMOD_MP_BASE        = 3,  // Give mob mp. Used for mobs that are not mages, wyverns, avatars
-    MOBMOD_SIGHT_RANGE    = 4,  // sight range
-    MOBMOD_SOUND_RANGE    = 5,  // sound range
-    MOBMOD_BUFF_CHANCE    = 6,  // % chance to buff (combat only)
-    MOBMOD_GA_CHANCE      = 7,  // % chance to use -ga spell
-    MOBMOD_HEAL_CHANCE    = 8,  // % chance to use heal
-    MOBMOD_HP_HEAL_CHANCE = 9,  // can cast cures below this HP %
-    MOBMOD_SUBLINK        = 10, // sub link group
-    MOBMOD_LINK_RADIUS    = 11, // link radius
-    // UNUSED = 12,
+    MOBMOD_NONE                   = 0,
+    MOBMOD_GIL_MIN                = 1,  // minimum gil drop -- spawn mod only
+    MOBMOD_GIL_MAX                = 2,  // maximum gil drop -- spawn mod only
+    MOBMOD_MP_BASE                = 3,  // Give mob mp. Used for mobs that are not mages, wyverns, avatars
+    MOBMOD_SIGHT_RANGE            = 4,  // sight range
+    MOBMOD_SOUND_RANGE            = 5,  // sound range
+    MOBMOD_BUFF_CHANCE            = 6,  // % chance to buff (combat only)
+    MOBMOD_GA_CHANCE              = 7,  // % chance to use -ga spell
+    MOBMOD_HEAL_CHANCE            = 8,  // % chance to use heal
+    MOBMOD_HP_HEAL_CHANCE         = 9,  // can cast cures below this HP %
+    MOBMOD_SUBLINK                = 10, // sub link group
+    MOBMOD_LINK_RADIUS            = 11, // link radius
+    MOBMOD_SEES_THROUGH_ILLUSION  = 12, // Mob can see through the Illusion effect that grants effects similar to Sneak & Invisible without this mod and allows aggro (see Viscious Liquid in mamook)
     MOBMOD_SEVERE_SPELL_CHANCE    = 13, // % chance to use a severe spell like death or impact
     MOBMOD_SKILL_LIST             = 14, // uses given mob skill list
     MOBMOD_MUG_GIL                = 15, // amount gil carried for mugging

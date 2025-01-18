@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Southern San d'Oria
 --  NPC: Thadiene
--- Standard Merchant NPC
 -----------------------------------
 local ID = zones[xi.zone.SOUTHERN_SAN_DORIA]
 -----------------------------------

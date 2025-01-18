@@ -287,7 +287,7 @@ INSERT INTO `status_effects` VALUES (253,'signet',16777216,0,0,0,0,0,0,0,1000);
 INSERT INTO `status_effects` VALUES (254,'battlefield',8912896,0,0,0,0,0,0,0,0);
 INSERT INTO `status_effects` VALUES (256,'sanction',16777216,0,0,0,0,0,0,0,1000);
 INSERT INTO `status_effects` VALUES (257,'besieged',0,0,0,0,0,0,0,0,0);
-INSERT INTO `status_effects` VALUES (258,'illusion',8388640,0,0,0,0,0,0,0,0);
+INSERT INTO `status_effects` VALUES (258,'illusion',4532,0,0,0,0,0,0,0,0);
 INSERT INTO `status_effects` VALUES (259,'encumbrance',268435456,0,0,0,0,0,0,0,0);
 INSERT INTO `status_effects` VALUES (260,'obliviscence',268435456,0,0,0,0,0,0,0,0);
 INSERT INTO `status_effects` VALUES (261,'impairment',268435456,0,0,0,0,0,0,0,0);

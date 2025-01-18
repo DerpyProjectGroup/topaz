@@ -1,8 +1,6 @@
 -----------------------------------
 -- Area: Windurst Waters
 --  NPC: Shohrun-Tuhrun
--- Standard Merchant NPC
--- Confirmed shop stock, August 2013
 -----------------------------------
 local ID = zones[xi.zone.WINDURST_WATERS]
 -----------------------------------

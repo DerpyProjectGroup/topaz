@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Tavnazian Safehold
 --  NPC: Misseulieu
--- Standard Merchant NPC
 -----------------------------------
 local ID = zones[xi.zone.TAVNAZIAN_SAFEHOLD]
 -----------------------------------

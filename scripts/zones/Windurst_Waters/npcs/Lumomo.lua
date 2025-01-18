@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Windurst Waters
 --  NPC: Lumomo
--- Type: Quest NPC - Involved in Eco-Warrior (Windurst)
 -- !pos -55.770 -5.499 18.914 238
 -----------------------------------
 ---@type TNpcEntity

@@ -25,6 +25,9 @@ local function registerRegionAroundNPC(zone, NPCID, zoneID)
 end
 
 zoneObject.onInitialize = function(zone)
+    -- A Chocobo Riding Game finish line
+    zone:registerTriggerArea(1, 467.16, 20, -156.82, 0, 0, 0)
+
     UpdateNMSpawnPoint(ID.mob.AHTU)
     GetMobByID(ID.mob.AHTU):setRespawnTime(math.random(900, 10800))
 
@@ -63,13 +66,21 @@ zoneObject.onZoneIn = function(player, prevZone)
     return cs
 end
 
+zoneObject.afterZoneIn = function(player)
+    xi.chocoboGame.handleMessage(player)
+end
+
 zoneObject.onConquestUpdate = function(zone, updatetype, influence, owner, ranking, isConquestAlliance)
     xi.conq.onConquestUpdate(zone, updatetype, influence, owner, ranking, isConquestAlliance)
 end
 
 zoneObject.onTriggerAreaEnter = function(player, triggerArea)
+    local triggerAreaID = triggerArea:GetTriggerAreaID()
+
     if player:hasStatusEffect(xi.effect.FULL_SPEED_AHEAD) then
-        xi.fsa.onTriggerAreaEnter(player, triggerArea:GetTriggerAreaID())
+        xi.fsa.onTriggerAreaEnter(player, triggerAreaID)
+    elseif triggerAreaID == 1 and player:hasStatusEffect(xi.effect.MOUNTED) then
+        xi.chocoboGame.onTriggerAreaEnter(player)
     end
 end
 
@@ -95,6 +106,8 @@ zoneObject.onEventFinish = function(player, csid, option, npc)
         player:setCharVar('[QUEST]FullSpeedAhead', 2)
         player:setPos(475, 8.8, -159, 128, 105)
     end
+
+    xi.chocoboGame.onEventFinish(player, csid)
 end
 
 return zoneObject

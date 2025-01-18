@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Rabao
 --  NPC: Scamplix
--- Standard Merchant NPC
 -----------------------------------
 local ID = zones[xi.zone.RABAO]
 -----------------------------------

@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Bastok Markets (S)
 --  NPC: Pagdako
--- Quest NPC
 -- pos -200 -6 -93
 -----------------------------------
 ---@type TNpcEntity

@@ -33,9 +33,11 @@ zones[xi.zone.FORET_DE_HENNETIEL] =
     },
     mob =
     {
+        REIVE_MOB_OFFSET = GetFirstID('Broadleaf_Palm'),
     },
     npc =
     {
+        REIVE_COLLISION_OFFSET = GetFirstID('_7a0'),
     },
 }
 

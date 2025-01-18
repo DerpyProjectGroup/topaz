@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Rabao
 --  NPC: Generoit
--- Standard Merchant NPC
 -----------------------------------
 local ID = zones[xi.zone.RABAO]
 -----------------------------------

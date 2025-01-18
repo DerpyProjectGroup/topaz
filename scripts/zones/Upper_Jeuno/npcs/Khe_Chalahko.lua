@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Upper Jeuno
 --  NPC: Khe Chalahko
--- Standard Merchant NPC
 -----------------------------------
 local ID = zones[xi.zone.UPPER_JEUNO]
 -----------------------------------

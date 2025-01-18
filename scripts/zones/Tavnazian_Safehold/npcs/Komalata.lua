@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Tavnazian Safehold
 --  NPC: Komalata
--- Standard Merchant NPC
 -----------------------------------
 local ID = zones[xi.zone.TAVNAZIAN_SAFEHOLD]
 -----------------------------------

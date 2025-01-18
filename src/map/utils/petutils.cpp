@@ -113,7 +113,7 @@ namespace petutils
                 Pet->name.insert(0, (const char*)_sql->GetData(1));
 
                 uint16 sqlModelID[10];
-                memcpy(&sqlModelID, _sql->GetData(2), 20);
+                std::memcpy(&sqlModelID, _sql->GetData(2), 20);
                 Pet->look = look_t(sqlModelID);
 
                 Pet->minLevel  = (uint8)_sql->GetIntData(3);

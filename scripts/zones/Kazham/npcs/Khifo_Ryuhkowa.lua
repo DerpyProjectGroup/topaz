@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Kazham
 --  NPC: Khifo Ryuhkowa
--- Standard Merchant NPC
 -----------------------------------
 local ID = zones[xi.zone.KAZHAM]
 -----------------------------------

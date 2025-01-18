@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Port Jeuno
 --  NPC: Gekko
--- Standard Merchant NPC
 -----------------------------------
 local ID = zones[xi.zone.PORT_JEUNO]
 -----------------------------------

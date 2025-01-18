@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Monastic Cavern
 --  NPC: Loo Kohor
--- Type: Quest NPC
 -- !pos -48.744 -17.741 -104.954 150
 -----------------------------------
 ---@type TNpcEntity

@@ -131,15 +131,18 @@ xi.spells.enhancing.calculateSongPower = function(caster, target, spell, spellId
     local divisor     = pTable[spellId][column.DIVISOR]
     local singingLvl  = caster:getSkillLevel(xi.skill.SINGING)
 
-    -- Add ranged skill level ONLY if it's an instrument.
-    local rangeType = caster:getWeaponSkillType(xi.slot.RANGED)
-    local rangedLvl = caster:getWeaponSkillLevel(xi.slot.RANGED)
+    if caster:isPC() then
+        -- Add ranged skill level ONLY if it's an instrument.
+        local rangeType = caster:getWeaponSkillType(xi.slot.RANGED)
 
-    -- String instruments have half the skill effectiveness and amplify the AoE in exchange.
-    if rangeType == xi.skill.WIND_INSTRUMENT then
-        singingLvl = singingLvl + rangedLvl
-    elseif rangeType == xi.skill.STRING_INSTRUMENT then
-        singingLvl = singingLvl + math.floor(rangedLvl / 2)
+        -- String instruments have half the skill effectiveness and amplify the AoE in exchange.
+        if rangeType == xi.skill.WIND_INSTRUMENT then
+            singingLvl = singingLvl + caster:getSkillLevel(rangeType)
+        elseif rangeType == xi.skill.STRING_INSTRUMENT then
+            singingLvl = singingLvl + math.floor(caster:getSkillLevel(rangeType) / 2)
+        end
+    else
+        singingLvl = singingLvl * 2
     end
 
     -- Get Potency bonuses from Singing Skill and Instrument Skill. TODO: Investigate JP-Wiki. Most of this makes no sense.

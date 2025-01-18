@@ -497,7 +497,7 @@ struct zoneWeather_t
     zoneWeather_t(uint8 _normal, uint8 _common, uint8 _rare)
     : normal(_normal)
     , common(_common)
-    , rare(_rare) {};
+    , rare(_rare){};
 };
 
 /************************************************************************
@@ -586,8 +586,8 @@ public:
     virtual void SpawnPETs(CCharEntity* PChar);
     virtual void SpawnNPCs(CCharEntity* PChar);
     virtual void SpawnTRUSTs(CCharEntity* PChar);
-    virtual void SpawnMoogle(CCharEntity* PChar);    // Spawn Moogle in Moghouse in zone (if applicable)
-    virtual void SpawnTransport(CCharEntity* PChar); // Spawn ships/boats in the zone
+    virtual void SpawnConditionalNPCs(CCharEntity* PChar); // Spawn Moogle in Moghouse in zone (if applicable)
+    virtual void SpawnTransport(CCharEntity* PChar);       // Spawn ships/boats in the zone
     void         SavePlayTime();
 
     virtual void WideScan(CCharEntity* PChar, uint16 radius);
@@ -610,7 +610,7 @@ public:
     void InsertTriggerArea(CTriggerArea* triggerArea);
 
     virtual void TOTDChange(TIMETYPE TOTD);
-    virtual void PushPacket(CBaseEntity*, GLOBAL_MESSAGE_TYPE, CBasicPacket*);
+    virtual void PushPacket(CBaseEntity*, GLOBAL_MESSAGE_TYPE, const std::unique_ptr<CBasicPacket>&);
 
     virtual void UpdateCharPacket(CCharEntity* PChar, ENTITYUPDATE type, uint8 updatemask);
     virtual void UpdateEntityPacket(CBaseEntity* PEntity, ENTITYUPDATE type, uint8 updatemask, bool alwaysInclude = false);

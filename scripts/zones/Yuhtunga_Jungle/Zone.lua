@@ -9,6 +9,9 @@ require('scripts/missions/amk/helpers')
 local zoneObject = {}
 
 zoneObject.onInitialize = function(zone)
+    -- A Chocobo Riding Game finish line
+    zone:registerTriggerArea(1, -485.54, 5, -379.19, 0, 0, 0)
+
     xi.conq.setRegionalConquestOverseers(zone:getRegionID())
 
     xi.helm.initZone(zone, xi.helmType.HARVESTING)
@@ -52,7 +55,16 @@ zoneObject.onZoneIn = function(player, prevZone)
     return cs
 end
 
+zoneObject.afterZoneIn = function(player)
+    xi.chocoboGame.handleMessage(player)
+end
+
 zoneObject.onTriggerAreaEnter = function(player, triggerArea)
+    local triggerAreaID = triggerArea:GetTriggerAreaID()
+
+    if triggerAreaID == 1 and player:hasStatusEffect(xi.effect.MOUNTED) then
+        xi.chocoboGame.onTriggerAreaEnter(player)
+    end
 end
 
 zoneObject.onEventUpdate = function(player, csid, option, npc)
@@ -62,6 +74,7 @@ zoneObject.onEventUpdate = function(player, csid, option, npc)
 end
 
 zoneObject.onEventFinish = function(player, csid, option, npc)
+    xi.chocoboGame.onEventFinish(player, csid)
 end
 
 zoneObject.onZoneWeatherChange = function(weather)

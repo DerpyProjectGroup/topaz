@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Selbina
 --  NPC: Chutarmire
--- Standard Merchant NPC
 -----------------------------------
 local ID = zones[xi.zone.SELBINA]
 -----------------------------------

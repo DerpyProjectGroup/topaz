@@ -2,8 +2,6 @@
 -- Area: Windurst Walls
 --  NPC: Ambrosius
 -----------------------------------
--- Quest NPC for "The Postman Always KOs Twice"
------------------------------------
 ---@type TNpcEntity
 local entity = {}
 

@@ -56,10 +56,10 @@ void CJobPoints::LoadJobPoints()
                     JobPointType_t currentType = {};
                     currentType.id             = currentJob.jobCategory + j;
                     currentType.value          = _sql->GetUIntData(JOBPOINTS_SQL_COLUMN_OFFSET + j);
-                    memcpy(&currentJob.job_point_types[j], &currentType, sizeof(JobPointType_t));
+                    std::memcpy(&currentJob.job_point_types[j], &currentType, sizeof(JobPointType_t));
                 }
 
-                memcpy(&m_jobPoints[jobId], &currentJob, sizeof(JobPoints_t));
+                std::memcpy(&m_jobPoints[jobId], &currentJob, sizeof(JobPoints_t));
             }
         }
     }

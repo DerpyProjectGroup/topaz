@@ -486,6 +486,7 @@ public:
     int32 getBaseMP();             // Returns Entity base Mana Points (before modifiers)
     int32 addMP(int32 amount);     // Increase mp of Entity
     void  setMP(int32 value);      // Set mp of Entity to value
+    void  setMaxMP(int32 value);   // Set max mp of Entity to value
     int32 restoreMP(int32 amount); // Modify mp of Entity, but check if alive first
     int32 delMP(int32 amount);     // Decrease mp of Entity
 

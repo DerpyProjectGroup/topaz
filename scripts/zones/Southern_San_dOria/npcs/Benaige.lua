@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Southern San d'Oria
 --  NPC: Benaige
--- Standard Merchant NPC
 -- !pos -142 -6 47 230
 -----------------------------------
 local ID = zones[xi.zone.SOUTHERN_SAN_DORIA]

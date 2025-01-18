@@ -479,7 +479,7 @@ void CZone::LoadNavMesh()
     }
 
     char file[255];
-    memset(file, 0, sizeof(file));
+    std::memset(file, 0, sizeof(file));
     snprintf(file, sizeof(file), "navmeshes/%s.nav", getName().c_str());
 
     if (!m_navMesh->load(file))
@@ -646,7 +646,7 @@ void CZone::SetWeather(WEATHER weather)
     m_Weather           = weather;
     m_WeatherChangeTime = CVanaTime::getInstance()->getVanaTime();
 
-    m_zoneEntities->PushPacket(nullptr, CHAR_INZONE, new CWeatherPacket(m_WeatherChangeTime, m_Weather, xirand::GetRandomNumber(4, 28)));
+    m_zoneEntities->PushPacket(nullptr, CHAR_INZONE, std::make_unique<CWeatherPacket>(m_WeatherChangeTime, m_Weather, xirand::GetRandomNumber(4, 28)));
 }
 
 void CZone::UpdateWeather()
@@ -844,13 +844,13 @@ void CZone::SpawnPCs(CCharEntity* PChar)
 
 /************************************************************************
  *                                                                       *
- *  Displaying Moogle in MogHouse                                        *
+ *  Displaying Moogle in MogHouse, etc.                                  *
  *                                                                       *
  ************************************************************************/
 
-void CZone::SpawnMoogle(CCharEntity* PChar)
+void CZone::SpawnConditionalNPCs(CCharEntity* PChar)
 {
-    m_zoneEntities->SpawnMoogle(PChar);
+    m_zoneEntities->SpawnConditionalNPCs(PChar);
 }
 
 /************************************************************************
@@ -898,7 +898,7 @@ CCharEntity* CZone::GetCharByID(uint32 id)
     return m_zoneEntities->GetCharByID(id);
 }
 
-void CZone::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, CBasicPacket* packet)
+void CZone::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, const std::unique_ptr<CBasicPacket>& packet)
 {
     TracyZoneScoped;
     m_zoneEntities->PushPacket(PEntity, message_type, packet);
@@ -1044,6 +1044,11 @@ void CZone::CharZoneIn(CCharEntity* PChar)
     if (PChar->StatusEffectContainer->HasStatusEffect(EFFECT_COSTUME))
     {
         PChar->StatusEffectContainer->DelStatusEffectSilent(EFFECT_COSTUME);
+    }
+
+    if (PChar->StatusEffectContainer->HasStatusEffect(EFFECT_ILLUSION))
+    {
+        PChar->StatusEffectContainer->DelStatusEffectSilent(EFFECT_ILLUSION);
     }
 
     PChar->ReloadPartyInc();

@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Selbina
 --  NPC: Quelpia
--- Standard Merchant NPC
 -----------------------------------
 local ID = zones[xi.zone.SELBINA]
 -----------------------------------

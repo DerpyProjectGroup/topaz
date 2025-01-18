@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Windurst Waters (S)
 --  NPC: Pelftrix
--- Standard Merchant NPC
 -----------------------------------
 local ID = zones[xi.zone.WINDURST_WATERS_S]
 -----------------------------------

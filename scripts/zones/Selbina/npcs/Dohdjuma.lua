@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Selbina
 --  NPC: Dohdjuma
--- Standard Merchant NPC
 -----------------------------------
 local ID = zones[xi.zone.SELBINA]
 -----------------------------------

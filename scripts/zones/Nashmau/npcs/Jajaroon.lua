@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Nashmau
 --  NPC: Jajaroon
--- Standard Merchant NPC
 -----------------------------------
 local ID = zones[xi.zone.NASHMAU]
 -----------------------------------

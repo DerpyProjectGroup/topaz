@@ -35,6 +35,7 @@ zones[xi.zone.YHOATOR_JUNGLE] =
         PAMAMAS                       = 7701,  -- You might be able to draw an Opo-opo here if you had more pamamas.
         SOMETHING_IS_BURIED_HERE      = 7738,  -- It looks like something is buried here. If you had <item> you could dig it up.
         GARRISON_BASE                 = 7748,  -- Hm? What is this? %? How do I know this is not some [San d'Orian/Bastokan/Windurstian] trick?
+        TIME_ELAPSED                  = 7795,  -- Time Elapsed: / [hour/hours] (Vanadiel Time) / [minute/minutes] and [second/seconds] (Earth time)
         PLAYER_OBTAINS_ITEM           = 7827,  -- <name> obtains <item>!
         UNABLE_TO_OBTAIN_ITEM         = 7828,  -- You were unable to obtain the item.
         PLAYER_OBTAINS_TEMP_ITEM      = 7829,  -- <name> obtains the temporary item: <item>!

@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Rabao
 --  NPC: Brave Ox
--- Standard Merchant NPC
 -----------------------------------
 local ID = zones[xi.zone.RABAO]
 -----------------------------------

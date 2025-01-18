@@ -281,7 +281,7 @@ namespace trustutils
                 trust->packet_name.insert(0, (const char*)_sql->GetData(2));
 
                 uint16 sqlModelID[10];
-                memcpy(&sqlModelID, _sql->GetData(3), 20);
+                std::memcpy(&sqlModelID, _sql->GetData(3), 20);
                 trust->look = look_t(sqlModelID);
 
                 trust->m_Family       = (uint16)_sql->GetIntData(4);

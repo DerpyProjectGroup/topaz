@@ -211,7 +211,7 @@ void CLuaBaseEntity::showText(CLuaBaseEntity* mob, uint16 messageID, sol::object
     }
     else
     {
-        m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE, new CMessageSpecialPacket(PBaseEntity, messageID, param0, param1, param3));
+        m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE, std::make_unique<CMessageSpecialPacket>(PBaseEntity, messageID, param0, param1, param3));
     }
 }
 
@@ -291,7 +291,7 @@ void CLuaBaseEntity::messageText(CLuaBaseEntity* PLuaBaseEntity, uint16 messageI
     }
     else
     { // broadcast in range
-        m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE, new CMessageTextPacket(PTarget, messageID, showName, mode));
+        m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE, std::make_unique<CMessageTextPacket>(PTarget, messageID, showName, mode));
     }
 }
 
@@ -345,17 +345,17 @@ void CLuaBaseEntity::printToArea(std::string const& message, sol::object const& 
 
     if (messageRange == MESSAGE_AREA_SYSTEM)
     {
-        message::send(MSG_CHAT_SERVMES, nullptr, 0, new CChatMessagePacket(PChar, messageLook, message, name));
+        message::send(MSG_CHAT_SERVMES, nullptr, 0, std::make_unique<CChatMessagePacket>(PChar, messageLook, message, name));
     }
     else if (messageRange == MESSAGE_AREA_SAY)
     {
-        PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CChatMessagePacket(PChar, messageLook, message, name));
-        PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CChatMessagePacket(PChar, messageLook, message, name));
+        PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, std::make_unique<CChatMessagePacket>(PChar, messageLook, message, name));
+        PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, std::make_unique<CChatMessagePacket>(PChar, messageLook, message, name));
     }
     else if (messageRange == MESSAGE_AREA_SHOUT)
     {
-        PChar->loc.zone->PushPacket(PChar, CHAR_INSHOUT, new CChatMessagePacket(PChar, messageLook, message, name));
-        PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CChatMessagePacket(PChar, messageLook, message, name));
+        PChar->loc.zone->PushPacket(PChar, CHAR_INSHOUT, std::make_unique<CChatMessagePacket>(PChar, messageLook, message, name));
+        PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, std::make_unique<CChatMessagePacket>(PChar, messageLook, message, name));
     }
     else if (messageRange == MESSAGE_AREA_PARTY)
     {
@@ -364,24 +364,24 @@ void CLuaBaseEntity::printToArea(std::string const& message, sol::object const& 
         {
             ref<uint32>(packetData, 0) = PChar->PParty->m_PAlliance->m_AllianceID;
             ref<uint32>(packetData, 4) = 0; // No ID so that the PChar sees the message too
-            message::send(MSG_CHAT_ALLIANCE, packetData, sizeof(packetData), new CChatMessagePacket(PChar, messageLook, message, name));
+            message::send(MSG_CHAT_ALLIANCE, packetData, sizeof(packetData), std::make_unique<CChatMessagePacket>(PChar, messageLook, message, name));
         }
         else if (PChar->PParty)
         {
             ref<uint32>(packetData, 0) = PChar->PParty->GetPartyID();
             ref<uint32>(packetData, 4) = 0; // No ID so that the PChar sees the message too
-            message::send(MSG_CHAT_PARTY, packetData, sizeof(packetData), new CChatMessagePacket(PChar, messageLook, message, name));
+            message::send(MSG_CHAT_PARTY, packetData, sizeof(packetData), std::make_unique<CChatMessagePacket>(PChar, messageLook, message, name));
         }
     }
     else if (messageRange == MESSAGE_AREA_YELL)
     {
-        message::send(MSG_CHAT_YELL, nullptr, 0, new CChatMessagePacket(PChar, messageLook, message, name));
-        PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CChatMessagePacket(PChar, messageLook, message, name));
+        message::send(MSG_CHAT_YELL, nullptr, 0, std::make_unique<CChatMessagePacket>(PChar, messageLook, message, name));
+        PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, std::make_unique<CChatMessagePacket>(PChar, messageLook, message, name));
     }
     else if (messageRange == MESSAGE_AREA_UNITY)
     {
-        message::send(MSG_CHAT_UNITY, nullptr, 0, new CChatMessagePacket(PChar, messageLook, message, name));
-        PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CChatMessagePacket(PChar, messageLook, message, name));
+        message::send(MSG_CHAT_UNITY, nullptr, 0, std::make_unique<CChatMessagePacket>(PChar, messageLook, message, name));
+        PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, std::make_unique<CChatMessagePacket>(PChar, messageLook, message, name));
     }
     else
     {
@@ -413,7 +413,7 @@ void CLuaBaseEntity::messageBasic(uint16 messageID, sol::object const& p0, sol::
     else
     {
         // Broadcast in range
-        m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE, new CMessageBasicPacket(m_PBaseEntity, PTarget, param0, param1, messageID));
+        m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE, std::make_unique<CMessageBasicPacket>(m_PBaseEntity, PTarget, param0, param1, messageID));
     }
 }
 
@@ -443,8 +443,7 @@ void CLuaBaseEntity::messageName(uint16 messageID, sol::object const& entity, so
     }
     else
     {
-        m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE,
-                                            new CMessageNamePacket(m_PBaseEntity, messageID, PNameEntity, param0, param1, param2, param3, chatType));
+        m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE, std::make_unique<CMessageNamePacket>(m_PBaseEntity, messageID, PNameEntity, param0, param1, param2, param3, chatType));
     }
 }
 
@@ -462,8 +461,7 @@ void CLuaBaseEntity::messagePublic(uint16 messageID, CLuaBaseEntity const* PEnti
 
     if (PEntity != nullptr)
     {
-        m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE_SELF,
-                                            new CMessageBasicPacket(m_PBaseEntity, PEntity->GetBaseEntity(), param0, param1, messageID));
+        m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE_SELF, std::make_unique<CMessageBasicPacket>(m_PBaseEntity, PEntity->GetBaseEntity(), param0, param1, messageID));
     }
 }
 
@@ -787,7 +785,7 @@ void CLuaBaseEntity::injectPacket(std::string const& filename)
 
     if (File)
     {
-        CBasicPacket* PPacket = new CBasicPacket();
+        auto PPacket = std::make_unique<CBasicPacket>();
 
         fseek(File, 1, SEEK_SET);
         if (fread(&size, 1, 1, File) != 1)
@@ -805,7 +803,7 @@ void CLuaBaseEntity::injectPacket(std::string const& filename)
             return;
         }
 
-        ((CCharEntity*)m_PBaseEntity)->pushPacket(PPacket);
+        ((CCharEntity*)m_PBaseEntity)->pushPacket(std::move(PPacket));
 
         fclose(File);
     }
@@ -843,7 +841,7 @@ void CLuaBaseEntity::injectActionPacket(uint32 inTargetID, uint16 inCategory, ui
     target.speceffect      = speceffect;
     target.reaction        = reaction;
 
-    m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE_SELF, new CActionPacket(Action));
+    m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE_SELF, std::make_unique<CActionPacket>(Action));
 }
 
 /************************************************************************
@@ -899,7 +897,7 @@ void CLuaBaseEntity::entityAnimationPacket(const char* command, sol::object cons
     }
     else
     {
-        m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE, new CEntityAnimationPacket(m_PBaseEntity, PTarget, command));
+        m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE, std::make_unique<CEntityAnimationPacket>(m_PBaseEntity, PTarget, command));
     }
 }
 
@@ -2522,8 +2520,7 @@ void CLuaBaseEntity::sendEmote(CLuaBaseEntity* target, uint8 emID, uint8 emMode)
             const auto emoteID   = static_cast<Emote>(emID);
             const auto emoteMode = static_cast<EmoteMode>(emMode);
 
-            PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE,
-                                        new CCharEmotionPacket(PChar, PTarget->id, PTarget->targid, emoteID, emoteMode, 0));
+            PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, std::make_unique<CCharEmotionPacket>(PChar, PTarget->id, PTarget->targid, emoteID, emoteMode, 0));
         }
     }
 }
@@ -2838,14 +2835,14 @@ void CLuaBaseEntity::sendEmptyEntityUpdateToPlayer(CLuaBaseEntity* entityToUpdat
 {
     if (m_PBaseEntity->objtype == TYPE_PC && entityToUpdate->GetBaseEntity())
     {
-        auto* packet = new CBasicPacket();
+        auto packet = std::make_unique<CBasicPacket>();
         packet->setType(0x0E);
         packet->setSize(0x50);
         packet->ref<uint32>(0x04) = entityToUpdate->GetBaseEntity()->id;
         packet->ref<uint16>(0x08) = entityToUpdate->GetBaseEntity()->targid;
         packet->ref<uint8>(0x0A)  = 0x20; // Matches retail observation
         packet->ref<uint8>(0x30)  = 0x01; // MODEL_TYPE::MODEL_EQUIPPED
-        static_cast<CCharEntity*>(m_PBaseEntity)->pushPacket(packet);
+        static_cast<CCharEntity*>(m_PBaseEntity)->pushPacket(std::move(packet));
     }
 }
 
@@ -3108,7 +3105,7 @@ void CLuaBaseEntity::teleport(std::map<std::string, float> pos, sol::object cons
         m_PBaseEntity->loc.p.rotation  = worldAngle(m_PBaseEntity->loc.p, PLuaBaseEntity->GetBaseEntity()->loc.p);
     }
 
-    m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE, new CPositionPacket(m_PBaseEntity));
+    m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE, std::make_unique<CPositionPacket>(m_PBaseEntity));
     m_PBaseEntity->updatemask |= UPDATE_POS;
 }
 
@@ -3627,7 +3624,7 @@ void CLuaBaseEntity::goToEntity(uint32 targetID, sol::object const& option)
     uint16 playerZone = PChar->loc.zone->GetID();
 
     char buf[12];
-    memset(&buf[0], 0, sizeof(buf));
+    std::memset(&buf[0], 0, sizeof(buf));
 
     ref<bool>(&buf, 0)    = true;        // Toggle for message routing; goes to entity server first
     ref<bool>(&buf, 1)    = spawnedOnly; // Specification for Spawned Only or Any
@@ -3658,7 +3655,7 @@ bool CLuaBaseEntity::gotoPlayer(std::string const& playerName)
     if (ret != SQL_ERROR && _sql->NumRows() != 0 && _sql->NextRow() == SQL_SUCCESS)
     {
         char buf[30];
-        memset(&buf[0], 0, sizeof(buf));
+        std::memset(&buf[0], 0, sizeof(buf));
 
         ref<uint32>(&buf, 0) = _sql->GetUIntData(0); // target char
         ref<uint32>(&buf, 4) = m_PBaseEntity->id;    // warping to target char, their server will send us a zoning message with their pos
@@ -3690,7 +3687,7 @@ bool CLuaBaseEntity::bringPlayer(std::string const& playerName)
     if (ret != SQL_ERROR && _sql->NumRows() != 0 && _sql->NextRow() == SQL_SUCCESS)
     {
         char buf[30];
-        memset(&buf[0], 0, sizeof(buf));
+        std::memset(&buf[0], 0, sizeof(buf));
 
         ref<uint32>(&buf, 0)  = _sql->GetUIntData(0); // target char
         ref<uint32>(&buf, 4)  = 0;                    // wanting to bring target char here so wont give our id
@@ -3902,7 +3899,7 @@ bool CLuaBaseEntity::addItem(sol::variadic_args va)
                 {
                     char encoded[SignatureStringLength];
 
-                    memset(&encoded, 0, sizeof(encoded));
+                    std::memset(&encoded, 0, sizeof(encoded));
                     PItem->setSignature(EncodeStringSignature(signature, encoded));
                 }
 
@@ -4480,7 +4477,7 @@ bool CLuaBaseEntity::addLinkpearl(std::string const& lsname, bool equip)
             // build linkpearl
             char EncodedString[LinkshellStringLength];
 
-            memset(&EncodedString, 0, sizeof(EncodedString));
+            std::memset(&EncodedString, 0, sizeof(EncodedString));
             EncodeStringLinkshell(lsname, EncodedString);
             ((CItem*)PItemLinkPearl)->setSignature(EncodedString);
             PItemLinkPearl->SetLSID(_sql->GetUIntData(0));
@@ -9807,6 +9804,27 @@ void CLuaBaseEntity::setMP(int32 value)
 }
 
 /************************************************************************
+ *  Function: setMaxMP()
+ *  Purpose : Sets the Maximum Mana Points of an Entity
+ *  Example : player:setMaxMP(100)
+ *  Notes   :
+ ************************************************************************/
+
+void CLuaBaseEntity::setMaxMP(int32 value)
+{
+    if (m_PBaseEntity->objtype == TYPE_NPC)
+    {
+        ShowWarning("Invalid Entity (NPC: %s) calling function.", m_PBaseEntity->getName());
+        return;
+    }
+
+    auto* PBattle = static_cast<CBattleEntity*>(m_PBaseEntity);
+
+    PBattle->health.maxmp = std::max(0, value);
+    PBattle->UpdateHealth();
+}
+
+/************************************************************************
  *  Function: restoreMP()
  *  Purpose : Restores Mana Points to a player
  *  Example : player:restoreMP(player:getMaxHP() - player:getHP())
@@ -11105,7 +11123,7 @@ void CLuaBaseEntity::disableLevelSync()
         }
     }
 
-    PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CCharSyncPacket(PChar));
+    PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, std::make_unique<CCharSyncPacket>(PChar));
 }
 
 /************************************************************************
@@ -11767,14 +11785,14 @@ void CLuaBaseEntity::countdown(sol::object const& secondsObj)
     }
 
     CCharEntity* PChar  = (CCharEntity*)m_PBaseEntity;
-    auto*        packet = new CObjectiveUtilityPacket();
+    auto         packet = std::make_unique<CObjectiveUtilityPacket>();
 
     if (secondsObj.is<uint32>())
     {
         packet->addCountdown(secondsObj.as<uint32>());
     }
 
-    PChar->pushPacket(packet);
+    PChar->pushPacket(std::move(packet));
 }
 
 /************************************************************************
@@ -11827,7 +11845,7 @@ void CLuaBaseEntity::objectiveUtility(sol::object const& obj)
     }
 
     CCharEntity* PChar  = (CCharEntity*)m_PBaseEntity;
-    auto*        packet = new CObjectiveUtilityPacket();
+    auto         packet = std::make_unique<CObjectiveUtilityPacket>();
 
     if (obj.is<sol::table>())
     {
@@ -11913,7 +11931,7 @@ void CLuaBaseEntity::objectiveUtility(sol::object const& obj)
         }
     }
 
-    PChar->pushPacket(packet);
+    PChar->pushPacket(std::move(packet));
 }
 
 /************************************************************************
@@ -11945,7 +11963,7 @@ void CLuaBaseEntity::enableEntities(sol::object const& obj)
  ************************************************************************/
 void CLuaBaseEntity::independentAnimation(CLuaBaseEntity* PTarget, uint16 animId, uint8 mode)
 {
-    m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE_SELF, new CIndependentAnimationPacket(m_PBaseEntity, PTarget->GetBaseEntity(), animId, mode));
+    m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE_SELF, std::make_unique<CIndependentAnimationPacket>(m_PBaseEntity, PTarget->GetBaseEntity(), animId, mode));
 }
 
 /************************************************************************
@@ -12851,7 +12869,7 @@ void CLuaBaseEntity::updateClaim(sol::object const& entity)
 
 /************************************************************************
  *  Function: hasEnmity()
- *  Purpose : Check if a an entity is on any mob's enmity list
+ *  Purpose : Check if a an entity is on any mob's enmity list or is supertanked by
  *  Example : if player:hasEnmity() then
  *  Notes   :
  ************************************************************************/
@@ -12864,7 +12882,7 @@ bool CLuaBaseEntity::hasEnmity()
         return false;
     }
 
-    return static_cast<CBattleEntity*>(m_PBaseEntity)->PNotorietyContainer->hasEnmity();
+    return static_cast<CBattleEntity*>(m_PBaseEntity)->hasEnmityEXPENSIVE();
 }
 
 /************************************************************************
@@ -15934,7 +15952,7 @@ auto CLuaBaseEntity::getAllRuneEffects() -> sol::table
     }
 
     std::vector<EFFECT> runeEffectList = PEntity->StatusEffectContainer->GetAllRuneEffects();
-    auto table                         = lua.create_table();
+    auto                table          = lua.create_table();
     for (const auto& runeEffect : runeEffectList)
     {
         table.add(runeEffect);
@@ -16412,7 +16430,7 @@ void CLuaBaseEntity::spawn(sol::object const& despawnSec, sol::object const& res
 
 /************************************************************************
  *  Function: isSpawned()
- *  Purpose : Returns true if a Mob is already spawned
+ *  Purpose : Returns true if a Mob or NPC is spawned or visible
  *  Example : if mob:isSpawned() then
  *  Notes   :
  ************************************************************************/
@@ -16425,9 +16443,13 @@ bool CLuaBaseEntity::isSpawned()
     {
         return static_cast<CMobEntity*>(m_PBaseEntity)->PAI->IsSpawned();
     }
+    else if (CNpcEntity* PNpcEntity = dynamic_cast<CNpcEntity*>(m_PBaseEntity))
+    {
+        return PNpcEntity->status != STATUS_TYPE::DISAPPEAR;
+    }
     else
     {
-        ShowError("CLuaBaseEntity::isSpawned() called on entity that is not a PMobEntity.");
+        ShowError("CLuaBaseEntity::isSpawned() called on entity that is not a CMobEntity or CNpcEntity.");
     }
     return false;
 }
@@ -17584,7 +17606,7 @@ void CLuaBaseEntity::restoreFromChest(CLuaBaseEntity* PLuaBaseEntity, uint32 res
             target.animation       = animationID;
             target.messageID       = messageID;
             target.param           = messageParam;
-            PTarget->loc.zone->PushPacket(PTarget, CHAR_INRANGE, new CActionPacket(Action));
+            PTarget->loc.zone->PushPacket(PTarget, CHAR_INRANGE, std::make_unique<CActionPacket>(Action));
         }
     }
 }
@@ -18848,6 +18870,7 @@ void CLuaBaseEntity::Register()
     SOL_REGISTER("getBaseMP", CLuaBaseEntity::getBaseMP);
     SOL_REGISTER("addMP", CLuaBaseEntity::addMP);
     SOL_REGISTER("setMP", CLuaBaseEntity::setMP);
+    SOL_REGISTER("setMaxMP", CLuaBaseEntity::setMaxMP);
     SOL_REGISTER("restoreMP", CLuaBaseEntity::restoreMP);
     SOL_REGISTER("delMP", CLuaBaseEntity::delMP);
 

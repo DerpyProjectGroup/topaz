@@ -73,7 +73,7 @@ namespace fishingutils
     std::map<uint16, std::map<uint32, uint16>>        FishingGroups;         // groupid, fishid, rarity
     std::map<uint16, std::map<uint32, uint8>>         FishingBaitAffinities; // baitid, fishid, power
 
-    uint32 HandleFishingAction(CCharEntity* PChar, CBasicPacket data)
+    uint32 HandleFishingAction(CCharEntity* PChar, CBasicPacket& data)
     {
         uint16 stamina = data.ref<uint16>(0x08);
         uint8  action  = data.ref<uint8>(0x0E);
@@ -1518,18 +1518,18 @@ namespace fishingutils
 
             if (Count > 1)
             {
-                PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CCaughtFishPacket(PChar, FishID, MessageOffset + FISHMESSAGEOFFSET_CATCH_MULTI, Count));
+                PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, std::make_unique<CCaughtFishPacket>(PChar, FishID, MessageOffset + FISHMESSAGEOFFSET_CATCH_MULTI, Count));
             }
             else
             {
-                PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CCaughtFishPacket(PChar, FishID, MessageOffset + FISHMESSAGEOFFSET_CATCH, Count));
+                PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, std::make_unique<CCaughtFishPacket>(PChar, FishID, MessageOffset + FISHMESSAGEOFFSET_CATCH, Count));
             }
 
             return 1;
         }
         else
         {
-            PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CCaughtFishPacket(PChar, FishID, MessageOffset + FISHMESSAGEOFFSET_CATCH_INV_FULL, Count));
+            PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, std::make_unique<CCaughtFishPacket>(PChar, FishID, MessageOffset + FISHMESSAGEOFFSET_CATCH_INV_FULL, Count));
         }
 
         return 0;
@@ -1558,18 +1558,18 @@ namespace fishingutils
 
             if (Count > 1)
             {
-                PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CCaughtFishPacket(PChar, ItemID, MessageOffset + FISHMESSAGEOFFSET_CATCH_MULTI, Count));
+                PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, std::make_unique<CCaughtFishPacket>(PChar, ItemID, MessageOffset + FISHMESSAGEOFFSET_CATCH_MULTI, Count));
             }
             else
             {
-                PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CCaughtFishPacket(PChar, ItemID, MessageOffset + FISHMESSAGEOFFSET_CATCH, Count));
+                PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, std::make_unique<CCaughtFishPacket>(PChar, ItemID, MessageOffset + FISHMESSAGEOFFSET_CATCH, Count));
             }
 
             return 1;
         }
         else
         {
-            PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CCaughtFishPacket(PChar, ItemID, MessageOffset + FISHMESSAGEOFFSET_CATCH_INV_FULL, Count));
+            PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, std::make_unique<CCaughtFishPacket>(PChar, ItemID, MessageOffset + FISHMESSAGEOFFSET_CATCH_INV_FULL, Count));
         }
 
         return 0;
@@ -1597,7 +1597,7 @@ namespace fishingutils
 
         PChar->animation = ANIMATION_FISHING_MONSTER;
         PChar->updatemask |= UPDATE_HP;
-        PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CCaughtMonsterPacket(PChar, MessageOffset + FISHMESSAGEOFFSET_MONSTER));
+        PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, std::make_unique<CCaughtMonsterPacket>(PChar, MessageOffset + FISHMESSAGEOFFSET_MONSTER));
 
         position_t p = PChar->loc.p;
         position_t m;
@@ -1653,7 +1653,7 @@ namespace fishingutils
 
         PChar->animation = ANIMATION_FISHING_CAUGHT;
         PChar->updatemask |= UPDATE_HP;
-        PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CCaughtMonsterPacket(PChar, MessageOffset + FISHMESSAGEOFFSET_CATCH_CHEST));
+        PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, std::make_unique<CCaughtMonsterPacket>(PChar, MessageOffset + FISHMESSAGEOFFSET_CATCH_CHEST));
 
         position_t p = PChar->loc.p;
         position_t m;
@@ -2965,7 +2965,7 @@ namespace fishingutils
 
                     for (int i = 0; i < fishingArea->numBounds; i++)
                     {
-                        memcpy((void*)&fishingArea->areaBounds[i], &bounds[i * sizeof(areavector_t)], sizeof(areavector_t));
+                        std::memcpy((void*)&fishingArea->areaBounds[i], &bounds[i * sizeof(areavector_t)], sizeof(areavector_t));
                     }
                 }
                 else
@@ -3061,7 +3061,7 @@ namespace fishingutils
                     for (int i = 0; i < numFish; i++)
                     {
                         uint16 fishid = 0;
-                        memcpy(&fishid, &reqFish[i * sizeof(uint16)], sizeof(uint16));
+                        std::memcpy(&fishid, &reqFish[i * sizeof(uint16)], sizeof(uint16));
                         fish->reqFish->emplace_back(fishid);
                     }
                 }

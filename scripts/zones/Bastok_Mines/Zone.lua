@@ -11,6 +11,7 @@ zoneObject.onInitialize = function(zone)
 
     xi.events.harvestFestival.applyHalloweenNpcCostumes(zone:getID())
     xi.chocobo.initZone(zone)
+    xi.chocoboGame.clearRecord(zone)
 end
 
 zoneObject.onZoneIn = function(player, prevZone)

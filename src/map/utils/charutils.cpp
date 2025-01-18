@@ -2221,7 +2221,7 @@ namespace charutils
                 auto* PItem          = PChar->getEquip((SLOTTYPE)i);
                 PChar->styleItems[i] = (PItem == nullptr) ? 0 : PItem->getID();
             }
-            memcpy(&PChar->mainlook, &PChar->look, sizeof(PChar->look));
+            std::memcpy(&PChar->mainlook, &PChar->look, sizeof(PChar->look));
         }
         else
         {
@@ -2613,37 +2613,54 @@ namespace charutils
 
         if (_sql->Query(Query, PChar->id, PChar->GetMJob()) == SQL_SUCCESS && _sql->NumRows() != 0 && _sql->NextRow() == SQL_SUCCESS)
         {
+            std::vector<uint8> validContainers = { LOC_INVENTORY, LOC_WARDROBE, LOC_WARDROBE2, LOC_WARDROBE3, LOC_WARDROBE4, LOC_WARDROBE5, LOC_WARDROBE6, LOC_WARDROBE7, LOC_WARDROBE8 };
+
             for (uint8 equipSlot = SLOT_MAIN; equipSlot <= SLOT_BACK; equipSlot++)
             {
                 uint16 itemId = _sql->GetUIntData(equipSlot);
 
                 if (itemId > 0)
                 {
-                    for (int container = LOC_INVENTORY; container <= LOC_WARDROBE8; container++)
+                    for (const auto container : validContainers)
                     {
                         bool found = false;
 
-                        if (container == LOC_INVENTORY || (container >= LOC_WARDROBE && container <= LOC_WARDROBE8))
+                        for (uint8 slot = 0; slot < PChar->getStorage(container)->GetSize(); slot++)
                         {
-                            for (uint8 slot = 0; slot < PChar->getStorage(container)->GetSize(); slot++)
-                            {
-                                CItem* PItem  = PChar->getStorage(container)->GetItem(slot);
-                                auto*  PEquip = dynamic_cast<CItemEquipment*>(PItem);
+                            auto* PEquip = dynamic_cast<CItemEquipment*>(PChar->getStorage(container)->GetItem(slot));
 
-                                if ((PItem != nullptr && PItem->getID() == itemId && PEquip != nullptr) &&
-                                    (PEquip != PChar->getEquip(static_cast<SLOTTYPE>(equipSlot - 1)) &&
-                                     PEquip != PChar->getEquip(static_cast<SLOTTYPE>(equipSlot + 1))))
+                            // ensure this is the item we actually want from the db
+                            if (PEquip && PEquip->getID() == itemId)
+                            {
+                                // Validate that we're not trying to equip the same item to two different slots
+                                CItemEquipment* compareItem = nullptr;
+
+                                // Get item that theoretically could be equipped an adjacent slot
+                                if (equipSlot == SLOT_MAIN || equipSlot == SLOT_EAR1 || equipSlot == SLOT_RING1)
+                                {
+                                    // Check one item to the "right"
+                                    compareItem = PChar->getEquip(static_cast<SLOTTYPE>(equipSlot + 1));
+                                }
+                                else if (equipSlot == SLOT_SUB || equipSlot == SLOT_EAR2 || equipSlot == SLOT_RING2)
+                                {
+                                    // Check one item to the "left"
+                                    compareItem = PChar->getEquip(static_cast<SLOTTYPE>(equipSlot - 1));
+                                }
+
+                                // If there's no item to compare then this item is valid
+                                // If there is, check they aren't the same via pointer comparison (2 unique copies)
+                                if (!compareItem || (compareItem && compareItem != PEquip))
                                 {
                                     found = true;
-                                    charutils::EquipItem(PChar, PItem->getSlotID(), equipSlot, static_cast<CONTAINER_ID>(container));
+                                    charutils::EquipItem(PChar, PEquip->getSlotID(), equipSlot, static_cast<CONTAINER_ID>(container));
                                     break;
                                 }
                             }
+                        }
 
-                            if (found)
-                            {
-                                break;
-                            }
+                        if (found)
+                        {
+                            break;
                         }
                     }
                 }
@@ -2902,7 +2919,7 @@ namespace charutils
 
     void BuildingCharWeaponSkills(CCharEntity* PChar)
     {
-        memset(&PChar->m_WeaponSkills, 0, sizeof(PChar->m_WeaponSkills));
+        std::memset(&PChar->m_WeaponSkills, 0, sizeof(PChar->m_WeaponSkills));
 
         CItemWeapon* PItem        = nullptr;
         int          main_ws      = 0;
@@ -2964,7 +2981,7 @@ namespace charutils
             return;
         }
 
-        memset(&PChar->m_PetCommands, 0, sizeof(PChar->m_PetCommands));
+        std::memset(&PChar->m_PetCommands, 0, sizeof(PChar->m_PetCommands));
 
         if (PetID == 0)
         { // technically Fire Spirit but we're using this to null the abilities shown
@@ -3357,7 +3374,7 @@ namespace charutils
             PChar->delModifier(PTrait->getMod(), PTrait->getValue());
         }
         PChar->TraitList.clear();
-        memset(&PChar->m_TraitList, 0, sizeof(PChar->m_TraitList));
+        std::memset(&PChar->m_TraitList, 0, sizeof(PChar->m_TraitList));
 
         auto mjob = PChar->GetMJob();
         auto sjob = PChar->GetSJob();
@@ -4764,7 +4781,7 @@ namespace charutils
             // Add capacity points
             if (PChar->PJobPoints->AddCapacityPoints(capacityPoints))
             {
-                PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CMessageCombatPacket(PChar, PMob, PChar->PJobPoints->GetJobPoints(), 0, 719));
+                PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, std::make_unique<CMessageCombatPacket>(PChar, PMob, PChar->PJobPoints->GetJobPoints(), 0, 719));
             }
             PChar->pushPacket<CMenuJobPointsPacket>(PChar);
 
@@ -4880,7 +4897,7 @@ namespace charutils
                     PChar->PParty->ReloadParty();
                 }
 
-                PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CMessageCombatPacket(PChar, PChar, PChar->jobs.job[PChar->GetMJob()], 0, 11));
+                PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, std::make_unique<CMessageCombatPacket>(PChar, PChar, PChar->jobs.job[PChar->GetMJob()], 0, 11));
                 luautils::OnPlayerLevelDown(PChar);
                 PChar->updatemask |= UPDATE_HP;
             }
@@ -4980,7 +4997,7 @@ namespace charutils
             // add limit points
             if (PChar->PMeritPoints->AddLimitPoints(exp))
             {
-                PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CMessageCombatPacket(PChar, PMob, PChar->PMeritPoints->GetMeritPoints(), 0, 50));
+                PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, std::make_unique<CMessageCombatPacket>(PChar, PMob, PChar->PMeritPoints->GetMeritPoints(), 0, 50));
             }
         }
         else
@@ -5099,7 +5116,7 @@ namespace charutils
                 PChar->pushPacket<CCharJobExtraPacket>(PChar, true);
                 PChar->pushPacket<CCharSyncPacket>(PChar);
 
-                PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CMessageCombatPacket(PChar, PMob, PChar->jobs.job[PChar->GetMJob()], 0, 9));
+                PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, std::make_unique<CMessageCombatPacket>(PChar, PMob, PChar->jobs.job[PChar->GetMJob()], 0, 9));
                 PChar->pushPacket<CCharStatsPacket>(PChar);
 
                 luautils::OnPlayerLevelUp(PChar);
@@ -7284,4 +7301,25 @@ namespace charutils
         PChar->status = STATUS_TYPE::DISAPPEAR;
     }
 
+    bool isOrchestrionPlaced(CCharEntity* PChar)
+    {
+        for (auto safeContainerId : { LOC_MOGSAFE, LOC_MOGSAFE2 })
+        {
+            CItemContainer* PContainer = PChar->getStorage(safeContainerId);
+            for (int slotIndex = 1; slotIndex <= PContainer->GetSize(); ++slotIndex)
+            {
+                CItem* PContainerItem = PContainer->GetItem(slotIndex);
+                if (PContainerItem != nullptr && PContainerItem->isType(ITEM_FURNISHING))
+                {
+                    CItemFurnishing* PFurniture = static_cast<CItemFurnishing*>(PContainerItem);
+                    if (PFurniture->isInstalled() && PFurniture->getID() == 426)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
 }; // namespace charutils

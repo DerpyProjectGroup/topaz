@@ -10,7 +10,7 @@ entity.onMobSpawn = function(mob)
     mob:addImmunity(xi.immunity.DARK_SLEEP)
     mob:addImmunity(xi.immunity.GRAVITY)
     mob:addImmunity(xi.immunity.BIND)
-    mob:setMod(xi.mod.STORETP, 25)
+    mob:setMod(xi.mod.STORETP, 50)
 end
 
 entity.onMobDeath = function(mob, player, optParams)

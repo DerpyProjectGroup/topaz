@@ -37,6 +37,7 @@ zones[xi.zone.SOUTH_GUSTABERG] =
         ALREADY_POSSESS_TEMP          = 7545, -- You already possess that temporary item.
         NO_COMBINATION                = 7550, -- You were unable to enter a combination.
         UNITY_WANTED_BATTLE_INTERACT  = 7612, -- Those who have accepted % must pay # Unity accolades to participate. The content for this Wanted battle is #. [Ready to begin?/You do not have the appropriate object set, so your rewards will be limited.]
+        TIME_ELAPSED                  = 7694, -- Time Elapsed: / [hour/hours] (Vanadiel Time) / [minute/minutes] and [second/seconds] (Earth time)
         REGIME_REGISTERED             = 9911, -- New training regime registered!
     },
     mob =

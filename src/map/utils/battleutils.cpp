@@ -4635,7 +4635,7 @@ namespace battleutils
             if (PChar)
             {
                 charutils::BuildingCharAbilityTable(PChar);
-                memset(&PChar->m_PetCommands, 0, sizeof(PChar->m_PetCommands));
+                std::memset(&PChar->m_PetCommands, 0, sizeof(PChar->m_PetCommands));
                 PChar->pushPacket<CCharAbilitiesPacket>(PChar);
                 PChar->pushPacket<CCharUpdatePacket>(PChar);
                 PChar->pushPacket<CPetSyncPacket>(PChar);
@@ -5647,7 +5647,7 @@ namespace battleutils
                     PTarget->loc.zone->UpdateEntityPacket(PTarget, ENTITY_UPDATE, UPDATE_POS);
                 }
 
-                PTarget->loc.zone->PushPacket(PTarget, CHAR_INRANGE, new CMessageBasicPacket(PTarget, PTarget, 0, 0, 232));
+                PTarget->loc.zone->PushPacket(PTarget, CHAR_INRANGE, std::make_unique<CMessageBasicPacket>(PTarget, PTarget, 0, 0, 232));
             }
         }
 

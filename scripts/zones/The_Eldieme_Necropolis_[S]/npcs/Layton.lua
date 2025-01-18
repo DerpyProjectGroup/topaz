@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: The Eldieme Necropolis (S)
 --  NPC: Layton
--- Type: Standard Merchant NPC
 -- Note: Available during Campaign battles
 -- !pos 382.679 -39.999 3.541 175
 -----------------------------------

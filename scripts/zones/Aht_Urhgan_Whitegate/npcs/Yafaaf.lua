@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Aht Urhgan Whitegate
 --  NPC: Yafaaf
--- Type: Standard Merchant
 -- !pos 76.889 -7 -140.379 50
 -----------------------------------
 local ID = zones[xi.zone.AHT_URHGAN_WHITEGATE]

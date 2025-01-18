@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Western Adoulin
 --  NPC: Hujette
--- Type: Quest NPC and Shop NPC
 -- Involved with Quest: 'All the Way to the Bank'
 -- !pos 35 0 -56 256
 -----------------------------------

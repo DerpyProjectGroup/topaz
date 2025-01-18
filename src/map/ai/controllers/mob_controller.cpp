@@ -263,6 +263,18 @@ bool CMobController::CanDetectTarget(CBattleEntity* PTarget, bool forceSight)
         hasSneak     = PTarget->StatusEffectContainer->HasStatusEffect(EFFECT_SNEAK);
     }
 
+    // Illusion effect seems to ignore true detection (true sound Porrogos don't aggro with Illusion up)
+    // Additionally, mobs that would normally aggro you via sound that also ignore illusion must also ignore you with illusion if you have sneak up,
+    // Fish in Mamook will see you through Illusion but not if you have sneak up
+    if (PTarget->StatusEffectContainer->HasStatusEffect(EFFECT_ILLUSION))
+    {
+        if (!PMob->getMobMod(MOBMOD_SEES_THROUGH_ILLUSION))
+        {
+            hasInvisible = true;
+            hasSneak     = true;
+        }
+    }
+
     bool isTargetAndInRange = PMob->GetBattleTargetID() == PTarget->targid && currentDistance <= PMob->GetMeleeRange();
 
     if (detectSight && !hasInvisible && currentDistance < PMob->getMobMod(MOBMOD_SIGHT_RANGE) && facing(PMob->loc.p, PTarget->loc.p, 64))

@@ -24,6 +24,7 @@ zones[xi.zone.ROLANBERRY_FIELDS] =
         DIG_THROW_AWAY                = 7259,  -- You dig up <item>, but your inventory is full. You regretfully throw the <item> away.
         FIND_NOTHING                  = 7261,  -- You dig and you dig, but find nothing.
         SIGN                          = 7416,  -- North: Grand Duchy of Jeuno, Sauromugue Champaign South: Pashhow Marshlands
+        TIME_ELAPSED                  = 7473,  -- Time Elapsed: / [hour/hours] (Vanadiel Time) / [minute/minutes] and [second/seconds] (Earth time)
         PLAYER_OBTAINS_ITEM           = 7597,  -- <name> obtains <item>!
         UNABLE_TO_OBTAIN_ITEM         = 7598,  -- You were unable to obtain the item.
         PLAYER_OBTAINS_TEMP_ITEM      = 7599,  -- <name> obtains the temporary item: <item>!

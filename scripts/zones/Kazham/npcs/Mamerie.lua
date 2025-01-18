@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Kazham
 --  NPC: Mamerie
--- Standard Merchant NPC
 -----------------------------------
 local ID = zones[xi.zone.KAZHAM]
 -----------------------------------

@@ -34,6 +34,7 @@ zones[xi.zone.EAST_SARUTABARUTA] =
         ALREADY_POSSESS_TEMP          = 7571, -- You already possess that temporary item.
         NO_COMBINATION                = 7576, -- You were unable to enter a combination.
         UNITY_WANTED_BATTLE_INTERACT  = 7638, -- Those who have accepted % must pay # Unity accolades to participate. The content for this Wanted battle is #. [Ready to begin?/You do not have the appropriate object set, so your rewards will be limited.]
+        TIME_ELAPSED                  = 7720, -- Time Elapsed: / [hour/hours] (Vanadiel Time) / [minute/minutes] and [second/seconds] (Earth time)
         REGIME_REGISTERED             = 9937, -- New training regime registered!
     },
     mob =

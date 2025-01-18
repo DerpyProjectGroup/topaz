@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Southern San d'Oria
 --  NPC: Aveline
--- Standard Merchant NPC
 -- !pos -139 -6 46 230
 -----------------------------------
 local ID = zones[xi.zone.SOUTHERN_SAN_DORIA]

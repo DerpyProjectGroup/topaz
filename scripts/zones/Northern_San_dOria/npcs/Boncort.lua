@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Northern San d'Oria
 --  NPC: Boncort
--- Standard Merchant NPC
 -----------------------------------
 local ID = zones[xi.zone.NORTHERN_SAN_DORIA]
 require('scripts/quests/flyers_for_regine')

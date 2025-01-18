@@ -115,7 +115,7 @@ CInstance* CInstanceLoader::LoadInstance()
             PMob->m_maxLevel = (uint8)_sql->GetIntData(12);
 
             uint16 sqlModelID[10];
-            memcpy(&sqlModelID, _sql->GetData(13), 20);
+            std::memcpy(&sqlModelID, _sql->GetData(13), 20);
             PMob->look = look_t(sqlModelID);
 
             PMob->SetMJob(_sql->GetIntData(14));
@@ -270,7 +270,7 @@ CInstance* CInstanceLoader::LoadInstance()
                 PNpc->m_flags = _sql->GetUIntData(13);
 
                 uint16 sqlModelID[10];
-                memcpy(&sqlModelID, _sql->GetData(14), 20);
+                std::memcpy(&sqlModelID, _sql->GetData(14), 20);
                 PNpc->look = look_t(sqlModelID);
 
                 PNpc->name_prefix = (uint8)_sql->GetIntData(15);

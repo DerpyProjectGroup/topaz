@@ -30,9 +30,11 @@ zones[xi.zone.YAHSE_HUNTING_GROUNDS] =
     },
     mob =
     {
+        REIVE_MOB_OFFSET = GetFirstID('Knotted_Root'),
     },
     npc =
     {
+        REIVE_COLLISION_OFFSET = GetFirstID('_780'),
     },
 }
 

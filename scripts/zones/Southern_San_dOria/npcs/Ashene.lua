@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Southern San d'Oria
 --  NPC: Ashene
--- Standard Merchant NPC
 -- !pos 70 0 61 230
 -----------------------------------
 local ID = zones[xi.zone.SOUTHERN_SAN_DORIA]

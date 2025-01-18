@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Port Jeuno
 --  NPC: Challoux
--- Standard Merchant NPC
 -----------------------------------
 local ID = zones[xi.zone.PORT_JEUNO]
 -----------------------------------

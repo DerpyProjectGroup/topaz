@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Kazham
 --  NPC: Tatapp
--- Standard Merchant NPC
 -----------------------------------
 ---@type TNpcEntity
 local entity = {}

@@ -61,6 +61,10 @@ zoneObject.onZoneIn = function(player, prevZone)
     return cs
 end
 
+zoneObject.afterZoneIn = function(player)
+    xi.chocoboGame.handleMessage(player)
+end
+
 zoneObject.onTriggerAreaEnter = function(player, triggerArea)
 end
 

@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Port Bastok
 --  NPC: Valeriano
--- Standard Merchant NPC
 -----------------------------------
 local ID = zones[xi.zone.PORT_BASTOK]
 -----------------------------------

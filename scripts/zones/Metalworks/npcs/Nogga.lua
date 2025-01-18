@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Metalworks
 --  NPC: Nogga
--- Standard Merchant NPC
 -----------------------------------
 local ID = zones[xi.zone.METALWORKS]
 -----------------------------------
