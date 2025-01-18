@@ -19,7 +19,7 @@ quest.sections =
     {
         check = function(player, status, vars)
             return status == xi.questStatus.QUEST_AVAILABLE and
-            player:getQuestStatus(xi.questLog.JEUNO, xi.quest.id.jeuno.THE_OLD_MONUMENT) == xi.questStatus.QUEST_COMPLETED
+            player:hasCompletedQuest(xi.questLog.JEUNO, xi.quest.id.jeuno.THE_OLD_MONUMENT)
         end,
 
         [xi.zone.LOWER_JEUNO] =
