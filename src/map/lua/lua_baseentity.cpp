@@ -10027,7 +10027,7 @@ void CLuaBaseEntity::capAllSkills()
 
     auto* PChar = static_cast<CCharEntity*>(m_PBaseEntity);
 
-    for (uint8 i = 1; i < 45; ++i)
+    for (uint8 i = 1; i < 46; ++i)
     {
         const char* Query = "INSERT INTO char_skills "
                             "SET "
