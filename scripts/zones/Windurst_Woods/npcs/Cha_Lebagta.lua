@@ -7,9 +7,6 @@
 ---@type TNpcEntity
 local entity = {}
 
-entity.onTrade = function(player, npc, trade)
-end
-
 entity.onTrigger = function(player, npc)
     local mihgosAmigo = player:getQuestStatus(xi.questLog.WINDURST, xi.quest.id.windurst.MIHGO_S_AMIGO)
 
@@ -18,12 +15,6 @@ entity.onTrigger = function(player, npc)
     elseif mihgosAmigo == xi.questStatus.QUEST_COMPLETED then
         player:startEvent(91, 0, 498) -- New standard dialog after Mihgo's Amigo completion
     end
-end
-
-entity.onEventUpdate = function(player, csid, option, npc)
-end
-
-entity.onEventFinish = function(player, csid, option, npc)
 end
 
 return entity

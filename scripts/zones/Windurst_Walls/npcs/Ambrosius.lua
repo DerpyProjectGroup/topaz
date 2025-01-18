@@ -70,9 +70,6 @@ entity.onTrade = function(player, npc, trade)
     end
 end
 
-entity.onEventUpdate = function(player, csid, option, npc)
-end
-
 entity.onEventFinish = function(player, csid, option, npc)
     if csid == 48 and option == 0 then
         player:addQuest(xi.questLog.WINDURST, xi.quest.id.windurst.THE_POSTMAN_ALWAYS_KO_S_TWICE)

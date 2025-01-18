@@ -385,7 +385,6 @@ xi.combat.magicHitRate.calculateTargetMagicEvasion = function(actor, target, act
     local magicEva   = target:getMod(xi.mod.MEVA) -- Base MACC.
     local resistRank = 0 -- Elemental specific Resistance rank. Acts as multiplier to base MACC.
     local resMod     = 0 -- Elemental specific magic evasion. Acts as a additive bonus to base MACC after affected by resistance rank.
-    local levelDiff  = target:getMainLvl() - actor:getMainLvl()
 
     -- Elemental magic evasion.
     if actionElement ~= xi.element.NONE then
@@ -407,11 +406,10 @@ xi.combat.magicHitRate.calculateTargetMagicEvasion = function(actor, target, act
 
     -- Level correction. Target gets a bonus the higher the level if it's a mob. Never a penalty.
     if
-        levelDiff > 0 and
-        xi.combat.levelCorrection.isLevelCorrectedZone(actor) and
-        not target:isPC()
+        not target:isPC() and
+        xi.combat.levelCorrection.isLevelCorrectedZone(actor)
     then
-        magicEva = magicEva + levelDiff * 4
+        magicEva = magicEva + utils.clamp(target:getMainLvl() - actor:getMainLvl(), 0, 100) * 4
     end
 
     return magicEva
@@ -437,7 +435,7 @@ end
 -- Calculate resist tier.
 -----------------------------------
 
-xi.combat.magicHitRate.calculateResistanceFactor = function(actor, target, skillType, actionElement, magicHitRate, rankModifier)
+xi.combat.magicHitRate.calculateResistanceFactor = function(actor, target, actionElement, magicHitRate, rankModifier)
     local targetResistRate = 1 -- The variable we return.
 
     ----------------------------------------
@@ -521,17 +519,6 @@ xi.combat.magicHitRate.calculateResistanceFactor = function(actor, target, skill
 
     targetResistRate = 1 / (2 ^ resistTier)
 
-    ----------------------------------------
-    -- Calculate additional resist tier.
-    ----------------------------------------
-    if
-        not actor:hasStatusEffect(xi.effect.SUBTLE_SORCERY) and -- Subtle sorcery bypasses this tier.
-        targetResistRank >= 4 and                               -- Forced only at and after rank 4 (50% EEM).
-        skillType == xi.skill.ELEMENTAL_MAGIC                   -- Only applies to nukes.
-    then
-        targetResistRate = targetResistRate / 2
-    end
-
     return targetResistRate
 end
 
@@ -553,7 +540,7 @@ xi.combat.magicHitRate.calculateResistRate = function(actor, target, spellGroup,
     local magicAcc     = xi.combat.magicHitRate.calculateActorMagicAccuracy(actor, target, spellGroup, skillType, skillRank, actionElement, statUsed, bonusMacc)
     local magicEva     = xi.combat.magicHitRate.calculateTargetMagicEvasion(actor, target, actionElement, magicEvasionModifier, rankModifier)
     local magicHitRate = xi.combat.magicHitRate.calculateMagicHitRate(magicAcc, magicEva)
-    local resistRate   = xi.combat.magicHitRate.calculateResistanceFactor(actor, target, skillType, actionElement, magicHitRate, rankModifier)
+    local resistRate   = xi.combat.magicHitRate.calculateResistanceFactor(actor, target, actionElement, magicHitRate, rankModifier)
 
     return resistRate
 end

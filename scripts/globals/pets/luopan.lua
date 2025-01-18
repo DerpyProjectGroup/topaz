@@ -10,6 +10,8 @@ xi.pets.luopan.onMobSpawn = function(mob)
     mob:timer(600000, function(mobArg)
         mobArg:setHP(0)
     end)
+
+    mob:setMod(xi.mod.MOVE_SPEED_OVERRIDE, 256) -- this mod > 255 = no movement
 end
 
 xi.pets.luopan.onMobDeath = function(mob)

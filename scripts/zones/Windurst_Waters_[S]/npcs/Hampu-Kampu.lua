@@ -6,9 +6,6 @@
 ---@type TNpcEntity
 local entity = {}
 
-entity.onTrade = function(player, npc, trade)
-end
-
 entity.onTrigger = function(player, npc)
     local sayItWithAHandbag = player:getQuestStatus(xi.questLog.CRYSTAL_WAR, xi.quest.id.crystalWar.SAY_IT_WITH_A_HANDBAG)
     local sayItWithAHandbagCS = player:getCharVar('sayItWithAHandbagCS')
@@ -32,9 +29,6 @@ entity.onTrigger = function(player, npc)
     elseif sayItWithAHandbag == xi.questStatus.QUEST_AVAILABLE then
         player:startEvent(169)
     end
-end
-
-entity.onEventUpdate = function(player, csid, option, npc)
 end
 
 entity.onEventFinish = function(player, csid, option, npc)
