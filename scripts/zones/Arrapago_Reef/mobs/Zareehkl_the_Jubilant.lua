@@ -8,6 +8,7 @@ mixins = { require('scripts/mixins/families/qutrub') }
 local entity = {}
 
 entity.onMobSpawn = function(mob)
+    mob:addImmunity(xi.immunity.STUN)
     mob:setLocalVar('qutrubBreakChance', 5) -- Wiki implies its weapon is harder to break
 end
 

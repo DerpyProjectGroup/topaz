@@ -15,6 +15,7 @@ entity.onMobInitialize = function(mob)
 end
 
 entity.onMobSpawn = function(mob)
+    mob:addImmunity(xi.immunity.STUN)
     mob:setLocalVar('spawn_time', os.time() + 5) -- five seconds for first pet
 end
 

@@ -1,6 +1,8 @@
 -----------------------------------
--- Area: Ranguemont Pass
---   NM: Mucoid Mass
+-- Area: Promyvion-Vahzl
+--   NM: Deviator
+-----------------------------------
+mixins = { require('scripts/mixins/families/empty_terroanima') }
 -----------------------------------
 ---@type TMobEntity
 local entity = {}
@@ -10,11 +12,6 @@ entity.onMobSpawn = function(mob)
 end
 
 entity.onMobDeath = function(mob, player, optParams)
-    xi.hunts.checkHunt(mob, player, 345)
-end
-
-entity.onMobDespawn = function(mob)
-    mob:setRespawnTime(math.random(5400, 6000)) -- 90 to 100 minutes
 end
 
 return entity

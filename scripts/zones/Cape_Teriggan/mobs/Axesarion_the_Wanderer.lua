@@ -7,6 +7,10 @@ local ID = zones[xi.zone.CAPE_TERIGGAN]
 ---@type TMobEntity
 local entity = {}
 
+entity.onMobSpawn = function(mob)
+    mob:addImmunity(xi.immunity.STUN)
+end
+
 entity.onMobDisengage = function(mob)
     DespawnMob(mob:getID(), 120)
 end

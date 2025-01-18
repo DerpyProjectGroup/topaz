@@ -1,8 +1,6 @@
 -----------------------------------
--- Area: Castle Oztroja (151)
---   NM: Huu Xalmo the Savage
------------------------------------
-mixins = { require('scripts/mixins/job_special') }
+-- Area: Temenos
+--  Mob: Aerns_Avatar
 -----------------------------------
 ---@type TMobEntity
 local entity = {}
