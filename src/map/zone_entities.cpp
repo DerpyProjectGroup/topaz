@@ -56,10 +56,13 @@
 #include "utils/synthutils.h"
 #include "utils/zoneutils.h"
 
+#include <ranges>
 #include <unordered_set>
 
 namespace
 {
+    const float ENTITY_RENDER_DISTANCE                 = 50.0f;
+    const float ENTITY_VERTICAL_RENDER_DISTANCE        = 20.0f;
     const float CHARACTER_SYNC_DISTANCE                = 45.0f;
     const float CHARACTER_DESPAWN_DISTANCE             = 50.0f;
     const int   CHARACTER_SWAP_MAX                     = 5;
@@ -68,6 +71,27 @@ namespace
     const int   CHARACTER_SYNC_PARTY_SIGNIFICANCE      = 100000;
     const int   CHARACTER_SYNC_ALLI_SIGNIFICANCE       = 10000;
     const int   PERSIST_CHECK_CHARACTERS               = 20;
+
+    inline bool isWithinVerticalDistance(CBaseEntity* source, CBaseEntity* target)
+    {
+        return abs(target->loc.p.y - source->loc.p.y - 0.5f) <= ENTITY_VERTICAL_RENDER_DISTANCE;
+    }
+
+    //
+    // Helpers for std::views::transform and std::views::filter
+    //
+
+    template <typename T>
+    struct cast
+    {
+        constexpr auto operator()(CBaseEntity* entity) -> T const
+        {
+            return static_cast<T>(entity);
+        }
+    };
+
+    template <typename T>
+    inline constexpr auto cast_view = std::views::values | std::views::transform(cast<T>{});
 } // namespace
 
 typedef std::pair<float, CCharEntity*> CharScorePair;
@@ -121,63 +145,145 @@ CZoneEntities::~CZoneEntities()
 void CZoneEntities::HealAllMobs()
 {
     TracyZoneScoped;
-    for (EntityList_t::const_iterator it = m_mobList.begin(); it != m_mobList.end(); ++it)
-    {
-        CMobEntity* PCurrentMob = (CMobEntity*)it->second;
 
+    for (auto* PCurrentMob : m_mobList | cast_view<CMobEntity*>)
+    {
         // keep resting until i'm full
         PCurrentMob->Rest(1);
+    }
+}
+
+void CZoneEntities::TryAddToNearbySpawnLists(CBaseEntity* PEntity)
+{
+    TracyZoneScoped;
+
+    for (auto* PCurrentChar : m_charList | cast_view<CCharEntity*>)
+    {
+        const auto isInHeightRange = isWithinVerticalDistance(PEntity, PCurrentChar);
+        const auto isInRange       = distance(PEntity->loc.p, PCurrentChar->loc.p) <= ENTITY_RENDER_DISTANCE;
+
+        if (isInHeightRange && isInRange)
+        {
+            switch (PEntity->objtype)
+            {
+                case TYPE_PC:
+                {
+                    PCurrentChar->SpawnPCList[PEntity->id] = PEntity;
+                    PCurrentChar->updateEntityPacket(PEntity, ENTITY_SPAWN, UPDATE_ALL_CHAR);
+                    break;
+                }
+                case TYPE_NPC:
+                {
+                    PCurrentChar->SpawnNPCList[PEntity->id] = PEntity;
+                    PCurrentChar->updateEntityPacket(PEntity, ENTITY_SPAWN, UPDATE_ALL_MOB);
+                    break;
+                }
+                case TYPE_MOB:
+                {
+                    PCurrentChar->SpawnMOBList[PEntity->id] = PEntity;
+                    PCurrentChar->updateEntityPacket(PEntity, ENTITY_SPAWN, UPDATE_ALL_MOB);
+                    break;
+                }
+
+                case TYPE_PET:
+                {
+                    PCurrentChar->SpawnPETList[PEntity->id] = PEntity;
+                    PCurrentChar->updateEntityPacket(PEntity, ENTITY_SPAWN, UPDATE_ALL_MOB);
+                    break;
+                }
+                case TYPE_TRUST:
+                {
+                    PCurrentChar->SpawnTRUSTList[PEntity->id] = PEntity;
+                    PCurrentChar->updateEntityPacket(PEntity, ENTITY_SPAWN, UPDATE_ALL_MOB);
+                    break;
+                }
+                // case TYPE_FELLOW:
+                // {
+                //     PCurrentChar->SpawnFellowList[PEntity->id] = PEntity;
+                //     PCurrentChar->updateEntityPacket(PEntity, ENTITY_SPAWN, UPDATE_ALL_MOB);
+                //     break;
+                // }
+                default:
+                    return;
+                    break;
+            }
+        }
     }
 }
 
 void CZoneEntities::InsertPC(CCharEntity* PChar)
 {
     TracyZoneScoped;
+
     PChar->loc.zone = m_zone;
     charTargIds.insert(PChar->targid);
     m_charList[PChar->targid] = PChar;
+
+    // TODO: Do we need to force-add the entity to spawn lists? It'll happen on a char's next update anyway?
+    TryAddToNearbySpawnLists(PChar);
+
     ShowDebug("CZone:: %s IncreaseZoneCounter <%u> %s", m_zone->getName(), m_charList.size(), PChar->getName());
 }
 
 void CZoneEntities::InsertAlly(CBaseEntity* PMob)
 {
     TracyZoneScoped;
+
     if ((PMob != nullptr) && (PMob->objtype == TYPE_MOB))
     {
         PMob->loc.zone           = m_zone;
         m_allyList[PMob->targid] = PMob;
+
+        // TODO: Do we need to force-add the entity to spawn lists? It'll happen on a char's next update anyway?
+        TryAddToNearbySpawnLists(PMob);
     }
 }
 
 void CZoneEntities::InsertMOB(CBaseEntity* PMob)
 {
     TracyZoneScoped;
+
     if ((PMob != nullptr) && (PMob->objtype == TYPE_MOB))
     {
         PMob->loc.zone = m_zone;
 
         FindPartyForMob(PMob);
         m_mobList[PMob->targid] = PMob;
+
+        // TODO: Do we need to force-add the entity to spawn lists? It'll happen on a char's next update anyway?
+        TryAddToNearbySpawnLists(PMob);
     }
 }
 
 void CZoneEntities::InsertNPC(CBaseEntity* PNpc)
 {
     TracyZoneScoped;
+
     if ((PNpc != nullptr) && (PNpc->objtype == TYPE_NPC))
     {
         PNpc->loc.zone = m_zone;
 
         if (PNpc->look.size == MODEL_SHIP)
         {
+            if (m_TransportList.contains(PNpc->targid))
+            {
+                ShowError("Error: Inserting Transport NPC with duplicate ID!");
+            }
+
             m_TransportList[PNpc->targid] = PNpc;
-            return;
         }
-        if (m_npcList.contains(PNpc->targid))
+        else
         {
-            ShowError("Error: Inserting NPC with duplicate ID!");
+            if (m_npcList.contains(PNpc->targid))
+            {
+                ShowError("Error: Inserting NPC with duplicate ID!");
+            }
+
+            m_npcList[PNpc->targid] = PNpc;
         }
-        m_npcList[PNpc->targid] = PNpc;
+
+        // TODO: Do we need to force-add the entity to spawn lists? It'll happen on a char's next update anyway?
+        TryAddToNearbySpawnLists(PNpc);
     }
 }
 
@@ -192,22 +298,15 @@ void CZoneEntities::DeletePET(CBaseEntity* PPet)
 void CZoneEntities::InsertPET(CBaseEntity* PPet)
 {
     TracyZoneScoped;
+
     if (PPet != nullptr)
     {
         m_zone->GetZoneEntities()->AssignDynamicTargIDandLongID(PPet);
 
         m_petList[PPet->targid] = PPet;
 
-        for (EntityList_t::const_iterator it = m_charList.begin(); it != m_charList.end(); ++it)
-        {
-            CCharEntity* PCurrentChar = (CCharEntity*)it->second;
-
-            if (distance(PPet->loc.p, PCurrentChar->loc.p) <= 50)
-            {
-                PCurrentChar->SpawnPETList[PPet->id] = PPet;
-                PCurrentChar->updateEntityPacket(PPet, ENTITY_SPAWN, UPDATE_ALL_MOB);
-            }
-        }
+        // TODO: Do we need to force-add the entity to spawn lists? It'll happen on a char's next update anyway?
+        TryAddToNearbySpawnLists(PPet);
 
         PPet->spawnAnimation = SPAWN_ANIMATION::NORMAL; // Turn off special spawn animation
 
@@ -219,24 +318,14 @@ void CZoneEntities::InsertPET(CBaseEntity* PPet)
 void CZoneEntities::InsertTRUST(CBaseEntity* PTrust)
 {
     TracyZoneScoped;
+
     if (PTrust != nullptr)
     {
         m_zone->GetZoneEntities()->AssignDynamicTargIDandLongID(PTrust);
         m_trustList[PTrust->targid] = PTrust;
 
-        for (EntityList_t::const_iterator it = m_charList.begin(); it != m_charList.end(); ++it)
-        {
-            CCharEntity* PCurrentChar = (CCharEntity*)it->second;
-
-            if (distance(PTrust->loc.p, PCurrentChar->loc.p) <= 50)
-            {
-                if (PCurrentChar->targid == ((CBattleEntity*)PTrust)->PMaster->targid)
-                {
-                    PCurrentChar->SpawnTRUSTList[PTrust->id] = PTrust;
-                }
-                PCurrentChar->updateEntityPacket(PTrust, ENTITY_SPAWN, UPDATE_ALL_MOB);
-            }
-        }
+        // TODO: Do we need to force-add the entity to spawn lists? It'll happen on a char's next update anyway?
+        TryAddToNearbySpawnLists(PTrust);
 
         PTrust->spawnAnimation = SPAWN_ANIMATION::NORMAL; // Turn off special spawn animation
 
@@ -255,6 +344,7 @@ void CZoneEntities::DeleteTRUST(CBaseEntity* PTrust)
 void CZoneEntities::FindPartyForMob(CBaseEntity* PEntity)
 {
     TracyZoneScoped;
+
     if (PEntity == nullptr)
     {
         ShowWarning("PEntity was null.");
@@ -275,10 +365,8 @@ void CZoneEntities::FindPartyForMob(CBaseEntity* PEntity)
 
     if ((forceLink || PMob->m_Link || PMob->m_Type & MOBTYPE_BATTLEFIELD) && PMob->PParty == nullptr)
     {
-        for (EntityList_t::const_iterator it = m_mobList.begin(); it != m_mobList.end(); ++it)
+        for (auto* PCurrentMob : m_mobList | cast_view<CMobEntity*>)
         {
-            CMobEntity* PCurrentMob = (CMobEntity*)it->second;
-
             if (!forceLink && !PCurrentMob->m_Link)
             {
                 continue;
@@ -303,10 +391,9 @@ void CZoneEntities::FindPartyForMob(CBaseEntity* PEntity)
 void CZoneEntities::TransportDepart(uint16 boundary, uint16 zone)
 {
     TracyZoneScoped;
-    for (EntityList_t::const_iterator it = m_charList.begin(); it != m_charList.end(); ++it)
-    {
-        CCharEntity* PCurrentChar = (CCharEntity*)it->second;
 
+    for (auto* PCurrentChar : m_charList | cast_view<CCharEntity*>)
+    {
         if (PCurrentChar->loc.boundary == boundary)
         {
             if (PCurrentChar->eventPreparation->targetEntity != nullptr)
@@ -333,12 +420,13 @@ void CZoneEntities::TransportDepart(uint16 boundary, uint16 zone)
 void CZoneEntities::WeatherChange(WEATHER weather)
 {
     TracyZoneScoped;
-    auto element = zoneutils::GetWeatherElement(weather);
-    for (EntityList_t::const_iterator it = m_mobList.begin(); it != m_mobList.end(); ++it)
-    {
-        CMobEntity* PCurrentMob = (CMobEntity*)it->second;
 
+    const auto element = zoneutils::GetWeatherElement(weather);
+
+    for (auto* PCurrentMob : m_mobList | cast_view<CMobEntity*>)
+    {
         PCurrentMob->PAI->EventHandler.triggerListener("WEATHER_CHANGE", CLuaBaseEntity(PCurrentMob), static_cast<int>(weather), element);
+
         // can't detect by scent in this weather
         if (PCurrentMob->getMobMod(MOBMOD_DETECTION) & DETECT_SCENT)
         {
@@ -375,30 +463,27 @@ void CZoneEntities::WeatherChange(WEATHER weather)
         }
     }
 
-    for (EntityList_t::const_iterator it = m_charList.begin(); it != m_charList.end(); ++it)
+    for (auto* PCurrentChar : m_charList | cast_view<CCharEntity*>)
     {
-        CCharEntity* PChar = (CCharEntity*)it->second;
-
-        PChar->PLatentEffectContainer->CheckLatentsWeather(weather);
-        PChar->PAI->EventHandler.triggerListener("WEATHER_CHANGE", CLuaBaseEntity(PChar), static_cast<int>(weather), element);
+        PCurrentChar->PLatentEffectContainer->CheckLatentsWeather(weather);
+        PCurrentChar->PAI->EventHandler.triggerListener("WEATHER_CHANGE", CLuaBaseEntity(PCurrentChar), static_cast<int>(weather), element);
     }
 }
 
 void CZoneEntities::MusicChange(uint16 BlockID, uint16 MusicTrackID)
 {
-    for (EntityList_t::const_iterator it = m_charList.begin(); it != m_charList.end(); ++it)
-    {
-        CCharEntity* PCurrentChar = (CCharEntity*)it->second;
+    TracyZoneScoped;
 
-        if (PCurrentChar != nullptr)
-        {
-            PCurrentChar->pushPacket<CChangeMusicPacket>(BlockID, MusicTrackID);
-        }
+    for (auto* PChar : m_charList | cast_view<CCharEntity*>)
+    {
+        PChar->pushPacket<CChangeMusicPacket>(BlockID, MusicTrackID);
     }
 }
 
 void CZoneEntities::DecreaseZoneCounter(CCharEntity* PChar)
 {
+    TracyZoneScoped;
+
     if (PChar == nullptr)
     {
         ShowWarning("PChar is null.");
@@ -410,8 +495,6 @@ void CZoneEntities::DecreaseZoneCounter(CCharEntity* PChar)
         ShowWarning("Zone mismatch for %s.", PChar->getName());
         return;
     }
-
-    TracyZoneScoped;
 
     battleutils::RelinquishClaim(PChar);
 
@@ -587,14 +670,16 @@ bool CZoneEntities::CharListEmpty() const
 
 void CZoneEntities::DespawnPC(CCharEntity* PChar)
 {
-    for (EntityList_t::const_iterator it = m_charList.begin(); it != m_charList.end(); ++it)
-    {
-        CCharEntity*            PCurrentChar = (CCharEntity*)it->second;
-        SpawnIDList_t::iterator PC           = PCurrentChar->SpawnPCList.find(PChar->id);
+    TracyZoneScoped;
 
-        if (PC != PCurrentChar->SpawnPCList.end())
+    for (auto* PCurrentChar : m_charList | cast_view<CCharEntity*>)
+    {
+        const auto itr           = PCurrentChar->SpawnPCList.find(PChar->id);
+        const auto isInSpawnList = itr != PCurrentChar->SpawnPCList.end();
+
+        if (isInSpawnList)
         {
-            PCurrentChar->SpawnPCList.erase(PC);
+            PCurrentChar->SpawnPCList.erase(itr);
             PCurrentChar->updateCharPacket(PChar, ENTITY_DESPAWN, UPDATE_NONE);
         }
     }
@@ -603,27 +688,42 @@ void CZoneEntities::DespawnPC(CCharEntity* PChar)
 void CZoneEntities::SpawnMOBs(CCharEntity* PChar)
 {
     TracyZoneScoped;
-    for (EntityList_t::const_iterator it = m_mobList.begin(); it != m_mobList.end(); ++it)
+
+    for (auto* PCurrentMob : m_mobList | cast_view<CMobEntity*>)
     {
-        CMobEntity*             PCurrentMob = (CMobEntity*)it->second;
-        SpawnIDList_t::iterator MOB         = PChar->SpawnMOBList.find(PCurrentMob->id);
+        auto& spawnList = PChar->SpawnMOBList;
 
-        float CurrentDistance = distance(PChar->loc.p, PCurrentMob->loc.p);
+        const auto id              = PCurrentMob->id;
+        const auto itr             = spawnList.find(id);
+        const auto isInSpawnList   = itr != spawnList.end();
+        const auto isInHeightRange = isWithinVerticalDistance(PChar, PCurrentMob);
+        const auto isInRange       = distance(PChar->loc.p, PCurrentMob->loc.p) <= ENTITY_RENDER_DISTANCE;
+        const auto isVisibleStatus = PCurrentMob->status != STATUS_TYPE::DISAPPEAR;
 
-        // Is this mob "visible" to the player?
-        if (PCurrentMob->status != STATUS_TYPE::DISAPPEAR && CurrentDistance <= 50)
+        const auto tryAddToSpawnList = [&]()
         {
-            // mob not in update list for player, add it in
-            if (MOB == PChar->SpawnMOBList.end())
+            if (!isInSpawnList)
             {
-                PChar->SpawnMOBList.insert(MOB, SpawnIDList_t::value_type(PCurrentMob->id, PCurrentMob));
+                spawnList.insert(itr, SpawnIDList_t::value_type(id, PCurrentMob));
                 PChar->updateEntityPacket(PCurrentMob, ENTITY_SPAWN, UPDATE_ALL_MOB);
             }
+        };
 
+        const auto tryRemoveFromSpawnList = [&]()
+        {
+            if (isInSpawnList)
+            {
+                spawnList.erase(itr);
+                PChar->updateEntityPacket(PCurrentMob, ENTITY_DESPAWN, UPDATE_NONE);
+            }
+        };
+
+        const auto tapAggro = [&]()
+        {
             // Check to skip aggro routine
             if (PChar->isDead() || PChar->visibleGmLevel >= 3 || PCurrentMob->PMaster)
             {
-                continue;
+                return;
             }
 
             // checking monsters night/daytime sleep is already taken into account in the CurrentAction check, because monsters don't move in their sleep
@@ -638,7 +738,7 @@ void CZoneEntities::SpawnMOBs(CCharEntity* PChar)
                 {
                     PController->SetFollowTarget(PChar, FollowType::Roam);
                 }
-                continue;
+                return;
             }
 
             bool validAggro = mobCheck > EMobDifficulty::TooWeak || PChar->isSitting() || PCurrentMob->getMobMod(MOBMOD_ALWAYS_AGGRO);
@@ -646,11 +746,19 @@ void CZoneEntities::SpawnMOBs(CCharEntity* PChar)
             {
                 PCurrentMob->PAI->Engage(PChar->targid);
             }
-        }
-        else if (MOB != PChar->SpawnMOBList.end())
+        };
+
+        // Is this mob "visible" to the player?
+        if (isVisibleStatus && isInHeightRange && isInRange)
         {
-            PChar->SpawnMOBList.erase(MOB);
-            PChar->updateEntityPacket(PCurrentMob, ENTITY_DESPAWN, UPDATE_NONE);
+            tryAddToSpawnList();
+
+            // TODO: Can/should this aggro routine be moved out of here and into the entity's first tick/spawn?
+            tapAggro();
+        }
+        else
+        {
+            tryRemoveFromSpawnList();
         }
     }
 }
@@ -659,26 +767,46 @@ void CZoneEntities::SpawnPETs(CCharEntity* PChar)
 {
     TracyZoneScoped;
 
-    for (EntityList_t::const_iterator it = m_petList.begin(); it != m_petList.end(); ++it)
+    // TODO: Rather than iterating every entity in the zone, we should be doing
+    //     : spatial partitioning to only check entities within a certain range of the player.
+    //     : This would change this loop to look like:
+    //     : Compare previous and current spatial partitioning results to determine which entities to add/remove from the spawn list.
+    for (auto* PCurrentEntity : m_petList | std::views::values)
     {
-        CPetEntity*             PCurrentPet = (CPetEntity*)it->second;
-        SpawnIDList_t::iterator PET         = PChar->SpawnPETList.find(PCurrentPet->id);
+        auto& spawnList = PChar->SpawnPETList;
 
-        // Is this pet "visible" to the player?
-        if ((PCurrentPet->status == STATUS_TYPE::NORMAL || PCurrentPet->status == STATUS_TYPE::UPDATE) && distance(PChar->loc.p, PCurrentPet->loc.p) <= 50)
+        const auto id              = PCurrentEntity->id;
+        const auto itr             = spawnList.find(id);
+        const auto isInSpawnList   = itr != spawnList.end();
+        const auto isInHeightRange = isWithinVerticalDistance(PChar, PCurrentEntity);
+        const auto isInRange       = distance(PChar->loc.p, PCurrentEntity->loc.p) <= ENTITY_RENDER_DISTANCE;
+        const auto isVisibleStatus = PCurrentEntity->status == STATUS_TYPE::NORMAL || PCurrentEntity->status == STATUS_TYPE::UPDATE;
+
+        const auto tryAddToSpawnList = [&]()
         {
-            // pet not in update list for player, add it in
-            if (PET == PChar->SpawnPETList.end())
+            if (!isInSpawnList)
             {
-                PChar->SpawnPETList.insert(PET, SpawnIDList_t::value_type(PCurrentPet->id, PCurrentPet));
-                PChar->updateEntityPacket(PCurrentPet, ENTITY_SPAWN, UPDATE_ALL_MOB);
+                spawnList.insert(itr, SpawnIDList_t::value_type(id, PCurrentEntity));
+                PChar->updateEntityPacket(PCurrentEntity, ENTITY_SPAWN, UPDATE_ALL_MOB);
             }
-        }
-        // Pet not visible, remove it from spawn list if it's in there
-        else if (PET != PChar->SpawnPETList.end())
+        };
+
+        const auto tryRemoveFromSpawnList = [&]()
         {
-            PChar->SpawnPETList.erase(PET);
-            PChar->updateEntityPacket(PCurrentPet, ENTITY_DESPAWN, UPDATE_NONE);
+            if (isInSpawnList)
+            {
+                spawnList.erase(itr);
+                PChar->updateEntityPacket(PCurrentEntity, ENTITY_DESPAWN, UPDATE_NONE);
+            }
+        };
+
+        if (isVisibleStatus && isInHeightRange && isInRange)
+        {
+            tryAddToSpawnList();
+        }
+        else
+        {
+            tryRemoveFromSpawnList();
         }
     }
 }
@@ -686,71 +814,106 @@ void CZoneEntities::SpawnPETs(CCharEntity* PChar)
 void CZoneEntities::SpawnNPCs(CCharEntity* PChar)
 {
     TracyZoneScoped;
-    if (!PChar->m_moghouseID)
-    {
-        for (EntityList_t::const_iterator it = m_npcList.begin(); it != m_npcList.end(); ++it)
-        {
-            CNpcEntity*             PCurrentNpc = (CNpcEntity*)it->second;
-            SpawnIDList_t::iterator NPC         = PChar->SpawnNPCList.find(PCurrentNpc->id);
 
-            if (PCurrentNpc->status == STATUS_TYPE::NORMAL || PCurrentNpc->status == STATUS_TYPE::UPDATE)
+    if (PChar->m_moghouseID)
+    {
+        return;
+    }
+
+    auto npcItrCount = 0U;
+
+    // TODO: Rather than iterating every entity in the zone, we should be doing
+    //     : spatial partitioning to only check entities within a certain range of the player.
+    //     : This would change this loop to look like:
+    //     : Compare previous and current spatial partitioning results to determine which entities to add/remove from the spawn list.
+    for (auto* PCurrentEntity : m_npcList | std::views::values)
+    {
+        npcItrCount++;
+
+        auto& spawnList = PChar->SpawnNPCList;
+
+        const auto id              = PCurrentEntity->id;
+        const auto itr             = spawnList.find(id);
+        const auto isInSpawnList   = itr != spawnList.end();
+        const auto isInHeightRange = isWithinVerticalDistance(PChar, PCurrentEntity);
+        const auto isInRange       = distance(PChar->loc.p, PCurrentEntity->loc.p) <= ENTITY_RENDER_DISTANCE;
+        const auto isVisibleStatus = PCurrentEntity->status == STATUS_TYPE::NORMAL || PCurrentEntity->status == STATUS_TYPE::UPDATE;
+
+        const auto tryAddToSpawnList = [&]()
+        {
+            if (!isInSpawnList)
             {
-                // Is this npc "visible" to the player?
-                if (distance(PChar->loc.p, PCurrentNpc->loc.p) <= 50)
-                {
-                    // npc not in update list for player, add it in
-                    if (NPC == PChar->SpawnNPCList.end())
-                    {
-                        PChar->SpawnNPCList.insert(NPC, SpawnIDList_t::value_type(PCurrentNpc->id, PCurrentNpc));
-                        PChar->updateEntityPacket(PCurrentNpc, ENTITY_SPAWN, UPDATE_ALL_MOB);
-                    }
-                }
-                // npc not visible, remove it from spawn list if it's in there
-                else if (NPC != PChar->SpawnNPCList.end())
-                {
-                    PChar->SpawnNPCList.erase(NPC);
-                    PChar->updateEntityPacket(PCurrentNpc, ENTITY_DESPAWN, UPDATE_NONE);
-                }
+                spawnList.insert(itr, SpawnIDList_t::value_type(id, PCurrentEntity));
+                PChar->updateEntityPacket(PCurrentEntity, ENTITY_SPAWN, UPDATE_ALL_MOB);
             }
-            // NPC not visible, remove it from spawn list if it's in there
-            else if (NPC != PChar->SpawnNPCList.end())
+        };
+
+        const auto tryRemoveFromSpawnList = [&]()
+        {
+            if (isInSpawnList)
             {
-                PChar->SpawnNPCList.erase(NPC);
-                PChar->updateEntityPacket(PCurrentNpc, ENTITY_DESPAWN, UPDATE_NONE);
+                spawnList.erase(itr);
+                PChar->updateEntityPacket(PCurrentEntity, ENTITY_DESPAWN, UPDATE_NONE);
             }
+        };
+
+        if (isVisibleStatus && isInHeightRange && isInRange)
+        {
+            tryAddToSpawnList();
+        }
+        else
+        {
+            tryRemoveFromSpawnList();
         }
     }
+
+    ShowInfoFmt("NPC iteration count: {}", npcItrCount);
 }
 
 void CZoneEntities::SpawnTRUSTs(CCharEntity* PChar)
 {
     TracyZoneScoped;
-    for (EntityList_t::const_iterator TrustItr = m_trustList.begin(); TrustItr != m_trustList.end(); ++TrustItr)
-    {
-        if (CTrustEntity* PCurrentTrust = dynamic_cast<CTrustEntity*>(TrustItr->second))
-        {
-            SpawnIDList_t::iterator SpawnTrustItr = PChar->SpawnTRUSTList.find(PCurrentTrust->id);
-            CCharEntity*            PMaster       = dynamic_cast<CCharEntity*>(PCurrentTrust->PMaster);
 
-            // Is this trust "visible" to the player?
-            if (PCurrentTrust->status == STATUS_TYPE::NORMAL && distance(PChar->loc.p, PCurrentTrust->loc.p) <= 50)
+    // TODO: Rather than iterating every entity in the zone, we should be doing
+    //     : spatial partitioning to only check entities within a certain range of the player.
+    //     : This would change this loop to look like:
+    //     : Compare previous and current spatial partitioning results to determine which entities to add/remove from the spawn list.
+    for (auto* PCurrentEntity : m_trustList | std::views::values)
+    {
+        auto& spawnList = PChar->SpawnTRUSTList;
+
+        const auto id              = PCurrentEntity->id;
+        const auto itr             = spawnList.find(id);
+        const auto isInSpawnList   = itr != spawnList.end();
+        const auto isInHeightRange = isWithinVerticalDistance(PChar, PCurrentEntity);
+        const auto isInRange       = distance(PChar->loc.p, PCurrentEntity->loc.p) <= ENTITY_RENDER_DISTANCE;
+        const auto isVisibleStatus = PCurrentEntity->status == STATUS_TYPE::NORMAL || PCurrentEntity->status == STATUS_TYPE::UPDATE;
+
+        const auto tryAddToSpawnList = [&]()
+        {
+            if (!isInSpawnList)
             {
-                // trust not in update list for player, add it in
-                if (SpawnTrustItr == PChar->SpawnTRUSTList.end())
-                {
-                    PChar->SpawnTRUSTList.insert(SpawnTrustItr, SpawnIDList_t::value_type(PCurrentTrust->id, PCurrentTrust));
-                    if (PMaster)
-                    {
-                        PChar->pushPacket<CEntitySetNamePacket>(PCurrentTrust);
-                        PChar->updateEntityPacket(PCurrentTrust, ENTITY_SPAWN, UPDATE_ALL_MOB);
-                    }
-                }
+                spawnList.insert(itr, SpawnIDList_t::value_type(id, PCurrentEntity));
+                PChar->updateEntityPacket(PCurrentEntity, ENTITY_SPAWN, UPDATE_ALL_MOB);
             }
-            // trust not visible, remove it from spawn list if it's in there
-            else if (SpawnTrustItr != PChar->SpawnTRUSTList.end())
+        };
+
+        const auto tryRemoveFromSpawnList = [&]()
+        {
+            if (isInSpawnList)
             {
-                PChar->SpawnTRUSTList.erase(SpawnTrustItr);
+                spawnList.erase(itr);
+                PChar->updateEntityPacket(PCurrentEntity, ENTITY_DESPAWN, UPDATE_NONE);
             }
+        };
+
+        if (isVisibleStatus && isInHeightRange && isInRange)
+        {
+            tryAddToSpawnList();
+        }
+        else
+        {
+            tryRemoveFromSpawnList();
         }
     }
 }
@@ -786,20 +949,8 @@ void CZoneEntities::SpawnPCs(CCharEntity* PChar)
     // Provide bonus score to characters targeted by spawned mobs or other conflict players, if in conflict
     std::unordered_map<uint32, float> scoreBonus = std::unordered_map<uint32, float>();
 
-    for (auto mobEntry : PChar->SpawnMOBList)
+    for (auto* PMob : PChar->SpawnMOBList | cast_view<CMobEntity*>)
     {
-        auto* PMob = mobEntry.second;
-        if (PMob == nullptr)
-        {
-            // clang-format off
-            auto targId       = mobEntry.first - 0x1000000 - (m_zone->GetID() << 12);
-            auto isDynamicStr = targId >= 0x700 ? "Dynamic" : "Static";
-            ShowError(fmt::format("Empty {} Mob entry (targId: {}) found in {}'s SpawnMOBList in {}! This indicates an improperly cleaned-up Mob object! This is dangerous!",
-                                  isDynamicStr, targId, PChar->name, m_zone->getName()).c_str());
-            // clang-format on
-            continue;
-        }
-
         CState* state = PMob->PAI->GetCurrentState();
         if (!state)
         {
@@ -817,14 +968,14 @@ void CZoneEntities::SpawnPCs(CCharEntity* PChar)
     MinHeap<CharScorePair>    spawnedCharacters;
     std::vector<CCharEntity*> toRemove;
 
-    for (auto iter : PChar->SpawnPCList)
+    for (auto* PCurrentChar : m_charList | cast_view<CCharEntity*>)
     {
-        CCharEntity* pc = (CCharEntity*)iter.second;
-
         // Despawn character if it's a hidden GM, is in a different mog house, or if player is in a conflict while other is not, or too far up/down
-        if (pc->m_isGMHidden || PChar->m_moghouseID != pc->m_moghouseID)
+        if (PCurrentChar->m_isGMHidden ||
+            PChar->m_moghouseID != PCurrentChar->m_moghouseID ||
+            !isWithinVerticalDistance(PChar, PCurrentChar))
         {
-            toRemove.emplace_back(pc);
+            toRemove.emplace_back(PCurrentChar);
             continue;
         }
 
@@ -837,22 +988,22 @@ void CZoneEntities::SpawnPCs(CCharEntity* PChar)
         // Despawn character if it's a hidden GM, is in a different mog house, or if player is in a conflict while other is not, or too far up/down
         if (PChar->loc.zone->GetID() == ZONE_FERETORY)
         {
-            toRemove.emplace_back(pc);
+            toRemove.emplace_back(PCurrentChar);
             continue;
         }
 
         // Despawn character if it's currently spawned and is far away
-        float charDistance = distance(PChar->loc.p, pc->loc.p);
+        float charDistance = distance(PChar->loc.p, PCurrentChar->loc.p);
         if (charDistance >= CHARACTER_DESPAWN_DISTANCE)
         {
-            toRemove.emplace_back(pc);
+            toRemove.emplace_back(PCurrentChar);
             continue;
         }
 
         // Total score is determined by the significance between the characters, adding any bonuses,
         // and then subtracting the distance to make characters further away less important.
-        float significanceScore = getSignificanceScore(PChar, pc);
-        auto  bonusIter         = scoreBonus.find(iter.second->id);
+        float significanceScore = getSignificanceScore(PChar, PCurrentChar);
+        auto  bonusIter         = scoreBonus.find(PCurrentChar->id);
         auto  bonus             = bonusIter == scoreBonus.end() ? 0 : bonusIter->second;
         float totalScore        = significanceScore + bonus - charDistance + CHARACTER_SYNC_DISTANCE_SWAP_THRESHOLD;
 
@@ -861,17 +1012,17 @@ void CZoneEntities::SpawnPCs(CCharEntity* PChar)
             // Is spawned and should be considered for removal if necessary
             if (spawnedCharacters.size() < CHARACTER_SYNC_LIMIT_MAX)
             {
-                spawnedCharacters.emplace(std::make_pair(totalScore, pc));
+                spawnedCharacters.emplace(std::make_pair(totalScore, PCurrentChar));
             }
             else if (!spawnedCharacters.empty() && spawnedCharacters.top().first < totalScore)
             {
-                spawnedCharacters.emplace(std::make_pair(totalScore, pc));
+                spawnedCharacters.emplace(std::make_pair(totalScore, PCurrentChar));
                 spawnedCharacters.pop();
             }
         }
     }
 
-    for (auto removeChar : toRemove)
+    for (const auto& removeChar : toRemove)
     {
         PChar->updateCharPacket(removeChar, ENTITY_DESPAWN, UPDATE_NONE);
         PChar->SpawnPCList.erase(removeChar->id);
@@ -880,10 +1031,8 @@ void CZoneEntities::SpawnPCs(CCharEntity* PChar)
     // Find candidates to spawn
     MinHeap<CharScorePair> candidateCharacters;
 
-    for (auto it : m_charList)
+    for (auto* PCurrentChar : m_charList | cast_view<CCharEntity*>)
     {
-        CCharEntity* PCurrentChar = (CCharEntity*)it.second;
-
         if (PCurrentChar != nullptr && PChar != PCurrentChar && PChar->SpawnPCList.find(PCurrentChar->id) == PChar->SpawnPCList.end())
         {
             if (PCurrentChar->m_isGMHidden || PChar->m_moghouseID != PCurrentChar->m_moghouseID)
@@ -933,7 +1082,7 @@ void CZoneEntities::SpawnPCs(CCharEntity* PChar)
         uint8 swapCount = 0;
 
         // Loop through candidates to be spawned from best to worst
-        for (auto candidatePair : candidates)
+        for (const auto& [candidateScore, candidateChar] : candidates)
         {
             if (swapCount >= CHARACTER_SWAP_MAX)
             {
@@ -951,7 +1100,7 @@ void CZoneEntities::SpawnPCs(CCharEntity* PChar)
 
                 // Check that the candidate score is better than the worst spawned score by a certain threshold,
                 // to avoid causing a lot of spawn/despawns all the time as people move around.
-                if (candidatePair.first > spawnedCharacters.top().first)
+                if (candidateScore > spawnedCharacters.top().first)
                 {
                     CCharEntity* spawnedChar = spawnedCharacters.top().second;
                     PChar->SpawnPCList.erase(spawnedChar->id);
@@ -968,7 +1117,6 @@ void CZoneEntities::SpawnPCs(CCharEntity* PChar)
             }
 
             // Spawn best candidate character
-            CCharEntity* candidateChar            = candidatePair.second;
             PChar->SpawnPCList[candidateChar->id] = candidateChar;
             PChar->updateCharPacket(candidateChar, ENTITY_SPAWN, UPDATE_ALL_CHAR);
             PChar->pushPacket<CCharSyncPacket>(candidateChar);
@@ -1001,36 +1149,34 @@ void CZoneEntities::SpawnConditionalNPCs(CCharEntity* PChar)
 
     // NOTE: We're not changing the NPC's status to NORMAL here, because we don't want them to be visible to all players.
     //     : We're sending updates AS IF they were visible, but only to this current player based on their conditions.
-    const auto toggleVisibilityForPlayer = [PChar](CNpcEntity* PNpc, bool visible)
+    const auto toggleVisibilityForPlayer = [PChar](CBaseEntity* PEntity, bool visible)
     {
         if (visible)
         {
-            PNpc->status = STATUS_TYPE::NORMAL;
+            PEntity->status = STATUS_TYPE::NORMAL;
         }
         else
         {
-            PNpc->status = STATUS_TYPE::DISAPPEAR;
+            PEntity->status = STATUS_TYPE::DISAPPEAR;
         }
 
-        PChar->updateEntityPacket(PNpc, ENTITY_SPAWN, UPDATE_ALL_MOB);
-        PNpc->status = STATUS_TYPE::DISAPPEAR;
+        PChar->updateEntityPacket(PEntity, ENTITY_SPAWN, UPDATE_ALL_MOB);
+        PEntity->status = STATUS_TYPE::DISAPPEAR;
     };
 
-    for (EntityList_t::const_iterator it = m_npcList.begin(); it != m_npcList.end(); ++it)
+    for (auto* PCurrentEntity : m_npcList | std::views::values)
     {
-        CNpcEntity* PCurrentNpc = (CNpcEntity*)it->second;
-
         // TODO: Come up with a sane way to mark "You only" NPCs
 
-        if (PCurrentNpc->name == "Moogle" && PCurrentNpc->loc.p.z == 1.5 && PCurrentNpc->look.face == 0x52)
+        if (PCurrentEntity->name == "Moogle" && PCurrentEntity->loc.p.z == 1.5 && PCurrentEntity->look.face == 0x52)
         {
-            toggleVisibilityForPlayer(PCurrentNpc, inMogHouse && !onMH2F);
+            toggleVisibilityForPlayer(PCurrentEntity, inMogHouse && !onMH2F);
             continue;
         }
 
-        if (PCurrentNpc->name == "Symphonic_Curator")
+        if (PCurrentEntity->name == "Symphonic_Curator")
         {
-            toggleVisibilityForPlayer(PCurrentNpc, inMHinHomeNation && orchestrionPlaced);
+            toggleVisibilityForPlayer(PCurrentEntity, inMHinHomeNation && orchestrionPlaced);
             continue;
         }
     }
@@ -1039,39 +1185,48 @@ void CZoneEntities::SpawnConditionalNPCs(CCharEntity* PChar)
 void CZoneEntities::SpawnTransport(CCharEntity* PChar)
 {
     TracyZoneScoped;
-    for (auto transport : m_TransportList)
+
+    for (auto* PEntity : m_TransportList | std::views::values)
     {
-        PChar->updateEntityPacket(transport.second, ENTITY_SPAWN, UPDATE_ALL_MOB);
+        PChar->updateEntityPacket(PEntity, ENTITY_SPAWN, UPDATE_ALL_MOB);
     }
 }
 
 CBaseEntity* CZoneEntities::GetEntity(uint16 targid, uint8 filter)
 {
     TracyZoneScoped;
+
+    const auto findEntity = [&](const EntityList_t& entityList) -> CBaseEntity*
+    {
+        const auto it = entityList.find(targid);
+        if (it != entityList.end())
+        {
+            return it->second;
+        }
+        return nullptr;
+    };
+
     if (targid < 0x400)
     {
         if (filter & TYPE_MOB)
         {
-            EntityList_t::const_iterator it = m_mobList.find(targid);
-            if (it != m_mobList.end())
+            if (auto* PEntity = findEntity(m_mobList))
             {
-                return it->second;
+                return PEntity;
             }
         }
         if (filter & TYPE_NPC)
         {
-            EntityList_t::const_iterator it = m_npcList.find(targid);
-            if (it != m_npcList.end())
+            if (auto* PEntity = findEntity(m_npcList))
             {
-                return it->second;
+                return PEntity;
             }
         }
         if (filter & TYPE_SHIP)
         {
-            EntityList_t::const_iterator it = m_TransportList.find(targid);
-            if (it != m_TransportList.end())
+            if (auto* PEntity = findEntity(m_TransportList))
             {
-                return it->second;
+                return PEntity;
             }
         }
     }
@@ -1079,10 +1234,9 @@ CBaseEntity* CZoneEntities::GetEntity(uint16 targid, uint8 filter)
     {
         if (filter & TYPE_PC)
         {
-            EntityList_t::const_iterator it = m_charList.find(targid);
-            if (it != m_charList.end())
+            if (auto* PEntity = findEntity(m_charList))
             {
-                return it->second;
+                return PEntity;
             }
         }
     }
@@ -1090,34 +1244,30 @@ CBaseEntity* CZoneEntities::GetEntity(uint16 targid, uint8 filter)
     {
         if (filter & TYPE_PET)
         {
-            EntityList_t::const_iterator it = m_petList.find(targid);
-            if (it != m_petList.end())
+            if (auto* PEntity = findEntity(m_petList))
             {
-                return it->second;
+                return PEntity;
             }
         }
         if (filter & TYPE_TRUST)
         {
-            EntityList_t::const_iterator it = m_trustList.find(targid);
-            if (it != m_trustList.end())
+            if (auto* PEntity = findEntity(m_trustList))
             {
-                return it->second;
+                return PEntity;
             }
         }
         if (filter & TYPE_NPC)
         {
-            EntityList_t::const_iterator it = m_npcList.find(targid);
-            if (it != m_npcList.end())
+            if (auto* PEntity = findEntity(m_npcList))
             {
-                return it->second;
+                return PEntity;
             }
         }
         if (filter & TYPE_MOB)
         {
-            EntityList_t::const_iterator it = m_mobList.find(targid);
-            if (it != m_mobList.end())
+            if (auto* PEntity = findEntity(m_mobList))
             {
-                return it->second;
+                return PEntity;
             }
         }
     }
@@ -1132,6 +1282,7 @@ CBaseEntity* CZoneEntities::GetEntity(uint16 targid, uint8 filter)
 void CZoneEntities::TOTDChange(TIMETYPE TOTD)
 {
     TracyZoneScoped;
+
     SCRIPTTYPE ScriptType = SCRIPT_NONE;
 
     switch (TOTD)
@@ -1142,10 +1293,8 @@ void CZoneEntities::TOTDChange(TIMETYPE TOTD)
         break;
         case TIME_NEWDAY:
         {
-            for (EntityList_t::const_iterator it = m_mobList.begin(); it != m_mobList.end(); ++it)
+            for (auto* PMob : m_mobList | cast_view<CMobEntity*>)
             {
-                CMobEntity* PMob = (CMobEntity*)it->second;
-
                 if (PMob->m_SpawnType & SPAWNTYPE_ATNIGHT)
                 {
                     PMob->SetDespawnTime(1ms);
@@ -1158,10 +1307,8 @@ void CZoneEntities::TOTDChange(TIMETYPE TOTD)
         {
             ScriptType = SCRIPT_TIME_DAWN;
 
-            for (EntityList_t::const_iterator it = m_mobList.begin(); it != m_mobList.end(); ++it)
+            for (auto* PMob : m_mobList | cast_view<CMobEntity*>)
             {
-                CMobEntity* PMob = (CMobEntity*)it->second;
-
                 if (PMob->m_SpawnType & SPAWNTYPE_ATEVENING)
                 {
                     PMob->SetDespawnTime(1ms);
@@ -1184,10 +1331,8 @@ void CZoneEntities::TOTDChange(TIMETYPE TOTD)
         {
             ScriptType = SCRIPT_TIME_EVENING;
 
-            for (EntityList_t::const_iterator it = m_mobList.begin(); it != m_mobList.end(); ++it)
+            for (auto* PMob : m_mobList | cast_view<CMobEntity*>)
             {
-                CMobEntity* PMob = (CMobEntity*)it->second;
-
                 if (PMob->m_SpawnType & SPAWNTYPE_ATEVENING)
                 {
                     PMob->SetDespawnTime(0s);
@@ -1199,10 +1344,8 @@ void CZoneEntities::TOTDChange(TIMETYPE TOTD)
         break;
         case TIME_NIGHT:
         {
-            for (EntityList_t::const_iterator it = m_mobList.begin(); it != m_mobList.end(); ++it)
+            for (auto* PMob : m_mobList | cast_view<CMobEntity*>)
             {
-                CMobEntity* PMob = (CMobEntity*)it->second;
-
                 if (PMob->m_SpawnType & SPAWNTYPE_ATNIGHT)
                 {
                     PMob->SetDespawnTime(0s);
@@ -1217,9 +1360,9 @@ void CZoneEntities::TOTDChange(TIMETYPE TOTD)
     }
     if (ScriptType != SCRIPT_NONE)
     {
-        for (EntityList_t::const_iterator it = m_charList.begin(); it != m_charList.end(); ++it)
+        for (auto* PChar : m_charList | cast_view<CCharEntity*>)
         {
-            charutils::CheckEquipLogic((CCharEntity*)it->second, ScriptType, TOTD);
+            charutils::CheckEquipLogic(PChar, ScriptType, TOTD);
         }
     }
 }
@@ -1227,29 +1370,22 @@ void CZoneEntities::TOTDChange(TIMETYPE TOTD)
 void CZoneEntities::SavePlayTime()
 {
     TracyZoneScoped;
-    if (!m_charList.empty())
+
+    for (auto* PChar : m_charList | cast_view<CCharEntity*>)
     {
-        for (EntityList_t::const_iterator it = m_charList.begin(); it != m_charList.end(); ++it)
-        {
-            CCharEntity* PChar = (CCharEntity*)it->second;
-            charutils::SavePlayTime(PChar);
-        }
+        charutils::SavePlayTime(PChar);
     }
 }
 
 CCharEntity* CZoneEntities::GetCharByName(const std::string& name)
 {
     TracyZoneScoped;
-    if (!m_charList.empty())
-    {
-        for (EntityList_t::const_iterator it = m_charList.begin(); it != m_charList.end(); ++it)
-        {
-            CCharEntity* PCurrentChar = (CCharEntity*)it->second;
 
-            if (strcmpi(PCurrentChar->getName().c_str(), name.c_str()) == 0)
-            {
-                return PCurrentChar;
-            }
+    for (auto* PCurrentChar : m_charList | cast_view<CCharEntity*>)
+    {
+        if (strcmpi(PCurrentChar->getName().c_str(), name.c_str()) == 0)
+        {
+            return PCurrentChar;
         }
     }
     return nullptr;
@@ -1258,11 +1394,12 @@ CCharEntity* CZoneEntities::GetCharByName(const std::string& name)
 CCharEntity* CZoneEntities::GetCharByID(uint32 id)
 {
     TracyZoneScoped;
-    for (auto PChar : m_charList)
+
+    for (auto* PCurrentChar : m_charList | cast_view<CCharEntity*>)
     {
-        if (PChar.second->id == id)
+        if (PCurrentChar->id == id)
         {
-            return (CCharEntity*)PChar.second;
+            return PCurrentChar;
         }
     }
     return nullptr;
@@ -1278,12 +1415,12 @@ void CZoneEntities::UpdateCharPacket(CCharEntity* PChar, ENTITYUPDATE type, uint
         return;
     }
 
-    for (EntityList_t::const_iterator it = m_charList.begin(); it != m_charList.end(); ++it)
+    for (auto* PCurrentChar : m_charList | cast_view<CCharEntity*>)
     {
-        CCharEntity* PCurrentChar = (CCharEntity*)it->second;
-
         if (PCurrentChar == PChar)
+        {
             continue;
+        }
 
         if (type == ENTITY_SPAWN || type == ENTITY_DESPAWN || PCurrentChar->SpawnPCList.find(PChar->id) != PCurrentChar->SpawnPCList.end())
         {
@@ -1296,10 +1433,8 @@ void CZoneEntities::UpdateEntityPacket(CBaseEntity* PEntity, ENTITYUPDATE type, 
 {
     TracyZoneScoped;
 
-    for (EntityList_t::const_iterator it = m_charList.begin(); it != m_charList.end(); ++it)
+    for (auto* PCurrentChar : m_charList | cast_view<CCharEntity*>)
     {
-        CCharEntity* PCurrentChar = (CCharEntity*)it->second;
-
         if (alwaysInclude || type == ENTITY_SPAWN || type == ENTITY_DESPAWN || charutils::hasEntitySpawned(PCurrentChar, PEntity))
         {
             PCurrentChar->updateEntityPacket(PEntity, type, updatemask);
@@ -1348,9 +1483,8 @@ void CZoneEntities::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message
                 // 30 yalms if action packet, 50 otherwise
                 const int checkDistanceSq = packet->getType() == 0x0028 ? 900 : 2500;
 
-                for (EntityList_t::const_iterator it = m_charList.begin(); it != m_charList.end(); ++it)
+                for (auto* PCurrentChar : m_charList | cast_view<CCharEntity*>)
                 {
-                    CCharEntity* PCurrentChar = (CCharEntity*)it->second;
                     if (PEntity != PCurrentChar)
                     {
                         if (distanceSquared(PEntity->loc.p, PCurrentChar->loc.p) < checkDistanceSq &&
@@ -1435,9 +1569,8 @@ void CZoneEntities::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message
             case CHAR_INSHOUT:
             {
                 TracyZoneCString("CHAR_INSHOUT");
-                for (EntityList_t::const_iterator it = m_charList.begin(); it != m_charList.end(); ++it)
+                for (auto* PCurrentChar : m_charList | cast_view<CCharEntity*>)
                 {
-                    CCharEntity* PCurrentChar = (CCharEntity*)it->second;
                     if (PEntity != PCurrentChar)
                     {
                         if (distance(PEntity->loc.p, PCurrentChar->loc.p) < 180 &&
@@ -1452,10 +1585,8 @@ void CZoneEntities::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message
             case CHAR_INZONE:
             {
                 TracyZoneCString("CHAR_INZONE");
-                for (EntityList_t::const_iterator it = m_charList.begin(); it != m_charList.end(); ++it)
+                for (auto* PCurrentChar : m_charList | cast_view<CCharEntity*>)
                 {
-                    CCharEntity* PCurrentChar = (CCharEntity*)it->second;
-
                     if (PCurrentChar->m_moghouseID == 0)
                     {
                         if (PEntity != PCurrentChar)
@@ -1474,21 +1605,16 @@ void CZoneEntities::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message
 void CZoneEntities::WideScan(CCharEntity* PChar, uint16 radius)
 {
     TracyZoneScoped;
+
     PChar->pushPacket<CWideScanPacket>(WIDESCAN_BEGIN);
-    for (EntityList_t::const_iterator it = m_npcList.begin(); it != m_npcList.end(); ++it)
+    for (const auto& entityList : { m_npcList, m_mobList })
     {
-        CNpcEntity* PNpc = (CNpcEntity*)it->second;
-        if (PNpc->isWideScannable() && distance(PChar->loc.p, PNpc->loc.p) < radius)
+        for (auto* PEntity : entityList | std::views::values)
         {
-            PChar->pushPacket<CWideScanPacket>(PChar, PNpc);
-        }
-    }
-    for (EntityList_t::const_iterator it = m_mobList.begin(); it != m_mobList.end(); ++it)
-    {
-        CMobEntity* PMob = (CMobEntity*)it->second;
-        if (PMob->isWideScannable() && distance(PChar->loc.p, PMob->loc.p) < radius)
-        {
-            PChar->pushPacket<CWideScanPacket>(PChar, PMob);
+            if (PEntity->isWideScannable() && distance(PChar->loc.p, PEntity->loc.p) < radius)
+            {
+                PChar->pushPacket<CWideScanPacket>(PChar, PEntity);
+            }
         }
     }
     PChar->pushPacket<CWideScanPacket>(WIDESCAN_END);
@@ -1595,7 +1721,7 @@ void CZoneEntities::ZoneServer(time_point tick)
         for (auto PMobCurrentIter : m_mobList)
         {
             CMobEntity* PCurrentMob = dynamic_cast<CMobEntity*>(PMobCurrentIter.second);
-            if (PCurrentMob != nullptr && PCurrentMob->isAlive() && PMob->allegiance != PCurrentMob->allegiance && distance(PMob->loc.p, PCurrentMob->loc.p) <= 50)
+            if (PCurrentMob != nullptr && PCurrentMob->isAlive() && PMob->allegiance != PCurrentMob->allegiance && distance(PMob->loc.p, PCurrentMob->loc.p) <= ENTITY_RENDER_DISTANCE)
             {
                 CMobController* PController = static_cast<CMobController*>(PCurrentMob->PAI->GetController());
                 if (PController != nullptr && PController->CanAggroTarget(PMob))
@@ -1713,7 +1839,7 @@ void CZoneEntities::ZoneServer(time_point tick)
                 {
                     // This is safe because m_charList only receives inserts of CCharEntity
                     CCharEntity* PChar = static_cast<CCharEntity*>(charIterator->second);
-                    if (distance(PChar->loc.p, PTrust->loc.p) < 50)
+                    if (distance(PChar->loc.p, PTrust->loc.p) < ENTITY_RENDER_DISTANCE)
                     {
                         PChar->SpawnTRUSTList.erase(PTrust->id);
                         PChar->ReloadPartyInc();
