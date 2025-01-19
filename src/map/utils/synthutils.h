@@ -58,7 +58,7 @@ namespace synthutils
     void  LoadSynthRecipes();
     int32 startSynth(CCharEntity* PChar);
     int32 sendSynthDone(CCharEntity* PChar);
-    void  doSynthFail(CCharEntity* PChar);
+    void  doSynthFail(CCharEntity* PChar, bool isCriticalFail);
 }; // namespace synthutils
 
 #endif

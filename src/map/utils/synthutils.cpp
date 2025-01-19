@@ -976,7 +976,7 @@ namespace synthutils
      *                                                                         *
      **************************************************************************/
 
-    void doSynthFail(CCharEntity* PChar)
+    void doSynthFail(CCharEntity* PChar, bool isCriticalFail)
     {
         // Break material calculations.
         if (PChar->CraftContainer->getCraftType() != CRAFT_SYNTHESIS_NO_LOSS) // If it's a synth where no materials can be lost, skip break calculations.
@@ -987,15 +987,17 @@ namespace synthutils
         // Push "Synthesis failed" messages.
         uint16 currentZone = PChar->loc.zone->GetID();
 
+        const auto message = isCriticalFail ? SYNTH_FAIL_CRITICAL : SYNTH_FAIL;
+
         if (currentZone &&
             currentZone != ZONE_MONORAIL_PRE_RELEASE &&
             currentZone != ZONE_49 &&
             currentZone < MAX_ZONEID)
         {
-            PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, std::make_unique<CSynthResultMessagePacket>(PChar, SYNTH_FAIL));
+            PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, std::make_unique<CSynthResultMessagePacket>(PChar, message));
         }
 
-        PChar->pushPacket<CSynthMessagePacket>(PChar, SYNTH_FAIL, 29695);
+        PChar->pushPacket<CSynthMessagePacket>(PChar, message, 29695);
     }
 
     /*********************************************************************
@@ -1160,7 +1162,7 @@ namespace synthutils
                     // Block the cheat by forcing the synth to fail
                     PChar->CraftContainer->setQuantity(0, synthutils::SYNTHESIS_FAIL);
                     m_synthResult = SYNTHESIS_FAIL;
-                    doSynthFail(PChar);
+                    doSynthFail(PChar, false);
                 }
                 // And report the incident (will possibly jail the player)
                 anticheat::ReportCheatIncident(PChar, anticheat::CheatID::CHEAT_ID_FASTSYNTH,
@@ -1176,7 +1178,7 @@ namespace synthutils
 
         if (m_synthResult == SYNTHESIS_FAIL)
         {
-            doSynthFail(PChar);
+            doSynthFail(PChar, false);
         }
         else
         {
@@ -1238,14 +1240,18 @@ namespace synthutils
             }
 
             PChar->pushPacket<CInventoryFinishPacket>();
+
+            // Use appropiate message (Regular or desynthesis)
+            const auto message = PChar->CraftContainer->getCraftType() == CRAFT_DESYNTHESIS ? SYNTH_SUCCESS_DESYNTH : SYNTH_SUCCESS;
+
             if (PChar->loc.zone->GetID() != 255 && PChar->loc.zone->GetID() != 0)
             {
-                PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, std::make_unique<CSynthResultMessagePacket>(PChar, SYNTH_SUCCESS, itemID, quantity));
-                PChar->pushPacket<CSynthMessagePacket>(PChar, SYNTH_SUCCESS, itemID, quantity);
+                PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, std::make_unique<CSynthResultMessagePacket>(PChar, message, itemID, quantity));
+                PChar->pushPacket<CSynthMessagePacket>(PChar, message, itemID, quantity);
             }
             else
             {
-                PChar->pushPacket<CSynthMessagePacket>(PChar, SYNTH_SUCCESS, itemID, quantity);
+                PChar->pushPacket<CSynthMessagePacket>(PChar, message, itemID, quantity);
             }
 
             // Calculate what craft this recipe "belongs" to based on highest skill required
