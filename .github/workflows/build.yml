@@ -391,7 +391,7 @@ jobs:
       - name: Build
         shell: cmd
         run: |
-          cmake --build build -j4
+          cmake --build build --config Release -j4
       - name: Archive Executables
         uses: actions/upload-artifact@v4
         with:
