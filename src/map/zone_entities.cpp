@@ -82,16 +82,13 @@ namespace
     //
 
     template <typename T>
-    struct cast
+    static constexpr T entity_cast(CBaseEntity* entity) noexcept
     {
-        constexpr auto operator()(CBaseEntity* entity) -> T const
-        {
-            return static_cast<T>(entity);
-        }
-    };
+        return static_cast<T>(entity);
+    }
 
     template <typename T>
-    inline constexpr auto cast_view = std::views::values | std::views::transform(cast<T>{});
+    inline constexpr auto cast_view = std::views::values | std::views::transform(&entity_cast<T>);
 } // namespace
 
 typedef std::pair<float, CCharEntity*> CharScorePair;
@@ -1750,8 +1747,8 @@ void CZoneEntities::ZoneServer(time_point tick)
         //     : this way, but we need to do this to keep allies working (for now).
         ShowTrace(fmt::format("CZoneEntities::ZoneServer: Pet: {} ({})", PPet->getName(), PPet->id).c_str());
 
-
         // TODO: Is this still necessary?
+
         // Pets specifically need to have their AI tick skipped if they're marked for deletion
         // to prevent a number of issues which can result from a pet having a deleted/nullptr'd PMaster
         if (PPet->status == STATUS_TYPE::DISAPPEAR)
@@ -1817,7 +1814,6 @@ void CZoneEntities::ZoneServer(time_point tick)
 
     for (auto* PChar : m_charList | cast_view<CCharEntity*>)
     {
-
         ShowTrace(fmt::format("CZoneEntities::ZoneServer: Char: {} ({})", PChar->getName(), PChar->id).c_str());
 
         if (PChar->status != STATUS_TYPE::SHUTDOWN)
