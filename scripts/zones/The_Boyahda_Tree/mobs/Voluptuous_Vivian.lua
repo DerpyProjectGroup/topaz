@@ -7,6 +7,11 @@ mixins = { require('scripts/mixins/job_special') }
 ---@type TMobEntity
 local entity = {}
 
+entity.onMobInitialize = function(mob)
+    mob:setMobMod(xi.mobMod.GIL_MIN, 20000)
+    mob:setMobMod(xi.mobMod.GIL_MAX, 24000)
+end
+
 entity.onMobSpawn = function(mob)
     mob:setMobMod(xi.mobMod.NO_MOVE, 0)
 end

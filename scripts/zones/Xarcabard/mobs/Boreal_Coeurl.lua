@@ -86,6 +86,7 @@ entity.onMobEngage = function(mob)
 end
 
 entity.onMobSpawn = function(mob)
+    mob:addImmunity(xi.immunity.STUN)
     mob:setMobMod(xi.mobMod.ALWAYS_AGGRO, 1)
     mob:setMod(xi.mod.FASTCAST, 30)
     mob:setSpeed(baseSpeed)

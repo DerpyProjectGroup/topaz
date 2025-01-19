@@ -581,7 +581,7 @@ namespace zoneutils
                                 PMob->setMobMod(MOBMOD_CHARMABLE, sql->GetUIntData(77));
 
                                 // Overwrite base family charmables depending on mob type. Disallowed mobs which should be charmable
-                                // can be set in mob_spawn_mods or in their onInitialize
+                                // can be set in their onInitialize
                                 if (PMob->m_Type & MOBTYPE_EVENT ||
                                     PMob->m_Type & MOBTYPE_FISHED ||
                                     PMob->m_Type & MOBTYPE_BATTLEFIELD ||

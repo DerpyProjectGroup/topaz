@@ -216,7 +216,7 @@ CInstance* CInstanceLoader::LoadInstance()
             PMob->setMobMod(MOBMOD_CHARMABLE, _sql->GetUIntData(74));
 
             // Overwrite base family charmables depending on mob type. Disallowed mobs which should be charmable
-            // can be set in mob_spawn_mods or in their onInitialize
+            // can be set in in their onInitialize
             if (PMob->m_Type & MOBTYPE_EVENT || PMob->m_Type & MOBTYPE_FISHED || PMob->m_Type & MOBTYPE_BATTLEFIELD || PMob->m_Type & MOBTYPE_NOTORIOUS)
             {
                 PMob->setMobMod(MOBMOD_CHARMABLE, 0);

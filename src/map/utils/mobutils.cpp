@@ -1207,9 +1207,6 @@ namespace mobutils
     void InitializeMob(CMobEntity* PMob)
     {
         // add special mob mods
-
-        PMob->m_Immunity |= PMob->getMobMod(MOBMOD_IMMUNITY);
-
         PMob->defaultMobMod(MOBMOD_SKILL_LIST, PMob->m_MobSkillList);
         PMob->defaultMobMod(MOBMOD_LINK_RADIUS, 10);
         PMob->defaultMobMod(MOBMOD_TP_USE_CHANCE,
@@ -1335,32 +1332,6 @@ namespace mobutils
                 else
                 {
                     poolMods->mods.emplace_back(mod);
-                }
-            }
-        }
-
-        // load spawn mods
-        const char QuerySpawnMods[] = "SELECT mobid, modid, value, is_mob_mod FROM mob_spawn_mods";
-
-        ret = _sql->Query(QuerySpawnMods);
-
-        if (ret != SQL_ERROR && _sql->NumRows() != 0)
-        {
-            while (_sql->NextRow() == SQL_SUCCESS)
-            {
-                ModsList_t* spawnMods = GetMobSpawnMods(_sql->GetUIntData(0), true);
-
-                CModifier* mod = new CModifier(static_cast<Mod>(_sql->GetUIntData(1)));
-                mod->setModAmount(_sql->GetUIntData(2));
-
-                int8 isMobMod = _sql->GetIntData(3);
-                if (isMobMod == 1)
-                {
-                    spawnMods->mobMods.emplace_back(mod);
-                }
-                else
-                {
-                    spawnMods->mods.emplace_back(mod);
                 }
             }
         }

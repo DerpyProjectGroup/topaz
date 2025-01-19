@@ -5,6 +5,10 @@
 ---@type TMobEntity
 local entity = {}
 
+entity.onMobInitialize = function(mob)
+    mob:setMobMod(xi.mobMod.IDLE_DESPAWN, 1800)
+end
+
 entity.onMobSpawn = function(mob)
     mob:addImmunity(xi.immunity.SILENCE)
 end

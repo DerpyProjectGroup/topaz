@@ -9,6 +9,11 @@ entity.onMobInitialize = function(mob)
     mob:setMobMod(xi.mobMod.ADD_EFFECT, 1)
 end
 
+entity.onMobSpawn = function(mob)
+    mob:addMod(xi.mod.ATT, 50)
+    mob:setMod(xi.mod.DOUBLE_ATTACK, 40)
+end
+
 entity.onAdditionalEffect = function(mob, target, damage)
     return xi.mob.onAddEffect(mob, target, damage, xi.mob.ae.ENWATER)
 end
