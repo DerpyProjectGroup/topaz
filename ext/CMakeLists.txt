@@ -83,7 +83,7 @@ CPMAddPackage(
 CPMAddPackage(
     NAME recastnavigation
     GITHUB_REPOSITORY recastnavigation/recastnavigation
-    GIT_TAG 455a019e7aef99354ac3020f04c1fe3541aa4d19
+    GIT_TAG 63dd4aa332ceb7650d6404916717875268041b26
     OPTIONS
         "RECASTNAVIGATION_DEMO OFF"
         "RECASTNAVIGATION_TESTS OFF"
