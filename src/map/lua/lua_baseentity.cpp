@@ -14931,19 +14931,26 @@ void CLuaBaseEntity::spawnPet(sol::object const& arg0)
             return;
         }
 
-        CMobEntity* PPet = static_cast<CMobEntity*>(PMob->PPet);
+        CMobEntity* PPetTemp = static_cast<CMobEntity*>(PMob->PPet);
 
-        // if a number is given its an avatar or elemental spawn
-        if ((arg0 != sol::lua_nil) && arg0.is<int>())
+        while (PPetTemp != nullptr)
         {
-            petutils::SpawnMobPet(PMob, arg0.as<uint32>());
+            CMobEntity* PPet = static_cast<CMobEntity*>(PPetTemp);
+
+            // if a number is given its an avatar or elemental spawn
+            if ((arg0 != sol::lua_nil) && arg0.is<int>())
+            {
+                petutils::SpawnMobPet(PMob, arg0.as<uint32>());
+            }
+
+            // always spawn on master
+            PPet->m_SpawnPoint = nearPosition(PMob->loc.p, 2.2f, static_cast<float>(M_PI));
+
+            // setup AI
+            PPet->Spawn();
+
+            PPetTemp = static_cast<CMobEntity*>(PPetTemp->PPetNext);
         }
-
-        // always spawn on master
-        PPet->m_SpawnPoint = nearPosition(PMob->loc.p, 2.2f, static_cast<float>(M_PI));
-
-        // setup AI
-        PPet->Spawn();
     }
 }
 

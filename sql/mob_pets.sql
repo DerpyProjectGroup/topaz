@@ -22,7 +22,8 @@ CREATE TABLE `mob_pets` (
   `job` tinyint(4) DEFAULT '9',
   `mobname` varchar(24) DEFAULT NULL,
   `petname` varchar(24) DEFAULT NULL,
-  PRIMARY KEY (`mob_mobid`)
+  PRIMARY KEY (`mob_mobid`, `pet_offset`),
+  INDEX (`mob_mobid`)
 ) ENGINE=Aria TRANSACTIONAL=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -261,6 +262,9 @@ INSERT INTO `mob_pets` VALUES (16920662,1,14,'Awaern','Aerns_Wynav');
 INSERT INTO `mob_pets` VALUES (16920779,1,9,'Awaern','Aerns_Euvhi');
 INSERT INTO `mob_pets` VALUES (16920783,1,14,'Awaern','Aerns_Wynav');
 INSERT INTO `mob_pets` VALUES (16920787,1,15,'Awaern','Aerns_Elemental');
+INSERT INTO `mob_pets` VALUES (16921022,1,14,'Ixaern_DRG','Ixaern_DRGs_Wynav');
+INSERT INTO `mob_pets` VALUES (16921022,2,14,'Ixaern_DRG','Ixaern_DRGs_Wynav');
+INSERT INTO `mob_pets` VALUES (16921022,3,14,'Ixaern_DRG','Ixaern_DRGs_Wynav');
 
 -- ------------------------------------------------------------
 -- Temenos (Zone 37)

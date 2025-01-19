@@ -2,6 +2,8 @@
 -- Area: The Garden of Ru'Hmet
 --  Mob: Ix'aern DRG's Wynav
 -----------------------------------
+local ID = zones[xi.zone.THE_GARDEN_OF_RUHMET]
+-----------------------------------
 ---@type TMobEntity
 local entity = {}
 
@@ -41,7 +43,13 @@ entity.onMobDeath = function(mob, player, optParams)
 end
 
 entity.onMobDespawn = function(mob)
-    mob:setLocalVar('repop', mob:getBattleTime()) -- This get erased on respawn automatic.
+    local ixaern   = GetMobByID(ID.mob.IXAERN_DRG)
+
+    if ixaern then
+        local petCount = ixaern:getLocalVar('petCount')
+
+        ixaern:setLocalVar('petCount', petCount - 1)
+    end
 end
 
 return entity
