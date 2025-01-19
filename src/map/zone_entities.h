@@ -31,6 +31,7 @@ class CZoneEntities
 {
 public:
     void HealAllMobs();
+    void TryAddToNearbySpawnLists(CBaseEntity* PEntity);
 
     CCharEntity* GetCharByName(const std::string& name); // finds the player if exists in zone
     CCharEntity* GetCharByID(uint32 id);
