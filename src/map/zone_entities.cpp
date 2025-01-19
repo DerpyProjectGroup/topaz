@@ -820,16 +820,12 @@ void CZoneEntities::SpawnNPCs(CCharEntity* PChar)
         return;
     }
 
-    auto npcItrCount = 0U;
-
     // TODO: Rather than iterating every entity in the zone, we should be doing
     //     : spatial partitioning to only check entities within a certain range of the player.
     //     : This would change this loop to look like:
     //     : Compare previous and current spatial partitioning results to determine which entities to add/remove from the spawn list.
     for (auto* PCurrentEntity : m_npcList | std::views::values)
     {
-        npcItrCount++;
-
         auto& spawnList = PChar->SpawnNPCList;
 
         const auto id              = PCurrentEntity->id;
@@ -866,8 +862,6 @@ void CZoneEntities::SpawnNPCs(CCharEntity* PChar)
             tryRemoveFromSpawnList();
         }
     }
-
-    ShowInfoFmt("NPC iteration count: {}", npcItrCount);
 }
 
 void CZoneEntities::SpawnTRUSTs(CCharEntity* PChar)
@@ -1627,14 +1621,17 @@ void CZoneEntities::ZoneServer(time_point tick)
 
     luautils::OnZoneTick(this->m_zone);
 
+    std::vector<CMobEntity*>   mobsToDelete;
+    std::vector<CNpcEntity*>   npcsToDelete;
+    std::vector<CPetEntity*>   petsToDelete;
+    std::vector<CTrustEntity*> trustsToDelete;
+
     std::vector<CMobEntity*> aggroableMobs;
-    EntityList_t::iterator   it = m_mobList.begin();
-    while (it != m_mobList.end())
+
+    for (auto* PMob : m_mobList | cast_view<CMobEntity*>)
     {
-        CMobEntity* PMob = dynamic_cast<CMobEntity*>(it->second);
         if (!PMob)
         {
-            ++it;
             continue;
         }
 
@@ -1642,7 +1639,6 @@ void CZoneEntities::ZoneServer(time_point tick)
 
         if (PMob->PBattlefield && PMob->PBattlefield->CanCleanup())
         {
-            ++it;
             continue;
         }
 
@@ -1656,6 +1652,7 @@ void CZoneEntities::ZoneServer(time_point tick)
 
         PMob->PAI->Tick(tick);
 
+        // This is only valid for dynamic entities
         if (PMob->status == STATUS_TYPE::DISAPPEAR && PMob->m_bReleaseTargIDOnDisappear)
         {
             if (PMob->PPet != nullptr)
@@ -1668,10 +1665,9 @@ void CZoneEntities::ZoneServer(time_point tick)
                 PMob->PMaster->PPet = nullptr;
             }
 
-            for (auto PMobIt : m_mobList)
+            for (auto* POtherMob : m_mobList | cast_view<CMobEntity*>)
             {
-                CMobEntity* PCurrentMob = static_cast<CMobEntity*>(PMobIt.second);
-                PCurrentMob->PEnmityContainer->Clear(PMob->id);
+                POtherMob->PEnmityContainer->Clear(PMob->id);
             }
 
             if (PMob->PParty)
@@ -1679,11 +1675,8 @@ void CZoneEntities::ZoneServer(time_point tick)
                 PMob->PParty->RemoveMember(PMob);
             }
 
-            for (EntityList_t::const_iterator charIterator = m_charList.begin(); charIterator != m_charList.end(); ++charIterator)
+            for (auto* PChar : m_charList | cast_view<CCharEntity*>)
             {
-                // This is safe because m_charList only receives inserts of CCharEntity
-                CCharEntity* PChar = static_cast<CCharEntity*>(charIterator->second);
-
                 if (PChar->PClaimedMob == PMob)
                 {
                     PChar->PClaimedMob = nullptr;
@@ -1700,10 +1693,7 @@ void CZoneEntities::ZoneServer(time_point tick)
                 }
             }
 
-            it->second = nullptr;
-            m_mobList.erase(it++);
-            dynamicTargIdsToDelete.emplace_back(PMob->targid, server_clock::now());
-            destroy(PMob);
+            mobsToDelete.emplace_back(PMob);
             continue;
         }
 
@@ -1711,17 +1701,17 @@ void CZoneEntities::ZoneServer(time_point tick)
         {
             aggroableMobs.emplace_back(PMob);
         }
-
-        ++it;
     }
 
     // Check to see if any aggroable mobs should be aggroed by other mobs
     for (CMobEntity* PMob : aggroableMobs)
     {
-        for (auto PMobCurrentIter : m_mobList)
+        for (auto* PCurrentMob : m_mobList | cast_view<CMobEntity*>)
         {
-            CMobEntity* PCurrentMob = dynamic_cast<CMobEntity*>(PMobCurrentIter.second);
-            if (PCurrentMob != nullptr && PCurrentMob->isAlive() && PMob->allegiance != PCurrentMob->allegiance && distance(PMob->loc.p, PCurrentMob->loc.p) <= ENTITY_RENDER_DISTANCE)
+            const auto isInHeightRange = isWithinVerticalDistance(PMob, PCurrentMob);
+            const auto isInRange       = distance(PMob->loc.p, PCurrentMob->loc.p) <= ENTITY_RENDER_DISTANCE;
+
+            if (PCurrentMob != nullptr && PCurrentMob->isAlive() && PMob->allegiance != PCurrentMob->allegiance && isInHeightRange && isInRange)
             {
                 CMobController* PController = static_cast<CMobController*>(PCurrentMob->PAI->GetController());
                 if (PController != nullptr && PController->CanAggroTarget(PMob))
@@ -1732,11 +1722,8 @@ void CZoneEntities::ZoneServer(time_point tick)
         }
     }
 
-    it = m_npcList.begin();
-    while (it != m_npcList.end())
+    for (auto* PNpc : m_npcList | cast_view<CNpcEntity*>)
     {
-        CNpcEntity* PNpc = (CNpcEntity*)it->second;
-
         ShowTrace(fmt::format("CZoneEntities::ZoneServer: NPC: {} ({})", PNpc->getName(), PNpc->id).c_str());
 
         PNpc->PAI->Tick(tick);
@@ -1744,116 +1731,83 @@ void CZoneEntities::ZoneServer(time_point tick)
         // This is only valid for dynamic entities
         if (PNpc->status == STATUS_TYPE::DISAPPEAR && PNpc->m_bReleaseTargIDOnDisappear)
         {
-            for (EntityList_t::const_iterator charIterator = m_charList.begin(); charIterator != m_charList.end(); ++charIterator)
+            for (auto* PChar : m_charList | cast_view<CCharEntity*>)
             {
-                // This is safe because m_charList only receives inserts of CCharEntity
-                CCharEntity* PChar = static_cast<CCharEntity*>(charIterator->second);
                 if (PChar->SpawnNPCList.find(PNpc->id) != PChar->SpawnNPCList.end())
                 {
                     PChar->SpawnNPCList.erase(PNpc->id);
                 }
             }
 
-            destroy(it->second);
-            dynamicTargIdsToDelete.emplace_back(it->first, server_clock::now());
-
-            m_npcList.erase(it++);
+            npcsToDelete.emplace_back(PNpc);
             continue;
         }
-        ++it;
     }
 
-    it = m_petList.begin();
-    while (it != m_petList.end())
+    for (auto* PPet : m_petList | cast_view<CPetEntity*>)
     {
-        // TODO: This static cast includes Battlefield Allies. Allies shouldn't be handled here in
+        // TODO: The static_cast in cast_view includes Battlefield Allies. Allies shouldn't be handled here in
         //     : this way, but we need to do this to keep allies working (for now).
-        if (auto* PPet = static_cast<CPetEntity*>(it->second))
+        ShowTrace(fmt::format("CZoneEntities::ZoneServer: Pet: {} ({})", PPet->getName(), PPet->id).c_str());
+
+
+        // TODO: Is this still necessary?
+        // Pets specifically need to have their AI tick skipped if they're marked for deletion
+        // to prevent a number of issues which can result from a pet having a deleted/nullptr'd PMaster
+        if (PPet->status == STATUS_TYPE::DISAPPEAR)
         {
-            ShowTrace(fmt::format("CZoneEntities::ZoneServer: Pet: {} ({})", PPet->getName(), PPet->id).c_str());
-
-            /*
-             * Pets specifically need to be removed prior to evaluating their AI Tick
-             * to prevent a number of issues which can result as a Pet having a
-             * deleted/nullptr'd PMaster
-             */
-            if (PPet->status == STATUS_TYPE::DISAPPEAR)
+            for (auto* PCurrentMob : m_mobList | cast_view<CMobEntity*>)
             {
-                for (auto PMobIt : m_mobList)
-                {
-                    CMobEntity* PCurrentMob = (CMobEntity*)PMobIt.second;
-                    PCurrentMob->PEnmityContainer->Clear(PPet->id);
-                }
-
-                if (PPet->getPetType() != PET_TYPE::AUTOMATON || !PPet->PMaster)
-                {
-                    destroy(it->second);
-                }
-
-                dynamicTargIdsToDelete.emplace_back(it->first, server_clock::now());
-
-                m_petList.erase(it++);
-                continue;
+                PCurrentMob->PEnmityContainer->Clear(PPet->id);
             }
 
-            PPet->PRecastContainer->Check();
-            PPet->StatusEffectContainer->CheckEffectsExpiry(tick);
-            if (tick > m_EffectCheckTime)
-            {
-                PPet->StatusEffectContainer->TickRegen(tick);
-                PPet->StatusEffectContainer->TickEffects(tick);
-            }
-            PPet->PAI->Tick(tick);
+            petsToDelete.emplace_back(PPet);
+            continue;
         }
-        ++it;
+
+        PPet->PRecastContainer->Check();
+        PPet->StatusEffectContainer->CheckEffectsExpiry(tick);
+        if (tick > m_EffectCheckTime)
+        {
+            PPet->StatusEffectContainer->TickRegen(tick);
+            PPet->StatusEffectContainer->TickEffects(tick);
+        }
+
+        PPet->PAI->Tick(tick);
     }
 
-    it = m_trustList.begin();
-    while (it != m_trustList.end())
+    for (auto* PTrust : m_trustList | cast_view<CTrustEntity*>)
     {
-        if (CTrustEntity* PTrust = dynamic_cast<CTrustEntity*>(it->second))
+        ShowTrace(fmt::format("CZoneEntities::ZoneServer: Trust: {} ({})", PTrust->getName(), PTrust->id).c_str());
+
+        PTrust->PRecastContainer->Check();
+        PTrust->StatusEffectContainer->CheckEffectsExpiry(tick);
+        if (tick > m_EffectCheckTime)
         {
-            ShowTrace(fmt::format("CZoneEntities::ZoneServer: Trust: {} ({})", PTrust->getName(), PTrust->id).c_str());
-
-            PTrust->PRecastContainer->Check();
-            PTrust->StatusEffectContainer->CheckEffectsExpiry(tick);
-            if (tick > m_EffectCheckTime)
-            {
-                PTrust->StatusEffectContainer->TickRegen(tick);
-                PTrust->StatusEffectContainer->TickEffects(tick);
-            }
-            PTrust->PAI->Tick(tick);
-
-            if (PTrust->status == STATUS_TYPE::DISAPPEAR)
-            {
-                for (auto& list : { m_mobList, m_trustList }) // Remove from Mobs and Trusts
-                {
-                    for (auto& itr : list)
-                    {
-                        CMobEntity* PCurrentMob = static_cast<CMobEntity*>(itr.second); // Force cast to CMobEntity*
-                        PCurrentMob->PEnmityContainer->Clear(PTrust->id);
-                    }
-                }
-
-                for (EntityList_t::const_iterator charIterator = m_charList.begin(); charIterator != m_charList.end(); ++charIterator)
-                {
-                    // This is safe because m_charList only receives inserts of CCharEntity
-                    CCharEntity* PChar = static_cast<CCharEntity*>(charIterator->second);
-                    if (distance(PChar->loc.p, PTrust->loc.p) < ENTITY_RENDER_DISTANCE)
-                    {
-                        PChar->SpawnTRUSTList.erase(PTrust->id);
-                        PChar->ReloadPartyInc();
-                    }
-                }
-
-                destroy(it->second);
-                dynamicTargIdsToDelete.emplace_back(it->first, server_clock::now());
-
-                m_trustList.erase(it++);
-                continue;
-            }
+            PTrust->StatusEffectContainer->TickRegen(tick);
+            PTrust->StatusEffectContainer->TickEffects(tick);
         }
-        ++it;
+
+        PTrust->PAI->Tick(tick);
+
+        if (PTrust->status == STATUS_TYPE::DISAPPEAR)
+        {
+            for (auto* PCurrentMob : m_mobList | cast_view<CMobEntity*>)
+            {
+                PCurrentMob->PEnmityContainer->Clear(PTrust->id);
+            }
+            for (auto* PChar : m_charList | cast_view<CCharEntity*>)
+            {
+                if (distance(PChar->loc.p, PTrust->loc.p) < ENTITY_RENDER_DISTANCE)
+                {
+                    PChar->SpawnTRUSTList.erase(PTrust->id);
+                    PChar->ReloadPartyInc();
+                }
+            }
+
+            trustsToDelete.emplace_back(PTrust);
+            continue;
+        }
     }
 
     // Store some lists for chars that may need post-processing for effects that could delete them from m_charList and cause crashes
@@ -1861,10 +1815,8 @@ void CZoneEntities::ZoneServer(time_point tick)
     std::vector<CCharEntity*> charsToWarp       = {};
     std::vector<CCharEntity*> charsToChangeZone = {};
 
-    for (EntityList_t::const_iterator charIterator = m_charList.begin(); charIterator != m_charList.end(); ++charIterator)
+    for (auto* PChar : m_charList | cast_view<CCharEntity*>)
     {
-        // This is safe because m_charList only receives inserts of CCharEntity
-        CCharEntity* PChar = static_cast<CCharEntity*>(charIterator->second);
 
         ShowTrace(fmt::format("CZoneEntities::ZoneServer: Char: {} ({})", PChar->getName(), PChar->id).c_str());
 
@@ -1877,6 +1829,7 @@ void CZoneEntities::ZoneServer(time_point tick)
                 PChar->StatusEffectContainer->TickRegen(tick);
                 PChar->StatusEffectContainer->TickEffects(tick);
             }
+
             PChar->PAI->Tick(tick);
 
             if (PChar->PTreasurePool)
@@ -1901,22 +1854,62 @@ void CZoneEntities::ZoneServer(time_point tick)
         }
     }
 
+    for (auto* PMob : mobsToDelete)
+    {
+        if (auto itr = m_mobList.find(PMob->id); itr != m_mobList.end())
+        {
+            m_mobList.erase(itr);
+            dynamicTargIdsToDelete.emplace_back(PMob->targid, server_clock::now());
+            destroy(PMob);
+        }
+    }
+
+    for (auto* PNpc : npcsToDelete)
+    {
+        if (auto itr = m_npcList.find(PNpc->id); itr != m_npcList.end())
+        {
+            m_npcList.erase(itr);
+            dynamicTargIdsToDelete.emplace_back(PNpc->targid, server_clock::now());
+            destroy(PNpc);
+        }
+    }
+
+    for (auto* PPet : petsToDelete)
+    {
+        if (auto itr = m_petList.find(PPet->id); itr != m_petList.end())
+        {
+            m_petList.erase(itr);
+            dynamicTargIdsToDelete.emplace_back(PPet->targid, server_clock::now());
+            destroy(PPet);
+        }
+    }
+
+    for (auto* PTrust : trustsToDelete)
+    {
+        if (auto itr = m_trustList.find(PTrust->id); itr != m_trustList.end())
+        {
+            m_trustList.erase(itr);
+            dynamicTargIdsToDelete.emplace_back(PTrust->targid, server_clock::now());
+            destroy(PTrust);
+        }
+    }
+
     // forceLogout eventually removes the char from m_charList -- so we must remove them here
-    for (auto PChar : charsToLogout)
+    for (auto* PChar : charsToLogout)
     {
         PChar->clearPacketList();
         charutils::ForceLogout(PChar);
     }
 
     // Warp players (do not recover HP/MP)
-    for (auto PChar : charsToWarp)
+    for (auto* PChar : charsToWarp)
     {
         PChar->clearPacketList();
         charutils::HomePoint(PChar, false);
     }
 
     // Change player's zone (teleports, etc)
-    for (auto PChar : charsToChangeZone)
+    for (auto* PChar : charsToChangeZone)
     {
         PChar->clearPacketList();
 
