@@ -3603,7 +3603,9 @@ INSERT INTO `mob_skill_lists` VALUES ('TRUST_Mildaurion',1086,3473); -- Stellar 
 -- INSERT INTO `mob_skill_lists` VALUES ('TRUST_Selh_teus',1094,0);
 -- INSERT INTO `mob_skill_lists` VALUES ('TRUST_Yoran-Oran_UC',1095,0);
 -- INSERT INTO `mob_skill_lists` VALUES ('TRUST_Sylvie_UC',1096,0);
--- INSERT INTO `mob_skill_lists` VALUES ('TRUST_Abquhbah',1097,0);
+INSERT INTO `mob_skill_lists` VALUES ('TRUST_Abquhbah',1097,1); -- Combo
+INSERT INTO `mob_skill_lists` VALUES ('TRUST_Abquhbah',1097,4); -- Backhand Blow
+INSERT INTO `mob_skill_lists` VALUES ('TRUST_Abquhbah',1097,3541); -- Salaheem Spirit
 -- INSERT INTO `mob_skill_lists` VALUES ('TRUST_Balamor',1098,0);
 -- INSERT INTO `mob_skill_lists` VALUES ('TRUST_August',1099,0);
 -- INSERT INTO `mob_skill_lists` VALUES ('TRUST_Rosulatia',1100,0);
