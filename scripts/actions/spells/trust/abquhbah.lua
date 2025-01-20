@@ -18,8 +18,7 @@ spellObject.onMobSpawn = function(mob)
     mob:addSimpleGambit(ai.t.SELF, ai.c.NOT_SC_AVAILABLE, 0, ai.r.JA, ai.s.SPECIFIC, xi.ja.WARCRY)
     mob:addSimpleGambit(ai.t.SELF, ai.c.ALWAYS, 0, ai.r.JA, ai.s.SPECIFIC, xi.ja.RESTRAINT)
 
-    mob:setTrustTPSkillSettings(ai.tp.CLOSER_UNTIL_TP, ai.s.RANDOM,1500)
-
+    mob:setTrustTPSkillSettings(ai.tp.CLOSER_UNTIL_TP, ai.s.RANDOM, 1500)
 end
 
 spellObject.onMobDespawn = function(mob)

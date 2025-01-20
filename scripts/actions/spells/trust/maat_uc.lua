@@ -21,7 +21,7 @@ spellObject.onMobSpawn = function(mob)
 
     if mob:getMaster():getMainLvl() >= 50 then
         -- TODO no current implementation to have multiple criterias on setTrustTOSkillSetting to allow opening a skill chain and closing a skill chain
-        mob:setTrustTPSkillSettings(ai.tp.CLOSER_UNTIL_TP, ai.s.HIGHEST,3000)
+        mob:setTrustTPSkillSettings(ai.tp.CLOSER_UNTIL_TP, ai.s.HIGHEST, 3000)
     end
 end
 
