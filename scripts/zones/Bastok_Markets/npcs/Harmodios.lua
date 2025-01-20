@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Bastok Markets
 --  NPC: Harmodios
--- Standard Merchant NPC
 -- !pos -79.928 -4.824 -135.114 235
 -----------------------------------
 local ID = zones[xi.zone.BASTOK_MARKETS]

@@ -26,6 +26,7 @@
 
 #include "common/blowfish.h"
 #include "common/kernel.h"
+#include "common/md52.h"
 #include "common/mmo.h"
 #include "common/socket.h"
 #include "common/sql.h"
@@ -83,7 +84,7 @@ struct map_session_data_t
         {
             if (blowfish.hash[i] == 0)
             {
-                memset(blowfish.hash + i, 0, 16 - i);
+                std::memset(blowfish.hash + i, 0, 16 - i);
                 break;
             }
         }

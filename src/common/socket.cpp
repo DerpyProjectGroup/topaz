@@ -373,7 +373,7 @@ using AccessControl = struct _access_control
     uint32 mask;
 };
 
-enum _aco
+enum _aco : uint8
 {
     ACO_DENY_ALLOW,
     ACO_ALLOW_DENY,
@@ -1071,8 +1071,8 @@ void socket_init_tcp()
         server_clock::now() + 1s,
         nullptr,
         CTaskMgr::TASK_INTERVAL,
-        connect_check_clear,
-        5min);
+        5min,
+        connect_check_clear);
 }
 
 void socket_final_tcp()

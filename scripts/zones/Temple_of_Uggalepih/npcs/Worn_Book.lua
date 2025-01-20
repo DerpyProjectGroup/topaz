@@ -9,9 +9,6 @@ local ID = zones[xi.zone.TEMPLE_OF_UGGALEPIH]
 ---@type TNpcEntity
 local entity = {}
 
-entity.onTrade = function(player, npc, trade)
-end
-
 entity.onTrigger = function(player, npc)
     if
         player:hasKeyItem(xi.ki.OLD_RUSTY_KEY) or
@@ -22,9 +19,6 @@ entity.onTrigger = function(player, npc)
         local offset = npc:getID() - ID.npc.BOOK_OFFSET
         player:startEvent(61 + offset)
     end
-end
-
-entity.onEventUpdate = function(player, csid, option, npc)
 end
 
 entity.onEventFinish = function(player, csid, option, npc)

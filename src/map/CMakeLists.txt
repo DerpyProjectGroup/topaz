@@ -54,6 +54,8 @@ set(SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/enmity_container.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/enmity_container.h
     ${CMAKE_CURRENT_SOURCE_DIR}/event_info.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/fishingcontest.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/fishingcontest.h
     ${CMAKE_CURRENT_SOURCE_DIR}/grades.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/grades.h
     ${CMAKE_CURRENT_SOURCE_DIR}/guild.cpp

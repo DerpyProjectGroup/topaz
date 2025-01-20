@@ -9,9 +9,6 @@ local ID = zones[xi.zone.WESTERN_ADOULIN]
 ---@type TNpcEntity
 local entity = {}
 
-entity.onTrade = function(player, npc, trade)
-end
-
 entity.onTrigger = function(player, npc)
     local apbif = player:getQuestStatus(xi.questLog.ADOULIN, xi.quest.id.adoulin.A_PIONEERS_BEST_IMAGINARY_FRIEND)
     if apbif == xi.questStatus.QUEST_ACCEPTED then
@@ -25,9 +22,6 @@ entity.onTrigger = function(player, npc)
     elseif apbif == xi.questStatus.QUEST_AVAILABLE then
         player:startEvent(2520)
     end
-end
-
-entity.onEventUpdate = function(player, csid, option, npc)
 end
 
 entity.onEventFinish = function(player, csid, option, npc)

@@ -23,6 +23,7 @@
 #define _CHARENTITY_H
 
 #include "event_info.h"
+#include "item_container.h"
 #include "monstrosity.h"
 #include "packets/char.h"
 #include "packets/entity_update.h"
@@ -287,7 +288,6 @@ class CRangeState;
 class CItemState;
 class CItemUsable;
 
-typedef std::deque<CBasicPacket*>      PacketList_t;
 typedef std::map<uint32, CBaseEntity*> SpawnIDList_t;
 typedef std::vector<EntityID_t>        BazaarList_t;
 
@@ -312,7 +312,7 @@ public:
     bool  isSettingBazaarPrices; // Is setting bazaar prices (temporarily hide bazaar)
     bool  isLinkDead;            // Player is d/cing
 
-    SAVE_CONF playerConfig; // Various settings such as chat filter, display head flag, new adventurer, autotarget, etc.
+    SAVE_CONF playerConfig{}; // Various settings such as chat filter, display head flag, new adventurer, autotarget, etc.
 
     uint32 lastOnline{ 0 };              // UTC Unix Timestamp of the last time char zoned or logged out
     bool   isNewPlayer() const;          // Checks if new player bit is unset.
@@ -356,7 +356,8 @@ public:
     void resetPetZoningInfo();            // Reset pet zoning info (when changing job ect)
     bool shouldPetPersistThroughZoning(); // If true, zoning should not cause a currently active pet to despawn
 
-    uint8  m_SetBlueSpells[20]{}; // The 0x200 offsetted blue magic spell IDs which the user has set. (1 byte per spell)
+    std::array<uint8, 20> m_SetBlueSpells{}; // The 0x200 offsetted blue magic spell IDs which the user has set. (1 byte per spell)
+
     uint32 m_FieldChocobo{};
     uint32 m_claimedDeeds[5]{};
     uint32 m_uniqueEvents[5]{};
@@ -414,17 +415,26 @@ public:
 
     uint8 GetGender();
 
-    void          clearPacketList();
-    void          pushPacket(CBasicPacket*);                                                     // Adding a copy of a package to the PacketList
-    void          pushPacket(std::unique_ptr<CBasicPacket>);                                     // Push packet to packet list
-    void          updateCharPacket(CCharEntity* PChar, ENTITYUPDATE type, uint8 updatemask);     // Push or update a char packet
-    void          updateEntityPacket(CBaseEntity* PEntity, ENTITYUPDATE type, uint8 updatemask); // Push or update an entity update packet
-    bool          isPacketListEmpty();
-    CBasicPacket* popPacket();     // Get first packet from PacketList
-    PacketList_t  getPacketList(); // Return a COPY of packet list
-    size_t        getPacketCount();
-    void          erasePackets(uint8 num); // Erase num elements from front of packet list
-    virtual void  HandleErrorMessage(std::unique_ptr<CBasicPacket>&) override;
+    void clearPacketList();
+
+    template <typename T, typename... Args>
+    void pushPacket(Args&&... args)
+    {
+        // TODO: This could hook into pooling of packet objects, etc.
+        pushPacket(std::make_unique<T>(std::forward<Args>(args)...));
+    }
+
+    void   pushPacket(std::unique_ptr<CBasicPacket>&&);                                   // Push packet to packet list
+    void   updateCharPacket(CCharEntity* PChar, ENTITYUPDATE type, uint8 updatemask);     // Push or update a char packet
+    void   updateEntityPacket(CBaseEntity* PEntity, ENTITYUPDATE type, uint8 updatemask); // Push or update an entity update packet
+    bool   isPacketListEmpty();
+    auto   popPacket() -> std::unique_ptr<CBasicPacket>;                     // Get first packet from PacketList
+    auto   getPacketListCopy() -> std::deque<std::unique_ptr<CBasicPacket>>; // Return a COPY of packet list
+    size_t getPacketCount();
+    void   erasePackets(uint8 num); // Erase num elements from front of packet list
+    bool   isPacketFiltered(std::unique_ptr<CBasicPacket>& packet);
+
+    virtual void HandleErrorMessage(std::unique_ptr<CBasicPacket>&) override;
 
     CLinkshell*    PLinkshell1;
     CLinkshell*    PLinkshell2;
@@ -510,6 +520,9 @@ public:
     bool getBlockingAid() const;
     void setBlockingAid(bool isBlockingAid);
 
+    // Send updates about dirty containers in post tick
+    std::map<CONTAINER_ID, bool> dirtyInventoryContainers;
+
     bool       m_EquipSwap; // true if equipment was recently changed
     bool       m_EffectsChanged;
     time_point m_LastSynthTime;
@@ -531,7 +544,7 @@ public:
 
     CItemEquipment* getEquip(SLOTTYPE slot);
 
-    CBasicPacket* PendingPositionPacket = nullptr;
+    std::unique_ptr<CBasicPacket> PendingPositionPacket = nullptr;
 
     bool requestedInfoSync = false;
 
@@ -652,9 +665,9 @@ private:
     uint8      dataToPersist = 0;
     time_point nextDataPersistTime;
 
-    PacketList_t                                     PacketList;           // The list of packets to be sent to the character during the next network cycle
-    std::unordered_map<uint32, CCharPacket*>         PendingCharPackets;   // Keep track of which char packets are queued up for this char, such that they can be updated
-    std::unordered_map<uint32, CEntityUpdatePacket*> PendingEntityPackets; // Keep track of which entity update packets are queued up for this char, such that they can be updated
+    std::deque<std::unique_ptr<CBasicPacket>>                        PacketList;           // The list of packets to be sent to the character during the next network cycle
+    std::unordered_map<uint32, std::unique_ptr<CCharPacket>>         PendingCharPackets;   // Keep track of which char packets are queued up for this char, such that they can be updated
+    std::unordered_map<uint32, std::unique_ptr<CEntityUpdatePacket>> PendingEntityPackets; // Keep track of which entity update packets are queued up for this char, such that they can be updated
 };
 
 #endif

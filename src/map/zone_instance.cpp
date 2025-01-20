@@ -323,12 +323,12 @@ void CZoneInstance::SpawnPCs(CCharEntity* PChar)
     }
 }
 
-void CZoneInstance::SpawnMoogle(CCharEntity* PChar)
+void CZoneInstance::SpawnConditionalNPCs(CCharEntity* PChar)
 {
     TracyZoneScoped;
     if (PChar->PInstance)
     {
-        PChar->PInstance->SpawnMoogle(PChar);
+        PChar->PInstance->SpawnConditionalNPCs(PChar);
     }
 }
 
@@ -350,7 +350,7 @@ void CZoneInstance::TOTDChange(TIMETYPE TOTD)
     }
 }
 
-void CZoneInstance::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, CBasicPacket* packet)
+void CZoneInstance::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, const std::unique_ptr<CBasicPacket>& packet)
 {
     TracyZoneScoped;
     if (PEntity)

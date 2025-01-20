@@ -32,10 +32,10 @@ zones[xi.zone.BHAFLAU_THICKETS] =
         AREA_FULL                     = 7597, -- This area is fully occupied. You were unable to enter.
         MEMBER_NO_REQS                = 7601, -- Not all of your party members meet the requirements for this objective. Unable to enter area.
         MEMBER_TOO_FAR                = 7605, -- One or more party members are too far away from the entrance. Unable to enter area.
-        SHED_LEAVES                   = 7666, -- The ground is strewn with shed leaves...
-        BLOOD_STAINS                  = 7668, -- The ground is smeared with bloodstains...
-        DRAWS_NEAR                    = 7693, -- Something draws near!
-        HOMEPOINT_SET                 = 7704, -- Home point set!
+        SHED_LEAVES                   = 7667, -- The ground is strewn with shed leaves...
+        BLOOD_STAINS                  = 7669, -- The ground is smeared with bloodstains...
+        DRAWS_NEAR                    = 7694, -- Something draws near!
+        HOMEPOINT_SET                 = 7705, -- Home point set!
     },
     mob =
     {

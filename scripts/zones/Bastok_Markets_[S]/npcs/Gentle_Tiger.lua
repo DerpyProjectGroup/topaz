@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Bastok Markets [S]
 --  NPC: GentleTiger
--- Type: Quest
 -- !pos -203  -10  1
 -----------------------------------
 ---@type TNpcEntity

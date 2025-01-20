@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Manaclipper
 --  NPC: Khots Chalahko
--- Type: NPC
 -- !pos 0.019 -4.674 -18.782 3
 -----------------------------------
 local ID = zones[xi.zone.MANACLIPPER]

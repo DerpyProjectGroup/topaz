@@ -504,7 +504,7 @@ void CMobEntity::PostTick()
         // If this mob is charmed, it should sync with its master
         if (PMaster && PMaster->PPet == this && PMaster->objtype == TYPE_PC)
         {
-            ((CCharEntity*)PMaster)->pushPacket(new CPetSyncPacket((CCharEntity*)PMaster));
+            ((CCharEntity*)PMaster)->pushPacket<CPetSyncPacket>((CCharEntity*)PMaster);
         }
 
         updatemask = 0;
@@ -652,8 +652,8 @@ void CMobEntity::DistributeRewards()
                 if (PMember->getZone() == PChar->getZone())
                 {
                     RoeDatagramList datagrams;
-                    datagrams.emplace_back(RoeDatagram("mob", this));
-                    datagrams.emplace_back(RoeDatagram("atkType", static_cast<uint8>(this->BattleHistory.lastHitTaken_atkType)));
+                    datagrams.emplace_back("mob", this);
+                    datagrams.emplace_back("atkType", static_cast<uint8>(this->BattleHistory.lastHitTaken_atkType));
                     roeutils::event(ROE_MOBKILL, (CCharEntity*)PMember, datagrams);
                 }
             });
@@ -685,15 +685,11 @@ void CMobEntity::DistributeRewards()
 void CMobEntity::DropItems(CCharEntity* PChar)
 {
     TracyZoneScoped;
-    // Adds an item to the treasure pool and returns true if the pool has been filled
-    auto AddItemToPool = [this, PChar](uint16 ItemID, uint8 dropCount)
+    // Adds an item to the treasure pool. Treasure pool will automatically kick out items if the pool is full (prioritizing non rare non ex items)
+    auto AddItemToPool = [this, PChar](uint16 ItemID)
     {
         PChar->PTreasurePool->AddItem(ItemID, this);
-        return dropCount >= TREASUREPOOL_SIZE;
     };
-
-    // Limit number of items that can drop to the treasure pool size
-    uint8 dropCount = 0;
 
     DropList_t* dropList = itemutils::GetDropList(m_DropID);
 
@@ -733,10 +729,8 @@ void CMobEntity::DropItems(CCharEntity* PChar)
                 {
                     if (itemRoll < previousRateValue + item.DropRate)
                     {
-                        if (AddItemToPool(item.ItemID, ++dropCount))
-                        {
-                            return;
-                        }
+                        AddItemToPool(item.ItemID);
+
                         break;
                     }
                     previousRateValue += item.DropRate;
@@ -756,10 +750,7 @@ void CMobEntity::DropItems(CCharEntity* PChar)
 
             if (itemDropRate > 0 && xirand::GetRandomNumber(1, 10000) <= itemDropRate * settings::get<float>("map.DROP_RATE_MULTIPLIER"))
             {
-                if (AddItemToPool(item.ItemID, ++dropCount))
-                {
-                    return;
-                }
+                AddItemToPool(item.ItemID);
             }
         });
         // clang-format on
@@ -785,29 +776,16 @@ void CMobEntity::DropItems(CCharEntity* PChar)
                 switch (xirand::GetRandomNumber(4))
                 {
                     case 0:
-
-                        if (AddItemToPool(1126, ++dropCount))
-                        {
-                            return;
-                        }
+                        AddItemToPool(1126);
                         break;
                     case 1:
-                        if (AddItemToPool(1127, ++dropCount))
-                        {
-                            return;
-                        }
+                        AddItemToPool(1127);
                         break;
                     case 2:
-                        if (AddItemToPool(2955, ++dropCount))
-                        {
-                            return;
-                        }
+                        AddItemToPool(2955);
                         break;
                     case 3:
-                        if (AddItemToPool(2956, ++dropCount))
-                        {
-                            return;
-                        }
+                        AddItemToPool(2956);
                         break;
                 }
             }
@@ -816,22 +794,13 @@ void CMobEntity::DropItems(CCharEntity* PChar)
                 switch (xirand::GetRandomNumber(3))
                 {
                     case 0:
-                        if (AddItemToPool(1126, ++dropCount))
-                        {
-                            return;
-                        }
+                        AddItemToPool(1126);
                         break;
                     case 1:
-                        if (AddItemToPool(1127, ++dropCount))
-                        {
-                            return;
-                        }
+                        AddItemToPool(1127);
                         break;
                     case 2:
-                        if (AddItemToPool(2955, ++dropCount))
-                        {
-                            return;
-                        }
+                        AddItemToPool(2955);
                         break;
                 }
             }
@@ -839,26 +808,17 @@ void CMobEntity::DropItems(CCharEntity* PChar)
             {
                 if (xirand::GetRandomNumber(2) == 0)
                 {
-                    if (AddItemToPool(1126, ++dropCount))
-                    {
-                        return;
-                    }
+                    AddItemToPool(1126);
                 }
                 else
                 {
-                    if (AddItemToPool(1127, ++dropCount))
-                    {
-                        return;
-                    }
+                    AddItemToPool(1127);
                 }
             }
             else
             {
                 // b.seal only
-                if (AddItemToPool(1126, ++dropCount))
-                {
-                    return;
-                }
+                AddItemToPool(1126);
             }
         }
 
@@ -931,28 +891,28 @@ void CMobEntity::DropItems(CCharEntity* PChar)
                 switch (element)
                 {
                     case ELEMENT_FIRE:
-                        AddItemToPool(3297, ++dropCount); // Flame Geode
+                        AddItemToPool(3297); // Flame Geode
                         break;
                     case ELEMENT_EARTH:
-                        AddItemToPool(3300, ++dropCount); // Soil Geode
+                        AddItemToPool(3300); // Soil Geode
                         break;
                     case ELEMENT_WATER:
-                        AddItemToPool(3302, ++dropCount); // Aqua Geode
+                        AddItemToPool(3302); // Aqua Geode
                         break;
                     case ELEMENT_WIND:
-                        AddItemToPool(3299, ++dropCount); // Breeze Geode
+                        AddItemToPool(3299); // Breeze Geode
                         break;
                     case ELEMENT_ICE:
-                        AddItemToPool(3298, ++dropCount); // Snow Geode
+                        AddItemToPool(3298); // Snow Geode
                         break;
                     case ELEMENT_THUNDER:
-                        AddItemToPool(3301, ++dropCount); // Thunder Geode
+                        AddItemToPool(3301); // Thunder Geode
                         break;
                     case ELEMENT_LIGHT:
-                        AddItemToPool(3303, ++dropCount); // Light Geode
+                        AddItemToPool(3303); // Light Geode
                         break;
                     case ELEMENT_DARK:
-                        AddItemToPool(3304, ++dropCount); // Shadow Geode
+                        AddItemToPool(3304); // Shadow Geode
                         break;
                     default:
                         break;
@@ -964,28 +924,28 @@ void CMobEntity::DropItems(CCharEntity* PChar)
                 switch (element)
                 {
                     case ELEMENT_FIRE:
-                        AddItemToPool(3520, ++dropCount); // Ifritite
+                        AddItemToPool(3520); // Ifritite
                         break;
                     case ELEMENT_EARTH:
-                        AddItemToPool(3523, ++dropCount); // Titanite
+                        AddItemToPool(3523); // Titanite
                         break;
                     case ELEMENT_WATER:
-                        AddItemToPool(3525, ++dropCount); // Leviatite
+                        AddItemToPool(3525); // Leviatite
                         break;
                     case ELEMENT_WIND:
-                        AddItemToPool(3522, ++dropCount); // Garudite
+                        AddItemToPool(3522); // Garudite
                         break;
                     case ELEMENT_ICE:
-                        AddItemToPool(3521, ++dropCount); // Shivite
+                        AddItemToPool(3521); // Shivite
                         break;
                     case ELEMENT_THUNDER:
-                        AddItemToPool(3524, ++dropCount); // Ramuite
+                        AddItemToPool(3524); // Ramuite
                         break;
                     case ELEMENT_LIGHT:
-                        AddItemToPool(3526, ++dropCount); // Carbit
+                        AddItemToPool(3526); // Carbit
                         break;
                     case ELEMENT_DARK:
-                        AddItemToPool(3527, ++dropCount); // Fenrite
+                        AddItemToPool(3527); // Fenrite
                         break;
                     default:
                         break;
@@ -1075,11 +1035,13 @@ void CMobEntity::DropItems(CCharEntity* PChar)
         });
         // clang-format on
 
+        // Is this really checked last? Would crystals actually kick out non-rare/ex items from the same mob dropping a large pool?
         for (uint8 i = 0; i < crystalRolls; i++)
         {
-            if (xirand::GetRandomNumber(100) < 20 && AddItemToPool(4095 + m_Element, ++dropCount))
+            // TODO: implement nation aketon crystal bonus (per member?)
+            if (xirand::GetRandomNumber(100) < 20)
             {
-                return;
+                AddItemToPool(4095 + m_Element);
             }
         }
     }
@@ -1198,11 +1160,11 @@ void CMobEntity::Die()
         {
             if (PLastAttacker)
             {
-                loc.zone->PushPacket(this, CHAR_INRANGE, new CMessageBasicPacket(PLastAttacker, this, 0, 0, MSGBASIC_DEFEATS_TARG));
+                loc.zone->PushPacket(this, CHAR_INRANGE, std::make_unique<CMessageBasicPacket>(PLastAttacker, this, 0, 0, MSGBASIC_DEFEATS_TARG));
             }
             else
             {
-                loc.zone->PushPacket(this, CHAR_INRANGE, new CMessageBasicPacket(this, this, 0, 0, MSGBASIC_FALLS_TO_GROUND));
+                loc.zone->PushPacket(this, CHAR_INRANGE, std::make_unique<CMessageBasicPacket>(this, this, 0, 0, MSGBASIC_FALLS_TO_GROUND));
             }
 
             DistributeRewards();

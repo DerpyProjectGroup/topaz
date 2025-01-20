@@ -40,6 +40,8 @@ local bracerMode = function(mob, qnAern1, qnAern2)
 end
 
 entity.onMobInitialize = function(mob)
+    mob:setMobMod(xi.mobMod.IDLE_DESPAWN, 300)
+
     mob:addListener('ITEM_DROPS', 'ITEM_DROPS_IXAERN_MNK', function(mobArg, loot)
         local rate = mob:getLocalVar('[SEA]IxAern_DropRate')
         loot:addGroupFixed(rate,

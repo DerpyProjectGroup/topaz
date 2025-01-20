@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Northern San d'Oria
 --  NPC: Halaviabeau
--- Quest NPC
 -----------------------------------
 ---@type TNpcEntity
 local entity = {}

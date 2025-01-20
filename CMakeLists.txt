@@ -107,6 +107,13 @@ add_definitions(
 # For external libs
 set(CMAKE_WARN_DEPRECATED OFF CACHE BOOL "" FORCE)
 
+# Tracy flags
+option(TRACY_ENABLE "Enable Tracy profiling." OFF)
+if(ENABLE_TRACY OR TRACY_ENABLED OR TRACY) # Also handle close flags
+    set(TRACY_ENABLE ON)
+endif()
+message(STATUS "TRACY_ENABLE: ${TRACY_ENABLE}")
+
 add_subdirectory(ext)
 
 include(ClangTidy)

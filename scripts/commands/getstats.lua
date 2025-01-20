@@ -106,11 +106,11 @@ commandObj.onTrigger = function(player, option)
                         end
                     end
 
-                    message = message .. ' SDT: ' ..         target:getMod(xi.combat.element.specificDmgTakenMod[v])
-                    message = message .. ' resRank: ' ..     target:getMod(xi.combat.element.resistRankMod[v])
-                    message = message .. ' Null%: ' ..       target:getMod(xi.combat.element.nullMod[v])
-                    message = message .. ' Absorb%: ' ..     target:getMod(xi.combat.element.absorbMod[v])
-                    message = message .. ' MEva: ' ..        target:getMod(xi.combat.element.elementalMagicEva[v])
+                    message = message .. ' SDT: ' ..         target:getMod(xi.combat.element.getElementalSDTModifier(v))
+                    message = message .. ' resRank: ' ..     target:getMod(xi.combat.element.getElementalResistanceRankModifier(v))
+                    message = message .. ' Null%: ' ..       target:getMod(xi.combat.element.getElementalNullificationModifier(v))
+                    message = message .. ' Absorb%: ' ..     target:getMod(xi.combat.element.getElementalAbsorptionModifier(v))
+                    message = message .. ' MEva: ' ..        target:getMod(xi.combat.element.getElementalMEVAModifier(v))
                     eleMessages[v] = message
                 end
             end

@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Kazham
 --  NPC: Pahya Lolohoiv
--- Standard Merchant NPC
 -----------------------------------
 local ID = zones[xi.zone.KAZHAM]
 -----------------------------------

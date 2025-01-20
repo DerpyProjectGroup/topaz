@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Mhaura
 --  NPC: Runito-Monito
--- Standard Merchant NPC
 -----------------------------------
 local ID = zones[xi.zone.MHAURA]
 -----------------------------------

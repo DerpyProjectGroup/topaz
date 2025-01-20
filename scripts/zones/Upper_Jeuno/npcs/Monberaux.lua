@@ -10,9 +10,6 @@ local ID = zones[xi.zone.UPPER_JEUNO]
 ---@type TNpcEntity
 local entity = {}
 
-entity.onTrade = function(player, npc, trade)
-end
-
 entity.onTrigger = function(player, npc)
     local theLostCardien = player:getQuestStatus(xi.questLog.JEUNO, xi.quest.id.jeuno.THE_LOST_CARDIAN)
     local cooksPride = player:getQuestStatus(xi.questLog.JEUNO, xi.quest.id.jeuno.COOK_S_PRIDE)
@@ -37,30 +34,6 @@ entity.onTrigger = function(player, npc)
     then
         player:startEvent(32)
     end
-end
-
---Door:Infirmary     2 ++
---Door:Infirmary     10 ++
---Door:Infirmary     207 ++
---Door:Infirmary     82 ++
---Door:Infirmary     10059 nonCOP
---Door:Infirmary     10060 nonCOP
---Door:Infirmary     10205 nonCOP
---Door:Infirmary     10061 nonCOP
---Door:Infirmary     10062 nonCOP
---Door:Infirmary     10207 nonCOP
---Door:Infirmary     33 ++
---Door:Infirmary     34 ++
---Door:Infirmary     2 ++
---Door:Infirmary     82 ++
---Door:Infirmary     75 ++
---Door:Infirmary     10060 nonCOP
---Door:Infirmary     10205 nonCOP
-
---Tenzen     10011
---Tenzen     10012
-
-entity.onEventUpdate = function(player, csid, option, npc)
 end
 
 entity.onEventFinish = function(player, csid, option, npc)

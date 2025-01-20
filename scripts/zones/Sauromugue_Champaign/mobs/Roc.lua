@@ -7,6 +7,26 @@ mixins = { require('scripts/mixins/rage') }
 ---@type TMobEntity
 local entity = {}
 
+entity.onMobInitialize = function(mob)
+    mob:setMobMod(xi.mobMod.GIL_MIN, 15000)
+    mob:setMobMod(xi.mobMod.GIL_MAX, 30000)
+end
+
+entity.onMobFight = function(mob, target)
+    local drawInTable =
+    {
+        conditions =
+        {
+            target:checkDistance(mob) > mob:getMeleeRange(),
+        },
+        position = mob:getPos(),
+        offset = 10,
+        degrees = 180,
+        wait = 15,
+    }
+    utils.drawIn(target, drawInTable)
+end
+
 entity.onMobDeath = function(mob, player, optParams)
     player:addTitle(xi.title.ROC_STAR)
 end

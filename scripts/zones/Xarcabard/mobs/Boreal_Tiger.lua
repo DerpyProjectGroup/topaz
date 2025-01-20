@@ -33,7 +33,7 @@ local function rotateMob(mob)
             rotationChange = -1 * rotationChange
         end
 
-        if math.random() < .25 then
+        if math.random(1, 100) <= 25 then
             rotationChange = 0
             mob:setLocalVar('rotationDirection', (rotationDirection + 1) % 2)
         end
@@ -46,7 +46,7 @@ local function rotateMob(mob)
 end
 
 entity.onPathPoint = function(mob)
-    if math.random() < 0.5 then
+    if math.random(1, 100) <= 50 then
         mob:setSpeed(0)
         mob:timer(math.random(4000, 8000), function(mobArg)
             mobArg:setSpeed(baseSpeed)
@@ -66,7 +66,7 @@ entity.onMobRoam = function(mob)
         mob:getSpeed() ~= 0
     then
         local pathFlag = xi.pathflag.SLIDE
-        if math.random() < .5 then
+        if math.random(1, 100) <= 50 then
             -- sometimes he runs between points
             mob:setSpeed(baseSpeed * 1.5)
             pathFlag = pathFlag + xi.pathflag.RUN
@@ -83,10 +83,38 @@ entity.onMobEngage = function(mob)
 end
 
 entity.onMobSpawn = function(mob)
+    mob:setMobMod(xi.mobMod.ALWAYS_AGGRO, 1)
     mob:setSpeed(baseSpeed)
     -- Failsafe to make sure NPC is down when NM is up
     if xi.settings.main.OLDSCHOOL_G2 then
         GetNPCByID(ID.npc.BOREAL_TIGER_QM):showNPC(0)
+    end
+end
+
+entity.onMobFight = function(mob, target)
+    local drawInTable =
+    {
+        conditions =
+        {
+            target:getZPos() < 335,
+        },
+        position = mob:getPos(),
+        offset = 5,
+        degrees = 180,
+        wait = 2,
+    }
+
+    if drawInTable.conditions[1] then
+        mob:setMobMod(xi.mobMod.NO_MOVE, 1)
+        -- If player is farther than melee range, then deaggro. Otherwise draw-in
+        if mob:checkDistance(target) > 10 then
+            mob:setMobMod(xi.mobMod.NO_MOVE, 0)
+            mob:disengage()
+        else
+            utils.drawIn(target, drawInTable)
+        end
+    else
+        mob:setMobMod(xi.mobMod.NO_MOVE, 0)
     end
 end
 

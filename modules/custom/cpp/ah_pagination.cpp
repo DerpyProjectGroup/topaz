@@ -23,15 +23,21 @@ class AHPaginationModule : public CPPModule
         TracyZoneScoped;
 
         // If this is set to 7, the client won't let you put up more than 7 items. So, 6.
-        auto ITEMS_PER_PAGE = 6U;
-        auto TOTAL_PAGES    = 6;
+        const auto ITEMS_PER_PAGE = 6U;
+        const auto TOTAL_PAGES    = 6U;
+        const auto AH_LIST_LIMIT  = ITEMS_PER_PAGE * TOTAL_PAGES;
 
-        ShowInfo("[AH PAGES] Setting AH_LIST_LIMIT to %i.", ITEMS_PER_PAGE * TOTAL_PAGES);
-        lua["xi"]["settings"]["search"]["AH_LIST_LIMIT"] = ITEMS_PER_PAGE * TOTAL_PAGES;
+        ShowInfo("[AH PAGES] Setting AH_LIST_LIMIT to %i.", AH_LIST_LIMIT);
+
+        settings::set("map.AH_LIST_LIMIT", static_cast<double>(AH_LIST_LIMIT));
+        if (settings::get<uint32>("map.AH_LIST_LIMIT") != AH_LIST_LIMIT)
+        {
+            ShowError("Failed to set AH_LIST_LIMIT to %i.", AH_LIST_LIMIT);
+        }
 
         auto originalHandler = PacketParser[0x04E];
 
-        auto newHandler = [this, ITEMS_PER_PAGE, TOTAL_PAGES, originalHandler](map_session_data_t* const PSession, CCharEntity* const PChar, CBasicPacket& data) -> void
+        auto newHandler = [ITEMS_PER_PAGE, TOTAL_PAGES, originalHandler](map_session_data_t* const PSession, CCharEntity* const PChar, CBasicPacket& data) -> void
         {
             TracyZoneScoped;
 
@@ -50,22 +56,42 @@ class AHPaginationModule : public CPPModule
                 {
                     // This will get wiped on zoning
                     auto currentAHPage = PChar->GetLocalVar("AH_PAGE");
+
+                    // Will only show the first time you access the AH until you zone again.
+                    // Since we do rollover of pages inline below.
+                    // This is also good for performance to not hammer the db completely.
+                    if (currentAHPage == 0) // Page "1"
+                    {
+                        // Get the current number of items the player has for sale
+                        const auto ahListings = [&]() -> uint32
+                        {
+                            const auto rset = db::preparedStmt("SELECT COUNT(*) FROM auction_house WHERE seller = ? AND sale = 0", PChar->id);
+                            if (rset && rset->rowsCount() && rset->next())
+                            {
+                                return rset->get<uint32>(0);
+                            }
+                            return 0;
+                        }();
+                        PChar->pushPacket<CChatMessagePacket>(PChar, MESSAGE_SYSTEM_3, fmt::format("You have {} items listed for sale.", ahListings).c_str(), "");
+                    }
+
                     PChar->SetLocalVar("AH_PAGE", (currentAHPage + 1) % TOTAL_PAGES);
 
                     PChar->m_ah_history.clear();
                     PChar->m_AHHistoryTimestamp = curTick;
-                    PChar->pushPacket(new CAuctionHousePacket(action));
+                    PChar->pushPacket<CAuctionHousePacket>(action);
 
-                    const char* Query = "SELECT itemid, price, stack FROM auction_house WHERE seller = %u and sale=0 ORDER BY id ASC LIMIT %u OFFSET %u;";
-                    int32       ret   = sql->Query(Query, PChar->id, ITEMS_PER_PAGE, currentAHPage * ITEMS_PER_PAGE);
+                    // Not const, because we're possibly going to overwrite it later
+                    auto rset = db::preparedStmt("SELECT itemid, price, stack FROM auction_house WHERE seller = ? and sale = 0 ORDER BY id ASC LIMIT ? OFFSET ?", PChar->id, ITEMS_PER_PAGE, currentAHPage * ITEMS_PER_PAGE);
 
-                    if (ret != SQL_ERROR && sql->NumRows() == 0)
+                    // If we get back 0 results, we're at the end of the list. We should redo the query and reset to page 1 (OFFSET 0)
+                    if (rset && rset->rowsCount() == 0)
                     {
-                        PChar->pushPacket(new CChatMessagePacket(PChar, MESSAGE_SYSTEM_3, fmt::format("No results for page: {} of {}.", currentAHPage + 1, TOTAL_PAGES).c_str(), ""));
+                        PChar->pushPacket<CChatMessagePacket>(PChar, MESSAGE_SYSTEM_3, fmt::format("No results for page: {} of {}.", currentAHPage + 1, TOTAL_PAGES).c_str(), "");
 
                         // Reset to Page 1
-                        const char* Query = "SELECT itemid, price, stack FROM auction_house WHERE seller = %u and sale=0 ORDER BY id ASC LIMIT %u OFFSET %u;";
-                        ret               = sql->Query(Query, PChar->id, ITEMS_PER_PAGE, 0);
+                        // Overwrite the original rset here
+                        rset = db::preparedStmt("SELECT itemid, price, stack FROM auction_house WHERE seller = ? and sale = 0 ORDER BY id ASC LIMIT ? OFFSET 0", PChar->id, ITEMS_PER_PAGE);
 
                         // Show Page 1 this time
                         currentAHPage = 0;
@@ -74,30 +100,30 @@ class AHPaginationModule : public CPPModule
                         PChar->SetLocalVar("AH_PAGE", currentAHPage + 1);
                     }
 
-                    PChar->pushPacket(new CChatMessagePacket(PChar, MESSAGE_SYSTEM_3, fmt::format("Current page: {} of {}. Showing {} items.", currentAHPage + 1, TOTAL_PAGES, sql->NumRows()).c_str(), ""));
+                    PChar->pushPacket<CChatMessagePacket>(PChar, MESSAGE_SYSTEM_3, fmt::format("Current page: {} of {}. Showing {} items.", currentAHPage + 1, TOTAL_PAGES, rset->rowsCount()).c_str(), "");
 
-                    if (ret != SQL_ERROR && sql->NumRows() != 0)
+                    if (rset && rset->rowsCount())
                     {
-                        while (sql->NextRow() == SQL_SUCCESS)
+                        while (rset->next())
                         {
-                            AuctionHistory_t ah;
-                            ah.itemid = (uint16)sql->GetIntData(0);
-                            ah.price  = sql->GetUIntData(1);
-                            ah.stack  = (uint8)sql->GetIntData(2);
-                            ah.status = 0;
-                            PChar->m_ah_history.push_back(ah);
+                            PChar->m_ah_history.emplace_back(AuctionHistory_t{
+                                .itemid = rset->get<uint16>("itemid"),
+                                .stack  = rset->get<uint8>("stack"),
+                                .price  = rset->get<uint32>("price"),
+                                .status = 0,
+                            });
                         }
                     }
 
                     auto totalItemsOnAh = PChar->m_ah_history.size();
                     for (size_t slot = 0; slot < totalItemsOnAh; slot++)
                     {
-                        PChar->pushPacket(new CAuctionHousePacket(0x0C, (uint8)slot, PChar));
+                        PChar->pushPacket<CAuctionHousePacket>(0x0C, (uint8)slot, PChar);
                     }
                 }
                 else
                 {
-                    PChar->pushPacket(new CAuctionHousePacket(action, 246, 0, 0, 0, 0)); // try again in a little while msg
+                    PChar->pushPacket<CAuctionHousePacket>(action, 246, 0, 0, 0, 0); // try again in a little while msg
                 }
             }
             else // Otherwise, call original handler

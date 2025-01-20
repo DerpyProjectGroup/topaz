@@ -28,27 +28,6 @@
 
 namespace
 {
-    constexpr int currentYear()
-    {
-        // clang-format off
-        constexpr auto charToInt = [](char c)
-        {
-            return (c >= '0' && c <= '9') ? (c - '0') : 0;
-        };
-        // clang-format on
-
-        constexpr const char* timestamp       = __TIMESTAMP__;             // "__TIMESTAMP__" is like "Mon Jan  2 15:04:05 2006"
-        constexpr size_t      timestampLength = sizeof(__TIMESTAMP__) - 1; // Length of the timestamp string
-
-        int year = 0;
-        for (size_t i = timestampLength - 4; i < timestampLength; ++i)
-        {
-            year = year * 10 + charToInt(timestamp[i]);
-        }
-
-        return year;
-    }
-
     constexpr bool isBcryptHash(const std::string& passHash)
     {
         return std::size(passHash) == 60 &&
@@ -186,9 +165,6 @@ void auth_session::read_func()
                 return "";
             }();
             // clang-format on
-
-            // OLD PASSWORD HASH MIGRATION
-            static_assert(currentYear() <= 2024, "Migration period for old password hashes has expired. Please simplify this code after 2024-12-31 or open an issue upstream to do so.");
 
             if (isBcryptHash(passHash))
             {
@@ -413,9 +389,6 @@ void auth_session::read_func()
                 return "";
             }();
             // clang-format on
-
-            // OLD PASSWORD HASH MIGRATION
-            static_assert(currentYear() <= 2024, "Migration period for old password hashes has expired. Please simplify this code after 2024-12-31 or open an issue upstream to do so.");
 
             if (isBcryptHash(passHash))
             {

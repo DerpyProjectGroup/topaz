@@ -22,9 +22,9 @@ local elementalSpells =
 
 local centers =
 {
-    { -177.5, 60, -142 },
-    {   22.5,  0,  18 },
-    {  222.5, -60, 138 },
+    { -177.5,  60, -142 },
+    {   22.5,   0,   18 },
+    {  222.5, -60,  138 },
 }
 
 local mevaList =
@@ -124,11 +124,11 @@ end
 
 entity.onMobMagicPrepare = function(mob, target, spellId)
     local element = mob:getLocalVar('mobElement')
-    local spell = math.random()
+    local spell   = math.random(1, 100)
 
-    if spell > 0.6 then
+    if spell > 60 then
         return elementalSpells[element][1] -- element's DoT
-    elseif spell > 0.2 then
+    elseif spell > 20 then
         return elementalSpells[element][2] -- element's nuke
     else
         return 258

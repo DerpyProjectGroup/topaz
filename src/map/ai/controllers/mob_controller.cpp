@@ -1,4 +1,4 @@
-﻿/*
+/*
 ===========================================================================
 
   Copyright (c) 2010-2015 Darkstar Dev Teams
@@ -261,6 +261,18 @@ bool CMobController::CanDetectTarget(CBattleEntity* PTarget, bool forceSight)
     {
         hasInvisible = PTarget->StatusEffectContainer->HasStatusEffectByFlag(EFFECTFLAG_INVISIBLE);
         hasSneak     = PTarget->StatusEffectContainer->HasStatusEffect(EFFECT_SNEAK);
+    }
+
+    // Illusion effect seems to ignore true detection (true sound Porrogos don't aggro with Illusion up)
+    // Additionally, mobs that would normally aggro you via sound that also ignore illusion must also ignore you with illusion if you have sneak up,
+    // Fish in Mamook will see you through Illusion but not if you have sneak up
+    if (PTarget->StatusEffectContainer->HasStatusEffect(EFFECT_ILLUSION))
+    {
+        if (!PMob->getMobMod(MOBMOD_SEES_THROUGH_ILLUSION))
+        {
+            hasInvisible = true;
+            hasSneak     = true;
+        }
     }
 
     bool isTargetAndInRange = PMob->GetBattleTargetID() == PTarget->targid && currentDistance <= PMob->GetMeleeRange();
@@ -633,6 +645,7 @@ void CMobController::FaceTarget(uint16 targid)
     {
         PMob->PAI->PathFind->LookAt(targ->loc.p);
     }
+    PMob->UpdateSpeed();
 }
 
 void CMobController::Move()
@@ -707,16 +720,6 @@ void CMobController::Move()
 
         if (((currentDistance > closeDistance) || move) && PMob->PAI->CanFollowPath())
         {
-            // TODO: can this be moved to scripts entirely?
-            if (PMob->getMobMod(MOBMOD_DRAW_IN) > 0)
-            {
-                if (currentDistance >= PMob->GetMeleeRange() * 2 && battleutils::DrawIn(PTarget, PMob, PMob->GetMeleeRange() - 0.2f))
-                {
-                    FaceTarget();
-                    return;
-                }
-            }
-
             if (PMob->speed != 0 && PMob->getMobMod(MOBMOD_NO_MOVE) == 0 && m_Tick >= m_LastSpecialTime)
             {
                 // attempt to teleport to target (if in range)

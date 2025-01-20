@@ -39,7 +39,8 @@ enum class PHYSICAL_ATTACK_TYPE
     RAPID_SHOT = 6,
     SAMBA      = 7,
     QUAD       = 8,
-    DAKEN      = 9
+    DAKEN      = 9,
+    FOLLOWUP   = 10,
 };
 
 enum PHYSICAL_ATTACK_DIRECTION

@@ -115,7 +115,7 @@ CInstance* CInstanceLoader::LoadInstance()
             PMob->m_maxLevel = (uint8)_sql->GetIntData(12);
 
             uint16 sqlModelID[10];
-            memcpy(&sqlModelID, _sql->GetData(13), 20);
+            std::memcpy(&sqlModelID, _sql->GetData(13), 20);
             PMob->look = look_t(sqlModelID);
 
             PMob->SetMJob(_sql->GetIntData(14));
@@ -134,8 +134,9 @@ CInstance* CInstanceLoader::LoadInstance()
             PMob->m_EcoSystem   = (ECOSYSTEM)_sql->GetIntData(23);
             PMob->m_ModelRadius = (float)_sql->GetIntData(24);
 
-            PMob->speed    = (uint8)_sql->GetIntData(25);
-            PMob->speedsub = (uint8)_sql->GetIntData(25);
+            PMob->baseSpeed      = (uint8)_sql->GetIntData(25);
+            PMob->speed          = (uint8)_sql->GetIntData(25);
+            PMob->animationSpeed = (uint8)_sql->GetIntData(25);
 
             PMob->strRank = (uint8)_sql->GetIntData(26);
             PMob->dexRank = (uint8)_sql->GetIntData(27);
@@ -215,7 +216,7 @@ CInstance* CInstanceLoader::LoadInstance()
             PMob->setMobMod(MOBMOD_CHARMABLE, _sql->GetUIntData(74));
 
             // Overwrite base family charmables depending on mob type. Disallowed mobs which should be charmable
-            // can be set in mob_spawn_mods or in their onInitialize
+            // can be set in in their onInitialize
             if (PMob->m_Type & MOBTYPE_EVENT || PMob->m_Type & MOBTYPE_FISHED || PMob->m_Type & MOBTYPE_BATTLEFIELD || PMob->m_Type & MOBTYPE_NOTORIOUS)
             {
                 PMob->setMobMod(MOBMOD_CHARMABLE, 0);
@@ -258,17 +259,18 @@ CInstance* CInstanceLoader::LoadInstance()
 
                 PNpc->m_TargID = _sql->GetUIntData(6) >> 16; // "quite likely"
 
-                PNpc->speed        = (uint8)_sql->GetIntData(7);
-                PNpc->speedsub     = (uint8)_sql->GetIntData(8);
-                PNpc->animation    = (uint8)_sql->GetIntData(9);
-                PNpc->animationsub = (uint8)_sql->GetIntData(10);
+                PNpc->baseSpeed      = (uint8)_sql->GetIntData(8);
+                PNpc->speed          = (uint8)_sql->GetIntData(7);
+                PNpc->animationSpeed = (uint8)_sql->GetIntData(8);
+                PNpc->animation      = (uint8)_sql->GetIntData(9);
+                PNpc->animationsub   = (uint8)_sql->GetIntData(10);
 
                 PNpc->namevis = (uint8)_sql->GetIntData(11);
                 PNpc->status  = static_cast<STATUS_TYPE>(_sql->GetIntData(12));
                 PNpc->m_flags = _sql->GetUIntData(13);
 
                 uint16 sqlModelID[10];
-                memcpy(&sqlModelID, _sql->GetData(14), 20);
+                std::memcpy(&sqlModelID, _sql->GetData(14), 20);
                 PNpc->look = look_t(sqlModelID);
 
                 PNpc->name_prefix = (uint8)_sql->GetIntData(15);

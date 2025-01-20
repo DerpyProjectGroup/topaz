@@ -16,6 +16,21 @@ entity.onMobSpawn = function(mob)
     GetNPCByID(ID.npc.FAFNIR_QM):setStatus(xi.status.DISAPPEAR)
 end
 
+entity.onMobFight = function(mob, target)
+    local drawInTable =
+    {
+        conditions =
+        {
+            target:getXPos() > 95 and target:getZPos() > 56,
+            target:getXPos() < 60 and target:getZPos() < 23,
+        },
+        position = mob:getPos(),
+        wait = 3,
+    }
+
+    utils.drawIn(target, drawInTable)
+end
+
 entity.onMobDeath = function(mob, player, optParams)
     player:addTitle(xi.title.FAFNIR_SLAYER)
 end

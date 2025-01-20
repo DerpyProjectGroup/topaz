@@ -1,4 +1,4 @@
-﻿/*
+/*
 ===========================================================================
 
   Copyright (c) 2010-2015 Darkstar Dev Teams
@@ -275,13 +275,13 @@ CCharUpdatePacket::CCharUpdatePacket(CCharEntity* PChar)
     // flags 1 starts at 0x2C
     charUpateFlags::flags1_t flags1 = {};
 
-    flags1.Speed        = PChar->GetSpeed();
+    flags1.Speed        = PChar->UpdateSpeed();
     flags1.Hackmove     = PChar->wallhackEnabled; // GM wallhack, walk through walls
     flags1.FreezeFlag   = 0;                      // Freeze client in place. Is this used?
     flags1.unknown_1_14 = 0;                      // Unknown.
     flags1.InvisFlag    = PChar->m_isGMHidden || PChar->StatusEffectContainer->HasStatusEffectByFlag(EFFECTFLAG_INVISIBLE);
     flags1.unknown_2_16 = 0; // Unknown.
-    flags1.SpeedBase    = PChar->speedsub;
+    flags1.SpeedBase    = PChar->animationSpeed;
     flags1.unknown_3_25 = 0; // Unknown
     flags1.BazaarFlag   = PChar->hasBazaar();
     flags1.CharmFlag    = PChar->isCharmed;
@@ -367,7 +367,7 @@ CCharUpdatePacket::CCharUpdatePacket(CCharEntity* PChar)
     packet.Flags5 = flags5;
     packet.Flags6 = flags6;
 
-    std::memcpy(&data[0], &packet, sizeof(packet));
+    std::memcpy(&buffer_.data()[0], &packet, sizeof(packet));
 
     // Mog wardrobe enabled bits (apparently used by windower in get_bag_info(N).enabled):
     // 0x01 = Wardrobe 3

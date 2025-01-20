@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Al Zahbi
 --  NPC: Kahah Hobichai
--- Standard Merchant NPC
 -- TODO: Stock needs to be modified based on
 --       status of Astral Candescence
 -----------------------------------

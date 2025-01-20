@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Bastok Markets (S)
 --  NPC: Blingbrix
--- Standard Merchant NPC
 -----------------------------------
 local ID = zones[xi.zone.BASTOK_MARKETS_S]
 -----------------------------------

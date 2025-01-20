@@ -15,16 +15,42 @@ end
 
 entity.onMobInitialize = function(mob)
     mob:setCarefulPathing(true)
-    mob:setMobMod(xi.mobMod.DRAW_IN, 8)
 end
 
 entity.onMobSpawn = function(mob)
     -- Reset animation so it starts grounded.
     mob:setMobSkillAttack(0)
     mob:setAnimationSub(0)
+    mob:setMobMod(xi.mobMod.NO_MOVE, 0)
+end
+
+entity.onMobRoam = function(mob)
+    mob:setMobMod(xi.mobMod.NO_MOVE, 0)
 end
 
 entity.onMobFight = function(mob, target)
+    -- Tiamat draws in from set boundaries leaving her spawn area
+    local drawInTable =
+    {
+        conditions =
+        {
+            target:getZPos() > 28,
+            target:getZPos() > -31 and target:getXPos() > -515,
+            target:getZPos() <= -31 and target:getXPos() > -500,
+        },
+        position = mob:getPos(),
+        wait = 5,
+    }
+    for _, condition in ipairs(drawInTable.conditions) do
+        if condition then
+            mob:setMobMod(xi.mobMod.NO_MOVE, 1)
+            utils.drawIn(target, drawInTable)
+            break
+        else
+            mob:setMobMod(xi.mobMod.NO_MOVE, 0)
+        end
+    end
+
     -- Gains a large attack boost when health is under 25% which cannot be Dispelled.
     if
         mob:getHPP() <= 25 and

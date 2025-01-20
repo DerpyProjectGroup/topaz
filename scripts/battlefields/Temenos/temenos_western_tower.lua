@@ -81,7 +81,7 @@ content.handleMobDeath = function(floor, battlefield, mob, count)
 
     local crateCount = battlefield:getLocalVar('CrateCount'..floor)
 
-    if crateCount < 3 and math.random(4) == 1 then
+    if crateCount < 3 and math.random(1, 100) <= 25 then
         -- Crate type randomization happens in onBattlefieldRegister
         local crateID = ID.TEMENOS_WESTERN_TOWER.npc.CRATE_OFFSETS[floor] + crateCount
 

@@ -22,6 +22,7 @@
 #include "lua_zone.h"
 
 #include "common/logging.h"
+#include "common/timer.h"
 
 #include "entities/charentity.h"
 #include "entities/npcentity.h"

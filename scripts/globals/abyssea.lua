@@ -829,7 +829,7 @@ xi.abyssea.getNewYellowWeakness = function(mob)
         chosenDay = xi.day.FIRESDAY
     end
 
-    local element = xi.magic.dayElement[chosenDay]
+    local element = xi.combat.element.getDayElement(chosenDay)
 
     return yellowWeakness[element][math.random(1, #yellowWeakness[element])] -- Choose an specific spell the mob is weak to.
 end

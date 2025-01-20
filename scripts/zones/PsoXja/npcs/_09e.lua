@@ -27,9 +27,6 @@ entity.onTrigger = function(player, npc)
     psoXjaGlobal.attemptOpenDoor(player, npc, player:getZPos() >= -21)
 end
 
-entity.onEventUpdate = function(player, csid, option, npc)
-end
-
 entity.onEventFinish = function(player, csid, option, npc)
     if csid == 26 and option == 1 then
         player:setPos(260, -0.25, -20, 254, 111)

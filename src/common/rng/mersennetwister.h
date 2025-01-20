@@ -25,6 +25,9 @@
 #include <array>
 #include <random>
 
+// Forward declare sysrandom which is built in the xirand.h/cpp compilation unit
+extern size_t sysrandom(void* dst, size_t dstlen);
+
 class xirand
 {
 public:
@@ -38,27 +41,10 @@ public:
     {
         ShowInfo("Seeding Mersenne Twister 32 bit RNG");
 
-        std::array<uint32_t, std::mt19937::state_size> seed_data;
+        uint32_t seed;
+        sysrandom(&seed, sizeof(seed));
 
-        // Certain systems were noted to have bad seeding via only std::random_device,
-        // the following indicated how we could mix in std::random_device with other seed sources
-        // https://stackoverflow.com/a/68382489
-        for (auto it = seed_data.begin(); it != seed_data.end(); ++it)
-        {
-            // start with a C++ equivalent of time(nullptr) - UNIX time in seconds
-            *it = std::chrono::duration_cast<std::chrono::seconds>(
-                      std::chrono::system_clock::now().time_since_epoch())
-                      .count();
-
-            // mix with a high precision time in microseconds
-            *it ^= std::chrono::duration_cast<std::chrono::microseconds>(
-                       std::chrono::high_resolution_clock::now().time_since_epoch())
-                       .count();
-
-            // *it ^= more_external_random_stuff;
-        }
-        std::seed_seq seq(seed_data.cbegin(), seed_data.cend());
-        rng().seed(seq);
+        rng().seed(seed);
     }
 
     /*

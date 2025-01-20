@@ -30,7 +30,7 @@ quest.sections =
 
         [xi.zone.SOUTHERN_SAN_DORIA] =
         {
-            ['Femitte'] = 
+            ['Femitte'] =
             {
                 onTrigger = quest:progressEvent(663),
             },

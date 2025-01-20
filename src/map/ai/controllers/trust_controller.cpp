@@ -40,7 +40,7 @@
 
 namespace
 {
-    enum TRUST_MOVEMENT_TYPE
+    enum TRUST_MOVEMENT_TYPE : int8
     {
         // NOTE: If you need to add special movement types, add descending into the minus values.
         //     : All of the positive values are taken for the ranged movement range.
@@ -180,7 +180,7 @@ void CTrustController::DoCombatTick(time_point tick)
                             {
                                 POwner->PAI->PathFind->FollowPath(m_Tick);
                             }
-                            else if (POwner->GetSpeed() > 0)
+                            else if (POwner->speed > 0)
                             {
                                 POwner->PAI->PathFind->StepTo(PTarget->loc.p, true);
                             }
@@ -288,7 +288,7 @@ void CTrustController::DoRoamTick(time_point tick)
         {
             POwner->PAI->PathFind->FollowPath(m_Tick);
         }
-        else if (POwner->GetSpeed() > 0)
+        else if (POwner->speed > 0)
         {
             POwner->PAI->PathFind->StepTo(PFollowTarget->loc.p, true);
         }

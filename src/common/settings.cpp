@@ -96,11 +96,11 @@ namespace settings
         }
 
         // Scrape defaults into cpp's settingsMap
-        for (auto [outerKeyObj, outerValObj] : lua["xi"]["settings"].get<sol::table>())
+        for (const auto& [outerKeyObj, outerValObj] : lua["xi"]["settings"].get<sol::table>())
         {
             auto outerKey = outerKeyObj.as<std::string>();
 
-            for (auto [innerKeyObj, innerValObj] : outerValObj.as<sol::table>())
+            for (const auto& [innerKeyObj, innerValObj] : outerValObj.as<sol::table>())
             {
                 auto innerKey = innerKeyObj.as<std::string>();
                 auto key      = to_upper(fmt::format("{}.{}", outerKey, innerKey));
@@ -161,11 +161,11 @@ namespace settings
         // Scrape user settings into cpp's settingsMap
         // This will overwrite the defaults, if user settings exist. Otherwise the
         // defaults will be left intact.
-        for (auto [outerKeyObj, outerValObj] : lua["xi"]["settings"].get<sol::table>())
+        for (const auto& [outerKeyObj, outerValObj] : lua["xi"]["settings"].get<sol::table>())
         {
             auto outerKey = outerKeyObj.as<std::string>();
 
-            for (auto [innerKeyObj, innerValObj] : outerValObj.as<sol::table>())
+            for (const auto& [innerKeyObj, innerValObj] : outerValObj.as<sol::table>())
             {
                 auto innerKey = innerKeyObj.as<std::string>();
                 auto key      = to_upper(fmt::format("{}.{}", outerKey, innerKey));
@@ -210,7 +210,7 @@ namespace settings
         }
 
         // Push the consolidated defaults + user settings back up into xi.settings
-        for (auto [key, value] : settingsMap)
+        for (const auto& [key, value] : settingsMap)
         {
             auto parts                          = split(key, ".");
             auto outer                          = to_lower(parts[0]);
@@ -226,7 +226,7 @@ namespace settings
         // lua.safe_script("require('settings/main'); require('settings/default/main'); print(xi.settings)");
     }
 
-    void visit(std::function<void(std::string, SettingsVariant_t)> visitor)
+    void visit(const std::function<void(std::string, SettingsVariant_t)>& visitor)
     {
         for (auto& [key, value] : settingsMap)
         {

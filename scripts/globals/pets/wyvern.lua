@@ -71,7 +71,7 @@ local function doHealingBreath(player, divisor)
         local party = player:getPartyWithTrusts()
         for _, member in pairs(party) do
             if
-                player:getHP() <= math.floor(player:getMaxHP() / divisor) and
+                member:getHP() <= math.floor(member:getMaxHP() / divisor) and
                 inBreathRange(member) and
                 not member:isDead()
             then

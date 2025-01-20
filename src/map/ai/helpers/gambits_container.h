@@ -142,6 +142,13 @@ namespace gambits
         G_SELECT   select;
         uint32     select_arg = 0;
 
+        Action_t(G_REACTION reaction, G_SELECT select, uint32 select_arg)
+        : reaction(reaction)
+        , select(select)
+        , select_arg(select_arg)
+        {
+        }
+
         bool parseInput(std::string const& key, uint32 value)
         {
             if (key.compare("reaction") == 0)

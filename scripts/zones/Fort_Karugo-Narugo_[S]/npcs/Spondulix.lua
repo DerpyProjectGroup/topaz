@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Fort Karugo-Narugo
 --  NPC: Spondulix
--- Standard Merchant NPC
 -----------------------------------
 local ID = zones[xi.zone.FORT_KARUGO_NARUGO_S]
 -----------------------------------

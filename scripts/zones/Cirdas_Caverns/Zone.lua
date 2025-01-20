@@ -5,6 +5,8 @@
 local zoneObject = {}
 
 zoneObject.onInitialize = function(zone)
+    xi.reives.setupZone(zone)
+
     -- Area around Ergon Locus (17883912)
     local locusX = -140.000
     local locusY = 10.000

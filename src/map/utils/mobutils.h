@@ -64,6 +64,8 @@ namespace mobutils
     void SetupNMMob(CMobEntity* PMob);
     void SetupPetSkills(CMobEntity* PMob);
 
+    uint8 JobSkillRankToBaseEvaRank(JOBTYPE job);
+
     uint16 GetWeaponDamage(CMobEntity* PMob, uint16 slot);
     uint16 GetMagicEvasion(CMobEntity* PMob);
     uint16 GetBaseDefEva(CMobEntity* PMob, uint8 rank);

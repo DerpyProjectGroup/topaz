@@ -17,12 +17,6 @@ end
 
 entity.onMobInitialize = function(mob)
     mob:setMobMod(xi.mobMod.ADD_EFFECT, 1)
-    mob:setMobMod(xi.mobMod.DRAW_IN, 2)
-end
-
-entity.onMobDrawIn = function(mob, target)
-    -- todo make him use AoE tp move
-    mob:addTP(3000)
 end
 
 entity.onAdditionalEffect = function(mob, target, damage)
@@ -56,7 +50,35 @@ entity.onMobDespawn = function(mob)
 end
 
 entity.onMobFight = function(mob, target)
+    local drawInTable =
+    {
+        conditions =
+        {
+            target:getZPos() > -540,
+            target:getXPos() < -350,
+        },
+        position = mob:getPos(),
+        wait = 3,
+    }
+    for _, condition in ipairs(drawInTable.conditions) do
+        if condition then
+            mob:setMobMod(xi.mobMod.NO_MOVE, 1)
+            utils.drawIn(target, drawInTable)
+            break
+        else
+            mob:setMobMod(xi.mobMod.NO_MOVE, 0)
+        end
+    end
+
     mobRegen(mob)
+end
+
+entity.onMobSkillTarget = function(target, mob, mobskill)
+    if mobskill:isAoE() then
+        for _, member in ipairs(target:getAlliance()) do
+            mob:drawIn(member)
+        end
+    end
 end
 
 return entity

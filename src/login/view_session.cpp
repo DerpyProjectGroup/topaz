@@ -192,7 +192,7 @@ void view_session::read_func()
 
                 // Sanitize name & check for invalid characters
                 std::string nameStr = db::escapeString(CharName);
-                for (auto letters : nameStr)
+                for (const auto& letters : nameStr)
                 {
                     if (!std::isalpha(letters))
                     {

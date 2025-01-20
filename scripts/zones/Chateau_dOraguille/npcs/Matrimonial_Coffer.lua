@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Chateau d'Oraguille
 --  NPC: Matrimonial Coffer
--- Type: NPC
 -- !pos -7.777 0.000 3.013 233
 -----------------------------------
 ---@type TNpcEntity

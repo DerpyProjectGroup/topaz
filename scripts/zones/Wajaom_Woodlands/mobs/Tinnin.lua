@@ -18,7 +18,6 @@ entity.onMobInitialize = function(mob)
     mob:setMobMod(xi.mobMod.GIL_MIN, 12000)
     mob:setMobMod(xi.mobMod.GIL_MAX, 30000)
     mob:setMobMod(xi.mobMod.MUG_GIL, 8000)
-    mob:setMobMod(xi.mobMod.DRAW_IN, 1)
     mob:setMod(xi.mod.UDMGBREATH, -10000) -- immune to breath damage
     mob:setMobMod(xi.mobMod.IDLE_DESPAWN, 300)
 end
@@ -113,6 +112,21 @@ entity.onMobFight = function(mob, target)
         mob:useMobAbility(1830) -- Polar Blast
         mob:useMobAbility(1832) -- Barofield
     end
+
+
+    local drawInTable =
+    {
+        conditions =
+        {
+            mob:checkDistance(target) >= mob:getMeleeRange() * 2,
+        },
+        position = mob:getPos(),
+    }
+    if drawInTable.conditions[1] then
+        if utils.drawIn(target, drawInTable) then
+            mob:addTP(3000) -- Uses a mobskill upon drawing in a player. Not necessarily on the person drawn in.
+        end
+    end
 end
 
 entity.onCriticalHit = function(mob)
@@ -138,10 +152,6 @@ entity.onCriticalHit = function(mob)
     end
 
     mob:setLocalVar('crits', critNum)
-end
-
-entity.onMobDrawIn = function(mob, target)
-    mob:addTP(3000) -- Uses a mobskill upon drawing in a player. Not necessarily on the person drawn in.
 end
 
 entity.onMobDeath = function(mob, player, optParams)

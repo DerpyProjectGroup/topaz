@@ -156,14 +156,14 @@ INSERT INTO `abilities` VALUES (137,'repair',18,15,257,180,206,102,0,83,2000,0,6
 INSERT INTO `abilities` VALUES (138,'deploy',18,1,4,10,207,0,0,83,2000,0,6,18.0,0,0,0,0,512,'TOAU');
 INSERT INTO `abilities` VALUES (139,'deactivate',18,1,1,60,208,0,0,83,2000,0,6,18.0,0,0,0,0,512,'TOAU');
 INSERT INTO `abilities` VALUES (140,'retrieve',18,10,1,10,209,0,0,83,2000,0,6,18.0,0,0,0,0,512,'TOAU');
-INSERT INTO `abilities` VALUES (141,'fire_maneuver',18,1,1,10,210,0,0,333,2000,0,6,18.0,0,1,0,0,512,'TOAU');
-INSERT INTO `abilities` VALUES (142,'ice_maneuver',18,1,1,10,210,0,0,333,2000,0,6,18.0,0,1,0,0,512,'TOAU');
-INSERT INTO `abilities` VALUES (143,'wind_maneuver',18,1,1,10,210,0,0,333,2000,0,6,18.0,0,1,0,0,512,'TOAU');
-INSERT INTO `abilities` VALUES (144,'earth_maneuver',18,1,1,10,210,0,0,333,2000,0,6,18.0,0,1,0,0,512,'TOAU');
-INSERT INTO `abilities` VALUES (145,'thunder_maneuver',18,1,1,10,210,0,0,333,2000,0,6,18.0,0,1,0,0,512,'TOAU');
-INSERT INTO `abilities` VALUES (146,'water_maneuver',18,1,1,10,210,0,0,333,2000,0,6,18.0,0,1,0,0,512,'TOAU');
-INSERT INTO `abilities` VALUES (147,'light_maneuver',18,1,1,10,210,0,0,333,2000,0,6,18.0,0,1,0,0,512,'TOAU');
-INSERT INTO `abilities` VALUES (148,'dark_maneuver',18,1,1,10,210,0,0,333,2000,0,6,18.0,0,1,0,0,512,'TOAU');
+INSERT INTO `abilities` VALUES (141,'fire_maneuver',18,1,1,10,210,0,0,333,0,0,6,18.0,0,1,0,0,512,'TOAU');
+INSERT INTO `abilities` VALUES (142,'ice_maneuver',18,1,1,10,210,0,0,333,0,0,6,18.0,0,1,0,0,512,'TOAU');
+INSERT INTO `abilities` VALUES (143,'wind_maneuver',18,1,1,10,210,0,0,333,0,0,6,18.0,0,1,0,0,512,'TOAU');
+INSERT INTO `abilities` VALUES (144,'earth_maneuver',18,1,1,10,210,0,0,333,0,0,6,18.0,0,1,0,0,512,'TOAU');
+INSERT INTO `abilities` VALUES (145,'thunder_maneuver',18,1,1,10,210,0,0,333,0,0,6,18.0,0,1,0,0,512,'TOAU');
+INSERT INTO `abilities` VALUES (146,'water_maneuver',18,1,1,10,210,0,0,333,0,0,6,18.0,0,1,0,0,512,'TOAU');
+INSERT INTO `abilities` VALUES (147,'light_maneuver',18,1,1,10,210,0,0,333,0,0,6,18.0,0,1,0,0,512,'TOAU');
+INSERT INTO `abilities` VALUES (148,'dark_maneuver',18,1,1,10,210,0,0,333,0,0,6,18.0,0,1,0,0,512,'TOAU');
 INSERT INTO `abilities` VALUES (149,'warriors_charge',1,75,1,300,6,0,0,154,2000,0,6,20.0,0,1,300,2048,1,'TOAU');
 INSERT INTO `abilities` VALUES (150,'tomahawk',1,75,4,180,7,0,0,244,2000,0,3,20.0,0,1,600,2050,1,'TOAU');
 INSERT INTO `abilities` VALUES (151,'mantra',2,75,1,600,19,441,0,155,2000,0,6,20.0,1,1,60,2112,1,'TOAU');
@@ -388,7 +388,7 @@ INSERT INTO `abilities` VALUES (380,'effusion',22,1,1,0,143,0,0,0,2000,0,6,0.0,0
 INSERT INTO `abilities` VALUES (381,'chocobo_jig_ii',19,70,1,60,218,126,0,13,2000,0,14,10.0,1,1,300,0,0,'SOA');
 INSERT INTO `abilities` VALUES (382,'relinquish',23,1,1,60,253,0,0,312,0,0,6,0.0,0,0,0,0,0,NULL);
 INSERT INTO `abilities` VALUES (383,'vivacious_pulse',22,65,1,60,242,102,0,327,2000,0,6,0.0,0,0,0,0,0,'SOA');
-INSERT INTO `abilities` VALUES (384,'contradance',19,50,1,300,229,0,0,329,2000,0,6,0.0,0,0,0,0,0,NULL); -- check animation
+INSERT INTO `abilities` VALUES (384,'contradance',19,50,1,300,229,0,0,81,2000,0,6,0.0,0,0,0,0,0,NULL);
 INSERT INTO `abilities` VALUES (385,'apogee',15,70,1,180,108,100,0,94,2000,0,6,0.0,0,1,80,0,0,'SOA');
 INSERT INTO `abilities` VALUES (386,'entrust',21,75,1,600,93,100,0,332,2000,0,6,0.0,0,1,300,0,0,'SOA');
 INSERT INTO `abilities` VALUES (387,'bestial_loyalty',9,23,1,1200,94,100,0,83,2000,0,6,18.0,0,1,0,900,0,'SOA');

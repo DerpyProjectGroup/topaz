@@ -338,11 +338,13 @@ content.groups =
             'Apollyon_Sapling',
         },
 
-        spawned  = false,
-        allDeath = function(battlefield, mob)
-            npcUtil.showCrate(GetNPCByID(ID.SW_APOLLYON.npc.ITEM_CRATES[2]))
-            npcUtil.showCrate(GetNPCByID(ID.SW_APOLLYON.npc.TIME_CRATES[2]))
-            xi.limbus.showRecoverCrate(ID.SW_APOLLYON.npc.RECOVER_CRATES[2])
+        spawned = false,
+        death = function(battlefield, mob, count)
+            if count == 7 then
+                npcUtil.showCrate(GetNPCByID(ID.SW_APOLLYON.npc.ITEM_CRATES[2]))
+                npcUtil.showCrate(GetNPCByID(ID.SW_APOLLYON.npc.TIME_CRATES[2]))
+                xi.limbus.showRecoverCrate(ID.SW_APOLLYON.npc.RECOVER_CRATES[2])
+            end
         end,
     },
 
@@ -351,7 +353,6 @@ content.groups =
         mobs    = { 'Armoury_Crate_Mimic' },
         mobMods =
         {
-            [xi.mobMod.DRAW_IN   ] = 1,
             [xi.mobMod.NO_MOVE   ] = 1,
             [xi.mobMod.NO_DESPAWN] = 1,
             [xi.mobMod.NO_AGGRO  ] = 1,

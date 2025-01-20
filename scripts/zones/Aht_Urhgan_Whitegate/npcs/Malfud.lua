@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Aht Urhfan Whitegate
 --  NPC: Malfud
--- Standard Merchant NPC
 -----------------------------------
 local ID = zones[xi.zone.AHT_URHGAN_WHITEGATE]
 -----------------------------------

@@ -149,9 +149,6 @@ entity.onTrigger = function(player, npc)
     end
 end
 
-entity.onEventUpdate = function(player, csid, option, npc)
-end
-
 entity.onEventFinish = function(player, csid, option, npc)
     -- Moonlit Path and Other Fenrir Stuff
     if csid == 842 and option == 2 then

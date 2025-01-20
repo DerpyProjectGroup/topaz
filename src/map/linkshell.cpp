@@ -97,7 +97,7 @@ void CLinkshell::setMessage(const std::string& message, const std::string& poste
     if (message.size() != 0)
     {
         message::send(MSG_CHAT_LINKSHELL, packetData, sizeof(packetData),
-                      new CLinkshellMessagePacket(poster, message, m_name, std::numeric_limits<uint32>::min(), true));
+                      std::make_unique<CLinkshellMessagePacket>(poster, message, m_name, std::numeric_limits<uint32>::min(), true));
     }
 }
 
@@ -186,7 +186,7 @@ void CLinkshell::ChangeMemberRank(const std::string& MemberName, uint8 toSack)
                         return;
                     }
                     newShellItem->setQuantity(1);
-                    memcpy(newShellItem->m_extra, PItemLinkshell->m_extra, 24);
+                    std::memcpy(newShellItem->m_extra, PItemLinkshell->m_extra, 24);
                     newShellItem->SetLSType(newId == 514 ? LSTYPE_PEARLSACK : LSTYPE_LINKPEARL);
                     newShellItem->setSubType(ITEM_LOCKED);
                     uint8 LocationID = PItemLinkshell->getLocationID();
@@ -211,16 +211,16 @@ void CLinkshell::ChangeMemberRank(const std::string& MemberName, uint8 toSack)
                                     static_cast<uint8>(PItemLinkshell->GetLSType()), PMember->id);
                     }
 
-                    PMember->pushPacket(new CInventoryAssignPacket(PItemLinkshell, INV_NORMAL));
-                    PMember->pushPacket(new CLinkshellEquipPacket(PMember, lsID));
-                    PMember->pushPacket(new CInventoryItemPacket(PItemLinkshell, LocationID, SlotID));
+                    PMember->pushPacket<CInventoryAssignPacket>(PItemLinkshell, INV_NORMAL);
+                    PMember->pushPacket<CLinkshellEquipPacket>(PMember, lsID);
+                    PMember->pushPacket<CInventoryItemPacket>(PItemLinkshell, LocationID, SlotID);
                 }
 
                 charutils::SaveCharStats(PMember);
                 charutils::SaveCharEquip(PMember);
 
-                PMember->pushPacket(new CInventoryFinishPacket());
-                PMember->pushPacket(new CCharUpdatePacket(PMember));
+                PMember->pushPacket<CInventoryFinishPacket>();
+                PMember->pushPacket<CCharUpdatePacket>(PMember);
                 return;
             }
         }
@@ -261,8 +261,8 @@ void CLinkshell::RemoveMemberByName(const std::string& MemberName, uint8 kickerR
                     PMember->updatemask |= UPDATE_HP;
                 }
 
-                PMember->pushPacket(new CInventoryAssignPacket(PItemLinkshell, INV_NORMAL));
-                PMember->pushPacket(new CLinkshellEquipPacket(PMember, lsNum));
+                PMember->pushPacket<CInventoryAssignPacket>(PItemLinkshell, INV_NORMAL);
+                PMember->pushPacket<CLinkshellEquipPacket>(PMember, lsNum);
             }
 
             for (uint8 LocationID = 0; LocationID < CONTAINER_ID::MAX_CONTAINER_ID; ++LocationID)
@@ -282,7 +282,7 @@ void CLinkshell::RemoveMemberByName(const std::string& MemberName, uint8 kickerR
                                 _sql->EscapeStringLen(extra, (const char*)newPItemLinkshell->m_extra, sizeof(newPItemLinkshell->m_extra));
                                 const char* Query = "UPDATE char_inventory SET extra = '%s' WHERE charid = %u AND location = %u AND slot = %u LIMIT 1";
                                 _sql->Query(Query, extra, PMember->id, LocationID, SlotID);
-                                PMember->pushPacket(new CInventoryItemPacket(newPItemLinkshell, LocationID, SlotID));
+                                PMember->pushPacket<CInventoryItemPacket>(newPItemLinkshell, LocationID, SlotID);
                             }
                         }
                     }
@@ -292,15 +292,15 @@ void CLinkshell::RemoveMemberByName(const std::string& MemberName, uint8 kickerR
             charutils::SaveCharStats(PMember);
             charutils::SaveCharEquip(PMember);
 
-            PMember->pushPacket(new CInventoryFinishPacket());
-            PMember->pushPacket(new CCharUpdatePacket(PMember));
+            PMember->pushPacket<CInventoryFinishPacket>();
+            PMember->pushPacket<CCharUpdatePacket>(PMember);
             if (breakLinkshell)
             {
-                PMember->pushPacket(new CMessageStandardPacket(MsgStd::LinkshellNoLongerExists));
+                PMember->pushPacket<CMessageStandardPacket>(MsgStd::LinkshellNoLongerExists);
             }
             else
             {
-                PMember->pushPacket(new CMessageStandardPacket(MsgStd::LinkshellKicked));
+                PMember->pushPacket<CMessageStandardPacket>(MsgStd::LinkshellKicked);
             }
 
             return;
@@ -323,13 +323,13 @@ void CLinkshell::BreakLinkshell()
 }
 
 // send linkshell message to all online members
-void CLinkshell::PushPacket(uint32 senderID, CBasicPacket* packet)
+void CLinkshell::PushPacket(uint32 senderID, const std::unique_ptr<CBasicPacket>& packet)
 {
     for (auto& member : members)
     {
         if (member->id != senderID && member->status != STATUS_TYPE::DISAPPEAR && !jailutils::InPrison(member))
         {
-            CBasicPacket* newPacket = new CBasicPacket(*packet);
+            auto newPacket = packet->copy();
             if (member->PLinkshell2 == this)
             {
                 if (newPacket->getType() == CChatMessagePacket::id)
@@ -341,10 +341,9 @@ void CLinkshell::PushPacket(uint32 senderID, CBasicPacket* packet)
                     newPacket->ref<uint8>(0x05) |= 0x40;
                 }
             }
-            member->pushPacket(newPacket);
+            member->pushPacket(std::move(newPacket));
         }
     }
-    destroy(packet);
 }
 
 void CLinkshell::PushLinkshellMessage(CCharEntity* PChar, bool ls1)
@@ -357,7 +356,7 @@ void CLinkshell::PushLinkshellMessage(CCharEntity* PChar, bool ls1)
         const auto messageTime = rset->getOrDefault<uint32>("messagetime", 0);
         if (!message.empty())
         {
-            PChar->pushPacket(new CLinkshellMessagePacket(poster, message, m_name, messageTime, ls1));
+            PChar->pushPacket<CLinkshellMessagePacket>(poster, message, m_name, messageTime, ls1);
         }
     }
 }
@@ -377,7 +376,7 @@ namespace linkshell
             PLinkshell->setColor(_sql->GetIntData(1));
             char EncodedName[LinkshellStringLength];
 
-            memset(&EncodedName, 0, sizeof(EncodedName));
+            std::memset(&EncodedName, 0, sizeof(EncodedName));
 
             EncodeStringLinkshell(_sql->GetStringData(2).c_str(), EncodedName);
             PLinkshell->setName(EncodedName);

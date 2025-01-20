@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Bibiki Bay
 --  NPC: Pohka Chichiyowahl
--- Type: Standard Merchant NPC
 -- !pos -415 -2 -430 4
 -----------------------------------
 local ID = zones[xi.zone.BIBIKI_BAY]

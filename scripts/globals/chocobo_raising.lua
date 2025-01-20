@@ -65,7 +65,7 @@ local walkEnergyRandomness = 5
 -- The amount of energy taken by: short, medium and long walks (+ a random amount between 0 and walkEnergyRandomness)
 local walkEnergyAmount = { 25, 33, 50 }
 
--- Chance for an event to happen while on a walk (checked as chance < math.random(100))
+-- Chance for an event to happen while on a walk (checked as chance < math.random(1, 100))
 local walkEventChance = 33
 
 -- The amount of energy taken by: watch over chocobo
@@ -1812,7 +1812,7 @@ xi.chocoboRaising.onEventUpdateVCSTrainer = function(player, csid, option, npc)
                 local output     = { 0, 0, 0, 0, 0, 0, 0, 0 }
 
                 -- Will there be an event?
-                if math.random(100) < walkEventChance then
+                if math.random(1, 100) <= walkEventChance then
                     local possibleEvents = {}
 
                     -- If not holding an item, it's possible to find an item
@@ -1875,7 +1875,7 @@ xi.chocoboRaising.onEventUpdateVCSTrainer = function(player, csid, option, npc)
                 local output = { 0, 0, 0, 0, 0, 0, 0, 0 }
 
                 -- Will there be an event?
-                if walkEventChance < math.random(100) then
+                if math.random(1, 100) <= walkEventChance then
                     -- TODO: Hard-coded to randomly finding an item
                     output = { unpack(csData[1]) }
                 end
@@ -1926,7 +1926,7 @@ xi.chocoboRaising.onEventUpdateVCSTrainer = function(player, csid, option, npc)
                 local output     = { 0, 0, 0, 0, 0, 0, 0, 0 }
 
                 -- Will there be an event?
-                if walkEventChance < math.random(100) then
+                if math.random(1, 100) <= walkEventChance then
                     -- TODO: Hard-coded to randomly finding an item
                     output = { unpack(csData[1]) }
                 end

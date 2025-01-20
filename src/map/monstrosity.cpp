@@ -50,27 +50,27 @@
 
 struct MonstrositySpeciesRow
 {
-    uint8       monstrosityId;
-    uint16      monstrositySpeciesCode;
-    std::string name;
-    JOBTYPE     mjob;
-    JOBTYPE     sjob;
-    uint8       size;
-    uint16      look;
+    uint8       monstrosityId{};
+    uint16      monstrositySpeciesCode{};
+    std::string name{};
+    JOBTYPE     mjob{};
+    JOBTYPE     sjob{};
+    uint8       size{};
+    uint16      look{};
 };
 
 struct MonstrosityInstinctRow
 {
-    uint16                 monstrosityInstinctId;
-    uint8                  cost;
-    std::string            name;
-    std::vector<CModifier> mods;
+    uint16                 monstrosityInstinctId{};
+    uint8                  cost{};
+    std::string            name{};
+    std::vector<CModifier> mods{};
 };
 
 namespace
 {
-    std::unordered_map<uint16, MonstrositySpeciesRow>  gMonstrositySpeciesMap;
-    std::unordered_map<uint16, MonstrosityInstinctRow> gMonstrosityInstinctMap;
+    std::unordered_map<uint16, MonstrositySpeciesRow>  gMonstrositySpeciesMap{};
+    std::unordered_map<uint16, MonstrosityInstinctRow> gMonstrosityInstinctMap{};
 } // namespace
 
 monstrosity::MonstrosityData_t::MonstrosityData_t()
@@ -155,29 +155,27 @@ void monstrosity::ReadMonstrosityData(CCharEntity* PChar)
 {
     auto data = std::make_unique<MonstrosityData_t>();
 
-    // clang-format off
     auto rset = db::preparedStmt("SELECT "
-                          "charid, "
-                          "current_monstrosity_id, "
-                          "current_monstrosity_species, "
-                          "current_monstrosity_name_prefix_1, "
-                          "current_monstrosity_name_prefix_2, "
-                          "current_exp, "
-                          "equip, "
-                          "levels, "
-                          "instincts, "
-                          "variants, "
-                          "belligerency, "
-                          "entry_x, "
-                          "entry_y, "
-                          "entry_z, "
-                          "entry_rot, "
-                          "entry_zone_id, "
-                          "entry_mjob, "
-                          "entry_sjob "
-                          "FROM char_monstrosity WHERE charid = (?) LIMIT 1",
-                          PChar->id);
-    // clang-format on
+                                 "charid, "
+                                 "current_monstrosity_id, "
+                                 "current_monstrosity_species, "
+                                 "current_monstrosity_name_prefix_1, "
+                                 "current_monstrosity_name_prefix_2, "
+                                 "current_exp, "
+                                 "equip, "
+                                 "levels, "
+                                 "instincts, "
+                                 "variants, "
+                                 "belligerency, "
+                                 "entry_x, "
+                                 "entry_y, "
+                                 "entry_z, "
+                                 "entry_rot, "
+                                 "entry_zone_id, "
+                                 "entry_mjob, "
+                                 "entry_sjob "
+                                 "FROM char_monstrosity WHERE charid = ? LIMIT 1",
+                                 PChar->id);
 
     if (rset && rset->rowsCount() && rset->next())
     {
@@ -189,10 +187,10 @@ void monstrosity::ReadMonstrosityData(CCharEntity* PChar)
         data->NamePrefix2 = rset->get<uint8>("current_monstrosity_name_prefix_2");
         data->CurrentExp  = rset->get<uint32>("current_exp");
 
-        db::extractFromBlob(rset, "equip", data->EquippedInstincts);
-        db::extractFromBlob(rset, "levels", data->levels);
-        db::extractFromBlob(rset, "instincts", data->instincts);
-        db::extractFromBlob(rset, "variants", data->variants);
+        data->EquippedInstincts = rset->get<std::array<uint16, 12>>("equip");
+        data->levels            = rset->get<std::array<uint8, 128>>("levels");
+        data->instincts         = rset->get<std::array<uint8, 64>>("instincts");
+        data->variants          = rset->get<std::array<uint8, 32>>("variants");
 
         data->Belligerency = static_cast<bool>(rset->get<uint32>("belligerency"));
 
@@ -224,50 +222,45 @@ void monstrosity::WriteMonstrosityData(CCharEntity* PChar)
         return;
     }
 
-    const char* Query = "REPLACE INTO char_monstrosity SET "
-                        "charid = '%u', "
-                        "current_monstrosity_id = '%d', "
-                        "current_monstrosity_species = '%d', "
-                        "current_monstrosity_name_prefix_1 = '%d', "
-                        "current_monstrosity_name_prefix_2 = '%d', "
-                        "current_exp = '%d', "
-                        "equip = '%s', "
-                        "levels = '%s', "
-                        "instincts = '%s', "
-                        "variants = '%s', "
-                        "belligerency = '%d', "
-                        "entry_x = '%.3f', "
-                        "entry_y = '%.3f', "
-                        "entry_z = '%.3f', "
-                        "entry_rot = '%u', "
-                        "entry_zone_id = '%d', "
-                        "entry_mjob = '%d', "
-                        "entry_sjob = '%d'";
+    const char* query = "REPLACE INTO char_monstrosity SET "
+                        "charid = ?, "
+                        "current_monstrosity_id = ?, "
+                        "current_monstrosity_species = ?, "
+                        "current_monstrosity_name_prefix_1 = ?, "
+                        "current_monstrosity_name_prefix_2 = ?, "
+                        "current_exp = ?, "
+                        "equip = ?, "
+                        "levels = ?, "
+                        "instincts = ?, "
+                        "variants = ?, "
+                        "belligerency = ?, "
+                        "entry_x = ?, "
+                        "entry_y = ?, "
+                        "entry_z = ?, "
+                        "entry_rot = ?, "
+                        "entry_zone_id = ?, "
+                        "entry_mjob = ?, "
+                        "entry_sjob = ?";
 
-    const auto equipEscaped     = db::encodeToBlob(PChar->m_PMonstrosity->EquippedInstincts);
-    const auto levelsEscaped    = db::encodeToBlob(PChar->m_PMonstrosity->levels);
-    const auto instinctsEscaped = db::encodeToBlob(PChar->m_PMonstrosity->instincts);
-    const auto variantsEscaped  = db::encodeToBlob(PChar->m_PMonstrosity->variants);
-
-    db::query(Query,
-              PChar->id,
-              PChar->m_PMonstrosity->MonstrosityId,
-              PChar->m_PMonstrosity->Species,
-              PChar->m_PMonstrosity->NamePrefix1,
-              PChar->m_PMonstrosity->NamePrefix2,
-              PChar->m_PMonstrosity->CurrentExp,
-              equipEscaped.c_str(),
-              levelsEscaped.c_str(),
-              instinctsEscaped.c_str(),
-              variantsEscaped.c_str(),
-              static_cast<uint8>(PChar->m_PMonstrosity->Belligerency),
-              PChar->m_PMonstrosity->EntryPos.x,
-              PChar->m_PMonstrosity->EntryPos.y,
-              PChar->m_PMonstrosity->EntryPos.z,
-              PChar->m_PMonstrosity->EntryPos.rotation,
-              PChar->m_PMonstrosity->EntryZoneId,
-              PChar->m_PMonstrosity->EntryMainJob,
-              PChar->m_PMonstrosity->EntrySubJob);
+    db::preparedStmt(query,
+                     PChar->id,
+                     PChar->m_PMonstrosity->MonstrosityId,
+                     PChar->m_PMonstrosity->Species,
+                     PChar->m_PMonstrosity->NamePrefix1,
+                     PChar->m_PMonstrosity->NamePrefix2,
+                     PChar->m_PMonstrosity->CurrentExp,
+                     PChar->m_PMonstrosity->EquippedInstincts,
+                     PChar->m_PMonstrosity->levels,
+                     PChar->m_PMonstrosity->instincts,
+                     PChar->m_PMonstrosity->variants,
+                     static_cast<uint8>(PChar->m_PMonstrosity->Belligerency),
+                     PChar->m_PMonstrosity->EntryPos.x,
+                     PChar->m_PMonstrosity->EntryPos.y,
+                     PChar->m_PMonstrosity->EntryPos.z,
+                     PChar->m_PMonstrosity->EntryPos.rotation,
+                     PChar->m_PMonstrosity->EntryZoneId,
+                     PChar->m_PMonstrosity->EntryMainJob,
+                     PChar->m_PMonstrosity->EntrySubJob);
 }
 
 void monstrosity::TryPopulateMonstrosityData(CCharEntity* PChar)
@@ -377,14 +370,14 @@ void monstrosity::SendFullMonstrosityUpdate(CCharEntity* PChar)
 
     luautils::OnMonstrosityUpdate(PChar);
 
-    PChar->pushPacket(new CMonipulatorPacket1(PChar));
-    PChar->pushPacket(new CMonipulatorPacket2(PChar));
-    PChar->pushPacket(new CCharJobsPacket(PChar));
-    PChar->pushPacket(new CCharJobExtraPacket(PChar, true));
-    PChar->pushPacket(new CCharJobExtraPacket(PChar, false));
-    PChar->pushPacket(new CCharAppearancePacket(PChar));
-    PChar->pushPacket(new CCharStatsPacket(PChar));
-    PChar->pushPacket(new CCharAbilitiesPacket(PChar));
+    PChar->pushPacket<CMonipulatorPacket1>(PChar);
+    PChar->pushPacket<CMonipulatorPacket2>(PChar);
+    PChar->pushPacket<CCharJobsPacket>(PChar);
+    PChar->pushPacket<CCharJobExtraPacket>(PChar, true);
+    PChar->pushPacket<CCharJobExtraPacket>(PChar, false);
+    PChar->pushPacket<CCharAppearancePacket>(PChar);
+    PChar->pushPacket<CCharStatsPacket>(PChar);
+    PChar->pushPacket<CCharAbilitiesPacket>(PChar);
 
     PChar->updatemask |= UPDATE_LOOK;
 }

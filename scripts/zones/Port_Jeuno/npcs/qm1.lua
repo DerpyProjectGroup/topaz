@@ -7,9 +7,6 @@
 ---@type TNpcEntity
 local entity = {}
 
-entity.onTrade = function(player, npc, trade)
-end
-
 entity.onTrigger = function(player, npc)
     local borghertzCS = player:getCharVar('BorghertzCS')
 
@@ -24,9 +21,6 @@ entity.onTrigger = function(player, npc)
             player:startEvent(48) -- Get AF
         end
     end
-end
-
-entity.onEventUpdate = function(player, csid, option, npc)
 end
 
 entity.onEventFinish = function(player, csid, option, npc)

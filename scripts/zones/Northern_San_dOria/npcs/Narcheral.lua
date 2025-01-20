@@ -82,12 +82,12 @@ entity.onEventFinish = function(player, csid, option, npc)
         end
     elseif csid == 692 then
         if player:getFreeSlotsCount() == 0 then
-            player:messageSpecial(ID.text.ITEM_CANNOT_BE_OBTAINED, xi.item.HEALERS_BRIAULT) -- Healer's Briault
+            player:messageSpecial(ID.text.ITEM_CANNOT_BE_OBTAINED, xi.item.HEALERS_BLIAUT) -- Healer's Bliaut
         else
             player:addTitle(xi.title.PARAGON_OF_WHITE_MAGE_EXCELLENCE)
             player:setCharVar('pieujesDecisionCS', 0)
-            player:addItem(xi.item.HEALERS_BRIAULT)
-            player:messageSpecial(ID.text.ITEM_OBTAINED, xi.item.HEALERS_BRIAULT) -- Healer's Briault
+            player:addItem(xi.item.HEALERS_BLIAUT)
+            player:messageSpecial(ID.text.ITEM_OBTAINED, xi.item.HEALERS_BLIAUT) -- Healer's Bliaut
             player:tradeComplete()
             player:addFame(xi.fameArea.SANDORIA, 60)
             player:completeQuest(xi.questLog.SANDORIA, xi.quest.id.sandoria.PIEUJE_S_DECISION)

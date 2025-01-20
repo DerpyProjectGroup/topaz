@@ -34,16 +34,11 @@
 #include <cstring>
 #include <utility>
 
-#include "ai/ai_container.h"
-#include "ai/states/death_state.h"
 #include "alliance.h"
 #include "campaign_system.h"
 #include "conquest_system.h"
 #include "enmity_container.h"
-#include "entities/charentity.h"
-#include "entities/mobentity.h"
-#include "entities/npcentity.h"
-#include "entities/trustentity.h"
+#include "fishingcontest.h"
 #include "item_container.h"
 #include "latent_effect_container.h"
 #include "linkshell.h"
@@ -62,19 +57,15 @@
 #include "treasure_pool.h"
 #include "unitychat.h"
 #include "universal_container.h"
-#include "utils/battleutils.h"
-#include "utils/blacklistutils.h"
-#include "utils/blueutils.h"
-#include "utils/charutils.h"
-#include "utils/fishingutils.h"
-#include "utils/gardenutils.h"
-#include "utils/itemutils.h"
-#include "utils/jailutils.h"
-#include "utils/petutils.h"
-#include "utils/puppetutils.h"
-#include "utils/synthutils.h"
-#include "utils/zoneutils.h"
 #include "zone.h"
+
+#include "ai/ai_container.h"
+#include "ai/states/death_state.h"
+
+#include "entities/charentity.h"
+#include "entities/mobentity.h"
+#include "entities/npcentity.h"
+#include "entities/trustentity.h"
 
 #include "items/item_flowerpot.h"
 #include "items/item_shop.h"
@@ -176,6 +167,19 @@
 #include "packets/zone_in.h"
 #include "packets/zone_visited.h"
 
+#include "utils/battleutils.h"
+#include "utils/blacklistutils.h"
+#include "utils/blueutils.h"
+#include "utils/charutils.h"
+#include "utils/fishingutils.h"
+#include "utils/gardenutils.h"
+#include "utils/itemutils.h"
+#include "utils/jailutils.h"
+#include "utils/petutils.h"
+#include "utils/puppetutils.h"
+#include "utils/synthutils.h"
+#include "utils/zoneutils.h"
+
 uint8 PacketSize[512];
 
 std::function<void(map_session_data_t* const, CCharEntity* const, CBasicPacket&)> PacketParser[512];
@@ -186,18 +190,16 @@ std::function<void(map_session_data_t* const, CCharEntity* const, CBasicPacket&)
  *                                                                       *
  ************************************************************************/
 
-void PrintPacket(CBasicPacket data)
+void PrintPacket(CBasicPacket& packet)
 {
     std::string message;
-    char        buffer[5];
 
-    for (size_t y = 0; y < data.getSize(); y++)
+    for (std::size_t idx = 0U; idx < packet.getSize(); idx++)
     {
-        std::memset(buffer, 0, sizeof(buffer));                               // TODO: Replace these three lines with std::format when/if we move to C++ 20.
-        snprintf(buffer, sizeof(buffer), "%02hhx ", *((uint8*)data[(int)y])); //
-        message.append(buffer);                                               //
+        uint8 byte = *packet[idx];
+        message.append(fmt::format("{:02x} ", byte));
 
-        if (((y + 1) % 16) == 0)
+        if (((idx + 1U) % 16U) == 0U)
         {
             message += "\n";
             ShowDebug(message.c_str());
@@ -205,7 +207,7 @@ void PrintPacket(CBasicPacket data)
         }
     }
 
-    if (message.length() > 0)
+    if (!message.empty())
     {
         message += "\n";
         ShowDebug(message.c_str());
@@ -400,16 +402,16 @@ void SmallPacket0x00A(map_session_data_t* const PSession, CCharEntity* const PCh
                             uint16 handsId    = getModelIdFromStorageSlot(PChar, PMannequin->m_extra[10 + 5]);
                             uint16 legId      = getModelIdFromStorageSlot(PChar, PMannequin->m_extra[10 + 6]);
                             uint16 feetId     = getModelIdFromStorageSlot(PChar, PMannequin->m_extra[10 + 7]);
-                            PChar->pushPacket(new CInventoryCountPacket(safeContainerId, slotIndex, headId, bodyId, handsId, legId, feetId, mainId, subId, rangeId));
+                            PChar->pushPacket<CInventoryCountPacket>(safeContainerId, slotIndex, headId, bodyId, handsId, legId, feetId, mainId, subId, rangeId);
                         }
                     }
                 }
             }
         }
 
-        PChar->pushPacket(new CDownloadingDataPacket());
-        PChar->pushPacket(new CZoneInPacket(PChar, PChar->currentEvent));
-        PChar->pushPacket(new CZoneVisitedPacket(PChar));
+        PChar->pushPacket<CDownloadingDataPacket>();
+        PChar->pushPacket<CZoneInPacket>(PChar, PChar->currentEvent);
+        PChar->pushPacket<CZoneVisitedPacket>(PChar);
     }
 }
 
@@ -424,14 +426,14 @@ void SmallPacket0x00A(map_session_data_t* const PSession, CCharEntity* const PCh
 void SmallPacket0x00C(map_session_data_t* const PSession, CCharEntity* const PChar, CBasicPacket& data)
 {
     TracyZoneScoped;
-    PChar->pushPacket(new CInventorySizePacket(PChar));
-    PChar->pushPacket(new CMenuConfigPacket(PChar));
-    PChar->pushPacket(new CCharJobsPacket(PChar));
+    PChar->pushPacket<CInventorySizePacket>(PChar);
+    PChar->pushPacket<CMenuConfigPacket>(PChar);
+    PChar->pushPacket<CCharJobsPacket>(PChar);
 
     if (charutils::hasKeyItem(PChar, 2544))
     {
         // Only send Job Points Packet if the player has unlocked them
-        PChar->pushPacket(new CJobPointDetailsPacket(PChar));
+        PChar->pushPacket<CJobPointDetailsPacket>(PChar);
     }
 
     // TODO: While in mog house; treasure pool is not created.
@@ -480,12 +482,12 @@ void SmallPacket0x00F(map_session_data_t* const PSession, CCharEntity* const PCh
     charutils::SendKeyItems(PChar);
     charutils::SendQuestMissionLog(PChar);
 
-    PChar->pushPacket(new CCharSpellsPacket(PChar));
-    PChar->pushPacket(new CCharMountsPacket(PChar));
-    PChar->pushPacket(new CCharAbilitiesPacket(PChar));
-    PChar->pushPacket(new CCharSyncPacket(PChar));
-    PChar->pushPacket(new CBazaarMessagePacket(PChar));
-    PChar->pushPacket(new CMeritPointsCategoriesPacket(PChar));
+    PChar->pushPacket<CCharSpellsPacket>(PChar);
+    PChar->pushPacket<CCharMountsPacket>(PChar);
+    PChar->pushPacket<CCharAbilitiesPacket>(PChar);
+    PChar->pushPacket<CCharSyncPacket>(PChar);
+    PChar->pushPacket<CBazaarMessagePacket>(PChar);
+    PChar->pushPacket<CMeritPointsCategoriesPacket>(PChar);
 
     charutils::SendInventory(PChar);
 
@@ -512,7 +514,7 @@ void SmallPacket0x011(map_session_data_t* const PSession, CCharEntity* const PCh
     {
         if (PChar->equip[i] != 0)
         {
-            PChar->pushPacket(new CEquipPacket(PChar->equip[i], i, PChar->equipLoc[i]));
+            PChar->pushPacket<CEquipPacket>(PChar->equip[i], i, PChar->equipLoc[i]);
         }
     }
 
@@ -525,7 +527,7 @@ void SmallPacket0x011(map_session_data_t* const PSession, CCharEntity* const PCh
     {
         // On zone change, only sending a version message if mismatch
         // if ((bool)sql->GetUIntData(0))
-        // PChar->pushPacket(new CChatMessagePacket(PChar, CHAT_MESSAGE_TYPE::MESSAGE_SYSTEM_1, "Server does not support this client version."));
+        // PChar->pushPacket<CChatMessagePacket>(PChar, CHAT_MESSAGE_TYPE::MESSAGE_SYSTEM_1, "Server does not support this client version.");
     }
 }
 
@@ -597,7 +599,7 @@ void SmallPacket0x015(map_session_data_t* const PSession, CCharEntity* const PCh
         {
             if (const auto* PWideScanEntity = PChar->GetEntity(wideScanTarget.targid, TYPE_MOB | TYPE_NPC))
             {
-                PChar->pushPacket(new CWideScanTrackPacket(PWideScanEntity));
+                PChar->pushPacket<CWideScanTrackPacket>(PWideScanEntity);
 
                 if (PWideScanEntity->status == STATUS_TYPE::DISAPPEAR)
                 {
@@ -627,7 +629,7 @@ void SmallPacket0x016(map_session_data_t* const PSession, CCharEntity* const PCh
     if (targid == PChar->targid)
     {
         PChar->updateCharPacket(PChar, ENTITY_SPAWN, UPDATE_ALL_CHAR);
-        PChar->pushPacket(new CCharUpdatePacket(PChar));
+        PChar->pushPacket<CCharUpdatePacket>(PChar);
     }
     else
     {
@@ -666,7 +668,7 @@ void SmallPacket0x016(map_session_data_t* const PSession, CCharEntity* const PCh
                 PEntity->loc.p.z == 1.5 &&
                 PEntity->look.face == 0x52)
             {
-                // Using the same logic as in ZoneEntities::SpawnMoogle:
+                // Using the same logic as in ZoneEntities::SpawnConditionalNPCs:
                 // Change the status of the entity, send the packet, change it back to disappear
                 PEntity->status = STATUS_TYPE::NORMAL;
                 PChar->updateEntityPacket(PEntity, ENTITY_SPAWN, UPDATE_ALL_MOB);
@@ -811,7 +813,7 @@ void SmallPacket0x01A(map_session_data_t* const PSession, CCharEntity* const PCh
 
             if (PChar->m_Costume != 0 || PChar->animation == ANIMATION_SYNTH || (PChar->CraftContainer && PChar->CraftContainer->getItemsCount() > 0))
             {
-                PChar->pushPacket(new CReleasePacket(PChar, RELEASE_TYPE::STANDARD));
+                PChar->pushPacket<CReleasePacket>(PChar, RELEASE_TYPE::STANDARD);
                 return;
             }
 
@@ -824,12 +826,12 @@ void SmallPacket0x01A(map_session_data_t* const PSession, CCharEntity* const PCh
                 PChar->getZone() != ZONEID::ZONE_FERETORY &&
                 !settings::get<bool>("main.MONSTROSITY_TRIGGER_NPCS"))
             {
-                PChar->pushPacket(new CReleasePacket(PChar, RELEASE_TYPE::STANDARD));
+                PChar->pushPacket<CReleasePacket>(PChar, RELEASE_TYPE::STANDARD);
                 return;
             }
 
             // NOTE: Moogles inside of mog houses are the exception for not requiring Spawned or Status checks.
-            if (PNpc != nullptr && distance(PNpc->loc.p, PChar->loc.p) <= 10 && ((PNpc->PAI->IsSpawned() && PNpc->status == STATUS_TYPE::NORMAL) || PChar->m_moghouseID != 0))
+            if (PNpc != nullptr && distance(PNpc->loc.p, PChar->loc.p) <= 6.0f && ((PNpc->PAI->IsSpawned() && PNpc->status == STATUS_TYPE::NORMAL) || PChar->m_moghouseID != 0))
             {
                 PNpc->PAI->Trigger(PChar);
                 PChar->m_charHistory.npcInteractions++;
@@ -845,7 +847,7 @@ void SmallPacket0x01A(map_session_data_t* const PSession, CCharEntity* const PCh
             if (!PChar->isNpcLocked())
             {
                 PChar->eventPreparation->reset();
-                PChar->pushPacket(new CReleasePacket(PChar, RELEASE_TYPE::STANDARD));
+                PChar->pushPacket<CReleasePacket>(PChar, RELEASE_TYPE::STANDARD);
             }
         }
         break;
@@ -906,19 +908,19 @@ void SmallPacket0x01A(map_session_data_t* const PSession, CCharEntity* const PCh
                 if (!PMob->GetCallForHelpFlag() && PMob->PEnmityContainer->HasID(PChar->id) && !PMob->m_CallForHelpBlocked)
                 {
                     PMob->SetCallForHelpFlag(true);
-                    PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CMessageBasicPacket(PChar, PChar, 0, 0, 19));
+                    PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, std::make_unique<CMessageBasicPacket>(PChar, PChar, 0, 0, 19));
                     return;
                 }
             }
 
-            PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, 22));
+            PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, 0, 0, 22);
         }
         break;
         case 0x07: // weaponskill
         {
             if (!PChar->PAI->IsEngaged() && settings::get<bool>("map.PREVENT_UNENGAGED_WS")) // Prevent Weaponskill usage if player isn't engaged.
             {
-                PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, MSGBASIC_UNABLE_TO_USE_WS));
+                PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, 0, 0, MSGBASIC_UNABLE_TO_USE_WS);
                 return;
             }
 
@@ -942,7 +944,7 @@ void SmallPacket0x01A(map_session_data_t* const PSession, CCharEntity* const PCh
             {
                 if (JobAbilityID >= ABILITY_FOOT_KICK && JobAbilityID <= ABILITY_PENTAPECK) // Is this a BST ability?
                 {
-                    PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, MSGBASIC_UNABLE_TO_USE_JA2));
+                    PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, 0, 0, MSGBASIC_UNABLE_TO_USE_JA2);
                     return;
                 }
             }
@@ -1029,7 +1031,7 @@ void SmallPacket0x01A(map_session_data_t* const PSession, CCharEntity* const PCh
             uint8 slotID = PChar->getStorage(LOC_INVENTORY)->SearchItem(4545);
             if (slotID == ERROR_SLOTID)
             {
-                PChar->pushPacket(new CMessageSystemPacket(4545, 0, MsgStd::YouDontHaveAny));
+                PChar->pushPacket<CMessageSystemPacket>(4545, 0, MsgStd::YouDontHaveAny);
                 return;
             }
 
@@ -1037,8 +1039,8 @@ void SmallPacket0x01A(map_session_data_t* const PSession, CCharEntity* const PCh
             if (luautils::OnChocoboDig(PChar))
             {
                 charutils::UpdateItem(PChar, LOC_INVENTORY, slotID, -1);
-                PChar->pushPacket(new CInventoryFinishPacket());
-                PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CChocoboDiggingPacket(PChar));
+                PChar->pushPacket<CInventoryFinishPacket>();
+                PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, std::make_unique<CChocoboDiggingPacket>(PChar));
             }
         }
         break;
@@ -1074,9 +1076,9 @@ void SmallPacket0x01A(map_session_data_t* const PSession, CCharEntity* const PCh
         break;
         case 0x14: // complete character update
         {
-            if (PChar->m_moghouseID != 0)
+            if (PChar->m_moghouseID != 0) // TODO: For now this is only in the moghouse
             {
-                PChar->loc.zone->SpawnMoogle(PChar);
+                PChar->loc.zone->SpawnConditionalNPCs(PChar);
             }
             else
             {
@@ -1100,24 +1102,24 @@ void SmallPacket0x01A(map_session_data_t* const PSession, CCharEntity* const PCh
                 if (type == 0x00 && PChar->getBlockingAid()) // /blockaid off
                 {
                     // Blockaid canceled
-                    PChar->pushPacket(new CMessageSystemPacket(0, 0, MsgStd::BlockaidCanceled));
+                    PChar->pushPacket<CMessageSystemPacket>(0, 0, MsgStd::BlockaidCanceled);
                     PChar->setBlockingAid(false);
                 }
                 else if (type == 0x01 && !PChar->getBlockingAid()) // /blockaid on
                 {
                     // Blockaid activated
-                    PChar->pushPacket(new CMessageSystemPacket(0, 0, MsgStd::BlockaidActivated));
+                    PChar->pushPacket<CMessageSystemPacket>(0, 0, MsgStd::BlockaidActivated);
                     PChar->setBlockingAid(true);
                 }
                 else if (type == 0x02) // /blockaid
                 {
                     // Blockaid is currently active/inactive
-                    PChar->pushPacket(new CMessageSystemPacket(0, 0, PChar->getBlockingAid() ? MsgStd::BlockaidCurrentlyActive : MsgStd::BlockaidCurrentlyInactive));
+                    PChar->pushPacket<CMessageSystemPacket>(0, 0, PChar->getBlockingAid() ? MsgStd::BlockaidCurrentlyActive : MsgStd::BlockaidCurrentlyInactive);
                 }
             }
             else
             {
-                PChar->pushPacket(new CMessageSystemPacket(0, 0, MsgStd::CannotUseCommandAtTheMoment));
+                PChar->pushPacket<CMessageSystemPacket>(0, 0, MsgStd::CannotUseCommandAtTheMoment);
             }
         }
         break;
@@ -1132,30 +1134,30 @@ void SmallPacket0x01A(map_session_data_t* const PSession, CCharEntity* const PCh
 
             if (PChar->animation != ANIMATION_NONE)
             {
-                PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, 71));
+                PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, 0, 0, 71);
             }
             else if (!PChar->loc.zone->CanUseMisc(MISC_MOUNT))
             {
-                PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, MSGBASIC_CANNOT_USE_IN_AREA));
+                PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, 0, 0, MSGBASIC_CANNOT_USE_IN_AREA);
             }
             else if (PChar->GetMLevel() < 20)
             {
-                PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 20, 0, 773));
+                PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, 20, 0, 773);
             }
             else if (charutils::hasKeyItem(PChar, 3072 + MountID))
             {
                 if (PChar->PRecastContainer->HasRecast(RECAST_ABILITY, 256, 60))
                 {
-                    PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, 94));
+                    PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, 0, 0, 94);
 
                     // add recast timer
-                    // PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, 202));
+                    // PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, 0, 0, 202);
                     return;
                 }
 
-                if (PChar->PNotorietyContainer->hasEnmity())
+                if (PChar->hasEnmityEXPENSIVE())
                 {
-                    PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, MSGBASIC_YOUR_MOUNT_REFUSES));
+                    PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, 0, 0, MSGBASIC_YOUR_MOUNT_REFUSES);
                     return;
                 }
 
@@ -1170,7 +1172,7 @@ void SmallPacket0x01A(map_session_data_t* const PSession, CCharEntity* const PCh
                                                               true);
 
                 PChar->PRecastContainer->Add(RECAST_ABILITY, 256, 60);
-                PChar->pushPacket(new CCharRecastPacket(PChar));
+                PChar->pushPacket<CCharRecastPacket>(PChar);
 
                 luautils::OnPlayerMount(PChar);
             }
@@ -1196,7 +1198,7 @@ void SmallPacket0x01B(map_session_data_t* const PSession, CCharEntity* const PCh
     TracyZoneScoped;
     // 0 - world pass, 2 - gold world pass; +1 - purchase
 
-    PChar->pushPacket(new CWorldPassPacket(data.ref<uint8>(0x04) & 1 ? (uint32)xirand::GetRandomNumber(9999999999) : 0));
+    PChar->pushPacket<CWorldPassPacket>(data.ref<uint8>(0x04) & 1 ? (uint32)xirand::GetRandomNumber(9999999999) : 0);
 }
 
 /************************************************************************
@@ -1209,7 +1211,7 @@ void SmallPacket0x01B(map_session_data_t* const PSession, CCharEntity* const PCh
 void SmallPacket0x01C(map_session_data_t* const PSession, CCharEntity* const PChar, CBasicPacket& data)
 {
     TracyZoneScoped;
-    PrintPacket(std::move(data));
+    PrintPacket(data);
 }
 
 /************************************************************************
@@ -1294,7 +1296,7 @@ void SmallPacket0x028(map_session_data_t* const PSession, CCharEntity* const PCh
 
         if (slipData != 0)
         {
-            PChar->pushPacket(new CMessageStandardPacket(MsgStd::CannotBeProcessed));
+            PChar->pushPacket<CMessageStandardPacket>(MsgStd::CannotBeProcessed);
             return;
         }
     }
@@ -1369,10 +1371,10 @@ void SmallPacket0x029(map_session_data_t* const PSession, CCharEntity* const PCh
             CItem* PSlotItem = PChar->getStorage(FromLocationID)->GetItem(slotID);
             if (PSlotItem != nullptr)
             {
-                PChar->pushPacket(new CInventoryItemPacket(PSlotItem, FromLocationID, slotID));
+                PChar->pushPacket<CInventoryItemPacket>(PSlotItem, FromLocationID, slotID);
             }
         }
-        PChar->pushPacket(new CInventoryFinishPacket());
+        PChar->pushPacket<CInventoryFinishPacket>();
 
         return;
     }
@@ -1433,8 +1435,8 @@ void SmallPacket0x029(map_session_data_t* const PSession, CCharEntity* const PCh
             {
                 PChar->getStorage(FromLocationID)->InsertItem(nullptr, FromSlotID);
 
-                PChar->pushPacket(new CInventoryItemPacket(nullptr, FromLocationID, FromSlotID));
-                PChar->pushPacket(new CInventoryItemPacket(PItem, ToLocationID, NewSlotID));
+                PChar->pushPacket<CInventoryItemPacket>(nullptr, FromLocationID, FromSlotID);
+                PChar->pushPacket<CInventoryItemPacket>(PItem, ToLocationID, NewSlotID);
             }
             else
             {
@@ -1452,16 +1454,16 @@ void SmallPacket0x029(map_session_data_t* const PSession, CCharEntity* const PCh
                 CItem* PSlotItem = PChar->getStorage(ToLocationID)->GetItem(slotID);
                 if (PSlotItem != nullptr)
                 {
-                    PChar->pushPacket(new CInventoryItemPacket(PSlotItem, ToLocationID, slotID));
+                    PChar->pushPacket<CInventoryItemPacket>(PSlotItem, ToLocationID, slotID);
                 }
             }
-            PChar->pushPacket(new CInventoryFinishPacket());
+            PChar->pushPacket<CInventoryFinishPacket>();
 
             ShowError("SmallPacket0x29: Location %u Slot %u is full", ToLocationID, ToSlotID);
             return;
         }
     }
-    PChar->pushPacket(new CInventoryFinishPacket());
+    PChar->pushPacket<CInventoryFinishPacket>();
 }
 
 /************************************************************************
@@ -1492,14 +1494,31 @@ void SmallPacket0x032(map_session_data_t* const PSession, CCharEntity* const PCh
         // If the player is the same as the target, don't allow the trade
         if (PChar->id == PTarget->id)
         {
-            PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, 155));
+            PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, 0, 0, 155);
+            return;
+        }
+
+        if (distance(PChar->loc.p, PTarget->loc.p) > 6.0f) // Tested as around 6.0' on retail
+        {
+            ShowWarning("%s trade request with %s was blocked. They are too far away!", PChar->getName(), PTarget->getName());
+            PChar->pushPacket<CTradeActionPacket>(PTarget, 0x07);
+            return;
+        }
+
+        // You must either both be outside (your_id == their_id == 0),
+        // or in the same moghouse by invite (your_id == their_id)
+        if (PChar->m_moghouseID != PTarget->m_moghouseID)
+        {
+            ShowError("%s trade request with %s was blocked. They have mismatching moghouse IDs!", PChar->getName(), PTarget->getName());
+            PChar->pushPacket<CTradeActionPacket>(PTarget, 0x07);
             return;
         }
 
         // If either player is in prison don't allow the trade.
         if (jailutils::InPrison(PChar) || jailutils::InPrison(PTarget))
         {
-            PChar->pushPacket(new CTradeActionPacket(PTarget, 0x07));
+            ShowError("%s trade request with %s was blocked. They are in prison!", PChar->getName(), PTarget->getName());
+            PChar->pushPacket<CTradeActionPacket>(PTarget, 0x07);
             return;
         }
 
@@ -1507,8 +1526,8 @@ void SmallPacket0x032(map_session_data_t* const PSession, CCharEntity* const PCh
         if (PChar->animation == ANIMATION_SYNTH || (PChar->CraftContainer && PChar->CraftContainer->getItemsCount() > 0) ||
             PTarget->animation == ANIMATION_SYNTH || (PTarget->CraftContainer && PTarget->CraftContainer->getItemsCount() > 0))
         {
-            ShowDebug("%s trade request with %s was blocked.", PChar->getName(), PTarget->getName());
-            PChar->pushPacket(new CTradeActionPacket(PTarget, 0x07));
+            ShowError("%s trade request with %s was blocked. They are synthing!", PChar->getName(), PTarget->getName());
+            PChar->pushPacket<CTradeActionPacket>(PTarget, 0x07);
             return;
         }
 
@@ -1517,10 +1536,10 @@ void SmallPacket0x032(map_session_data_t* const PSession, CCharEntity* const PCh
         {
             ShowDebug("%s is blocking trades", PTarget->getName());
             // Target is blocking assistance
-            PChar->pushPacket(new CMessageSystemPacket(0, 0, MsgStd::TargetIsCurrentlyBlocking));
+            PChar->pushPacket<CMessageSystemPacket>(0, 0, MsgStd::TargetIsCurrentlyBlocking);
             // Interaction was blocked
-            PTarget->pushPacket(new CMessageSystemPacket(0, 0, MsgStd::BlockedByBlockaid));
-            PChar->pushPacket(new CTradeActionPacket(PTarget, 0x07));
+            PTarget->pushPacket<CMessageSystemPacket>(0, 0, MsgStd::BlockedByBlockaid);
+            PChar->pushPacket<CTradeActionPacket>(PTarget, 0x07);
             return;
         }
 
@@ -1532,7 +1551,7 @@ void SmallPacket0x032(map_session_data_t* const PSession, CCharEntity* const PCh
 
         if (!PTarget->UContainer->IsContainerEmpty())
         {
-            PChar->pushPacket(new CTradeActionPacket(PTarget, 0x07));
+            PChar->pushPacket<CTradeActionPacket>(PTarget, 0x07);
             ShowDebug("%s's UContainer is not empty. %s cannot trade with them at this time", PTarget->getName(), PChar->getName());
             return;
         }
@@ -1541,7 +1560,7 @@ void SmallPacket0x032(map_session_data_t* const PSession, CCharEntity* const PCh
         if ((PTarget->TradePending.targid != 0 && lastTargetTradeTimeSeconds < 60) || PTarget->UContainer->GetType() == UCONTAINER_TRADE)
         {
             // Can't trade with someone who's already got a pending trade before timeout
-            PChar->pushPacket(new CTradeActionPacket(PTarget, 0x07));
+            PChar->pushPacket<CTradeActionPacket>(PTarget, 0x07);
             return;
         }
 
@@ -1557,8 +1576,8 @@ void SmallPacket0x032(map_session_data_t* const PSession, CCharEntity* const PCh
                 POldTradeTarget->TradePending.clean();
                 PChar->TradePending.clean();
 
-                POldTradeTarget->pushPacket(new CTradeActionPacket(PChar, 0x07));
-                PChar->pushPacket(new CTradeActionPacket(POldTradeTarget, 0x07));
+                POldTradeTarget->pushPacket<CTradeActionPacket>(PChar, 0x07);
+                PChar->pushPacket<CTradeActionPacket>(POldTradeTarget, 0x07);
                 return;
             }
         }
@@ -1570,7 +1589,7 @@ void SmallPacket0x032(map_session_data_t* const PSession, CCharEntity* const PCh
         PTarget->lastTradeInvite     = server_clock::now();
         PTarget->TradePending.id     = PChar->id;
         PTarget->TradePending.targid = PChar->targid;
-        PTarget->pushPacket(new CTradeRequestPacket(PChar));
+        PTarget->pushPacket<CTradeRequestPacket>(PChar);
     }
 }
 
@@ -1609,10 +1628,10 @@ void SmallPacket0x033(map_session_data_t* const PSession, CCharEntity* const PCh
                         if (distance(PChar->loc.p, PTarget->loc.p) < 6)
                         {
                             PChar->UContainer->SetType(UCONTAINER_TRADE);
-                            PChar->pushPacket(new CTradeActionPacket(PTarget, action));
+                            PChar->pushPacket<CTradeActionPacket>(PTarget, action);
 
                             PTarget->UContainer->SetType(UCONTAINER_TRADE);
-                            PTarget->pushPacket(new CTradeActionPacket(PChar, action));
+                            PTarget->pushPacket<CTradeActionPacket>(PChar, action);
                             return;
                         }
                     }
@@ -1639,7 +1658,7 @@ void SmallPacket0x033(map_session_data_t* const PSession, CCharEntity* const PCh
                 }
 
                 PTarget->TradePending.clean();
-                PTarget->pushPacket(new CTradeActionPacket(PChar, action));
+                PTarget->pushPacket<CTradeActionPacket>(PChar, action);
 
                 PChar->TradePending.clean();
             }
@@ -1650,25 +1669,25 @@ void SmallPacket0x033(map_session_data_t* const PSession, CCharEntity* const PCh
                 if (PChar->TradePending.id == PTarget->id && PTarget->TradePending.id == PChar->id)
                 {
                     PChar->UContainer->SetLock();
-                    PTarget->pushPacket(new CTradeActionPacket(PChar, action));
+                    PTarget->pushPacket<CTradeActionPacket>(PChar, action);
 
                     if (PTarget->UContainer->IsLocked())
                     {
                         if (charutils::CanTrade(PChar, PTarget) && charutils::CanTrade(PTarget, PChar))
                         {
                             charutils::DoTrade(PChar, PTarget);
-                            PTarget->pushPacket(new CTradeActionPacket(PTarget, 9));
+                            PTarget->pushPacket<CTradeActionPacket>(PTarget, 9);
 
                             charutils::DoTrade(PTarget, PChar);
-                            PChar->pushPacket(new CTradeActionPacket(PChar, 9));
+                            PChar->pushPacket<CTradeActionPacket>(PChar, 9);
                         }
                         else
                         {
                             // Failed to trade
                             // Either players containers are full or illegal item trade attempted
                             ShowDebug("%s->%s trade failed (full inventory or illegal items)", PChar->getName(), PTarget->getName());
-                            PChar->pushPacket(new CTradeActionPacket(PTarget, 1));
-                            PTarget->pushPacket(new CTradeActionPacket(PChar, 1));
+                            PChar->pushPacket<CTradeActionPacket>(PTarget, 1);
+                            PTarget->pushPacket<CTradeActionPacket>(PChar, 1);
                         }
                         PChar->TradePending.clean();
                         PChar->UContainer->Clean();
@@ -1746,7 +1765,7 @@ void SmallPacket0x034(map_session_data_t* const PSession, CCharEntity* const PCh
                     if ((!PItemLinkshell1 && !PItemLinkshell2) || ((!PItemLinkshell1 || PItemLinkshell1->GetLSID() != PItemLinkshell->GetLSID()) &&
                                                                    (!PItemLinkshell2 || PItemLinkshell2->GetLSID() != PItemLinkshell->GetLSID())))
                     {
-                        PChar->pushPacket(new CMessageStandardPacket(MsgStd::LinkshellEquipBeforeUsing));
+                        PChar->pushPacket<CMessageStandardPacket>(MsgStd::LinkshellEquipBeforeUsing);
                         PItem->setReserve(0);
                         PChar->UContainer->SetItem(tradeSlotID, nullptr);
                     }
@@ -1774,9 +1793,9 @@ void SmallPacket0x034(map_session_data_t* const PSession, CCharEntity* const PCh
                 PChar->UContainer->SetItem(tradeSlotID, nullptr);
             }
             ShowDebug("%s->%s trade pushing packet to %s", PChar->getName(), PTarget->getName(), PChar->getName());
-            PChar->pushPacket(new CTradeItemPacket(PItem, tradeSlotID));
+            PChar->pushPacket<CTradeItemPacket>(PItem, tradeSlotID);
             ShowDebug("%s->%s trade pushing packet to %s", PChar->getName(), PTarget->getName(), PTarget->getName());
-            PTarget->pushPacket(new CTradeUpdatePacket(PItem, tradeSlotID));
+            PTarget->pushPacket<CTradeUpdatePacket>(PItem, tradeSlotID);
 
             PChar->UContainer->UnLock();
             PTarget->UContainer->UnLock();
@@ -1799,7 +1818,7 @@ void SmallPacket0x036(map_session_data_t* const PSession, CCharEntity* const PCh
     if (PChar->StatusEffectContainer->HasStatusEffectByFlag(EFFECTFLAG_INVISIBLE))
     {
         // "You cannot use that command while invisible."
-        PChar->pushPacket(new CMessageSystemPacket(0, 0, MsgStd::CannotWhileInvisible));
+        PChar->pushPacket<CMessageSystemPacket>(0, 0, MsgStd::CannotWhileInvisible);
         return;
     }
 
@@ -1820,8 +1839,14 @@ void SmallPacket0x036(map_session_data_t* const PSession, CCharEntity* const PCh
         return;
     }
 
-    if ((PNpc != nullptr) && (PNpc->id == npcid) && distance(PNpc->loc.p, PChar->loc.p) <= 10)
+    if ((PNpc != nullptr) && (PNpc->id == npcid))
     {
+        if (distance(PChar->loc.p, PNpc->loc.p) > 6.0f) // Tested as around 6.0' on retail
+        {
+            ShowError("Player %s trying to trade NPC %s from too far away! ", PChar->getName(), PNpc->getName());
+            return;
+        }
+
         uint8 numItems = data.ref<uint8>(0x3C);
 
         PChar->TradeContainer->Clean();
@@ -1835,13 +1860,13 @@ void SmallPacket0x036(map_session_data_t* const PSession, CCharEntity* const PCh
 
             if (PItem == nullptr || PItem->getQuantity() < Quantity)
             {
-                ShowError("SmallPacket0x036: Player %s trying to trade invalid item [to NPC]! ", PChar->getName());
+                ShowError("Player %s trying to trade NPC %s with invalid item! ", PChar->getName(), PNpc->getName());
                 return;
             }
 
             if (PItem->getReserve() > 0)
             {
-                ShowError("SmallPacket0x036: Player %s trying to trade a RESERVED item [to NPC]! ", PChar->getName());
+                ShowError("Player %s trying to trade NPC %s with reserved item! ", PChar->getName(), PNpc->getName());
                 return;
             }
 
@@ -1876,7 +1901,13 @@ void SmallPacket0x037(map_session_data_t* const PSession, CCharEntity* const PCh
 
     if (StorageID >= CONTAINER_ID::MAX_CONTAINER_ID)
     {
-        ShowWarning("SmallPacket0x037: Invalid storage ID passed to packet %u by %s", StorageID, PChar->getName());
+        ShowError("Invalid storage ID passed to packet %u by %s", StorageID, PChar->getName());
+        return;
+    }
+
+    if (PChar->m_moghouseID)
+    {
+        ShowError("Player trying to use item in moghouse %s", PChar->getName());
         return;
     }
 
@@ -1886,7 +1917,7 @@ void SmallPacket0x037(map_session_data_t* const PSession, CCharEntity* const PCh
     }
     else
     {
-        PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, 56));
+        PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, 0, 0, 56);
     }
 }
 
@@ -1960,7 +1991,7 @@ void SmallPacket0x03A(map_session_data_t* const PSession, CCharEntity* const PCh
             }
         }
     }
-    PChar->pushPacket(new CInventoryFinishPacket());
+    PChar->pushPacket<CInventoryFinishPacket>();
 }
 
 /************************************************************************
@@ -2033,7 +2064,7 @@ void SmallPacket0x03B(map_session_data_t* const PSession, CCharEntity* const PCh
             return;
         }
 
-        PChar->pushPacket(new CInventoryAssignPacket(PItem, status));
+        PChar->pushPacket<CInventoryAssignPacket>(PItem, status);
     };
 
     switch (action)
@@ -2121,9 +2152,9 @@ void SmallPacket0x03B(map_session_data_t* const PSession, CCharEntity* const PCh
     auto rows = _sql->AffectedRows();
     if (ret != SQL_ERROR && rows != 0)
     {
-        PChar->pushPacket(new CInventoryItemPacket(PMannequin, mannequinStorageLoc, mannequinStorageLocSlot));
-        PChar->pushPacket(new CInventoryCountPacket(mannequinStorageLoc, mannequinStorageLocSlot, headId, bodyId, handsId, legId, feetId, mainId, subId, rangeId));
-        PChar->pushPacket(new CInventoryFinishPacket());
+        PChar->pushPacket<CInventoryItemPacket>(PMannequin, mannequinStorageLoc, mannequinStorageLocSlot);
+        PChar->pushPacket<CInventoryCountPacket>(mannequinStorageLoc, mannequinStorageLocSlot, headId, bodyId, handsId, legId, feetId, mainId, subId, rangeId);
+        PChar->pushPacket<CInventoryFinishPacket>();
     }
     else
     {
@@ -2151,7 +2182,7 @@ void SmallPacket0x03D(map_session_data_t* const PSession, CCharEntity* const PCh
     TracyZoneScoped;
 
     char blacklistedName[PacketNameLength] = {};
-    memcpy(&blacklistedName, data[0x08], PacketNameLength - 1);
+    std::memcpy(&blacklistedName, data[0x08], PacketNameLength - 1);
 
     std::string name = blacklistedName;
     uint8       cmd  = data.ref<uint8>(0x18);
@@ -2162,7 +2193,7 @@ void SmallPacket0x03D(map_session_data_t* const PSession, CCharEntity* const PCh
     if (ret == SQL_ERROR || _sql->NumRows() != 1 || _sql->NextRow() != SQL_SUCCESS)
     {
         // Send failed
-        PChar->pushPacket(new CBlacklistEditResponsePacket(0, "", 0x02));
+        PChar->pushPacket<CBlacklistEditResponsePacket>(0, "", 0x02);
         return;
     }
 
@@ -2176,18 +2207,18 @@ void SmallPacket0x03D(map_session_data_t* const PSession, CCharEntity* const PCh
         if (blacklistutils::IsBlacklisted(PChar->id, charid))
         {
             // We cannot readd this person, fail to add
-            PChar->pushPacket(new CBlacklistEditResponsePacket(0, "", 0x02));
+            PChar->pushPacket<CBlacklistEditResponsePacket>(0, "", 0x02);
             return;
         }
 
         // Attempt to add this person
         if (blacklistutils::AddBlacklisted(PChar->id, charid))
         {
-            PChar->pushPacket(new CBlacklistEditResponsePacket(accid, name, cmd));
+            PChar->pushPacket<CBlacklistEditResponsePacket>(accid, name, cmd);
         }
         else
         {
-            PChar->pushPacket(new CBlacklistEditResponsePacket(0, "", 0x02));
+            PChar->pushPacket<CBlacklistEditResponsePacket>(0, "", 0x02);
         }
     }
 
@@ -2197,24 +2228,24 @@ void SmallPacket0x03D(map_session_data_t* const PSession, CCharEntity* const PCh
         if (!blacklistutils::IsBlacklisted(PChar->id, charid))
         {
             // We cannot remove this person, fail to remove
-            PChar->pushPacket(new CBlacklistEditResponsePacket(0, "", 0x02));
+            PChar->pushPacket<CBlacklistEditResponsePacket>(0, "", 0x02);
             return;
         }
 
         // Attempt to remove this person
         if (blacklistutils::DeleteBlacklisted(PChar->id, charid))
         {
-            PChar->pushPacket(new CBlacklistEditResponsePacket(accid, name, cmd));
+            PChar->pushPacket<CBlacklistEditResponsePacket>(accid, name, cmd);
         }
         else
         {
-            PChar->pushPacket(new CBlacklistEditResponsePacket(0, "", 0x02));
+            PChar->pushPacket<CBlacklistEditResponsePacket>(0, "", 0x02);
         }
     }
     else
     {
         // Send failed
-        PChar->pushPacket(new CBlacklistEditResponsePacket(0, "", 0x02));
+        PChar->pushPacket<CBlacklistEditResponsePacket>(0, "", 0x02);
     }
 }
 
@@ -2295,8 +2326,8 @@ void SmallPacket0x04B(map_session_data_t* const PSession, CCharEntity* const PCh
     {
         std::string loginMessage = luautils::GetServerMessage(msgLanguage);
 
-        PChar->pushPacket(new CServerMessagePacket(loginMessage, msgLanguage, msgTimestamp, msgOffset));
-        PChar->pushPacket(new CCharSyncPacket(PChar));
+        PChar->pushPacket<CServerMessagePacket>(loginMessage, msgLanguage, msgTimestamp, msgOffset);
+        PChar->pushPacket<CCharSyncPacket>(PChar);
 
         // TODO: kill player til theyre dead and bsod
         const auto rset = db::preparedStmt("SELECT version_mismatch FROM accounts_sessions WHERE charid = (?)", PChar->id);
@@ -2304,7 +2335,7 @@ void SmallPacket0x04B(map_session_data_t* const PSession, CCharEntity* const PCh
         {
             if (rset->get<bool>("version_mismatch"))
             {
-                PChar->pushPacket(new CChatMessagePacket(PChar, CHAT_MESSAGE_TYPE::MESSAGE_SYSTEM_1, "Server does not support this client version."));
+                PChar->pushPacket<CChatMessagePacket>(PChar, CHAT_MESSAGE_TYPE::MESSAGE_SYSTEM_1, "Server does not support this client version.");
             }
         }
     }
@@ -2389,12 +2420,12 @@ void SmallPacket0x04B(map_session_data_t* const PSession, CCharEntity* const PCh
                 }
                 else
                 {
-                    entries.push_back(FishingContestEntry()); // Safety if there is no pointer but we need to fill the vector
+                    entries.emplace_back(FishingContestEntry{}); // Safety if there is no pointer but we need to fill the vector
                 }
             }
         }
 
-        PChar->pushPacket(new CFishRankingPacket(entries, msgLanguage, msgTimestamp, msgOffset, totalEntries, msgChunk));
+        PChar->pushPacket<CFishRankingPacket>(entries, msgLanguage, msgTimestamp, msgOffset, totalEntries, msgChunk);
         entries.clear();
     }
 }
@@ -2519,7 +2550,7 @@ void SmallPacket0x04D(map_session_data_t* const PSession, CCharEntity* const PCh
                             size_t length = 0;
                             char*  extra  = nullptr;
                             _sql->GetData(5, &extra, &length);
-                            memcpy(PItem->m_extra, extra, (length > sizeof(PItem->m_extra) ? sizeof(PItem->m_extra) : length));
+                            std::memcpy(PItem->m_extra, extra, (length > sizeof(PItem->m_extra) ? sizeof(PItem->m_extra) : length));
 
                             if (boxtype == 2)
                             {
@@ -2539,7 +2570,7 @@ void SmallPacket0x04D(map_session_data_t* const PSession, CCharEntity* const PCh
                 }
                 for (uint8 i = 0; i < 8; ++i)
                 {
-                    PChar->pushPacket(new CDeliveryBoxPacket(action, boxtype, PChar->UContainer->GetItem(i), i, items, 1));
+                    PChar->pushPacket<CDeliveryBoxPacket>(action, boxtype, PChar->UContainer->GetItem(i), i, items, 1);
                 }
             }
             return;
@@ -2610,12 +2641,12 @@ void SmallPacket0x04D(map_session_data_t* const PSession, CCharEntity* const PCh
                     }
 
                     char receiver[PacketNameLength] = {};
-                    memcpy(&receiver, data[0x10], PacketNameLength - 1);
+                    std::memcpy(&receiver, data[0x10], PacketNameLength - 1);
                     PUBoxItem->setReceiver(receiver);
                     PUBoxItem->setSender(PChar->getName());
                     PUBoxItem->setQuantity(quantity);
                     PUBoxItem->setSlotID(PItem->getSlotID());
-                    memcpy(PUBoxItem->m_extra, PItem->m_extra, sizeof(PUBoxItem->m_extra));
+                    std::memcpy(PUBoxItem->m_extra, PItem->m_extra, sizeof(PUBoxItem->m_extra));
 
                     char extra[sizeof(PItem->m_extra) * 2 + 1];
                     _sql->EscapeStringLen(extra, (const char*)PItem->m_extra, sizeof(PItem->m_extra));
@@ -2628,8 +2659,8 @@ void SmallPacket0x04D(map_session_data_t* const PSession, CCharEntity* const PCh
                     if (ret != SQL_ERROR && _sql->AffectedRows() == 1 && charutils::UpdateItem(PChar, LOC_INVENTORY, invslot, -(int32)quantity))
                     {
                         PChar->UContainer->SetItem(slotID, PUBoxItem);
-                        PChar->pushPacket(new CDeliveryBoxPacket(action, boxtype, PUBoxItem, slotID, PChar->UContainer->GetItemsCount(), 1));
-                        PChar->pushPacket(new CInventoryFinishPacket());
+                        PChar->pushPacket<CDeliveryBoxPacket>(action, boxtype, PUBoxItem, slotID, PChar->UContainer->GetItemsCount(), 1);
+                        PChar->pushPacket<CInventoryFinishPacket>();
                     }
                     else
                     {
@@ -2691,8 +2722,8 @@ void SmallPacket0x04D(map_session_data_t* const PSession, CCharEntity* const PCh
                                 if (ret != SQL_ERROR && _sql->AffectedRows() == 1)
                                 {
                                     PItem->setSent(true);
-                                    PChar->pushPacket(new CDeliveryBoxPacket(action, boxtype, PItem, slotID, send_items, 0x02));
-                                    PChar->pushPacket(new CDeliveryBoxPacket(action, boxtype, PItem, slotID, send_items, 0x01));
+                                    PChar->pushPacket<CDeliveryBoxPacket>(action, boxtype, PItem, slotID, send_items, 0x02);
+                                    PChar->pushPacket<CDeliveryBoxPacket>(action, boxtype, PItem, slotID, send_items, 0x01);
                                     commit = true;
                                 }
                             }
@@ -2749,10 +2780,10 @@ void SmallPacket0x04D(map_session_data_t* const PSession, CCharEntity* const PCh
                             {
                                 PChar->UContainer->GetItem(slotID)->setSent(false);
                                 commit = true;
-                                PChar->pushPacket(new CDeliveryBoxPacket(action, boxtype, PChar->UContainer->GetItem(slotID), slotID,
-                                                                         PChar->UContainer->GetItemsCount(), 0x02));
-                                PChar->pushPacket(new CDeliveryBoxPacket(action, boxtype, PChar->UContainer->GetItem(slotID), slotID,
-                                                                         PChar->UContainer->GetItemsCount(), 0x01));
+                                PChar->pushPacket<CDeliveryBoxPacket>(action, boxtype, PChar->UContainer->GetItem(slotID), slotID,
+                                                                      PChar->UContainer->GetItemsCount(), 0x02);
+                                PChar->pushPacket<CDeliveryBoxPacket>(action, boxtype, PChar->UContainer->GetItem(slotID), slotID,
+                                                                      PChar->UContainer->GetItemsCount(), 0x01);
                             }
                             else if (ret != SQL_ERROR && _sql->AffectedRows() == 0)
                             {
@@ -2778,11 +2809,11 @@ void SmallPacket0x04D(map_session_data_t* const PSession, CCharEntity* const PCh
                             if (ret != SQL_ERROR && _sql->AffectedRows() == 1)
                             {
                                 ShowError("Deleting orphaned outbox record. PlayerID: %d slotID: %d itemID: %d", PChar->id, slotID, PItem->getID());
-                                PChar->pushPacket(new CDeliveryBoxPacket(0x0F, boxtype, 0, 1));
+                                PChar->pushPacket<CDeliveryBoxPacket>(0x0F, boxtype, 0, 1);
                             }
                         }
                         // error message: "Delivery orders are currently backlogged."
-                        PChar->pushPacket(new CDeliveryBoxPacket(action, boxtype, 0, -1));
+                        PChar->pushPacket<CDeliveryBoxPacket>(action, boxtype, 0, -1);
                     }
 
                     _sql->SetAutoCommit(isAutoCommitOn);
@@ -2827,8 +2858,8 @@ void SmallPacket0x04D(map_session_data_t* const PSession, CCharEntity* const PCh
                 received_items = (uint8)_sql->NumRows();
             }
 
-            PChar->pushPacket(new CDeliveryBoxPacket(action, boxtype, 0xFF, 0x02));
-            PChar->pushPacket(new CDeliveryBoxPacket(action, boxtype, received_items, 0x01));
+            PChar->pushPacket<CDeliveryBoxPacket>(action, boxtype, 0xFF, 0x02);
+            PChar->pushPacket<CDeliveryBoxPacket>(action, boxtype, received_items, 0x01);
 
             return;
         }
@@ -2867,7 +2898,7 @@ void SmallPacket0x04D(map_session_data_t* const PSession, CCharEntity* const PCh
                             size_t length = 0;
                             char*  extra  = nullptr;
                             _sql->GetData(3, &extra, &length);
-                            memcpy(PItem->m_extra, extra, (length > sizeof(PItem->m_extra) ? sizeof(PItem->m_extra) : length));
+                            std::memcpy(PItem->m_extra, extra, (length > sizeof(PItem->m_extra) ? sizeof(PItem->m_extra) : length));
 
                             PItem->setSender(_sql->GetStringData(4));
                             if (PChar->UContainer->IsSlotEmpty(slotID))
@@ -2894,8 +2925,8 @@ void SmallPacket0x04D(map_session_data_t* const PSession, CCharEntity* const PCh
                                         {
                                             PChar->UContainer->SetItem(slotID, PItem);
                                             // TODO: increment "count" for every new item, if needed
-                                            PChar->pushPacket(new CDeliveryBoxPacket(action, boxtype, nullptr, slotID, 1, 2));
-                                            PChar->pushPacket(new CDeliveryBoxPacket(action, boxtype, PItem, slotID, 1, 1));
+                                            PChar->pushPacket<CDeliveryBoxPacket>(action, boxtype, nullptr, slotID, 1, 2);
+                                            PChar->pushPacket<CDeliveryBoxPacket>(action, boxtype, PItem, slotID, 1, 1);
                                             commit = true;
                                         }
                                     }
@@ -2910,7 +2941,7 @@ void SmallPacket0x04D(map_session_data_t* const PSession, CCharEntity* const PCh
 
                         _sql->TransactionRollback();
                         ShowError("Could not find new item to add to delivery box. PlayerID: %d Box :%d Slot: %d", PChar->id, boxtype, slotID);
-                        PChar->pushPacket(new CDeliveryBoxPacket(action, boxtype, 0, 0xEB));
+                        PChar->pushPacket<CDeliveryBoxPacket>(action, boxtype, 0, 0xEB);
                     }
                 }
                 _sql->SetAutoCommit(isAutoCommitOn);
@@ -2945,8 +2976,8 @@ void SmallPacket0x04D(map_session_data_t* const PSession, CCharEntity* const PCh
                             ret = _sql->Query("DELETE FROM delivery_box WHERE charid = %u AND box = 2 AND slot = %u LIMIT 1", PChar->id, deliverySlotID);
                             if (ret != SQL_ERROR && _sql->AffectedRows() == 1)
                             {
-                                PChar->pushPacket(new CDeliveryBoxPacket(action, boxtype, 0, 0x02));
-                                PChar->pushPacket(new CDeliveryBoxPacket(action, boxtype, PItem, deliverySlotID, received_items, 0x01));
+                                PChar->pushPacket<CDeliveryBoxPacket>(action, boxtype, 0, 0x02);
+                                PChar->pushPacket<CDeliveryBoxPacket>(action, boxtype, PItem, deliverySlotID, received_items, 0x01);
                                 PChar->UContainer->SetItem(deliverySlotID, nullptr);
                                 destroy(PItem);
                             }
@@ -2967,7 +2998,7 @@ void SmallPacket0x04D(map_session_data_t* const PSession, CCharEntity* const PCh
 
             if (!PChar->UContainer->IsSlotEmpty(slotID))
             {
-                PChar->pushPacket(new CDeliveryBoxPacket(action, boxtype, PChar->UContainer->GetItem(slotID), slotID, 1, 1));
+                PChar->pushPacket<CDeliveryBoxPacket>(action, boxtype, PChar->UContainer->GetItem(slotID), slotID, 1, 1);
             }
 
             return;
@@ -3022,7 +3053,7 @@ void SmallPacket0x04D(map_session_data_t* const PSession, CCharEntity* const PCh
                                 if (ret != SQL_ERROR && _sql->AffectedRows() > 0)
                                 {
                                     PChar->UContainer->SetItem(slotID, nullptr);
-                                    PChar->pushPacket(new CDeliveryBoxPacket(action, boxtype, PItem, slotID, PChar->UContainer->GetItemsCount(), 1));
+                                    PChar->pushPacket<CDeliveryBoxPacket>(action, boxtype, PItem, slotID, PChar->UContainer->GetItemsCount(), 1);
                                     destroy(PItem);
                                     commit = true;
                                 }
@@ -3035,7 +3066,7 @@ void SmallPacket0x04D(map_session_data_t* const PSession, CCharEntity* const PCh
                         _sql->TransactionRollback();
                         ShowError("Could not finalize delivery return transaction. PlayerID: %d SenderID :%d ItemID: %d Quantity: %d", PChar->id, senderID,
                                   item_id, quantity);
-                        PChar->pushPacket(new CDeliveryBoxPacket(action, boxtype, PItem, slotID, PChar->UContainer->GetItemsCount(), 0xEB));
+                        PChar->pushPacket<CDeliveryBoxPacket>(action, boxtype, PItem, slotID, PChar->UContainer->GetItemsCount(), 0xEB);
                     }
 
                     _sql->SetAutoCommit(isAutoCommitOn);
@@ -3062,7 +3093,7 @@ void SmallPacket0x04D(map_session_data_t* const PSession, CCharEntity* const PCh
 
                 if (!PItem->isType(ITEM_CURRENCY) && PChar->getStorage(LOC_INVENTORY)->GetFreeSlotsCount() == 0)
                 {
-                    PChar->pushPacket(new CDeliveryBoxPacket(action, boxtype, PItem, slotID, PChar->UContainer->GetItemsCount(), 0xB9));
+                    PChar->pushPacket<CDeliveryBoxPacket>(action, boxtype, PItem, slotID, PChar->UContainer->GetItemsCount(), 0xB9);
                     return;
                 }
 
@@ -3094,7 +3125,7 @@ void SmallPacket0x04D(map_session_data_t* const PSession, CCharEntity* const PCh
                     if (!commit || !_sql->TransactionCommit())
                     {
                         _sql->TransactionRollback();
-                        PChar->pushPacket(new CDeliveryBoxPacket(action, boxtype, PItem, slotID, PChar->UContainer->GetItemsCount(), 0xBA));
+                        PChar->pushPacket<CDeliveryBoxPacket>(action, boxtype, PItem, slotID, PChar->UContainer->GetItemsCount(), 0xBA);
                         if (!invErr)
                         { // only display error in log if there's a database problem, not if inv is full or rare item conflict
                             ShowError("Could not finalize receive transaction. PlayerID: %d Action: 0x0A", PChar->id);
@@ -3102,8 +3133,8 @@ void SmallPacket0x04D(map_session_data_t* const PSession, CCharEntity* const PCh
                     }
                     else
                     {
-                        PChar->pushPacket(new CDeliveryBoxPacket(action, boxtype, PItem, slotID, PChar->UContainer->GetItemsCount(), 1));
-                        PChar->pushPacket(new CInventoryFinishPacket());
+                        PChar->pushPacket<CDeliveryBoxPacket>(action, boxtype, PItem, slotID, PChar->UContainer->GetItemsCount(), 1);
+                        PChar->pushPacket<CInventoryFinishPacket>();
                         PChar->UContainer->SetItem(slotID, nullptr);
                         destroy(PItem);
                     }
@@ -3131,7 +3162,7 @@ void SmallPacket0x04D(map_session_data_t* const PSession, CCharEntity* const PCh
                     CItem* PItem = PChar->UContainer->GetItem(slotID);
                     PChar->UContainer->SetItem(slotID, nullptr);
 
-                    PChar->pushPacket(new CDeliveryBoxPacket(action, boxtype, PItem, slotID, PChar->UContainer->GetItemsCount(), 1));
+                    PChar->pushPacket<CDeliveryBoxPacket>(action, boxtype, PItem, slotID, PChar->UContainer->GetItemsCount(), 1);
                     destroy(PItem);
                 }
             }
@@ -3154,19 +3185,19 @@ void SmallPacket0x04D(map_session_data_t* const PSession, CCharEntity* const PCh
                 ret          = _sql->Query("SELECT COUNT(*) FROM chars WHERE charid = '%u' AND accid = '%u' LIMIT 1", PChar->id, accid);
                 if (ret != SQL_ERROR && _sql->NextRow() == SQL_SUCCESS && _sql->GetUIntData(0))
                 {
-                    PChar->pushPacket(new CDeliveryBoxPacket(action, boxtype, 0xFF, 0x02));
-                    PChar->pushPacket(new CDeliveryBoxPacket(action, boxtype, 0x01, 0x01));
+                    PChar->pushPacket<CDeliveryBoxPacket>(action, boxtype, 0xFF, 0x02);
+                    PChar->pushPacket<CDeliveryBoxPacket>(action, boxtype, 0x01, 0x01);
                 }
                 else
                 {
-                    PChar->pushPacket(new CDeliveryBoxPacket(action, boxtype, 0xFF, 0x02));
-                    PChar->pushPacket(new CDeliveryBoxPacket(action, boxtype, 0x00, 0x01));
+                    PChar->pushPacket<CDeliveryBoxPacket>(action, boxtype, 0xFF, 0x02);
+                    PChar->pushPacket<CDeliveryBoxPacket>(action, boxtype, 0x00, 0x01);
                 }
             }
             else
             {
-                PChar->pushPacket(new CDeliveryBoxPacket(action, boxtype, 0xFF, 0x02));
-                PChar->pushPacket(new CDeliveryBoxPacket(action, boxtype, 0x00, 0xFB));
+                PChar->pushPacket<CDeliveryBoxPacket>(action, boxtype, 0xFF, 0x02);
+                PChar->pushPacket<CDeliveryBoxPacket>(action, boxtype, 0x00, 0xFB);
             }
             return;
         }
@@ -3194,7 +3225,7 @@ void SmallPacket0x04D(map_session_data_t* const PSession, CCharEntity* const PCh
     }
 
     // Open mail, close mail
-    PChar->pushPacket(new CDeliveryBoxPacket(action, boxtype, 0, 1));
+    PChar->pushPacket<CDeliveryBoxPacket>(action, boxtype, 0, 1);
 }
 
 /************************************************************************
@@ -3244,10 +3275,10 @@ void SmallPacket0x04E(map_session_data_t* const PSession, CCharEntity* const PCh
             {
                 if (PItem->isSubType(ITEM_CHARGED) && ((CItemUsable*)PItem)->getCurrentCharges() < ((CItemUsable*)PItem)->getMaxCharges())
                 {
-                    PChar->pushPacket(new CAuctionHousePacket(action, 197, 0, 0, 0, 0));
+                    PChar->pushPacket<CAuctionHousePacket>(action, 197, 0, 0, 0, 0);
                     return;
                 }
-                PChar->pushPacket(new CAuctionHousePacket(action, PItem, quantity, price));
+                PChar->pushPacket<CAuctionHousePacket>(action, PItem, quantity, price);
             }
         }
         break;
@@ -3259,30 +3290,27 @@ void SmallPacket0x04E(map_session_data_t* const PSession, CCharEntity* const PCh
             {
                 PChar->m_ah_history.clear();
                 PChar->m_AHHistoryTimestamp = curTick;
-                PChar->pushPacket(new CAuctionHousePacket(action));
+                PChar->pushPacket<CAuctionHousePacket>(action);
 
                 // A single SQL query for the player's AH history which is stored in a Char Entity struct + vector.
-                const char* Query = "SELECT itemid, price, stack FROM auction_house WHERE seller = %u AND sale=0 ORDER BY id ASC LIMIT 7";
-
-                int32 ret = _sql->Query(Query, PChar->id);
-
-                if (ret != SQL_ERROR && _sql->NumRows() != 0)
+                auto rset = db::preparedStmt("SELECT itemid, price, stack FROM auction_house WHERE seller = ? AND sale=0 ORDER BY id ASC LIMIT 7", PChar->id);
+                if (rset && rset->rowsCount())
                 {
-                    while (_sql->NextRow() == SQL_SUCCESS)
+                    while (rset->next())
                     {
-                        AuctionHistory_t ah{};
-                        ah.itemid = (uint16)_sql->GetIntData(0);
-                        ah.price  = _sql->GetUIntData(1);
-                        ah.stack  = (uint8)_sql->GetIntData(2);
-                        ah.status = 0;
-                        PChar->m_ah_history.emplace_back(ah);
+                        PChar->m_ah_history.emplace_back(AuctionHistory_t{
+                            .itemid = rset->get<uint16>("itemid"),
+                            .stack  = rset->get<uint8>("stack"),
+                            .price  = rset->get<uint32>("price"),
+                            .status = 0,
+                        });
                     }
                 }
                 ShowDebug("%s has %i items up on the AH. ", PChar->getName(), PChar->m_ah_history.size());
             }
             else
             {
-                PChar->pushPacket(new CAuctionHousePacket(action, 246, 0, 0, 0, 0)); // try again in a little while msg
+                PChar->pushPacket<CAuctionHousePacket>(action, 246, 0, 0, 0, 0); // try again in a little while msg
                 break;
             }
         }
@@ -3293,7 +3321,7 @@ void SmallPacket0x04E(map_session_data_t* const PSession, CCharEntity* const PCh
 
             for (size_t auctionSlot = 0; auctionSlot < totalItemsOnAh; auctionSlot++)
             {
-                PChar->pushPacket(new CAuctionHousePacket(0x0C, (uint8)auctionSlot, PChar));
+                PChar->pushPacket<CAuctionHousePacket>(0x0C, (uint8)auctionSlot, PChar);
             }
         }
         break;
@@ -3305,7 +3333,7 @@ void SmallPacket0x04E(map_session_data_t* const PSession, CCharEntity* const PCh
             {
                 if (PItem->isSubType(ITEM_CHARGED) && ((CItemUsable*)PItem)->getCurrentCharges() < ((CItemUsable*)PItem)->getMaxCharges())
                 {
-                    PChar->pushPacket(new CAuctionHousePacket(action, 197, 0, 0, 0, 0));
+                    PChar->pushPacket<CAuctionHousePacket>(action, 197, 0, 0, 0, 0);
                     return;
                 }
 
@@ -3315,7 +3343,7 @@ void SmallPacket0x04E(map_session_data_t* const PSession, CCharEntity* const PCh
                     if (PItem->getStackSize() == 1 || PItem->getStackSize() != PItem->getQuantity())
                     {
                         ShowError("SmallPacket0x04E::AuctionHouse: Incorrect quantity of item %s", PItem->getName());
-                        PChar->pushPacket(new CAuctionHousePacket(action, 197, 0, 0, 0, 0)); // Failed to place up
+                        PChar->pushPacket<CAuctionHousePacket>(action, 197, 0, 0, 0, 0); // Failed to place up
                         return;
                     }
                     auctionFee = (uint32)(settings::get<uint32>("map.AH_BASE_FEE_STACKS") + (price * settings::get<float>("map.AH_TAX_RATE_STACKS") / 100));
@@ -3330,41 +3358,42 @@ void SmallPacket0x04E(map_session_data_t* const PSession, CCharEntity* const PCh
                 auto PGil = PChar->getStorage(LOC_INVENTORY)->GetItem(0);
                 if (PGil->getQuantity() < auctionFee || PGil->getReserve() > 0)
                 {
-                    PChar->pushPacket(new CAuctionHousePacket(action, 197, 0, 0, 0, 0)); // Not enough gil to pay fee
+                    PChar->pushPacket<CAuctionHousePacket>(action, 197, 0, 0, 0, 0); // Not enough gil to pay fee
                     return;
                 }
 
                 // Get the current number of items the player has for sale
-                const char* Query = "SELECT COUNT(*) FROM auction_house WHERE seller = %u AND sale=0";
-
-                int32  ret         = _sql->Query(Query, PChar->id);
-                uint32 ah_listings = 0;
-
-                if (ret != SQL_ERROR && _sql->NumRows() != 0)
+                const auto ahListings = [&]() -> uint32
                 {
-                    _sql->NextRow();
-                    ah_listings = (uint32)_sql->GetIntData(0);
-                }
+                    const auto rset = db::preparedStmt("SELECT COUNT(*) FROM auction_house WHERE seller = ? AND sale = 0", PChar->id);
+                    if (rset && rset->rowsCount() && rset->next())
+                    {
+                        return rset->get<uint32>(0);
+                    }
+                    return 0;
+                }();
 
-                if (settings::get<uint8>("map.AH_LIST_LIMIT") && ah_listings >= settings::get<uint8>("map.AH_LIST_LIMIT"))
+                const auto ahListLimit = settings::get<uint8>("map.AH_LIST_LIMIT");
+                if (ahListLimit && ahListings >= ahListLimit)
                 {
-                    PChar->pushPacket(new CAuctionHousePacket(action, 197, 0, 0, 0, 0)); // Failed to place up
+                    ShowDebug("Player %s has reached the AH listing limit of %u", PChar->getName(), ahListLimit);
+                    PChar->pushPacket<CAuctionHousePacket>(action, 197, 0, 0, 0, 0); // Failed to place up
                     return;
                 }
 
-                const char* fmtQuery = "INSERT INTO auction_house(itemid, stack, seller, seller_name, date, price) VALUES(%u,%u,%u,'%s',%u,%u)";
-
-                if (_sql->Query(fmtQuery, PItem->getID(), quantity == 0, PChar->id, PChar->getName(), (uint32)time(nullptr), price) == SQL_ERROR)
+                if (!db::preparedStmt("INSERT INTO auction_house(itemid, stack, seller, seller_name, date, price) VALUES(?, ?, ?, ?, ?, ?)",
+                                      PItem->getID(), quantity == 0, PChar->id, PChar->getName(), (uint32)time(nullptr), price))
                 {
                     ShowError("SmallPacket0x04E::AuctionHouse: Cannot insert item %s to database", PItem->getName());
-                    PChar->pushPacket(new CAuctionHousePacket(action, 197, 0, 0, 0, 0)); // failed to place up
+                    PChar->pushPacket<CAuctionHousePacket>(action, 197, 0, 0, 0, 0); // failed to place up
                     return;
                 }
+
                 charutils::UpdateItem(PChar, LOC_INVENTORY, slot, -(int32)(quantity != 0 ? 1 : PItem->getStackSize()));
                 charutils::UpdateItem(PChar, LOC_INVENTORY, 0, -(int32)auctionFee); // Deduct AH fee
 
-                PChar->pushPacket(new CAuctionHousePacket(action, 1, 0, 0, 0, 0));           // Merchandise put up on auction msg
-                PChar->pushPacket(new CAuctionHousePacket(0x0C, (uint8)ah_listings, PChar)); // Inform history of slot
+                PChar->pushPacket<CAuctionHousePacket>(action, 1, 0, 0, 0, 0);          // Merchandise put up on auction msg
+                PChar->pushPacket<CAuctionHousePacket>(0x0C, (uint8)ahListings, PChar); // Inform history of slot
             }
         }
         break;
@@ -3374,7 +3403,7 @@ void SmallPacket0x04E(map_session_data_t* const PSession, CCharEntity* const PCh
 
             if (PChar->getStorage(LOC_INVENTORY)->GetFreeSlotsCount() == 0)
             {
-                PChar->pushPacket(new CAuctionHousePacket(action, 0xE5, 0, 0, 0, 0));
+                PChar->pushPacket<CAuctionHousePacket>(action, 0xE5, 0, 0, 0, 0);
             }
             else
             {
@@ -3388,7 +3417,7 @@ void SmallPacket0x04E(map_session_data_t* const PSession, CCharEntity* const PCh
                         {
                             if (PChar->getStorage(LocID)->SearchItem(itemid) != ERROR_SLOTID)
                             {
-                                PChar->pushPacket(new CAuctionHousePacket(action, 0xE5, 0, 0, 0, 0));
+                                PChar->pushPacket<CAuctionHousePacket>(action, 0xE5, 0, 0, 0, 0);
                                 return;
                             }
                         }
@@ -3397,11 +3426,10 @@ void SmallPacket0x04E(map_session_data_t* const PSession, CCharEntity* const PCh
 
                     if (gil != nullptr && gil->isType(ITEM_CURRENCY) && gil->getQuantity() >= price && gil->getReserve() == 0)
                     {
-                        const char* fmtQuery = "UPDATE auction_house SET buyer_name = '%s', sale = %u, sell_date = %u WHERE itemid = %u AND buyer_name IS NULL "
-                                               "AND stack = %u AND price <= %u ORDER BY price LIMIT 1";
-
-                        if (_sql->Query(fmtQuery, PChar->getName(), price, (uint32)time(nullptr), itemid, quantity == 0, price) != SQL_ERROR &&
-                            _sql->AffectedRows() != 0)
+                        const auto [rset, affectedRows] = db::preparedStmtWithAffectedRows("UPDATE auction_house SET buyer_name = ?, sale = ?, sell_date = ? WHERE itemid = ? AND buyer_name IS NULL "
+                                                                                           "AND stack = ? AND price <= ? ORDER BY price LIMIT 1",
+                                                                                           PChar->getName(), price, (uint32)time(nullptr), itemid, quantity == 0, price);
+                        if (rset && affectedRows)
                         {
                             uint8 SlotID = charutils::AddItem(PChar, LOC_INVENTORY, itemid, (quantity == 0 ? PItem->getStackSize() : 1));
 
@@ -3409,21 +3437,22 @@ void SmallPacket0x04E(map_session_data_t* const PSession, CCharEntity* const PCh
                             {
                                 charutils::UpdateItem(PChar, LOC_INVENTORY, 0, -(int32)(price));
 
-                                PChar->pushPacket(new CAuctionHousePacket(action, 0x01, itemid, price, quantity, PItem->getStackSize()));
-                                PChar->pushPacket(new CInventoryFinishPacket());
+                                PChar->pushPacket<CAuctionHousePacket>(action, 0x01, itemid, price, quantity, PItem->getStackSize());
+                                PChar->pushPacket<CInventoryFinishPacket>();
                             }
                             return;
                         }
                     }
                 }
+
                 // You were unable to buy the {qty} {item}
                 if (PItem)
                 {
-                    PChar->pushPacket(new CAuctionHousePacket(action, 0xC5, itemid, price, quantity, PItem->getStackSize()));
+                    PChar->pushPacket<CAuctionHousePacket>(action, 0xC5, itemid, price, quantity, PItem->getStackSize());
                 }
                 else
                 {
-                    PChar->pushPacket(new CAuctionHousePacket(action, 0xC5, itemid, price, quantity, 0));
+                    PChar->pushPacket<CAuctionHousePacket>(action, 0xC5, itemid, price, quantity, 0);
                 }
             }
         }
@@ -3432,27 +3461,26 @@ void SmallPacket0x04E(map_session_data_t* const PSession, CCharEntity* const PCh
         {
             if (slotid < PChar->m_ah_history.size())
             {
-                bool             isAutoCommitOn = _sql->GetAutoCommit();
-                AuctionHistory_t canceledItem   = PChar->m_ah_history[slotid];
+                bool isAutoCommitOn = db::getAutoCommit();
 
-                if (_sql->SetAutoCommit(false) && _sql->TransactionStart())
+                AuctionHistory_t canceledItem = PChar->m_ah_history[slotid];
+
+                if (db::setAutoCommit(false) && db::transactionStart())
                 {
-                    const char* fmtQuery = "DELETE FROM auction_house WHERE seller = %u AND itemid = %u AND stack = %u AND price = %u AND sale = 0 LIMIT 1";
-                    int32       ret      = _sql->Query(fmtQuery, PChar->id, canceledItem.itemid, canceledItem.stack, canceledItem.price);
-                    if (ret != SQL_ERROR && _sql->AffectedRows())
+                    const auto [rset, affectedRows] = db::preparedStmtWithAffectedRows("DELETE FROM auction_house WHERE seller = ? AND itemid = ? AND stack = ? AND price = ? AND sale = 0 LIMIT 1",
+                                                                                       PChar->id, canceledItem.itemid, canceledItem.stack, canceledItem.price);
+                    if (rset && affectedRows)
                     {
                         CItem* PDelItem = itemutils::GetItemPointer(canceledItem.itemid);
                         if (PDelItem)
                         {
-                            uint8 SlotID =
-                                charutils::AddItem(PChar, LOC_INVENTORY, canceledItem.itemid, (canceledItem.stack != 0 ? PDelItem->getStackSize() : 1), true);
-
+                            uint8 SlotID = charutils::AddItem(PChar, LOC_INVENTORY, canceledItem.itemid, (canceledItem.stack != 0 ? PDelItem->getStackSize() : 1), true);
                             if (SlotID != ERROR_SLOTID)
                             {
-                                _sql->TransactionCommit();
-                                PChar->pushPacket(new CAuctionHousePacket(action, 0, PChar, slotid, false));
-                                PChar->pushPacket(new CInventoryFinishPacket());
-                                _sql->SetAutoCommit(isAutoCommitOn);
+                                db::transactionCommit();
+                                PChar->pushPacket<CAuctionHousePacket>(action, 0, PChar, slotid, false);
+                                PChar->pushPacket<CInventoryFinishPacket>();
+                                db::setAutoCommit(isAutoCommitOn);
                                 return;
                             }
                         }
@@ -3462,17 +3490,17 @@ void SmallPacket0x04E(map_session_data_t* const PSession, CCharEntity* const PCh
                         ShowError("Failed to return item id %u stack %u to char. ", canceledItem.itemid, canceledItem.stack);
                     }
 
-                    _sql->TransactionRollback();
-                    _sql->SetAutoCommit(isAutoCommitOn);
+                    db::transactionRollback();
+                    db::setAutoCommit(isAutoCommitOn);
                 }
             }
             // Let client know something went wrong
-            PChar->pushPacket(new CAuctionHousePacket(action, 0xE5, PChar, slotid, true)); // Inventory full, unable to remove msg
+            PChar->pushPacket<CAuctionHousePacket>(action, 0xE5, PChar, slotid, true); // Inventory full, unable to remove msg
         }
         break;
         case 0x0D:
         {
-            PChar->pushPacket(new CAuctionHousePacket(action, slotid, PChar));
+            PChar->pushPacket<CAuctionHousePacket>(action, slotid, PChar);
         }
         break;
     }
@@ -3580,7 +3608,7 @@ void SmallPacket0x052(map_session_data_t* const PSession, CCharEntity* const PCh
     // in this list the slot of whats being updated is old value, replace with new in 116
     // Should Push 0x116 (size 68) in responce
     // 0x04 is start, contains 16 4 byte parts repersently each slot in order
-    PChar->pushPacket(new CAddtoEquipSet(PChar, data));
+    PChar->pushPacket<CAddtoEquipSet>(PChar, data);
 }
 
 /************************************************************************
@@ -3606,7 +3634,7 @@ void SmallPacket0x053(map_session_data_t* const PSession, CCharEntity* const PCh
     }
     else if (type == 2)
     {
-        PChar->pushPacket(new CMessageStandardPacket(PChar->getStyleLocked() ? MsgStd::StyleLockIsOn : MsgStd::StyleLockIsOff));
+        PChar->pushPacket<CMessageStandardPacket>(PChar->getStyleLocked() ? MsgStd::StyleLockIsOn : MsgStd::StyleLockIsOff);
     }
     else if (type == 3)
     {
@@ -3690,8 +3718,8 @@ void SmallPacket0x053(map_session_data_t* const PSession, CCharEntity* const PCh
 
     if (type != 1 && type != 2)
     {
-        PChar->pushPacket(new CCharAppearancePacket(PChar));
-        PChar->pushPacket(new CCharSyncPacket(PChar));
+        PChar->pushPacket<CCharAppearancePacket>(PChar);
+        PChar->pushPacket<CCharSyncPacket>(PChar);
     }
 }
 
@@ -3715,12 +3743,12 @@ void SmallPacket0x058(map_session_data_t* const PSession, CCharEntity* const PCh
         // uint16 resultMax  = data.ref<uint16>(0x0E); // Unused, maximum in range is always 16 greater
         uint16 resultMin = data.ref<uint16>(0x0C);
 
-        PChar->pushPacket(new CSynthSuggestionListPacket(skillID, skillLevel, skillRank, resultMin));
+        PChar->pushPacket<CSynthSuggestionListPacket>(skillID, skillLevel, skillRank, resultMin);
     }
     else
     {
         uint16 selectedRecipeOffset = data.ref<uint16>(0x10);
-        PChar->pushPacket(new CSynthSuggestionRecipePacket(skillID, skillLevel, skillRank, selectedRecipeOffset));
+        PChar->pushPacket<CSynthSuggestionRecipePacket>(skillID, skillLevel, skillRank, selectedRecipeOffset);
     }
 }
 
@@ -3748,12 +3776,12 @@ void SmallPacket0x059(map_session_data_t* const PSession, CCharEntity* const PCh
 void SmallPacket0x05A(map_session_data_t* const PSession, CCharEntity* const PChar, CBasicPacket& data)
 {
     TracyZoneScoped;
-    PChar->pushPacket(new CConquestPacket(PChar));
+    PChar->pushPacket<CConquestPacket>(PChar);
 
     // TODO: This is unstable across multiple processes. Fix me.
     // CampaignState state = campaign::GetCampaignState();
-    // PChar->pushPacket(new CCampaignPacket(PChar, state, 0));
-    // PChar->pushPacket(new CCampaignPacket(PChar, state, 1));
+    // PChar->pushPacket<CCampaignPacket>(PChar, state, 0);
+    // PChar->pushPacket<CCampaignPacket>(PChar, state, 1);
 }
 
 /************************************************************************
@@ -3799,7 +3827,7 @@ void SmallPacket0x05B(map_session_data_t* const PSession, CCharEntity* const PCh
         }
     }
 
-    PChar->pushPacket(new CReleasePacket(PChar, RELEASE_TYPE::EVENT));
+    PChar->pushPacket<CReleasePacket>(PChar, RELEASE_TYPE::EVENT);
     PChar->updatemask |= UPDATE_HP;
 }
 
@@ -3852,10 +3880,10 @@ void SmallPacket0x05C(map_session_data_t* const PSession, CCharEntity* const PCh
             PChar->loc.p.rotation = data.ref<uint8>(0x1F);
         }
 
-        PChar->pushPacket(new CCSPositionPacket(PChar));
-        PChar->pushPacket(new CPositionPacket(PChar));
+        PChar->pushPacket<CCSPositionPacket>(PChar);
+        PChar->pushPacket<CPositionPacket>(PChar);
     }
-    PChar->pushPacket(new CReleasePacket(PChar, RELEASE_TYPE::EVENT));
+    PChar->pushPacket<CReleasePacket>(PChar, RELEASE_TYPE::EVENT);
 }
 
 /************************************************************************
@@ -3869,7 +3897,7 @@ void SmallPacket0x05D(map_session_data_t* const PSession, CCharEntity* const PCh
     TracyZoneScoped;
     if (jailutils::InPrison(PChar))
     {
-        PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, MSGBASIC_CANNOT_USE_IN_AREA));
+        PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, 0, 0, MSGBASIC_CANNOT_USE_IN_AREA);
         return;
     }
 
@@ -3934,7 +3962,7 @@ void SmallPacket0x05D(map_session_data_t* const PSession, CCharEntity* const PCh
         return;
     }
 
-    PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CCharEmotionPacket(PChar, TargetID, TargetIndex, EmoteID, emoteMode, extra));
+    PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, std::make_unique<CCharEmotionPacket>(PChar, TargetID, TargetIndex, EmoteID, emoteMode, extra));
 
     luautils::OnPlayerEmote(PChar, EmoteID);
 }
@@ -4069,8 +4097,8 @@ void SmallPacket0x05E(map_session_data_t* const PSession, CCharEntity* const PCh
 
                 PChar->loc.p.rotation += 128;
 
-                PChar->pushPacket(new CMessageSystemPacket(0, 0, MsgStd::CouldNotEnter)); // You could not enter the next area.
-                PChar->pushPacket(new CCSPositionPacket(PChar));
+                PChar->pushPacket<CMessageSystemPacket>(0, 0, MsgStd::CouldNotEnter); // You could not enter the next area.
+                PChar->pushPacket<CCSPositionPacket>(PChar);
 
                 PChar->status = STATUS_TYPE::NORMAL;
                 return;
@@ -4079,8 +4107,8 @@ void SmallPacket0x05E(map_session_data_t* const PSession, CCharEntity* const PCh
             {
                 PChar->loc.p.rotation += 128;
 
-                PChar->pushPacket(new CMessageSystemPacket(0, 0, MsgStd::CouldNotEnter)); // You could not enter the next area.
-                PChar->pushPacket(new CCSPositionPacket(PChar));
+                PChar->pushPacket<CMessageSystemPacket>(0, 0, MsgStd::CouldNotEnter); // You could not enter the next area.
+                PChar->pushPacket<CCSPositionPacket>(PChar);
 
                 PChar->status = STATUS_TYPE::NORMAL;
                 return;
@@ -4089,14 +4117,14 @@ void SmallPacket0x05E(map_session_data_t* const PSession, CCharEntity* const PCh
             {
                 // Ensure the destination exists
                 CZone* PDestination = zoneutils::GetZone(PZoneLine->m_toZone);
-                if (PDestination && PDestination->GetIP() == 0)
+                if (PDestination && (PDestination->GetIP() == 0 || PDestination->GetPort() == 0))
                 {
                     ShowDebug("SmallPacket0x5E: Zone %u closed to chars", PZoneLine->m_toZone);
 
                     PChar->loc.p.rotation += 128;
 
-                    PChar->pushPacket(new CMessageSystemPacket(0, 0, MsgStd::CouldNotEnter)); // You could not enter the next area.
-                    PChar->pushPacket(new CCSPositionPacket(PChar));
+                    PChar->pushPacket<CMessageSystemPacket>(0, 0, MsgStd::CouldNotEnter); // You could not enter the next area.
+                    PChar->pushPacket<CCSPositionPacket>(PChar);
 
                     PChar->status = STATUS_TYPE::NORMAL;
                     return;
@@ -4137,8 +4165,8 @@ void SmallPacket0x05E(map_session_data_t* const PSession, CCharEntity* const PCh
 
         PChar->loc.p.rotation += 128;
 
-        PChar->pushPacket(new CMessageSystemPacket(0, 0, MsgStd::CouldNotEnter)); // You could not enter the next area.
-        PChar->pushPacket(new CCSPositionPacket(PChar));
+        PChar->pushPacket<CMessageSystemPacket>(0, 0, MsgStd::CouldNotEnter); // You could not enter the next area.
+        PChar->pushPacket<CCSPositionPacket>(PChar);
 
         PChar->status = STATUS_TYPE::NORMAL;
 
@@ -4164,8 +4192,8 @@ void SmallPacket0x060(map_session_data_t* const PSession, CCharEntity* const PCh
     std::string updateString = std::string((char*)data[12]);
     luautils::OnEventUpdate(PChar, updateString);
 
-    PChar->pushPacket(new CReleasePacket(PChar, RELEASE_TYPE::EVENT));
-    PChar->pushPacket(new CReleasePacket(PChar, RELEASE_TYPE::PLAYERINPUT));
+    PChar->pushPacket<CReleasePacket>(PChar, RELEASE_TYPE::EVENT);
+    PChar->pushPacket<CReleasePacket>(PChar, RELEASE_TYPE::PLAYERINPUT);
 }
 
 /************************************************************************
@@ -4177,25 +4205,25 @@ void SmallPacket0x060(map_session_data_t* const PSession, CCharEntity* const PCh
 void SmallPacket0x061(map_session_data_t* const PSession, CCharEntity* const PChar, CBasicPacket& data)
 {
     TracyZoneScoped;
-    PChar->pushPacket(new CCharUpdatePacket(PChar));
-    PChar->pushPacket(new CCharHealthPacket(PChar));
-    PChar->pushPacket(new CCharStatsPacket(PChar));
-    PChar->pushPacket(new CCharSkillsPacket(PChar));
-    PChar->pushPacket(new CCharRecastPacket(PChar));
-    PChar->pushPacket(new CMenuMeritPacket(PChar));
-    PChar->pushPacket(new CMonipulatorPacket1(PChar));
-    PChar->pushPacket(new CMonipulatorPacket2(PChar));
+    PChar->pushPacket<CCharUpdatePacket>(PChar);
+    PChar->pushPacket<CCharHealthPacket>(PChar);
+    PChar->pushPacket<CCharStatsPacket>(PChar);
+    PChar->pushPacket<CCharSkillsPacket>(PChar);
+    PChar->pushPacket<CCharRecastPacket>(PChar);
+    PChar->pushPacket<CMenuMeritPacket>(PChar);
+    PChar->pushPacket<CMonipulatorPacket1>(PChar);
+    PChar->pushPacket<CMonipulatorPacket2>(PChar);
 
     if (charutils::hasKeyItem(PChar, 2544))
     {
         // Only send Job Points Packet if the player has unlocked them
-        PChar->pushPacket(new CMenuJobPointsPacket(PChar));
-        PChar->pushPacket(new CJobPointDetailsPacket(PChar));
+        PChar->pushPacket<CMenuJobPointsPacket>(PChar);
+        PChar->pushPacket<CJobPointDetailsPacket>(PChar);
     }
 
-    PChar->pushPacket(new CCharJobExtraPacket(PChar, true));
-    PChar->pushPacket(new CCharJobExtraPacket(PChar, false));
-    PChar->pushPacket(new CStatusEffectPacket(PChar));
+    PChar->pushPacket<CCharJobExtraPacket>(PChar, true);
+    PChar->pushPacket<CCharJobExtraPacket>(PChar, false);
+    PChar->pushPacket<CStatusEffectPacket>(PChar);
 }
 
 /************************************************************************
@@ -4282,7 +4310,7 @@ void SmallPacket0x06E(map_session_data_t* const PSession, CCharEntity* const PCh
     if (jailutils::InPrison(PChar))
     {
         // Initiator is in prison.  Send error message.
-        PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, MSGBASIC_CANNOT_USE_IN_AREA));
+        PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, 0, 0, MSGBASIC_CANNOT_USE_IN_AREA);
         return;
     }
 
@@ -4293,7 +4321,7 @@ void SmallPacket0x06E(map_session_data_t* const PSession, CCharEntity* const PCh
             {
                 if (PChar->PParty && PChar->PParty->IsFull())
                 {
-                    PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, MsgStd::CannotInvite));
+                    PChar->pushPacket<CMessageStandardPacket>(PChar, 0, 0, MsgStd::CannotInvite);
                     break;
                 }
                 CCharEntity* PInvitee = nullptr;
@@ -4316,7 +4344,7 @@ void SmallPacket0x06E(map_session_data_t* const PSession, CCharEntity* const PCh
                     if (PInvitee->isDead() || jailutils::InPrison(PInvitee) || PInvitee->InvitePending.id != 0 || PInvitee->PParty != nullptr)
                     {
                         ShowDebug("%s is dead, in jail, has a pending invite, or is already in a party", PInvitee->getName());
-                        PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, MsgStd::CannotInvite));
+                        PChar->pushPacket<CMessageStandardPacket>(PChar, 0, 0, MsgStd::CannotInvite);
                         break;
                     }
                     // check /blockaid
@@ -4324,27 +4352,27 @@ void SmallPacket0x06E(map_session_data_t* const PSession, CCharEntity* const PCh
                     {
                         ShowDebug("%s is blocking party invites", PInvitee->getName());
                         // Target is blocking assistance
-                        PChar->pushPacket(new CMessageSystemPacket(0, 0, MsgStd::TargetIsCurrentlyBlocking));
+                        PChar->pushPacket<CMessageSystemPacket>(0, 0, MsgStd::TargetIsCurrentlyBlocking);
                         // Interaction was blocked
-                        PInvitee->pushPacket(new CMessageSystemPacket(0, 0, MsgStd::BlockedByBlockaid));
+                        PInvitee->pushPacket<CMessageSystemPacket>(0, 0, MsgStd::BlockedByBlockaid);
                         // You cannot invite that person at this time.
-                        PChar->pushPacket(new CMessageSystemPacket(0, 0, MsgStd::CannotInvite));
+                        PChar->pushPacket<CMessageSystemPacket>(0, 0, MsgStd::CannotInvite);
                         break;
                     }
                     if (PInvitee->StatusEffectContainer->HasStatusEffect(EFFECT_LEVEL_SYNC))
                     {
                         ShowDebug("%s has level sync, unable to send invite", PInvitee->getName());
-                        PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, MsgStd::CannotInviteLevelSync));
+                        PChar->pushPacket<CMessageStandardPacket>(PChar, 0, 0, MsgStd::CannotInviteLevelSync);
                         break;
                     }
 
                     PInvitee->InvitePending.id     = PChar->id;
                     PInvitee->InvitePending.targid = PChar->targid;
-                    PInvitee->pushPacket(new CPartyInvitePacket(charid, targid, PChar, INVITE_PARTY));
+                    PInvitee->pushPacket<CPartyInvitePacket>(charid, targid, PChar, INVITE_PARTY);
                     ShowDebug("Sent party invite packet to %s", PInvitee->getName());
                     if (PChar->PParty && PChar->PParty->GetSyncTarget())
                     {
-                        PInvitee->pushPacket(new CMessageStandardPacket(PInvitee, 0, 0, MsgStd::LevelSyncWarning));
+                        PInvitee->pushPacket<CMessageStandardPacket>(PInvitee, 0, 0, MsgStd::LevelSyncWarning);
                     }
                 }
                 else
@@ -4356,7 +4384,7 @@ void SmallPacket0x06E(map_session_data_t* const PSession, CCharEntity* const PCh
                     ref<uint16>(packetData, 4)  = targid;
                     ref<uint32>(packetData, 6)  = PChar->id;
                     ref<uint16>(packetData, 10) = PChar->targid;
-                    message::send(MSG_PT_INVITE, packetData, sizeof(packetData), new CPartyInvitePacket(charid, targid, PChar, INVITE_PARTY));
+                    message::send(MSG_PT_INVITE, packetData, sizeof(packetData), std::make_unique<CPartyInvitePacket>(charid, targid, PChar, INVITE_PARTY));
 
                     ShowDebug("Sent invite packet to lobby server from %s to (%d)", PChar->getName(), charid);
                 }
@@ -4364,7 +4392,7 @@ void SmallPacket0x06E(map_session_data_t* const PSession, CCharEntity* const PCh
             else // in party but not leader, cannot invite
             {
                 ShowDebug("%s is not party leader, cannot send invite", PChar->getName());
-                PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, MsgStd::NotPartyLeader));
+                PChar->pushPacket<CMessageStandardPacket>(PChar, 0, 0, MsgStd::NotPartyLeader);
             }
             break;
 
@@ -4395,11 +4423,11 @@ void SmallPacket0x06E(map_session_data_t* const PSession, CCharEntity* const PCh
                     {
                         ShowDebug("%s is blocking alliance invites", PInvitee->getName());
                         // Target is blocking assistance
-                        PChar->pushPacket(new CMessageSystemPacket(0, 0, MsgStd::TargetIsCurrentlyBlocking));
+                        PChar->pushPacket<CMessageSystemPacket>(0, 0, MsgStd::TargetIsCurrentlyBlocking);
                         // Interaction was blocked
-                        PInvitee->pushPacket(new CMessageSystemPacket(0, 0, MsgStd::BlockedByBlockaid));
+                        PInvitee->pushPacket<CMessageSystemPacket>(0, 0, MsgStd::BlockedByBlockaid);
                         // You cannot invite that person at this time.
-                        PChar->pushPacket(new CMessageSystemPacket(0, 0, MsgStd::CannotInvite));
+                        PChar->pushPacket<CMessageSystemPacket>(0, 0, MsgStd::CannotInvite);
                         break;
                     }
                     // make sure intvitee isn't dead or in jail, they are an unallied party leader and don't already have an invite pending
@@ -4407,19 +4435,19 @@ void SmallPacket0x06E(map_session_data_t* const PSession, CCharEntity* const PCh
                         PInvitee->PParty->GetLeader() != PInvitee || PInvitee->PParty->m_PAlliance)
                     {
                         ShowDebug("%s is dead, in jail, has a pending invite, or is already in a party/alliance", PInvitee->getName());
-                        PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, MsgStd::CannotInvite));
+                        PChar->pushPacket<CMessageStandardPacket>(PChar, 0, 0, MsgStd::CannotInvite);
                         break;
                     }
                     if (PInvitee->StatusEffectContainer->HasStatusEffect(EFFECT_LEVEL_SYNC))
                     {
                         ShowDebug("%s has level sync, unable to send invite", PInvitee->getName());
-                        PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, MsgStd::CannotInviteLevelSync));
+                        PChar->pushPacket<CMessageStandardPacket>(PChar, 0, 0, MsgStd::CannotInviteLevelSync);
                         break;
                     }
 
                     PInvitee->InvitePending.id     = PChar->id;
                     PInvitee->InvitePending.targid = PChar->targid;
-                    PInvitee->pushPacket(new CPartyInvitePacket(charid, targid, PChar, INVITE_ALLIANCE));
+                    PInvitee->pushPacket<CPartyInvitePacket>(charid, targid, PChar, INVITE_ALLIANCE);
                     ShowDebug("Sent party invite packet to %s", PInvitee->getName());
                 }
                 else
@@ -4431,7 +4459,7 @@ void SmallPacket0x06E(map_session_data_t* const PSession, CCharEntity* const PCh
                     ref<uint16>(packetData, 4)  = targid;
                     ref<uint32>(packetData, 6)  = PChar->id;
                     ref<uint16>(packetData, 10) = PChar->targid;
-                    message::send(MSG_PT_INVITE, packetData, sizeof(packetData), new CPartyInvitePacket(charid, targid, PChar, INVITE_ALLIANCE));
+                    message::send(MSG_PT_INVITE, packetData, sizeof(packetData), std::make_unique<CPartyInvitePacket>(charid, targid, PChar, INVITE_ALLIANCE));
 
                     ShowDebug("(Alliance)Sent invite packet to lobby server from %s to (%d)", PChar->getName(), charid);
                 }
@@ -4559,7 +4587,7 @@ void SmallPacket0x071(map_session_data_t* const PSession, CCharEntity* const PCh
             if (PChar->PParty && PChar->PParty->GetLeader() == PChar)
             {
                 char charName[PacketNameLength] = {};
-                memcpy(&charName, data[0x0C], PacketNameLength - 1);
+                std::memcpy(&charName, data[0x0C], PacketNameLength - 1);
 
                 CCharEntity* PVictim = dynamic_cast<CCharEntity*>(PChar->PParty->GetMemberByName(charName));
                 if (PVictim)
@@ -4629,7 +4657,7 @@ void SmallPacket0x071(map_session_data_t* const PSession, CCharEntity* const PCh
             {
                 int8 packetData[29]{};
                 ref<uint32>(packetData, 0) = PChar->id;
-                memcpy(packetData + 0x04, data[0x0C], 20);
+                std::memcpy(packetData + 0x04, data[0x0C], 20);
                 ref<uint32>(packetData, 24) = PChar->PLinkshell1->getID();
                 ref<uint8>(packetData, 28)  = PItemLinkshell->GetLSType();
                 message::send(MSG_LINKSHELL_REMOVE, packetData, sizeof(packetData), nullptr);
@@ -4644,7 +4672,7 @@ void SmallPacket0x071(map_session_data_t* const PSession, CCharEntity* const PCh
             {
                 int8 packetData[29]{};
                 ref<uint32>(packetData, 0) = PChar->id;
-                memcpy(packetData + 0x04, data[0x0C], 20);
+                std::memcpy(packetData + 0x04, data[0x0C], 20);
                 ref<uint32>(packetData, 24) = PChar->PLinkshell2->getID();
                 ref<uint8>(packetData, 28)  = PItemLinkshell->GetLSType();
                 message::send(MSG_LINKSHELL_REMOVE, packetData, sizeof(packetData), nullptr);
@@ -4659,7 +4687,7 @@ void SmallPacket0x071(map_session_data_t* const PSession, CCharEntity* const PCh
                 for (std::size_t i = 0; i < PChar->PParty->m_PAlliance->partyList.size(); ++i)
                 {
                     char charName[PacketNameLength] = {};
-                    memcpy(&charName, data[0x0C], PacketNameLength - 1);
+                    std::memcpy(&charName, data[0x0C], PacketNameLength - 1);
 
                     PVictim = dynamic_cast<CCharEntity*>(PChar->PParty->m_PAlliance->partyList[i]->GetMemberByName(charName));
                     if (PVictim && PVictim->PParty && PVictim->PParty->m_PAlliance) // victim is in this party
@@ -4744,7 +4772,7 @@ void SmallPacket0x074(map_session_data_t* const PSession, CCharEntity* const PCh
         {
             ShowDebug("%s declined party invite from %s", PChar->getName(), PInviter->getName());
             // invitee declined invite
-            PInviter->pushPacket(new CMessageStandardPacket(PInviter, 0, 0, MsgStd::InvitationDeclined));
+            PInviter->pushPacket<CMessageStandardPacket>(PInviter, 0, 0, MsgStd::InvitationDeclined);
             PChar->InvitePending.clean();
             return;
         }
@@ -4763,7 +4791,7 @@ void SmallPacket0x074(map_session_data_t* const PSession, CCharEntity* const PCh
                     if (PInviter->PParty->m_PAlliance->isFull() || PInviter->PParty->m_PAlliance->getMainParty() != PInviter->PParty)
                     {
                         ShowDebug("Alliance is full, invite to %s cancelled", PChar->getName());
-                        PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, MsgStd::CannotBeProcessed));
+                        PChar->pushPacket<CMessageStandardPacket>(PChar, 0, 0, MsgStd::CannotBeProcessed);
                         PChar->InvitePending.clean();
                         return;
                     }
@@ -4777,7 +4805,7 @@ void SmallPacket0x074(map_session_data_t* const PSession, CCharEntity* const PCh
                 else if (PChar->PParty->HasTrusts() || PInviter->PParty->HasTrusts())
                 {
                     // Cannot form alliance if you have Trusts
-                    PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, MsgStd::TrustCannotJoinAlliance));
+                    PChar->pushPacket<CMessageStandardPacket>(PChar, 0, 0, MsgStd::TrustCannotJoinAlliance);
                     return;
                 }
                 else
@@ -4808,9 +4836,9 @@ void SmallPacket0x074(map_session_data_t* const PSession, CCharEntity* const PCh
                 {
                     if (PInviter->PParty->IsFull())
                     { // someone else accepted invitation
-                        // PInviter->pushPacket(new CMessageStandardPacket(PInviter, 0, 0, 14)); Don't think retail sends error packet to inviter on full pt
+                        // PInviter->pushPacket<CMessageStandardPacket>(PInviter, 0, 0, 14); Don't think retail sends error packet to inviter on full pt
                         ShowDebug("Someone else accepted party invite, %s cannot be added to party", PChar->getName());
-                        PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, MsgStd::CannotBeProcessed));
+                        PChar->pushPacket<CMessageStandardPacket>(PChar, 0, 0, MsgStd::CannotBeProcessed);
                     }
                     else
                     {
@@ -4821,7 +4849,7 @@ void SmallPacket0x074(map_session_data_t* const PSession, CCharEntity* const PCh
             }
             else
             {
-                PChar->pushPacket(new CMessageStandardPacket(PChar, 0, 0, MsgStd::CannotJoinLevelSync));
+                PChar->pushPacket<CMessageStandardPacket>(PChar, 0, 0, MsgStd::CannotJoinLevelSync);
             }
         }
     }
@@ -4857,7 +4885,7 @@ void SmallPacket0x076(map_session_data_t* const PSession, CCharEntity* const PCh
     else
     {
         // previous CPartyDefine was dropped or otherwise didn't work?
-        PChar->pushPacket(new CPartyDefinePacket(nullptr, false));
+        PChar->pushPacket<CPartyDefinePacket>(nullptr, false);
     }
 }
 
@@ -4877,7 +4905,7 @@ void SmallPacket0x077(map_session_data_t* const PSession, CCharEntity* const PCh
             if (PChar->PParty != nullptr && PChar->PParty->GetLeader() == PChar)
             {
                 char memberName[PacketNameLength] = {};
-                memcpy(&memberName, data[0x04], PacketNameLength - 1);
+                std::memcpy(&memberName, data[0x04], PacketNameLength - 1);
 
                 ShowDebug(fmt::format("(Party)Altering permissions of {} to {}", str(memberName), str(data[0x15])));
                 PChar->PParty->AssignPartyRole(memberName, data.ref<uint8>(0x15));
@@ -4890,7 +4918,7 @@ void SmallPacket0x077(map_session_data_t* const PSession, CCharEntity* const PCh
             {
                 int8 packetData[29]{};
                 ref<uint32>(packetData, 0) = PChar->id;
-                memcpy(packetData + 0x04, data[0x04], 20);
+                std::memcpy(packetData + 0x04, data[0x04], 20);
                 ref<uint32>(packetData, 24) = PChar->PLinkshell1->getID();
                 ref<uint8>(packetData, 28)  = data.ref<uint8>(0x15);
                 message::send(MSG_LINKSHELL_RANK_CHANGE, packetData, sizeof(packetData), nullptr);
@@ -4903,7 +4931,7 @@ void SmallPacket0x077(map_session_data_t* const PSession, CCharEntity* const PCh
             {
                 int8 packetData[29]{};
                 ref<uint32>(packetData, 0) = PChar->id;
-                memcpy(packetData + 0x04, data[0x04], 20);
+                std::memcpy(packetData + 0x04, data[0x04], 20);
                 ref<uint32>(packetData, 24) = PChar->PLinkshell2->getID();
                 ref<uint8>(packetData, 28)  = data.ref<uint8>(0x15);
                 message::send(MSG_LINKSHELL_RANK_CHANGE, packetData, sizeof(packetData), nullptr);
@@ -4916,7 +4944,7 @@ void SmallPacket0x077(map_session_data_t* const PSession, CCharEntity* const PCh
                 PChar->PParty->m_PAlliance->getMainParty() == PChar->PParty)
             {
                 char memberName[PacketNameLength] = {};
-                memcpy(&memberName, data[0x04], PacketNameLength - 1);
+                std::memcpy(&memberName, data[0x04], PacketNameLength - 1);
 
                 ShowDebug(fmt::format("(Alliance)Changing leader to {}", str(memberName)));
                 PChar->PParty->m_PAlliance->assignAllianceLeader(str(data[0x04]).c_str());
@@ -4943,7 +4971,7 @@ void SmallPacket0x077(map_session_data_t* const PSession, CCharEntity* const PCh
 void SmallPacket0x078(map_session_data_t* const PSession, CCharEntity* const PChar, CBasicPacket& data)
 {
     TracyZoneScoped;
-    PChar->pushPacket(new CPartySearchPacket(PChar));
+    PChar->pushPacket<CPartySearchPacket>(PChar);
 }
 
 /************************************************************************
@@ -4993,8 +5021,8 @@ void SmallPacket0x083(map_session_data_t* const PSession, CCharEntity* const PCh
             {
                 charutils::UpdateItem(PChar, LOC_INVENTORY, 0, -(int32)(price * quantity));
                 ShowInfo("User '%s' purchased %u of item of ID %u [from VENDOR] ", PChar->getName(), quantity, itemID);
-                PChar->pushPacket(new CShopBuyPacket(shopSlotID, quantity));
-                PChar->pushPacket(new CInventoryFinishPacket());
+                PChar->pushPacket<CShopBuyPacket>(shopSlotID, quantity);
+                PChar->pushPacket<CInventoryFinishPacket>();
             }
         }
     }
@@ -5021,7 +5049,7 @@ void SmallPacket0x084(map_session_data_t* const PSession, CCharEntity* const PCh
             quantity = std::min(quantity, PItem->getQuantity());
             // Store item-to-sell in the last slot of the shop container
             PChar->Container->setItem(PChar->Container->getExSize(), itemID, slotID, quantity);
-            PChar->pushPacket(new CShopAppraisePacket(slotID, PItem->getBasePrice()));
+            PChar->pushPacket<CShopAppraisePacket>(slotID, PItem->getBasePrice());
         }
         return;
     }
@@ -5076,8 +5104,8 @@ void SmallPacket0x085(map_session_data_t* const PSession, CCharEntity* const PCh
         charutils::UpdateItem(PChar, LOC_INVENTORY, 0, cost);
         charutils::UpdateItem(PChar, LOC_INVENTORY, slotID, -(int32)quantity);
         ShowInfo("SmallPacket0x085: Player '%s' sold %u of itemID %u (Total: %u gil) [to VENDOR] ", PChar->getName(), quantity, itemID, cost);
-        PChar->pushPacket(new CMessageStandardPacket(nullptr, itemID, quantity, MsgStd::Sell));
-        PChar->pushPacket(new CInventoryFinishPacket());
+        PChar->pushPacket<CMessageStandardPacket>(nullptr, itemID, quantity, MsgStd::Sell);
+        PChar->pushPacket<CInventoryFinishPacket>();
         PChar->Container->setItem(PChar->Container->getSize() - 1, 0, -1, 0);
     }
 }
@@ -5094,7 +5122,7 @@ void SmallPacket0x096(map_session_data_t* const PSession, CCharEntity* const PCh
     if (jailutils::InPrison(PChar))
     {
         // Prevent crafting in prison
-        PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, MSGBASIC_CANNOT_USE_IN_AREA));
+        PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, 0, 0, MSGBASIC_CANNOT_USE_IN_AREA);
         return;
     }
 
@@ -5109,7 +5137,7 @@ void SmallPacket0x096(map_session_data_t* const PSession, CCharEntity* const PCh
     // Thus players can synth on whatever fps they want
     if (PChar->m_LastSynthTime + 15s > server_clock::now())
     {
-        PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, 94));
+        PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, 0, 0, 94);
         return;
     }
 
@@ -5135,10 +5163,10 @@ void SmallPacket0x096(map_session_data_t* const PSession, CCharEntity* const PCh
 
             PTarget->TradePending.clean();
             PTarget->UContainer->Clean();
-            PTarget->pushPacket(new CTradeActionPacket(PChar, 0x01));
-            PChar->pushPacket(new CTradeActionPacket(PTarget, 0x01));
+            PTarget->pushPacket<CTradeActionPacket>(PChar, 0x01);
+            PChar->pushPacket<CTradeActionPacket>(PTarget, 0x01);
         }
-        PChar->pushPacket(new CMessageStandardPacket(MsgStd::CannotBeProcessed));
+        PChar->pushPacket<CMessageStandardPacket>(MsgStd::CannotBeProcessed);
         PChar->TradePending.clean();
         PChar->UContainer->Clean();
         return;
@@ -5157,7 +5185,7 @@ void SmallPacket0x096(map_session_data_t* const PSession, CCharEntity* const PCh
     {
         // Detect invalid crystal usage
         // Prevent crafting exploit to crash on container size > 8
-        PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, MSGBASIC_CANNOT_USE_IN_AREA));
+        PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, 0, 0, MSGBASIC_CANNOT_USE_IN_AREA);
         return;
     }
 
@@ -5388,9 +5416,8 @@ void SmallPacket0x0AA(map_session_data_t* const PSession, CCharEntity* const PCh
                 charutils::UpdateItem(PChar, LOC_INVENTORY, 0, -(int32)(item->getBasePrice() * quantity));
                 ShowInfo("SmallPacket0x0AA: Player '%s' purchased %u of itemID %u [from GUILD] ", PChar->getName(), quantity, itemID);
                 PChar->PGuildShop->GetItem(shopSlotID)->setQuantity(PChar->PGuildShop->GetItem(shopSlotID)->getQuantity() - quantity);
-                PChar->pushPacket(
-                    new CGuildMenuBuyUpdatePacket(PChar, PChar->PGuildShop->GetItem(PChar->PGuildShop->SearchItem(itemID))->getQuantity(), itemID, quantity));
-                PChar->pushPacket(new CInventoryFinishPacket());
+                PChar->pushPacket<CGuildMenuBuyUpdatePacket>(PChar, PChar->PGuildShop->GetItem(PChar->PGuildShop->SearchItem(itemID))->getQuantity(), itemID, quantity);
+                PChar->pushPacket<CInventoryFinishPacket>();
             }
         }
     }
@@ -5408,7 +5435,7 @@ void SmallPacket0x0A2(map_session_data_t* const PSession, CCharEntity* const PCh
     TracyZoneScoped;
     uint16 diceroll = xirand::GetRandomNumber(1000);
 
-    PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CMessageStandardPacket(PChar, diceroll, MsgStd::DiceRoll));
+    PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, std::make_unique<CMessageStandardPacket>(PChar, diceroll, MsgStd::DiceRoll));
 }
 
 /************************************************************************
@@ -5422,7 +5449,7 @@ void SmallPacket0x0AB(map_session_data_t* const PSession, CCharEntity* const PCh
     TracyZoneScoped;
     if (PChar->PGuildShop != nullptr)
     {
-        PChar->pushPacket(new CGuildMenuBuyPacket(PChar, PChar->PGuildShop));
+        PChar->pushPacket<CGuildMenuBuyPacket>(PChar, PChar->PGuildShop);
     }
 }
 
@@ -5459,9 +5486,9 @@ void SmallPacket0x0AC(map_session_data_t* const PSession, CCharEntity* const PCh
                     charutils::UpdateItem(PChar, LOC_INVENTORY, 0, shopItem->getSellPrice() * quantity);
                     ShowInfo("SmallPacket0x0AC: Player '%s' sold %u of itemID %u [to GUILD] ", PChar->getName(), quantity, itemID);
                     PChar->PGuildShop->GetItem(shopSlotID)->setQuantity(PChar->PGuildShop->GetItem(shopSlotID)->getQuantity() + quantity);
-                    PChar->pushPacket(new CGuildMenuSellUpdatePacket(PChar, PChar->PGuildShop->GetItem(PChar->PGuildShop->SearchItem(itemID))->getQuantity(),
-                                                                     itemID, quantity));
-                    PChar->pushPacket(new CInventoryFinishPacket());
+                    PChar->pushPacket<CGuildMenuSellUpdatePacket>(PChar, PChar->PGuildShop->GetItem(PChar->PGuildShop->SearchItem(itemID))->getQuantity(),
+                                                                  itemID, quantity);
+                    PChar->pushPacket<CInventoryFinishPacket>();
                 }
             }
             // TODO: error messages!
@@ -5481,7 +5508,7 @@ void SmallPacket0x0AD(map_session_data_t* const PSession, CCharEntity* const PCh
     TracyZoneScoped;
     if (PChar->PGuildShop != nullptr)
     {
-        PChar->pushPacket(new CGuildMenuSellPacket(PChar, PChar->PGuildShop));
+        PChar->pushPacket<CGuildMenuSellPacket>(PChar, PChar->PGuildShop);
     }
 }
 
@@ -5497,7 +5524,7 @@ void SmallPacket0x0B5(map_session_data_t* const PSession, CCharEntity* const PCh
     char  message[256]    = {};
     uint8 messagePosition = 0x07;
 
-    memcpy(&message, data[messagePosition], std::min(data.getSize() - messagePosition, sizeof(message)));
+    std::memcpy(&message, data[messagePosition], std::min(data.getSize() - messagePosition, sizeof(message)));
 
     if (data.ref<uint8>(0x06) == '!' && !jailutils::InPrison(PChar) && (CCommandHandler::call(lua, PChar, message) == 0 || PChar->m_GMlevel > 0))
     {
@@ -5505,7 +5532,7 @@ void SmallPacket0x0B5(map_session_data_t* const PSession, CCharEntity* const PCh
     }
     else if (data.ref<uint8>(0x06) == '#' && PChar->m_GMlevel > 0)
     {
-        message::send(MSG_CHAT_SERVMES, nullptr, 0, new CChatMessagePacket(PChar, MESSAGE_SYSTEM_1, (const char*)data[7]));
+        message::send(MSG_CHAT_SERVMES, nullptr, 0, std::make_unique<CChatMessagePacket>(PChar, MESSAGE_SYSTEM_1, (const char*)data[7]));
     }
     else
     {
@@ -5528,11 +5555,11 @@ void SmallPacket0x0B5(map_session_data_t* const PSession, CCharEntity* const PCh
                     });
                     // clang-format on
                 }
-                PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CChatMessagePacket(PChar, MESSAGE_SAY, (const char*)data[6]));
+                PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, std::make_unique<CChatMessagePacket>(PChar, MESSAGE_SAY, (const char*)data[6]));
             }
             else
             {
-                PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, MSGBASIC_CANNOT_IN_THIS_AREA));
+                PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, 0, 0, MSGBASIC_CANNOT_IN_THIS_AREA);
             }
         }
         else
@@ -5556,12 +5583,12 @@ void SmallPacket0x0B5(map_session_data_t* const PSession, CCharEntity* const PCh
                         });
                         // clang-format on
                     }
-                    PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CChatMessagePacket(PChar, MESSAGE_SAY, (const char*)data[6]));
+                    PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, std::make_unique<CChatMessagePacket>(PChar, MESSAGE_SAY, (const char*)data[6]));
                 }
                 break;
                 case MESSAGE_EMOTION:
                 {
-                    PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CChatMessagePacket(PChar, MESSAGE_EMOTION, (const char*)data[6]));
+                    PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, std::make_unique<CChatMessagePacket>(PChar, MESSAGE_EMOTION, (const char*)data[6]));
                 }
                 break;
                 case MESSAGE_SHOUT:
@@ -5581,7 +5608,7 @@ void SmallPacket0x0B5(map_session_data_t* const PSession, CCharEntity* const PCh
                         });
                         // clang-format on
                     }
-                    PChar->loc.zone->PushPacket(PChar, CHAR_INSHOUT, new CChatMessagePacket(PChar, MESSAGE_SHOUT, (const char*)data[6]));
+                    PChar->loc.zone->PushPacket(PChar, CHAR_INSHOUT, std::make_unique<CChatMessagePacket>(PChar, MESSAGE_SHOUT, (const char*)data[6]));
                 }
                 break;
                 case MESSAGE_LINKSHELL:
@@ -5592,7 +5619,7 @@ void SmallPacket0x0B5(map_session_data_t* const PSession, CCharEntity* const PCh
                         ref<uint32>(packetData, 0) = PChar->PLinkshell1->getID();
                         ref<uint32>(packetData, 4) = PChar->id;
                         message::send(MSG_CHAT_LINKSHELL, packetData, sizeof(packetData),
-                                      new CChatMessagePacket(PChar, MESSAGE_LINKSHELL, (const char*)data[6]));
+                                      std::make_unique<CChatMessagePacket>(PChar, MESSAGE_LINKSHELL, (const char*)data[6]));
 
                         if (settings::get<bool>("map.AUDIT_CHAT") && settings::get<uint8>("map.AUDIT_LINKSHELL"))
                         {
@@ -5623,7 +5650,7 @@ void SmallPacket0x0B5(map_session_data_t* const PSession, CCharEntity* const PCh
                         ref<uint32>(packetData, 0) = PChar->PLinkshell2->getID();
                         ref<uint32>(packetData, 4) = PChar->id;
                         message::send(MSG_CHAT_LINKSHELL, packetData, sizeof(packetData),
-                                      new CChatMessagePacket(PChar, MESSAGE_LINKSHELL, (const char*)data[6]));
+                                      std::make_unique<CChatMessagePacket>(PChar, MESSAGE_LINKSHELL, (const char*)data[6]));
 
                         if (settings::get<bool>("map.AUDIT_CHAT") && settings::get<uint8>("map.AUDIT_LINKSHELL"))
                         {
@@ -5655,13 +5682,13 @@ void SmallPacket0x0B5(map_session_data_t* const PSession, CCharEntity* const PCh
                         {
                             ref<uint32>(packetData, 0) = PChar->PParty->m_PAlliance->m_AllianceID;
                             ref<uint32>(packetData, 4) = PChar->id;
-                            message::send(MSG_CHAT_ALLIANCE, packetData, sizeof(packetData), new CChatMessagePacket(PChar, MESSAGE_PARTY, (const char*)data[6]));
+                            message::send(MSG_CHAT_ALLIANCE, packetData, sizeof(packetData), std::make_unique<CChatMessagePacket>(PChar, MESSAGE_PARTY, (const char*)data[6]));
                         }
                         else
                         {
                             ref<uint32>(packetData, 0) = PChar->PParty->GetPartyID();
                             ref<uint32>(packetData, 4) = PChar->id;
-                            message::send(MSG_CHAT_PARTY, packetData, sizeof(packetData), new CChatMessagePacket(PChar, MESSAGE_PARTY, (const char*)data[6]));
+                            message::send(MSG_CHAT_PARTY, packetData, sizeof(packetData), std::make_unique<CChatMessagePacket>(PChar, MESSAGE_PARTY, (const char*)data[6]));
                         }
 
                         if (settings::get<bool>("map.AUDIT_CHAT") && settings::get<uint8>("map.AUDIT_PARTY"))
@@ -5689,7 +5716,7 @@ void SmallPacket0x0B5(map_session_data_t* const PSession, CCharEntity* const PCh
                         int yellBanned = PChar->getCharVar("[YELL]Banned");
                         if (yellBanned == 1)
                         {
-                            PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, MSGBASIC_CANNOT_USE_IN_AREA));
+                            PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, 0, 0, MSGBASIC_CANNOT_USE_IN_AREA);
                         }
                         else if (gettick() >= PChar->m_LastYell)
                         {
@@ -5697,7 +5724,7 @@ void SmallPacket0x0B5(map_session_data_t* const PSession, CCharEntity* const PCh
                             int8 packetData[4]{};
                             ref<uint32>(packetData, 0) = PChar->id;
 
-                            message::send(MSG_CHAT_YELL, packetData, sizeof(packetData), new CChatMessagePacket(PChar, MESSAGE_YELL, (const char*)data[6]));
+                            message::send(MSG_CHAT_YELL, packetData, sizeof(packetData), std::make_unique<CChatMessagePacket>(PChar, MESSAGE_YELL, (const char*)data[6]));
 
                             if (settings::get<bool>("map.AUDIT_CHAT") && settings::get<uint8>("map.AUDIT_YELL"))
                             {
@@ -5717,12 +5744,12 @@ void SmallPacket0x0B5(map_session_data_t* const PSession, CCharEntity* const PCh
                         }
                         else // You must wait longer to perform that action.
                         {
-                            PChar->pushPacket(new CMessageStandardPacket(PChar, 0, MsgStd::WaitLonger));
+                            PChar->pushPacket<CMessageStandardPacket>(PChar, 0, MsgStd::WaitLonger);
                         }
                     }
                     else // You cannot use that command in this area.
                     {
-                        PChar->pushPacket(new CMessageStandardPacket(PChar, 0, MsgStd::CannotHere));
+                        PChar->pushPacket<CMessageStandardPacket>(PChar, 0, MsgStd::CannotHere);
                     }
                 }
                 break;
@@ -5734,7 +5761,7 @@ void SmallPacket0x0B5(map_session_data_t* const PSession, CCharEntity* const PCh
                         ref<uint32>(packetData, 0) = PChar->PUnityChat->getLeader();
                         ref<uint32>(packetData, 4) = PChar->id;
                         message::send(MSG_CHAT_UNITY, packetData, sizeof(packetData),
-                                      new CChatMessagePacket(PChar, MESSAGE_UNITY, (const char*)data[6]));
+                                      std::make_unique<CChatMessagePacket>(PChar, MESSAGE_UNITY, (const char*)data[6]));
 
                         roeutils::event(ROE_EVENT::ROE_UNITY_CHAT, PChar, RoeDatagram("unityMessage", (const char*)data[6]));
 
@@ -5774,7 +5801,7 @@ void SmallPacket0x0B6(map_session_data_t* const PSession, CCharEntity* const PCh
 
     if (jailutils::InPrison(PChar))
     {
-        PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, MSGBASIC_CANNOT_USE_IN_AREA));
+        PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, 0, 0, MSGBASIC_CANNOT_USE_IN_AREA);
         return;
     }
 
@@ -5796,7 +5823,7 @@ void SmallPacket0x0B6(map_session_data_t* const PSession, CCharEntity* const PCh
     strncpy((char*)packetData + 4, recipientName.c_str(), recipientName.length() + 1);
     ref<uint32>(packetData, 0) = PChar->id;
 
-    message::send(MSG_CHAT_TELL, packetData, recipientName.length() + 5, new CChatMessagePacket(PChar, MESSAGE_TELL, message));
+    message::send(MSG_CHAT_TELL, packetData, recipientName.length() + 5, std::make_unique<CChatMessagePacket>(PChar, MESSAGE_TELL, message));
 
     if (settings::get<bool>("map.AUDIT_CHAT") && settings::get<bool>("map.AUDIT_TELL"))
     {
@@ -5834,9 +5861,9 @@ void SmallPacket0x0BE(map_session_data_t* const PSession, CCharEntity* const PCh
             if (_sql->Query("UPDATE char_exp SET mode = %u WHERE charid = %u", operation, PChar->id) != SQL_ERROR)
             {
                 PChar->MeritMode = operation;
-                PChar->pushPacket(new CMenuMeritPacket(PChar));
-                PChar->pushPacket(new CMonipulatorPacket1(PChar));
-                PChar->pushPacket(new CMonipulatorPacket2(PChar));
+                PChar->pushPacket<CMenuMeritPacket>(PChar);
+                PChar->pushPacket<CMonipulatorPacket1>(PChar);
+                PChar->pushPacket<CMonipulatorPacket2>(PChar);
             }
         }
         break;
@@ -5854,17 +5881,17 @@ void SmallPacket0x0BE(map_session_data_t* const PSession, CCharEntity* const PCh
                     {
                         case 0:
                             PChar->PMeritPoints->LowerMerit(merit);
-                            PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, data.ref<uint16>(0x06), PMerit->count, MSGBASIC_MERIT_DECREASE));
+                            PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, data.ref<uint16>(0x06), PMerit->count, MSGBASIC_MERIT_DECREASE);
                             break;
                         case 1:
                             PChar->PMeritPoints->RaiseMerit(merit);
-                            PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, data.ref<uint16>(0x06), PMerit->count, MSGBASIC_MERIT_INCREASE));
+                            PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, data.ref<uint16>(0x06), PMerit->count, MSGBASIC_MERIT_INCREASE);
                             break;
                     }
-                    PChar->pushPacket(new CMenuMeritPacket(PChar));
-                    PChar->pushPacket(new CMonipulatorPacket1(PChar));
-                    PChar->pushPacket(new CMonipulatorPacket2(PChar));
-                    PChar->pushPacket(new CMeritPointsCategoriesPacket(PChar, merit));
+                    PChar->pushPacket<CMenuMeritPacket>(PChar);
+                    PChar->pushPacket<CMonipulatorPacket1>(PChar);
+                    PChar->pushPacket<CMonipulatorPacket2>(PChar);
+                    PChar->pushPacket<CMeritPointsCategoriesPacket>(PChar, merit);
 
                     charutils::SaveCharExp(PChar, PChar->GetMJob());
                     PChar->PMeritPoints->SaveMeritPoints(PChar->id);
@@ -5878,14 +5905,14 @@ void SmallPacket0x0BE(map_session_data_t* const PSession, CCharEntity* const PCh
                     PChar->UpdateHealth();
                     PChar->addHP(PChar->GetMaxHP());
                     PChar->addMP(PChar->GetMaxMP());
-                    PChar->pushPacket(new CCharUpdatePacket(PChar));
-                    PChar->pushPacket(new CCharStatsPacket(PChar));
-                    PChar->pushPacket(new CCharSkillsPacket(PChar));
-                    PChar->pushPacket(new CCharRecastPacket(PChar));
-                    PChar->pushPacket(new CCharAbilitiesPacket(PChar));
-                    PChar->pushPacket(new CCharJobExtraPacket(PChar, true));
-                    PChar->pushPacket(new CCharJobExtraPacket(PChar, true));
-                    PChar->pushPacket(new CCharSyncPacket(PChar));
+                    PChar->pushPacket<CCharUpdatePacket>(PChar);
+                    PChar->pushPacket<CCharStatsPacket>(PChar);
+                    PChar->pushPacket<CCharSkillsPacket>(PChar);
+                    PChar->pushPacket<CCharRecastPacket>(PChar);
+                    PChar->pushPacket<CCharAbilitiesPacket>(PChar);
+                    PChar->pushPacket<CCharJobExtraPacket>(PChar, true);
+                    PChar->pushPacket<CCharJobExtraPacket>(PChar, true);
+                    PChar->pushPacket<CCharSyncPacket>(PChar);
                 }
             }
         }
@@ -5909,8 +5936,8 @@ void SmallPacket0x0BF(map_session_data_t* const PSession, CCharEntity* const PCh
         if (PChar->PJobPoints->IsJobPointExist(jpType))
         {
             PChar->PJobPoints->RaiseJobPoint(jpType);
-            PChar->pushPacket(new CMenuJobPointsPacket(PChar));
-            PChar->pushPacket(new CJobPointUpdatePacket(PChar, jpType));
+            PChar->pushPacket<CMenuJobPointsPacket>(PChar);
+            PChar->pushPacket<CJobPointUpdatePacket>(PChar, jpType);
         }
     }
 }
@@ -5927,7 +5954,7 @@ void SmallPacket0x0C0(map_session_data_t* const PSession, CCharEntity* const PCh
     if (charutils::hasKeyItem(PChar, 2544))
     {
         // Only send Job Points Packet if the player has unlocked them
-        PChar->pushPacket(new CJobPointDetailsPacket(PChar));
+        PChar->pushPacket<CJobPointDetailsPacket>(PChar);
     }
 }
 
@@ -5954,7 +5981,7 @@ void SmallPacket0x0C3(map_session_data_t* const PSession, CCharEntity* const PCh
         if (PItemLinkPearl)
         {
             PItemLinkPearl->setQuantity(1);
-            memcpy(PItemLinkPearl->m_extra, PItemLinkshell->m_extra, 24);
+            std::memcpy(PItemLinkPearl->m_extra, PItemLinkshell->m_extra, 24);
             PItemLinkPearl->SetLSType(LSTYPE_LINKPEARL);
             charutils::AddItem(PChar, LOC_INVENTORY, PItemLinkPearl);
         }
@@ -5988,8 +6015,8 @@ void SmallPacket0x0C4(map_session_data_t* const PSession, CCharEntity* const PCh
             char DecodedName[DecodeStringLength];
             char EncodedName[LinkshellStringLength];
 
-            memset(&DecodedName, 0, sizeof(DecodedName));
-            memset(&EncodedName, 0, sizeof(EncodedName));
+            std::memset(&DecodedName, 0, sizeof(DecodedName));
+            std::memset(&EncodedName, 0, sizeof(EncodedName));
 
             char* decodePtr = reinterpret_cast<char*>(data[12]);
             DecodeStringLinkshell(decodePtr, DecodedName);
@@ -6020,12 +6047,12 @@ void SmallPacket0x0C4(map_session_data_t* const PSession, CCharEntity* const PCh
 
                 if (_sql->Query(Query, DecodedName, extra, PChar->id, SlotID) != SQL_ERROR && _sql->AffectedRows() != 0)
                 {
-                    PChar->pushPacket(new CInventoryItemPacket(PItemLinkshell, LocationID, SlotID));
+                    PChar->pushPacket<CInventoryItemPacket>(PItemLinkshell, LocationID, SlotID);
                 }
             }
             else
             {
-                PChar->pushPacket(new CMessageStandardPacket(MsgStd::LinkshellUnavailable));
+                PChar->pushPacket<CMessageStandardPacket>(MsgStd::LinkshellUnavailable);
                 // DE
                 // 20
                 // 1D
@@ -6056,7 +6083,7 @@ void SmallPacket0x0C4(map_session_data_t* const PSession, CCharEntity* const PCh
                         PChar->updatemask |= UPDATE_HP;
                     }
 
-                    PChar->pushPacket(new CInventoryAssignPacket(PItemLinkshell, INV_NORMAL));
+                    PChar->pushPacket<CInventoryAssignPacket>(PItemLinkshell, INV_NORMAL);
                 }
                 break;
                 case 1: // equip linkshell
@@ -6069,14 +6096,14 @@ void SmallPacket0x0C4(map_session_data_t* const PSession, CCharEntity* const PCh
                         _sql->EscapeStringLen(extra, (const char*)PItemLinkshell->m_extra, sizeof(PItemLinkshell->m_extra));
                         const char* Query = "UPDATE char_inventory SET extra = '%s' WHERE charid = %u AND location = %u AND slot = %u LIMIT 1";
                         _sql->Query(Query, extra, PChar->id, PItemLinkshell->getLocationID(), PItemLinkshell->getSlotID());
-                        PChar->pushPacket(new CInventoryItemPacket(PItemLinkshell, PItemLinkshell->getLocationID(), PItemLinkshell->getSlotID()));
-                        PChar->pushPacket(new CInventoryFinishPacket());
-                        PChar->pushPacket(new CMessageStandardPacket(MsgStd::LinkshellNoLongerExists));
+                        PChar->pushPacket<CInventoryItemPacket>(PItemLinkshell, PItemLinkshell->getLocationID(), PItemLinkshell->getSlotID());
+                        PChar->pushPacket<CInventoryFinishPacket>();
+                        PChar->pushPacket<CMessageStandardPacket>(MsgStd::LinkshellNoLongerExists);
                         return;
                     }
                     if (PItemLinkshell->GetLSID() == 0)
                     {
-                        PChar->pushPacket(new CMessageStandardPacket(MsgStd::LinkshellNoLongerExists));
+                        PChar->pushPacket<CMessageStandardPacket>(MsgStd::LinkshellNoLongerExists);
                         return;
                     }
                     if (OldLinkshell != nullptr) // switching linkshell group
@@ -6088,7 +6115,7 @@ void SmallPacket0x0C4(map_session_data_t* const PSession, CCharEntity* const PCh
                             linkshell::DelOnlineMember(PChar, POldItemLinkshell);
 
                             POldItemLinkshell->setSubType(ITEM_UNLOCKED);
-                            PChar->pushPacket(new CInventoryAssignPacket(POldItemLinkshell, INV_NORMAL));
+                            PChar->pushPacket<CInventoryAssignPacket>(POldItemLinkshell, INV_NORMAL);
                         }
                     }
                     linkshell::AddOnlineMember(PChar, PItemLinkshell, lsNum);
@@ -6102,18 +6129,18 @@ void SmallPacket0x0C4(map_session_data_t* const PSession, CCharEntity* const PCh
                         PChar->updatemask |= UPDATE_HP;
                     }
 
-                    PChar->pushPacket(new CInventoryAssignPacket(PItemLinkshell, INV_LINKSHELL));
+                    PChar->pushPacket<CInventoryAssignPacket>(PItemLinkshell, INV_LINKSHELL);
                 }
                 break;
             }
             charutils::SaveCharStats(PChar);
             charutils::SaveCharEquip(PChar);
 
-            PChar->pushPacket(new CLinkshellEquipPacket(PChar, lsNum));
-            PChar->pushPacket(new CInventoryItemPacket(PItemLinkshell, LocationID, SlotID));
+            PChar->pushPacket<CLinkshellEquipPacket>(PChar, lsNum);
+            PChar->pushPacket<CInventoryItemPacket>(PItemLinkshell, LocationID, SlotID);
         }
-        PChar->pushPacket(new CInventoryFinishPacket());
-        PChar->pushPacket(new CCharUpdatePacket(PChar));
+        PChar->pushPacket<CInventoryFinishPacket>();
+        PChar->pushPacket<CCharUpdatePacket>(PChar);
     }
 }
 
@@ -6131,6 +6158,9 @@ void SmallPacket0x0CB(map_session_data_t* const PSession, CCharEntity* const PCh
     if (operation == 1)
     {
         // open mog house
+
+        // NOTE: If you zone or move floors while in the MH and you have someone visiting, they will be booted.
+        // NOTE: When you zone or move floors your "open MH" flag will be reset.
     }
     else if (operation == 2)
     {
@@ -6196,7 +6226,7 @@ void SmallPacket0x0D2(map_session_data_t* const PSession, CCharEntity* const PCh
     {
         if (PPartyMember->getZone() == PChar->getZone() && ((CCharEntity*)PPartyMember)->m_moghouseID == PChar->m_moghouseID)
         {
-            PChar->pushPacket(new CPartyMapPacket((CCharEntity*)PPartyMember));
+            PChar->pushPacket<CPartyMapPacket>((CCharEntity*)PPartyMember);
         }
     });
     // clang-format on
@@ -6247,8 +6277,8 @@ void SmallPacket0x0DB(map_session_data_t* const PSession, CCharEntity* const PCh
     uint32_t oldChatFilter2  = {};
 
     std::memcpy(&oldPlayerConfig, &PChar->playerConfig, sizeof(uint32_t));
-    std::memcpy(&oldChatFilter1, &PChar->playerConfig.MassageFilter, sizeof(uint32_t));
-    std::memcpy(&oldChatFilter2, &PChar->playerConfig.MassageFilter2, sizeof(uint32_t));
+    std::memcpy(&oldChatFilter1, &PChar->playerConfig.MessageFilter, sizeof(uint32_t));
+    std::memcpy(&oldChatFilter2, &PChar->playerConfig.MessageFilter2, sizeof(uint32_t));
 
     // Player updated their search language(s).
     if (packet.Kind == 1)
@@ -6270,12 +6300,12 @@ void SmallPacket0x0DB(map_session_data_t* const PSession, CCharEntity* const PCh
 
     if (oldChatFilter1 != packet.ConfigSys[1] || oldChatFilter2 != packet.ConfigSys[2])
     {
-        std::memcpy(&PChar->playerConfig.MassageFilter, &packet.ConfigSys[1], sizeof(uint32_t));
-        std::memcpy(&PChar->playerConfig.MassageFilter2, &packet.ConfigSys[2], sizeof(uint32_t));
+        std::memcpy(&PChar->playerConfig.MessageFilter, &packet.ConfigSys[1], sizeof(uint32_t));
+        std::memcpy(&PChar->playerConfig.MessageFilter2, &packet.ConfigSys[2], sizeof(uint32_t));
         charutils::SaveChatFilterFlags(PChar); // Do we even need to save chat filter flags? When the client logs in, they send the chat filters.
     }
 
-    PChar->pushPacket(new CMenuConfigPacket(PChar));
+    PChar->pushPacket<CMenuConfigPacket>(PChar);
 }
 
 /************************************************************************
@@ -6329,7 +6359,7 @@ void SmallPacket0x0DC(map_session_data_t* const PSession, CCharEntity* const PCh
 
             if (static_cast<bool>(oldAnon) != PChar->isAnon())
             {
-                PChar->pushPacket(new CMessageSystemPacket(0, 0, param == 1 ? MsgStd::CharacterInfoHidden : MsgStd::CharacterInfoShown));
+                PChar->pushPacket<CMessageSystemPacket>(0, 0, param == 1 ? MsgStd::CharacterInfoHidden : MsgStd::CharacterInfoShown);
             }
             break;
         }
@@ -6390,8 +6420,8 @@ void SmallPacket0x0DC(map_session_data_t* const PSession, CCharEntity* const PCh
 
             if (oldDisplayHeadflag != PChar->playerConfig.DisplayHeadOffFlg)
             {
-                PChar->pushPacket(new CCharAppearancePacket(PChar));
-                PChar->pushPacket(new CMessageStandardPacket(param == 1 ? MsgStd::HeadgearHide : MsgStd::HeadgearShow));
+                PChar->pushPacket<CCharAppearancePacket>(PChar);
+                PChar->pushPacket<CMessageStandardPacket>(param == 1 ? MsgStd::HeadgearHide : MsgStd::HeadgearShow);
             }
             break;
         }
@@ -6414,9 +6444,9 @@ void SmallPacket0x0DC(map_session_data_t* const PSession, CCharEntity* const PCh
 
     charutils::SaveCharStats(PChar);
     charutils::SavePlayerSettings(PChar);
-    PChar->pushPacket(new CMenuConfigPacket(PChar));
-    PChar->pushPacket(new CCharUpdatePacket(PChar));
-    PChar->pushPacket(new CCharSyncPacket(PChar));
+    PChar->pushPacket<CMenuConfigPacket>(PChar);
+    PChar->pushPacket<CCharUpdatePacket>(PChar);
+    PChar->pushPacket<CCharSyncPacket>(PChar);
 }
 
 /************************************************************************
@@ -6447,71 +6477,69 @@ void SmallPacket0x0DD(map_session_data_t* const PSession, CCharEntity* const PCh
     {
         if (PChar->id == id)
         {
-            PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, MSGBASIC_CHECKPARAM_NAME));
-            PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, MSGBASIC_CHECKPARAM_ILVL));
-            PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, PChar->ACC(0, 0), PChar->ATT(SLOT_MAIN), MSGBASIC_CHECKPARAM_PRIMARY));
+            PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, 0, 0, MSGBASIC_CHECKPARAM_NAME);
+            PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, 0, 0, MSGBASIC_CHECKPARAM_ILVL);
+            PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, PChar->ACC(0, 0), PChar->ATT(SLOT_MAIN), MSGBASIC_CHECKPARAM_PRIMARY);
             if (PChar->getEquip(SLOT_SUB) && PChar->getEquip(SLOT_SUB)->isType(ITEM_WEAPON))
             {
-                PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, PChar->ACC(1, 0), PChar->ATT(SLOT_SUB), MSGBASIC_CHECKPARAM_AUXILIARY));
+                PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, PChar->ACC(1, 0), PChar->ATT(SLOT_SUB), MSGBASIC_CHECKPARAM_AUXILIARY);
             }
             else
             {
-                PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, MSGBASIC_CHECKPARAM_AUXILIARY));
+                PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, 0, 0, MSGBASIC_CHECKPARAM_AUXILIARY);
             }
             if (PChar->getEquip(SLOT_RANGED) && PChar->getEquip(SLOT_RANGED)->isType(ITEM_WEAPON))
             {
                 int skill      = ((CItemWeapon*)PChar->getEquip(SLOT_RANGED))->getSkillType();
                 int bonusSkill = ((CItemWeapon*)PChar->getEquip(SLOT_RANGED))->getILvlSkill();
-                PChar->pushPacket(
-                    new CMessageBasicPacket(PChar, PChar, PChar->RACC(skill, bonusSkill), PChar->RATT(skill, bonusSkill), MSGBASIC_CHECKPARAM_RANGE));
+                PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, PChar->RACC(skill, bonusSkill), PChar->RATT(skill, bonusSkill), MSGBASIC_CHECKPARAM_RANGE);
             }
             else if (PChar->getEquip(SLOT_AMMO) && PChar->getEquip(SLOT_AMMO)->isType(ITEM_WEAPON))
             {
                 int skill      = ((CItemWeapon*)PChar->getEquip(SLOT_AMMO))->getSkillType();
                 int bonusSkill = ((CItemWeapon*)PChar->getEquip(SLOT_AMMO))->getILvlSkill();
-                PChar->pushPacket(
-                    new CMessageBasicPacket(PChar, PChar, PChar->RACC(skill, bonusSkill), PChar->RATT(skill, bonusSkill), MSGBASIC_CHECKPARAM_RANGE));
+                PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, PChar->RACC(skill, bonusSkill), PChar->RATT(skill, bonusSkill), MSGBASIC_CHECKPARAM_RANGE);
             }
             else
             {
-                PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, MSGBASIC_CHECKPARAM_RANGE));
+                PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, 0, 0, MSGBASIC_CHECKPARAM_RANGE);
             }
-            PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, PChar->EVA(), PChar->DEF(), MSGBASIC_CHECKPARAM_DEFENSE));
+            PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, PChar->EVA(), PChar->DEF(), MSGBASIC_CHECKPARAM_DEFENSE);
         }
         else if (PChar->PPet && PChar->PPet->id == id)
         {
-            PChar->pushPacket(new CMessageBasicPacket(PChar, PChar->PPet, 0, 0, MSGBASIC_CHECKPARAM_NAME));
-            PChar->pushPacket(new CMessageBasicPacket(PChar, PChar->PPet, PChar->PPet->ACC(0, 0), PChar->PPet->ATT(SLOT_MAIN), MSGBASIC_CHECKPARAM_PRIMARY));
+            PChar->pushPacket<CMessageBasicPacket>(PChar, PChar->PPet, 0, 0, MSGBASIC_CHECKPARAM_NAME);
+            PChar->pushPacket<CMessageBasicPacket>(PChar, PChar->PPet, PChar->PPet->ACC(0, 0), PChar->PPet->ATT(SLOT_MAIN), MSGBASIC_CHECKPARAM_PRIMARY);
             if (PChar->getEquip(SLOT_SUB) && PChar->getEquip(SLOT_SUB)->isType(ITEM_WEAPON))
             {
-                PChar->pushPacket(new CMessageBasicPacket(PChar, PChar->PPet, PChar->PPet->ACC(1, 0), PChar->PPet->ATT(SLOT_MAIN), MSGBASIC_CHECKPARAM_AUXILIARY));
+                PChar->pushPacket<CMessageBasicPacket>(PChar, PChar->PPet, PChar->PPet->ACC(1, 0), PChar->PPet->ATT(SLOT_MAIN), MSGBASIC_CHECKPARAM_AUXILIARY);
             }
             else
             {
-                PChar->pushPacket(new CMessageBasicPacket(PChar, PChar->PPet, 0, 0, MSGBASIC_CHECKPARAM_AUXILIARY));
+                PChar->pushPacket<CMessageBasicPacket>(PChar, PChar->PPet, 0, 0, MSGBASIC_CHECKPARAM_AUXILIARY);
             }
             if (PChar->getEquip(SLOT_RANGED) && PChar->getEquip(SLOT_RANGED)->isType(ITEM_WEAPON))
             {
                 int skill = ((CItemWeapon*)PChar->getEquip(SLOT_RANGED))->getSkillType();
-                PChar->pushPacket(new CMessageBasicPacket(PChar, PChar->PPet, PChar->PPet->RACC(skill), PChar->PPet->RATT(skill), MSGBASIC_CHECKPARAM_RANGE));
+                PChar->pushPacket<CMessageBasicPacket>(PChar, PChar->PPet, PChar->PPet->RACC(skill), PChar->PPet->RATT(skill), MSGBASIC_CHECKPARAM_RANGE);
             }
             else if (PChar->getEquip(SLOT_AMMO) && PChar->getEquip(SLOT_AMMO)->isType(ITEM_WEAPON))
             {
                 int skill = ((CItemWeapon*)PChar->getEquip(SLOT_AMMO))->getSkillType();
-                PChar->pushPacket(new CMessageBasicPacket(PChar, PChar->PPet, PChar->PPet->RACC(skill), PChar->PPet->RATT(skill), MSGBASIC_CHECKPARAM_RANGE));
+                PChar->pushPacket<CMessageBasicPacket>(PChar, PChar->PPet, PChar->PPet->RACC(skill), PChar->PPet->RATT(skill), MSGBASIC_CHECKPARAM_RANGE);
             }
             else
             {
-                PChar->pushPacket(new CMessageBasicPacket(PChar, PChar->PPet, 0, 0, MSGBASIC_CHECKPARAM_RANGE));
+                PChar->pushPacket<CMessageBasicPacket>(PChar, PChar->PPet, 0, 0, MSGBASIC_CHECKPARAM_RANGE);
             }
-            PChar->pushPacket(new CMessageBasicPacket(PChar, PChar->PPet, PChar->PPet->EVA(), PChar->PPet->DEF(), MSGBASIC_CHECKPARAM_DEFENSE));
+            PChar->pushPacket<CMessageBasicPacket>(PChar, PChar->PPet, PChar->PPet->EVA(), PChar->PPet->DEF(), MSGBASIC_CHECKPARAM_DEFENSE);
         }
     }
     else
     {
         if (jailutils::InPrison(PChar))
         {
-            PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, MSGBASIC_CANNOT_USE_IN_AREA));
+            PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, 0, 0, MSGBASIC_CANNOT_USE_IN_AREA);
             return;
         }
 
@@ -6530,7 +6558,7 @@ void SmallPacket0x0DD(map_session_data_t* const PSession, CCharEntity* const PCh
 
                 if (PTarget->m_Type & MOBTYPE_NOTORIOUS || PTarget->m_Type & MOBTYPE_BATTLEFIELD || PTarget->getMobMod(MOBMOD_CHECK_AS_NM) > 0)
                 {
-                    PChar->pushPacket(new CMessageBasicPacket(PChar, PTarget, 0, 0, 249));
+                    PChar->pushPacket<CMessageBasicPacket>(PChar, PTarget, 0, 0, 249);
                 }
                 else
                 {
@@ -6570,7 +6598,7 @@ void SmallPacket0x0DD(map_session_data_t* const PSession, CCharEntity* const PCh
                         MessageID += 3;
                     }
 
-                    PChar->pushPacket(new CMessageBasicPacket(PChar, PTarget, mobLvl, MessageValue, MessageID));
+                    PChar->pushPacket<CMessageBasicPacket>(PChar, PTarget, mobLvl, MessageValue, MessageID);
                 }
             }
             break;
@@ -6580,18 +6608,18 @@ void SmallPacket0x0DD(map_session_data_t* const PSession, CCharEntity* const PCh
 
                 if (PTarget->m_PMonstrosity)
                 {
-                    PChar->pushPacket(new CMessageStandardPacket(PTarget, 0, 0, MsgStd::MonstrosityCheckOut));
-                    PTarget->pushPacket(new CMessageStandardPacket(PChar, 0, 0, MsgStd::MonstrosityCheckIn));
+                    PChar->pushPacket<CMessageStandardPacket>(PTarget, 0, 0, MsgStd::MonstrosityCheckOut);
+                    PTarget->pushPacket<CMessageStandardPacket>(PChar, 0, 0, MsgStd::MonstrosityCheckIn);
                     return;
                 }
 
                 if (!PChar->m_isGMHidden || (PChar->m_isGMHidden && PTarget->m_GMlevel >= PChar->m_GMlevel))
                 {
-                    PTarget->pushPacket(new CMessageStandardPacket(PChar, 0, 0, MsgStd::Examine));
+                    PTarget->pushPacket<CMessageStandardPacket>(PChar, 0, 0, MsgStd::Examine);
                 }
 
-                PChar->pushPacket(new CBazaarMessagePacket(PTarget));
-                PChar->pushPacket(new CCheckPacket(PChar, PTarget));
+                PChar->pushPacket<CBazaarMessagePacket>(PTarget);
+                PChar->pushPacket<CCheckPacket>(PChar, PTarget);
             }
             break;
             default:
@@ -6712,7 +6740,7 @@ void SmallPacket0x0E2(map_session_data_t* const PSession, CCharEntity* const PCh
                 if (static_cast<uint8>(PItemLinkshell->GetLSType()) <= PChar->PLinkshell1->m_postRights)
                 {
                     char lsMessage[128] = {};
-                    memcpy(&lsMessage, data[16], sizeof(lsMessage));
+                    std::memcpy(&lsMessage, data[16], sizeof(lsMessage));
                     PChar->PLinkshell1->setMessage(lsMessage, PChar->getName());
                     return;
                 }
@@ -6720,7 +6748,7 @@ void SmallPacket0x0E2(map_session_data_t* const PSession, CCharEntity* const PCh
             break;
         }
     }
-    PChar->pushPacket(new CMessageStandardPacket(MsgStd::LinkshellNoAccess));
+    PChar->pushPacket<CMessageStandardPacket>(MsgStd::LinkshellNoAccess);
 }
 
 /************************************************************************
@@ -6813,7 +6841,7 @@ void SmallPacket0x0E8(map_session_data_t* const PSession, CCharEntity* const PCh
                 PChar->StatusEffectContainer->AddStatusEffect(new CStatusEffect(EFFECT_HEALING, 0, 0, settings::get<uint8>("map.HEALING_TICK_DELAY"), 0));
                 return;
             }
-            PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, 345));
+            PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, 0, 0, 345);
         }
         break;
         case ANIMATION_HEALING:
@@ -6883,7 +6911,7 @@ void SmallPacket0x0EB(map_session_data_t* const PSession, CCharEntity* const PCh
         return;
     }
 
-    PChar->pushPacket(new CSpecialReleasePacket(PChar));
+    PChar->pushPacket<CSpecialReleasePacket>(PChar);
 }
 
 /************************************************************************
@@ -7133,7 +7161,7 @@ void SmallPacket0x0FA(map_session_data_t* const PSession, CCharEntity* const PCh
 
         PItem->setSubType(ITEM_LOCKED);
 
-        PChar->pushPacket(new CFurnitureInteractPacket(PItem, containerID, slotID));
+        PChar->pushPacket<CFurnitureInteractPacket>(PItem, containerID, slotID);
 
         char extra[sizeof(PItem->m_extra) * 2 + 1];
         _sql->EscapeStringLen(extra, (const char*)PItem->m_extra, sizeof(PItem->m_extra));
@@ -7151,12 +7179,14 @@ void SmallPacket0x0FA(map_session_data_t* const PSession, CCharEntity* const PCh
                 PChar->getStorage(LOC_STORAGE)->AddBuff(PItem->getStorage());
             }
 
-            PChar->pushPacket(new CInventorySizePacket(PChar));
+            PChar->pushPacket<CInventorySizePacket>(PChar);
 
             luautils::OnFurniturePlaced(PChar, PItem);
+
+            PChar->loc.zone->SpawnConditionalNPCs(PChar);
         }
-        PChar->pushPacket(new CInventoryItemPacket(PItem, containerID, slotID));
-        PChar->pushPacket(new CInventoryFinishPacket());
+        PChar->pushPacket<CInventoryItemPacket>(PItem, containerID, slotID);
+        PChar->pushPacket<CInventoryFinishPacket>();
     }
 }
 
@@ -7206,7 +7236,7 @@ void SmallPacket0x0FB(map_session_data_t* const PSession, CCharEntity* const PCh
             // If this furniture is a mannequin, clear its appearance and unlock all items that were on it!
             if (PItem->isMannequin())
             {
-                PChar->pushPacket(new CInventoryCountPacket(containerID, slotID, 0, 0, 0, 0, 0, 0, 0, 0));
+                PChar->pushPacket<CInventoryCountPacket>(containerID, slotID, 0, 0, 0, 0, 0, 0, 0, 0);
                 for (uint8 i = 0; i < 8; ++i)
                 {
                     if (PItem->m_extra[10 + i] > 0)
@@ -7216,7 +7246,7 @@ void SmallPacket0x0FB(map_session_data_t* const PSession, CCharEntity* const PCh
                         {
                             continue;
                         }
-                        PChar->pushPacket(new CInventoryAssignPacket(PEquippedItem, INV_NORMAL));
+                        PChar->pushPacket<CInventoryAssignPacket>(PEquippedItem, INV_NORMAL);
                         PItem->m_extra[10 + i] = 0;
                     }
                 }
@@ -7247,12 +7277,14 @@ void SmallPacket0x0FB(map_session_data_t* const PSession, CCharEntity* const PCh
                     PChar->getStorage(LOC_STORAGE)->AddBuff(-(int8)PItem->getStorage());
                 }
 
-                PChar->pushPacket(new CInventorySizePacket(PChar));
+                PChar->pushPacket<CInventorySizePacket>(PChar);
 
                 luautils::OnFurnitureRemoved(PChar, PItem);
+
+                PChar->loc.zone->SpawnConditionalNPCs(PChar);
             }
-            PChar->pushPacket(new CInventoryItemPacket(PItem, containerID, PItem->getSlotID()));
-            PChar->pushPacket(new CInventoryFinishPacket());
+            PChar->pushPacket<CInventoryItemPacket>(PItem, containerID, PItem->getSlotID());
+            PChar->pushPacket<CInventoryFinishPacket>();
         }
         else
         {
@@ -7309,43 +7341,54 @@ void SmallPacket0x0FC(map_session_data_t* const PSession, CCharEntity* const PCh
         return;
     }
 
+    bool updatedPot = false;
+
     if (CItemFlowerpot::getPlantFromSeed(itemID) != FLOWERPOT_PLANT_NONE)
     {
         // Planting a seed in the flowerpot
-        PChar->pushPacket(new CMessageStandardPacket(itemID, 132)); // "Your moogle plants the <seed> in the flowerpot."
+        PChar->pushPacket<CMessageStandardPacket>(itemID, 132); // "Your moogle plants the <seed> in the flowerpot."
         PPotItem->cleanPot();
         PPotItem->setPlant(CItemFlowerpot::getPlantFromSeed(itemID));
         PPotItem->setPlantTimestamp(CVanaTime::getInstance()->getVanaTime());
         PPotItem->setStrength(xirand::GetRandomNumber(33));
         gardenutils::GrowToNextStage(PPotItem);
+        updatedPot = true;
     }
     else if (itemID >= 4096 && itemID <= 4111)
     {
         // Feeding the plant a crystal
-        PChar->pushPacket(new CMessageStandardPacket(itemID, 136)); // "Your moogle uses the <item> on the plant."
+        PChar->pushPacket<CMessageStandardPacket>(itemID, 136); // "Your moogle uses the <item> on the plant."
         if (PPotItem->getStage() == FLOWERPOT_STAGE_FIRST_SPROUTS_CRYSTAL)
         {
             PPotItem->setFirstCrystalFeed(CItemFlowerpot::getElementFromItem(itemID));
+            updatedPot = true;
         }
         else if (PPotItem->getStage() == FLOWERPOT_STAGE_SECOND_SPROUTS_CRYSTAL)
         {
             PPotItem->setSecondCrystalFeed(CItemFlowerpot::getElementFromItem(itemID));
+            updatedPot = true;
         }
-        gardenutils::GrowToNextStage(PPotItem, true);
-        PPotItem->markExamined();
+        if (updatedPot)
+        {
+            gardenutils::GrowToNextStage(PPotItem, true);
+            PPotItem->markExamined();
+        }
     }
 
-    char extra[sizeof(PPotItem->m_extra) * 2 + 1];
-    _sql->EscapeStringLen(extra, (const char*)PPotItem->m_extra, sizeof(PPotItem->m_extra));
-    const char* Query = "UPDATE char_inventory SET extra = '%s' WHERE charid = %u AND location = %u AND slot = %u";
-    _sql->Query(Query, extra, PChar->id, PPotItem->getLocationID(), PPotItem->getSlotID());
+    if (updatedPot)
+    {
+        char extra[sizeof(PPotItem->m_extra) * 2 + 1];
+        _sql->EscapeStringLen(extra, (const char*)PPotItem->m_extra, sizeof(PPotItem->m_extra));
+        const char* Query = "UPDATE char_inventory SET extra = '%s' WHERE charid = %u AND location = %u AND slot = %u";
+        _sql->Query(Query, extra, PChar->id, PPotItem->getLocationID(), PPotItem->getSlotID());
 
-    PChar->pushPacket(new CFurnitureInteractPacket(PPotItem, potContainerID, potSlotID));
+        PChar->pushPacket<CFurnitureInteractPacket>(PPotItem, potContainerID, potSlotID);
 
-    PChar->pushPacket(new CInventoryItemPacket(PPotItem, potContainerID, potSlotID));
+        PChar->pushPacket<CInventoryItemPacket>(PPotItem, potContainerID, potSlotID);
 
-    charutils::UpdateItem(PChar, containerID, slotID, -1);
-    PChar->pushPacket(new CInventoryFinishPacket());
+        charutils::UpdateItem(PChar, containerID, slotID, -1);
+        PChar->pushPacket<CInventoryFinishPacket>();
+    }
 }
 
 /************************************************************************
@@ -7379,19 +7422,19 @@ void SmallPacket0x0FD(map_session_data_t* const PSession, CCharEntity* const PCh
 
     if (PItem->isPlanted())
     {
-        PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, CItemFlowerpot::getSeedID(PItem->getPlant()), 0, MSGBASIC_GARDENING_SEED_SOWN));
+        PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, CItemFlowerpot::getSeedID(PItem->getPlant()), 0, MSGBASIC_GARDENING_SEED_SOWN);
         if (PItem->isTree())
         {
             if (PItem->getStage() > FLOWERPOT_STAGE_FIRST_SPROUTS_CRYSTAL)
             {
                 if (PItem->getExtraCrystalFeed() != FLOWERPOT_ELEMENT_NONE)
                 {
-                    PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, CItemFlowerpot::getItemFromElement(PItem->getExtraCrystalFeed()), 0,
-                                                              MSGBASIC_GARDENING_CRYSTAL_USED));
+                    PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, CItemFlowerpot::getItemFromElement(PItem->getExtraCrystalFeed()), 0,
+                                                           MSGBASIC_GARDENING_CRYSTAL_USED);
                 }
                 else
                 {
-                    PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, MSGBASIC_GARDENING_CRYSTAL_NONE));
+                    PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, 0, 0, MSGBASIC_GARDENING_CRYSTAL_NONE);
                 }
             }
         }
@@ -7399,12 +7442,12 @@ void SmallPacket0x0FD(map_session_data_t* const PSession, CCharEntity* const PCh
         {
             if (PItem->getCommonCrystalFeed() != FLOWERPOT_ELEMENT_NONE)
             {
-                PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, CItemFlowerpot::getItemFromElement(PItem->getCommonCrystalFeed()), 0,
-                                                          MSGBASIC_GARDENING_CRYSTAL_USED));
+                PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, CItemFlowerpot::getItemFromElement(PItem->getCommonCrystalFeed()), 0,
+                                                       MSGBASIC_GARDENING_CRYSTAL_USED);
             }
             else
             {
-                PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, MSGBASIC_GARDENING_CRYSTAL_NONE));
+                PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, 0, 0, MSGBASIC_GARDENING_CRYSTAL_NONE);
             }
         }
 
@@ -7418,7 +7461,7 @@ void SmallPacket0x0FD(map_session_data_t* const PSession, CCharEntity* const PCh
         }
     }
 
-    PChar->pushPacket(new CFurnitureInteractPacket(PItem, containerID, slotID));
+    PChar->pushPacket<CFurnitureInteractPacket>(PItem, containerID, slotID);
 }
 
 /************************************************************************
@@ -7473,7 +7516,7 @@ void SmallPacket0x0FE(map_session_data_t* const PSession, CCharEntity* const PCh
             uint8 totalFreeSlots              = PChar->getStorage(LOC_MOGSAFE)->GetFreeSlotsCount() + PChar->getStorage(LOC_MOGSAFE2)->GetFreeSlotsCount();
             if (requiredSlots > totalFreeSlots || totalQuantity == 0)
             {
-                PChar->pushPacket(new CMessageStandardPacket(MsgStd::MoghouseCantPickUp)); // Kupo. I can't pick anything right now, kupo.
+                PChar->pushPacket<CMessageStandardPacket>(MsgStd::MoghouseCantPickUp); // Kupo. I can't pick anything right now, kupo.
                 return;
             }
             uint8 remainingQuantity = totalQuantity;
@@ -7486,10 +7529,10 @@ void SmallPacket0x0FE(map_session_data_t* const PSession, CCharEntity* const PCh
                 }
                 remainingQuantity -= quantity;
             }
-            PChar->pushPacket(new CMessageStandardPacket(resultID, totalQuantity, 134)); // Your moogle <quantity> <item> from the plant!
+            PChar->pushPacket<CMessageStandardPacket>(resultID, totalQuantity, 134); // Your moogle <quantity> <item> from the plant!
         }
 
-        PChar->pushPacket(new CFurnitureInteractPacket(PItem, containerID, slotID));
+        PChar->pushPacket<CFurnitureInteractPacket>(PItem, containerID, slotID);
         PItem->cleanPot();
 
         char extra[sizeof(PItem->m_extra) * 2 + 1];
@@ -7497,8 +7540,8 @@ void SmallPacket0x0FE(map_session_data_t* const PSession, CCharEntity* const PCh
         const char* Query = "UPDATE char_inventory SET extra = '%s' WHERE charid = %u AND location = %u AND slot = %u";
         _sql->Query(Query, extra, PChar->id, PItem->getLocationID(), PItem->getSlotID());
 
-        PChar->pushPacket(new CInventoryItemPacket(PItem, containerID, slotID));
-        PChar->pushPacket(new CInventoryFinishPacket());
+        PChar->pushPacket<CInventoryItemPacket>(PItem, containerID, slotID);
+        PChar->pushPacket<CInventoryFinishPacket>();
     }
 }
 
@@ -7529,8 +7572,8 @@ void SmallPacket0x0FF(map_session_data_t* const PSession, CCharEntity* const PCh
 
     if (PItem != nullptr && PItem->isPlanted() && PItem->getStage() > FLOWERPOT_STAGE_INITIAL && PItem->getStage() < FLOWERPOT_STAGE_WILTED && !PItem->isDried())
     {
-        PChar->pushPacket(new CMessageStandardPacket(itemID, 133)); // Your moogle dries the plant in the <item>.
-        PChar->pushPacket(new CFurnitureInteractPacket(PItem, containerID, slotID));
+        PChar->pushPacket<CMessageStandardPacket>(itemID, 133); // Your moogle dries the plant in the <item>.
+        PChar->pushPacket<CFurnitureInteractPacket>(PItem, containerID, slotID);
         PItem->setDried(true);
 
         char extra[sizeof(PItem->m_extra) * 2 + 1];
@@ -7538,8 +7581,8 @@ void SmallPacket0x0FF(map_session_data_t* const PSession, CCharEntity* const PCh
         const char* Query = "UPDATE char_inventory SET extra = '%s' WHERE charid = %u AND location = %u AND slot = %u";
         _sql->Query(Query, extra, PChar->id, PItem->getLocationID(), PItem->getSlotID());
 
-        PChar->pushPacket(new CInventoryItemPacket(PItem, containerID, slotID));
-        PChar->pushPacket(new CInventoryFinishPacket());
+        PChar->pushPacket<CInventoryItemPacket>(PItem, containerID, slotID);
+        PChar->pushPacket<CInventoryFinishPacket>();
     }
 }
 
@@ -7650,18 +7693,18 @@ void SmallPacket0x100(map_session_data_t* const PSession, CCharEntity* const PCh
 
         charutils::SaveCharStats(PChar);
 
-        PChar->pushPacket(new CCharJobsPacket(PChar));
-        PChar->pushPacket(new CCharUpdatePacket(PChar));
-        PChar->pushPacket(new CCharStatsPacket(PChar));
-        PChar->pushPacket(new CCharSkillsPacket(PChar));
-        PChar->pushPacket(new CCharRecastPacket(PChar));
-        PChar->pushPacket(new CCharAbilitiesPacket(PChar));
-        PChar->pushPacket(new CCharJobExtraPacket(PChar, true));
-        PChar->pushPacket(new CCharJobExtraPacket(PChar, false));
-        PChar->pushPacket(new CMenuMeritPacket(PChar));
-        PChar->pushPacket(new CMonipulatorPacket1(PChar));
-        PChar->pushPacket(new CMonipulatorPacket2(PChar));
-        PChar->pushPacket(new CCharSyncPacket(PChar));
+        PChar->pushPacket<CCharJobsPacket>(PChar);
+        PChar->pushPacket<CCharUpdatePacket>(PChar);
+        PChar->pushPacket<CCharStatsPacket>(PChar);
+        PChar->pushPacket<CCharSkillsPacket>(PChar);
+        PChar->pushPacket<CCharRecastPacket>(PChar);
+        PChar->pushPacket<CCharAbilitiesPacket>(PChar);
+        PChar->pushPacket<CCharJobExtraPacket>(PChar, true);
+        PChar->pushPacket<CCharJobExtraPacket>(PChar, false);
+        PChar->pushPacket<CMenuMeritPacket>(PChar);
+        PChar->pushPacket<CMonipulatorPacket1>(PChar);
+        PChar->pushPacket<CMonipulatorPacket2>(PChar);
+        PChar->pushPacket<CCharSyncPacket>(PChar);
     }
 }
 
@@ -7714,10 +7757,10 @@ void SmallPacket0x102(map_session_data_t* const PSession, CCharEntity* const PCh
                 }
             }
             charutils::BuildingCharTraitsTable(PChar);
-            PChar->pushPacket(new CCharAbilitiesPacket(PChar));
-            PChar->pushPacket(new CCharJobExtraPacket(PChar, true));
-            PChar->pushPacket(new CCharJobExtraPacket(PChar, false));
-            PChar->pushPacket(new CCharStatsPacket(PChar));
+            PChar->pushPacket<CCharAbilitiesPacket>(PChar);
+            PChar->pushPacket<CCharJobExtraPacket>(PChar, true);
+            PChar->pushPacket<CCharJobExtraPacket>(PChar, false);
+            PChar->pushPacket<CCharStatsPacket>(PChar);
             PChar->UpdateHealth();
         }
         else
@@ -7751,10 +7794,10 @@ void SmallPacket0x102(map_session_data_t* const PSession, CCharEntity* const PCh
 
                     blueutils::SetBlueSpell(PChar, spell, spellIndex, true);
                     charutils::BuildingCharTraitsTable(PChar);
-                    PChar->pushPacket(new CCharAbilitiesPacket(PChar));
-                    PChar->pushPacket(new CCharJobExtraPacket(PChar, true));
-                    PChar->pushPacket(new CCharJobExtraPacket(PChar, false));
-                    PChar->pushPacket(new CCharStatsPacket(PChar));
+                    PChar->pushPacket<CCharAbilitiesPacket>(PChar);
+                    PChar->pushPacket<CCharJobExtraPacket>(PChar, true);
+                    PChar->pushPacket<CCharJobExtraPacket>(PChar, false);
+                    PChar->pushPacket<CCharStatsPacket>(PChar);
                     PChar->UpdateHealth();
                 }
                 else
@@ -7820,8 +7863,8 @@ void SmallPacket0x102(map_session_data_t* const PSession, CCharEntity* const PCh
                 }
             }
         }
-        PChar->pushPacket(new CCharJobExtraPacket(PChar, true));
-        PChar->pushPacket(new CCharJobExtraPacket(PChar, false));
+        PChar->pushPacket<CCharJobExtraPacket>(PChar, true);
+        PChar->pushPacket<CCharJobExtraPacket>(PChar, false);
         puppetutils::SaveAutomaton(PChar);
     }
     else if (PChar->loc.zone->GetID() == ZONE_FERETORY && PChar->m_PMonstrosity != nullptr)
@@ -7853,7 +7896,7 @@ void SmallPacket0x104(map_session_data_t* const PSession, CCharEntity* const PCh
         }
         if (!PChar->m_isGMHidden || (PChar->m_isGMHidden && PTarget->m_GMlevel >= PChar->m_GMlevel))
         {
-            PTarget->pushPacket(new CBazaarCheckPacket(PChar, BAZAAR_LEAVE));
+            PTarget->pushPacket<CBazaarCheckPacket>(PChar, BAZAAR_LEAVE);
         }
 
         DebugBazaarsFmt("Bazaar Interaction [Leave Bazaar] - Buyer: {}, Seller: {}", PChar->name, PTarget->name);
@@ -7895,7 +7938,7 @@ void SmallPacket0x105(map_session_data_t* const PSession, CCharEntity* const PCh
 
         if (!PChar->m_isGMHidden || (PChar->m_isGMHidden && PTarget->m_GMlevel >= PChar->m_GMlevel))
         {
-            PTarget->pushPacket(new CBazaarCheckPacket(PChar, BAZAAR_ENTER));
+            PTarget->pushPacket<CBazaarCheckPacket>(PChar, BAZAAR_ENTER);
         }
         PTarget->BazaarCustomers.emplace_back(EntityID);
 
@@ -7907,7 +7950,7 @@ void SmallPacket0x105(map_session_data_t* const PSession, CCharEntity* const PCh
 
             if ((PItem != nullptr) && (PItem->getCharPrice() != 0))
             {
-                PChar->pushPacket(new CBazaarItemPacket(PItem, SlotID, PChar->loc.zone->GetTax()));
+                PChar->pushPacket<CBazaarItemPacket>(PItem, SlotID, PChar->loc.zone->GetTax());
             }
         }
 
@@ -7957,7 +8000,7 @@ void SmallPacket0x106(map_session_data_t* const PSession, CCharEntity* const PCh
 
     if (PChar->id == PTarget->id || PBuyerInventory->GetFreeSlotsCount() == 0)
     {
-        PChar->pushPacket(new CBazaarPurchasePacket(PTarget, false));
+        PChar->pushPacket<CBazaarPurchasePacket>(PTarget, false);
 
         if (settings::get<bool>("logging.DEBUG_BAZAARS") && PChar->id == PTarget->id)
         {
@@ -7979,7 +8022,7 @@ void SmallPacket0x106(map_session_data_t* const PSession, CCharEntity* const PCh
     if (PCharGil == nullptr || !PCharGil->isType(ITEM_CURRENCY) || PCharGil->getReserve() > 0)
     {
         // Player has no gil
-        PChar->pushPacket(new CBazaarPurchasePacket(PTarget, false));
+        PChar->pushPacket<CBazaarPurchasePacket>(PTarget, false);
         return;
     }
 
@@ -7991,7 +8034,7 @@ void SmallPacket0x106(map_session_data_t* const PSession, CCharEntity* const PCh
         // Validate this player can afford said item
         if (PCharGil->getQuantity() < PriceWithTax)
         {
-            PChar->pushPacket(new CBazaarPurchasePacket(PTarget, false));
+            PChar->pushPacket<CBazaarPurchasePacket>(PTarget, false);
 
             // Exploit attempt
             ShowWarningFmt("Bazaar Interaction [Insufficient Gil] - Buyer: {}, Seller: {}, Buyer Gil: {}, Price: {}", PChar->name, PTarget->name, PCharGil->getQuantity(), PriceWithTax);
@@ -8013,14 +8056,14 @@ void SmallPacket0x106(map_session_data_t* const PSession, CCharEntity* const PCh
         charutils::UpdateItem(PChar, LOC_INVENTORY, 0, -(int32)PriceWithTax);
         charutils::UpdateItem(PTarget, LOC_INVENTORY, 0, Price);
 
-        PChar->pushPacket(new CBazaarPurchasePacket(PTarget, true));
+        PChar->pushPacket<CBazaarPurchasePacket>(PTarget, true);
 
-        PTarget->pushPacket(new CBazaarConfirmationPacket(PChar, PItem));
+        PTarget->pushPacket<CBazaarConfirmationPacket>(PChar, PItem);
 
         charutils::UpdateItem(PTarget, LOC_INVENTORY, SlotID, -Quantity);
 
-        PTarget->pushPacket(new CInventoryItemPacket(PBazaar->GetItem(SlotID), LOC_INVENTORY, SlotID));
-        PTarget->pushPacket(new CInventoryFinishPacket());
+        PTarget->pushPacket<CInventoryItemPacket>(PBazaar->GetItem(SlotID), LOC_INVENTORY, SlotID);
+        PTarget->pushPacket<CInventoryFinishPacket>();
 
         DebugBazaarsFmt("Bazaar Interaction [Purchase Successful] - Buyer: {}, Seller: {}, Item: {}, Qty: {}, Cost: {}", PChar->name, PTarget->name, PItem->getName(), Quantity, PriceWithTax);
 
@@ -8044,13 +8087,13 @@ void SmallPacket0x106(map_session_data_t* const PSession, CCharEntity* const PCh
             {
                 if (PCustomer->id != PChar->id)
                 {
-                    PCustomer->pushPacket(new CBazaarConfirmationPacket(PChar, SlotID, Quantity));
+                    PCustomer->pushPacket<CBazaarConfirmationPacket>(PChar, SlotID, Quantity);
                 }
-                PCustomer->pushPacket(new CBazaarItemPacket(PBazaar->GetItem(SlotID), SlotID, PChar->loc.zone->GetTax()));
+                PCustomer->pushPacket<CBazaarItemPacket>(PBazaar->GetItem(SlotID), SlotID, PChar->loc.zone->GetTax());
 
                 if (BazaarIsEmpty)
                 {
-                    PCustomer->pushPacket(new CBazaarClosePacket(PTarget));
+                    PCustomer->pushPacket<CBazaarClosePacket>(PTarget);
 
                     DebugBazaarsFmt("Bazaar Interaction [Bazaar Emptied] - Buyer: {}, Seller: {}", PChar->name, PTarget->name);
                 }
@@ -8062,7 +8105,7 @@ void SmallPacket0x106(map_session_data_t* const PSession, CCharEntity* const PCh
         }
         return;
     }
-    PChar->pushPacket(new CBazaarPurchasePacket(PTarget, false));
+    PChar->pushPacket<CBazaarPurchasePacket>(PTarget, false);
 }
 
 /************************************************************************
@@ -8120,8 +8163,8 @@ void SmallPacket0x10A(map_session_data_t* const PSession, CCharEntity* const PCh
         PItem->setCharPrice(price);
         PItem->setSubType((price == 0 ? ITEM_UNLOCKED : ITEM_LOCKED));
 
-        PChar->pushPacket(new CInventoryItemPacket(PItem, LOC_INVENTORY, slotID));
-        PChar->pushPacket(new CInventoryFinishPacket());
+        PChar->pushPacket<CInventoryItemPacket>(PItem, LOC_INVENTORY, slotID);
+        PChar->pushPacket<CInventoryFinishPacket>();
 
         DebugBazaarsFmt("Bazaar Interaction [Price Set] - Character: {}, Item: {}, Price: {}", PChar->name, PItem->getName(), price);
     }
@@ -8142,7 +8185,7 @@ void SmallPacket0x10B(map_session_data_t* const PSession, CCharEntity* const PCh
 
         if (PCustomer != nullptr && PCustomer->id == PChar->BazaarCustomers[i].id)
         {
-            PCustomer->pushPacket(new CBazaarClosePacket(PChar));
+            PCustomer->pushPacket<CBazaarClosePacket>(PChar);
 
             DebugBazaarsFmt("Bazaar Interaction [Leave Bazaar] - Buyer: {}, Seller: {}", PCustomer->name, PChar->name);
         }
@@ -8168,7 +8211,7 @@ void SmallPacket0x10C(map_session_data_t* const PSession, CCharEntity* const PCh
     {
         uint16 recordID = data.ref<uint32>(0x04);
         roeutils::AddEminenceRecord(PChar, recordID);
-        PChar->pushPacket(new CRoeSparkUpdatePacket(PChar));
+        PChar->pushPacket<CRoeSparkUpdatePacket>(PChar);
         roeutils::onRecordTake(PChar, recordID);
     }
 }
@@ -8185,7 +8228,7 @@ void SmallPacket0x10D(map_session_data_t* const PSession, CCharEntity* const PCh
     if (settings::get<bool>("main.ENABLE_ROE"))
     {
         roeutils::DelEminenceRecord(PChar, data.ref<uint32>(0x04));
-        PChar->pushPacket(new CRoeSparkUpdatePacket(PChar));
+        PChar->pushPacket<CRoeSparkUpdatePacket>(PChar);
     }
 }
 
@@ -8214,7 +8257,7 @@ void SmallPacket0x10E(map_session_data_t* const PSession, CCharEntity* const PCh
 void SmallPacket0x10F(map_session_data_t* const PSession, CCharEntity* const PChar, CBasicPacket& data)
 {
     TracyZoneScoped;
-    PChar->pushPacket(new CCurrencyPacket1(PChar));
+    PChar->pushPacket<CCurrencyPacket1>(PChar);
 }
 
 /************************************************************************
@@ -8230,10 +8273,6 @@ void SmallPacket0x110(map_session_data_t* const PSession, CCharEntity* const PCh
     {
         fishingutils::HandleFishingAction(PChar, data);
     }
-    else
-    {
-        return;
-    }
 }
 
 /************************************************************************
@@ -8246,7 +8285,7 @@ void SmallPacket0x111(map_session_data_t* const PSession, CCharEntity* const PCh
 {
     TracyZoneScoped;
     charutils::SetStyleLock(PChar, data.ref<uint8>(0x04));
-    PChar->pushPacket(new CCharAppearancePacket(PChar));
+    PChar->pushPacket<CCharAppearancePacket>(PChar);
 }
 
 /************************************************************************
@@ -8259,24 +8298,24 @@ void SmallPacket0x112(map_session_data_t* const PSession, CCharEntity* const PCh
 {
     TracyZoneScoped;
     // Send spark updates
-    PChar->pushPacket(new CRoeSparkUpdatePacket(PChar));
+    PChar->pushPacket<CRoeSparkUpdatePacket>(PChar);
 
     if (settings::get<bool>("main.ENABLE_ROE"))
     {
         // Current RoE quests
-        PChar->pushPacket(new CRoeUpdatePacket(PChar));
+        PChar->pushPacket<CRoeUpdatePacket>(PChar);
 
         // Players logging in to a new timed record get one-time message
         if (PChar->m_eminenceCache.notifyTimedRecord)
         {
             PChar->m_eminenceCache.notifyTimedRecord = false;
-            PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, roeutils::GetActiveTimedRecord(), 0, MSGBASIC_ROE_TIMED));
+            PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, roeutils::GetActiveTimedRecord(), 0, MSGBASIC_ROE_TIMED);
         }
 
         // 4-part Eminence Completion bitmap
         for (int i = 0; i < 4; i++)
         {
-            PChar->pushPacket(new CRoeQuestLogPacket(PChar, i));
+            PChar->pushPacket<CRoeQuestLogPacket>(PChar, i);
         }
     }
 }
@@ -8333,7 +8372,7 @@ void SmallPacket0x113(map_session_data_t* const PSession, CCharEntity* const PCh
 void SmallPacket0x114(map_session_data_t* const PSession, CCharEntity* const PChar, CBasicPacket& data)
 {
     TracyZoneScoped;
-    PChar->pushPacket(new CMapMarkerPacket(PChar));
+    PChar->pushPacket<CMapMarkerPacket>(PChar);
 }
 
 /************************************************************************
@@ -8345,7 +8384,7 @@ void SmallPacket0x114(map_session_data_t* const PSession, CCharEntity* const PCh
 void SmallPacket0x115(map_session_data_t* const PSession, CCharEntity* const PChar, CBasicPacket& data)
 {
     TracyZoneScoped;
-    PChar->pushPacket(new CCurrencyPacket2(PChar));
+    PChar->pushPacket<CCurrencyPacket2>(PChar);
 }
 
 /************************************************************************
@@ -8357,8 +8396,8 @@ void SmallPacket0x115(map_session_data_t* const PSession, CCharEntity* const PCh
 void SmallPacket0x116(map_session_data_t* const PSession, CCharEntity* const PChar, CBasicPacket& data)
 {
     TracyZoneScoped;
-    PChar->pushPacket(new CRoeSparkUpdatePacket(PChar));
-    PChar->pushPacket(new CMenuUnityPacket(PChar));
+    PChar->pushPacket<CRoeSparkUpdatePacket>(PChar);
+    PChar->pushPacket<CMenuUnityPacket>(PChar);
 }
 
 /************************************************************************
@@ -8371,8 +8410,8 @@ void SmallPacket0x116(map_session_data_t* const PSession, CCharEntity* const PCh
 void SmallPacket0x117(map_session_data_t* const PSession, CCharEntity* const PChar, CBasicPacket& data)
 {
     TracyZoneScoped;
-    PChar->pushPacket(new CRoeSparkUpdatePacket(PChar));
-    PChar->pushPacket(new CMenuUnityPacket(PChar));
+    PChar->pushPacket<CRoeSparkUpdatePacket>(PChar);
+    PChar->pushPacket<CMenuUnityPacket>(PChar);
 }
 
 /************************************************************************
@@ -8401,7 +8440,7 @@ void SmallPacket0x118(map_session_data_t* const PSession, CCharEntity* const PCh
  ************************************************************************/
 void SmallPacket0x119(map_session_data_t* const PSession, CCharEntity* const PChar, CBasicPacket& data)
 {
-    PChar->pushPacket(new CCharEmoteListPacket(PChar));
+    PChar->pushPacket<CCharEmoteListPacket>(PChar);
 }
 
 /************************************************************************
@@ -8414,7 +8453,7 @@ void SmallPacket0x11B(map_session_data_t* const PSession, CCharEntity* const PCh
     PChar->m_jobMasterDisplay = data.ref<uint8>(0x04) > 0;
 
     charutils::SaveJobMasterDisplay(PChar);
-    PChar->pushPacket(new CCharUpdatePacket(PChar));
+    PChar->pushPacket<CCharUpdatePacket>(PChar);
 }
 
 /************************************************************************
@@ -8428,14 +8467,14 @@ void SmallPacket0x11D(map_session_data_t* const PSession, CCharEntity* const PCh
     TracyZoneScoped;
     if (jailutils::InPrison(PChar))
     {
-        PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, MSGBASIC_CANNOT_USE_IN_AREA));
+        PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, 0, 0, MSGBASIC_CANNOT_USE_IN_AREA);
         return;
     }
 
     auto const& targetIndex = data.ref<uint16>(0x08);
     auto const& extra       = data.ref<uint16>(0x0A);
 
-    PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, new CCharEmotionJumpPacket(PChar, targetIndex, extra));
+    PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE_SELF, std::make_unique<CCharEmotionJumpPacket>(PChar, targetIndex, extra));
 }
 
 /************************************************************************

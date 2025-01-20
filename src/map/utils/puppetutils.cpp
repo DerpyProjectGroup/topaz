@@ -89,6 +89,7 @@ namespace puppetutils
                 PChar->PAutomaton->saveModifiers();
 
                 PChar->PAutomaton->name = rset->get<std::string>("name");
+
                 automaton_equip_t tempEquip;
                 db::extractFromBlob(rset, "equipped_attachments", tempEquip);
 
@@ -99,6 +100,8 @@ namespace puppetutils
                     tempEquip.Frame < FRAME_HARLEQUIN ||
                     tempEquip.Frame > FRAME_STORMWAKER)
                 {
+                    PChar->PAutomaton->name = "Automaton";
+
                     PChar->PAutomaton->setHead(HEAD_HARLEQUIN);
                     tempEquip.Head = HEAD_HARLEQUIN;
                     PChar->PAutomaton->setFrame(FRAME_HARLEQUIN);
@@ -171,12 +174,12 @@ namespace puppetutils
 
             char unlockedAttachmentsEscaped[sizeof(PChar->m_unlockedAttachments) * 2 + 1];
             char unlockedAttachments[sizeof(PChar->m_unlockedAttachments)];
-            memcpy(unlockedAttachments, &PChar->m_unlockedAttachments, sizeof(unlockedAttachments));
+            std::memcpy(unlockedAttachments, &PChar->m_unlockedAttachments, sizeof(unlockedAttachments));
             _sql->EscapeStringLen(unlockedAttachmentsEscaped, unlockedAttachments, sizeof(unlockedAttachments));
 
             char equippedAttachmentsEscaped[sizeof(PChar->PAutomaton->m_Equip) * 2 + 1];
             char equippedAttachments[sizeof(PChar->PAutomaton->m_Equip)];
-            memcpy(equippedAttachments, &PChar->PAutomaton->m_Equip, sizeof(equippedAttachments));
+            std::memcpy(equippedAttachments, &PChar->PAutomaton->m_Equip, sizeof(equippedAttachments));
             _sql->EscapeStringLen(equippedAttachmentsEscaped, equippedAttachments, sizeof(equippedAttachments));
 
             _sql->Query(Query, unlockedAttachmentsEscaped, equippedAttachmentsEscaped, PChar->id);
@@ -189,7 +192,7 @@ namespace puppetutils
 
             char unlockedAttachmentsEscaped[sizeof(PChar->m_unlockedAttachments) * 2 + 1];
             char unlockedAttachments[sizeof(PChar->m_unlockedAttachments)];
-            memcpy(unlockedAttachments, &PChar->m_unlockedAttachments, sizeof(unlockedAttachments));
+            std::memcpy(unlockedAttachments, &PChar->m_unlockedAttachments, sizeof(unlockedAttachments));
             _sql->EscapeStringLen(unlockedAttachmentsEscaped, unlockedAttachments, sizeof(unlockedAttachments));
 
             _sql->Query(Query, unlockedAttachmentsEscaped, PChar->id);
@@ -213,7 +216,7 @@ namespace puppetutils
             if (addBit(id & 0xFF, (uint8*)PChar->m_unlockedAttachments.attachments, sizeof(PChar->m_unlockedAttachments.attachments)))
             {
                 SaveAutomaton(PChar);
-                PChar->pushPacket(new CCharJobExtraPacket(PChar, PChar->GetMJob() == JOB_PUP));
+                PChar->pushPacket<CCharJobExtraPacket>(PChar, PChar->GetMJob() == JOB_PUP);
                 return true;
             }
             return false;
@@ -223,7 +226,7 @@ namespace puppetutils
             if (addBit(id & 0x0F, &PChar->m_unlockedAttachments.frames, sizeof(PChar->m_unlockedAttachments.frames)))
             {
                 SaveAutomaton(PChar);
-                PChar->pushPacket(new CCharJobExtraPacket(PChar, PChar->GetMJob() == JOB_PUP));
+                PChar->pushPacket<CCharJobExtraPacket>(PChar, PChar->GetMJob() == JOB_PUP);
                 return true;
             }
             return false;
@@ -233,7 +236,7 @@ namespace puppetutils
             if (addBit(id & 0x0F, &PChar->m_unlockedAttachments.heads, sizeof(PChar->m_unlockedAttachments.heads)))
             {
                 SaveAutomaton(PChar);
-                PChar->pushPacket(new CCharJobExtraPacket(PChar, PChar->GetMJob() == JOB_PUP));
+                PChar->pushPacket<CCharJobExtraPacket>(PChar, PChar->GetMJob() == JOB_PUP);
                 return true;
             }
             return false;
@@ -695,7 +698,7 @@ namespace puppetutils
                 }
 
                 PChar->RealSkills.skill[SkillID] += SkillAmount;
-                PChar->pushPacket(new CMessageBasicPacket(PAutomaton, PAutomaton, SkillID, SkillAmount, 38));
+                PChar->pushPacket<CMessageBasicPacket>(PAutomaton, PAutomaton, SkillID, SkillAmount, 38);
 
                 if ((CurSkill / 10) < (CurSkill + SkillAmount) / 10) // if gone up a level
                 {
@@ -711,8 +714,8 @@ namespace puppetutils
                         PAutomaton->WorkingSkills.elemental       = amaSkill;
                         PAutomaton->WorkingSkills.dark            = amaSkill;
                     }
-                    PChar->pushPacket(new CCharJobExtraPacket(PChar, PChar->GetMJob() == JOB_PUP));
-                    PChar->pushPacket(new CMessageBasicPacket(PAutomaton, PAutomaton, SkillID, (CurSkill + SkillAmount) / 10, 53));
+                    PChar->pushPacket<CCharJobExtraPacket>(PChar, PChar->GetMJob() == JOB_PUP);
+                    PChar->pushPacket<CMessageBasicPacket>(PAutomaton, PAutomaton, SkillID, (CurSkill + SkillAmount) / 10, 53);
                 }
                 charutils::SaveCharSkills(PChar, SkillID);
             }

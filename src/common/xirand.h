@@ -24,8 +24,8 @@
 #define _XIRAND_H_
 
 // You can choose an RNG by commenting/uncommenting this line. The default is Mersenne Twister in 32 bit.
-#include "rng/mersennetwister.h"
-// #include "rng/mersennetwister64.h"
+// #include "rng/mersennetwister.h"
+#include "rng/mersennetwister64.h"
 // #include "rng/pcg.h"
 // #include "rng/pcg64.h"
 
@@ -137,5 +137,8 @@ inline T xirand::GetRandomElement(std::initializer_list<T> list)
     std::vector<T> container(list);
     return GetRandomElement(container);
 }
+
+// Get secure random numbers
+size_t sysrandom(void* dst, size_t dstlen);
 
 #endif // _XIRAND_H_
