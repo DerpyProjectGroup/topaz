@@ -639,10 +639,28 @@ namespace zoneutils
                                 // pet is always spawned by master
                                 PPet->m_AllowRespawn = false;
                                 PPet->m_SpawnType    = SPAWNTYPE_SCRIPTED;
+                                PPet->PPetNext       = nullptr;
                                 PPet->SetDespawnTime(0s);
 
-                                PMaster->PPet = PPet;
-                                PPet->PMaster = PMaster;
+                                if (PMaster->PPet == nullptr)
+                                {
+                                    PMaster->PPet = PPet;
+                                    PPet->PMaster = PMaster;
+                                }
+                                else
+                                {
+                                    // We know that PMaster->PPet is not nullptr at least once
+                                    // Iterate until we find end of Pet Linked List
+                                    CMobEntity* PPetTemp = static_cast<CMobEntity*>(PMaster->PPet);
+                                    while (PPetTemp->PPetNext != nullptr)
+                                    {
+                                        PPetTemp = static_cast<CMobEntity*>(PPetTemp->PPetNext);
+                                    }
+                                    // Attach the new pet (PPet) to the last pet (PPetTemp)
+                                    // Link the new pet to the Master
+                                    PPetTemp->PPetNext = PPet;
+                                    PPet->PMaster      = PMaster;
+                                }
                             }
                         }
                     }

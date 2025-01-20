@@ -200,10 +200,21 @@ void CMobController::TryLink()
         }
     }
 
-    // my pet should help as well
-    if (PMob->PPet != nullptr && PMob->PPet->PAI->IsRoaming())
+    // my pets should help as well
+    if (PMob->PPet != nullptr)
     {
-        PMob->PPet->PAI->Engage(PTarget->targid);
+        CBattleEntity* PPet = PMob->PPet;
+        // Iterate over all my pets
+        while (PPet != nullptr)
+        {
+            // Check if they are roaming
+            if (PPet->PAI->IsRoaming())
+            {
+                // Have them attack my target
+                PPet->PAI->Engage(PTarget->targid);
+            }
+            PPet = PPet->PPetNext;
+        }
     }
 
     // Handle monster linking if they are close enough
@@ -1089,12 +1100,16 @@ void CMobController::FollowRoamPath()
         PMob->PAI->PathFind->FollowPath(m_Tick);
 
         CBattleEntity* PPet = PMob->PPet;
-        if (PPet != nullptr && PPet->PAI->IsSpawned() && !PPet->PAI->IsEngaged())
+        while (PPet != nullptr)
         {
-            // pet should follow me if roaming
-            position_t targetPoint = nearPosition(PMob->loc.p, 2.1f, (float)M_PI);
+            if (PPet->PAI->IsSpawned() && !PPet->PAI->IsEngaged())
+            {
+                // pet should follow me if roaming
+                position_t targetPoint = nearPosition(PMob->loc.p, 2.1f, (float)M_PI);
 
-            PPet->PAI->PathFind->PathTo(targetPoint);
+                PPet->PAI->PathFind->PathTo(targetPoint);
+            }
+            PPet = PPet->PPetNext;
         }
 
         // if I just finished reset my last action time
