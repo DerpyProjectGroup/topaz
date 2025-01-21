@@ -1101,7 +1101,7 @@ namespace luautils
     {
         if (auto* PItem = itemutils::GetItemPointer(itemId))
         {
-            return CLuaItem(PItem);
+            return PItem;
         }
 
         return std::nullopt;
@@ -1853,7 +1853,7 @@ namespace luautils
             return;
         }
 
-        auto result = onInitialize(CLuaZone(PZone));
+        auto result = onInitialize(PZone);
         if (!result.valid())
         {
             sol::error err = result;
@@ -1876,7 +1876,7 @@ namespace luautils
             return;
         }
 
-        auto result = onZoneTick(CLuaZone(PZone));
+        auto result = onZoneTick(PZone);
         if (!result.valid())
         {
             sol::error err = result;
@@ -1897,7 +1897,7 @@ namespace luautils
             return;
         }
 
-        auto result = onGameIn(CLuaBaseEntity(PChar), PChar->GetPlayTime(false) == 0, zoning);
+        auto result = onGameIn(PChar, PChar->GetPlayTime(false) == 0, zoning);
         if (!result.valid())
         {
             sol::error err = result;
@@ -1932,7 +1932,7 @@ namespace luautils
         auto onZoneInFramework = lua["InteractionGlobal"]["onZoneIn"];
         auto onZoneIn          = GetCacheEntryFromFilename(filename)["onZoneIn"];
 
-        auto result = onZoneInFramework(CLuaBaseEntity(PChar), PChar->loc.prevzone, onZoneIn);
+        auto result = onZoneInFramework(PChar, PChar->loc.prevzone, onZoneIn);
         if (!result.valid())
         {
             sol::error err = result;
@@ -1967,7 +1967,7 @@ namespace luautils
         auto afterZoneInFramework = lua["InteractionGlobal"]["afterZoneIn"];
         auto afterZoneIn          = GetCacheEntryFromFilename(filename)["afterZoneIn"];
 
-        auto result = afterZoneInFramework(CLuaBaseEntity(PChar), afterZoneIn);
+        auto result = afterZoneInFramework(PChar, afterZoneIn);
         if (!result.valid())
         {
             sol::error err = result;
@@ -1988,7 +1988,7 @@ namespace luautils
         auto onZoneOutFramework = lua["InteractionGlobal"]["onZoneOut"];
         auto onZoneOut          = GetCacheEntryFromFilename(filename)["onZoneOut"];
 
-        auto result = onZoneOutFramework(CLuaBaseEntity(PChar), onZoneOut);
+        auto result = onZoneOutFramework(PChar, onZoneOut);
         if (!result.valid())
         {
             sol::error err = result;
@@ -2043,7 +2043,7 @@ namespace luautils
         }
 
         auto onTriggerAreaEnterFramework = lua["InteractionGlobal"]["onTriggerAreaEnter"];
-        auto result                      = onTriggerAreaEnterFramework(CLuaBaseEntity(PChar), CLuaTriggerArea(PTriggerArea), optInstance, onTriggerAreaEnter);
+        auto result                      = onTriggerAreaEnterFramework(PChar, PTriggerArea, optInstance, onTriggerAreaEnter);
         if (!result.valid())
         {
             sol::error err = result;
@@ -2091,7 +2091,7 @@ namespace luautils
         }
 
         auto onTriggerAreaLeaveFramework = lua["InteractionGlobal"]["onTriggerAreaLeave"];
-        auto result                      = onTriggerAreaLeaveFramework(CLuaBaseEntity(PChar), CLuaTriggerArea(PTriggerArea), optInstance, onTriggerAreaLeave);
+        auto result                      = onTriggerAreaLeaveFramework(PChar, PTriggerArea, optInstance, onTriggerAreaLeave);
         if (!result.valid())
         {
             sol::error err = result;
@@ -2136,7 +2136,7 @@ namespace luautils
         auto onTriggerFramework = lua["InteractionGlobal"]["onTrigger"];
         auto onTrigger          = GetCacheEntryFromFilename(filename)["onTrigger"];
 
-        auto result = onTriggerFramework(CLuaBaseEntity(PChar), CLuaBaseEntity(PNpc), onTrigger);
+        auto result = onTriggerFramework(PChar, PNpc, onTrigger);
         if (!result.valid())
         {
             sol::error err = result;
@@ -2167,7 +2167,7 @@ namespace luautils
             optTarget = CLuaBaseEntity(PChar->currentEvent->targetEntity);
         }
 
-        auto func_result = onEventUpdateFramework(CLuaBaseEntity(PChar), eventID, result, optTarget, onEventUpdate);
+        auto func_result = onEventUpdateFramework(PChar, eventID, result, optTarget, onEventUpdate);
 
         PChar->eventPreparation = previousPrep;
 
@@ -2201,7 +2201,7 @@ namespace luautils
             optTarget = CLuaBaseEntity(PChar->currentEvent->targetEntity);
         }
 
-        auto result = onEventUpdateFramework(CLuaBaseEntity(PChar), PChar->currentEvent->eventId, updateString, optTarget, onEventUpdate);
+        auto result = onEventUpdateFramework(PChar, PChar->currentEvent->eventId, updateString, optTarget, onEventUpdate);
 
         PChar->eventPreparation = previousPrep;
 
@@ -2240,7 +2240,7 @@ namespace luautils
             optTarget = CLuaBaseEntity(PChar->currentEvent->targetEntity);
         }
 
-        auto func_result = onEventFinishFramework(CLuaBaseEntity(PChar), eventID, result, optTarget, onEventFinish);
+        auto func_result = onEventFinishFramework(PChar, eventID, result, optTarget, onEventFinish);
 
         // Restore eventPreparation before potentially bailing out of function due to errors
         PChar->eventPreparation = previousPrep;
@@ -2279,7 +2279,7 @@ namespace luautils
         auto onTradeFramework = lua["InteractionGlobal"]["onTrade"];
         auto onTrade          = GetCacheEntryFromFilename(filename)["onTrade"];
 
-        auto result = onTradeFramework(CLuaBaseEntity(PChar), CLuaBaseEntity(PNpc), CLuaTradeContainer(PChar->TradeContainer), onTrade);
+        auto result = onTradeFramework(PChar, PNpc, PChar->TradeContainer, onTrade);
         if (!result.valid())
         {
             sol::error err = result;
@@ -2304,7 +2304,7 @@ namespace luautils
             return;
         }
 
-        auto result = onSpawn(CLuaBaseEntity(PNpc));
+        auto result = onSpawn(PNpc);
         if (!result.valid())
         {
             sol::error err = result;
@@ -2330,7 +2330,7 @@ namespace luautils
             return;
         }
 
-        auto result = onAdditionalEffect(CLuaBaseEntity(PAttacker), CLuaBaseEntity(PDefender), damage);
+        auto result = onAdditionalEffect(PAttacker, PDefender, damage);
         if (!result.valid())
         {
             sol::error err = result;
@@ -2357,7 +2357,7 @@ namespace luautils
             return;
         }
 
-        auto result = onSpikesDamage(CLuaBaseEntity(PDefender), CLuaBaseEntity(PAttacker), damage);
+        auto result = onSpikesDamage(PDefender, PAttacker, damage);
         if (!result.valid())
         {
             sol::error err = result;
@@ -2386,7 +2386,7 @@ namespace luautils
             return -1;
         }
 
-        auto result = additionalEffectAttack(CLuaBaseEntity(PAttacker), CLuaBaseEntity(PDefender), baseAttackDamage, CLuaItem(PItem));
+        auto result = additionalEffectAttack(PAttacker, PDefender, baseAttackDamage, PItem);
         if (!result.valid())
         {
             sol::error err = result;
@@ -2413,7 +2413,7 @@ namespace luautils
             return;
         }
 
-        auto result = additionalEffectSpikes(CLuaBaseEntity(PDefender), CLuaBaseEntity(PAttacker), baseAttackDamage, CLuaItem(PItem));
+        auto result = additionalEffectSpikes(PDefender, PAttacker, baseAttackDamage, PItem);
         if (!result.valid())
         {
             sol::error err = result;
@@ -2438,7 +2438,7 @@ namespace luautils
             return;
         }
 
-        auto result = onEffectGain(CLuaBaseEntity(PEntity), CLuaStatusEffect(PStatusEffect));
+        auto result = onEffectGain(PEntity, CLuaStatusEffect(PStatusEffect));
         if (!result.valid())
         {
             sol::error err = result;
@@ -2459,7 +2459,7 @@ namespace luautils
             return;
         }
 
-        auto result = onEffectTick(CLuaBaseEntity(PEntity), CLuaStatusEffect(PStatusEffect));
+        auto result = onEffectTick(PEntity, CLuaStatusEffect(PStatusEffect));
         if (!result.valid())
         {
             sol::error err = result;
@@ -2480,7 +2480,7 @@ namespace luautils
             return;
         }
 
-        auto result = onEffectLose(CLuaBaseEntity(PEntity), CLuaStatusEffect(PStatusEffect));
+        auto result = onEffectLose(PEntity, CLuaStatusEffect(PStatusEffect));
         if (!result.valid())
         {
             sol::error err = result;
@@ -2501,7 +2501,7 @@ namespace luautils
             return;
         }
 
-        auto result = onEquip(CLuaBaseEntity(PEntity), CLuaItem(attachment));
+        auto result = onEquip(PEntity, CLuaItem(attachment));
         if (!result.valid())
         {
             sol::error err = result;
@@ -2521,7 +2521,7 @@ namespace luautils
             return;
         }
 
-        auto result = onUnequip(CLuaBaseEntity(PEntity), CLuaItem(attachment));
+        auto result = onUnequip(PEntity, CLuaItem(attachment));
         if (!result.valid())
         {
             sol::error err = result;
@@ -2541,7 +2541,7 @@ namespace luautils
             return;
         }
 
-        auto result = onManeuverGain(CLuaBaseEntity(PEntity), CLuaItem(attachment), maneuvers);
+        auto result = onManeuverGain(PEntity, CLuaItem(attachment), maneuvers);
         if (!result.valid())
         {
             sol::error err = result;
@@ -2561,7 +2561,7 @@ namespace luautils
             return;
         }
 
-        auto result = onManeuverLose(CLuaBaseEntity(PEntity), CLuaItem(attachment), maneuvers);
+        auto result = onManeuverLose(PEntity, CLuaItem(attachment), maneuvers);
         if (!result.valid())
         {
             sol::error err = result;
@@ -2581,7 +2581,7 @@ namespace luautils
             return;
         }
 
-        auto result = onUpdate(CLuaBaseEntity(PEntity), CLuaItem(attachment), maneuvers);
+        auto result = onUpdate(PEntity, CLuaItem(attachment), maneuvers);
         if (!result.valid())
         {
             sol::error err = result;
@@ -2606,10 +2606,10 @@ namespace luautils
         std::optional<CLuaBaseEntity> caster = std::nullopt;
         if (PCaster)
         {
-            caster = CLuaBaseEntity(PCaster);
+            caster = PCaster;
         }
 
-        auto result = onItemCheck(CLuaBaseEntity(PTarget), CLuaItem(PItem), static_cast<uint32>(param), caster);
+        auto result = onItemCheck(PTarget, PItem, static_cast<uint32>(param), caster);
         if (!result.valid())
         {
             sol::error err = result;
@@ -2649,7 +2649,7 @@ namespace luautils
             }
         }
 
-        auto result = onItemUse(CLuaBaseEntity(PTarget), CLuaBaseEntity(PUser), CLuaItem(PItem));
+        auto result = onItemUse(PTarget, PUser, PItem);
         if (!result.valid())
         {
             sol::error err = result;
@@ -2671,7 +2671,7 @@ namespace luautils
             return;
         }
 
-        auto result = onItemDrop(CLuaBaseEntity(PUser), CLuaItem(PItem));
+        auto result = onItemDrop(PUser, PItem);
         if (!result.valid())
         {
             sol::error err = result;
@@ -2692,7 +2692,7 @@ namespace luautils
             return;
         }
 
-        auto result = onItemEquip(CLuaBaseEntity(PUser), CLuaItem(PItem));
+        auto result = onItemEquip(PUser, PItem);
         if (!result.valid())
         {
             sol::error err = result;
@@ -2713,7 +2713,7 @@ namespace luautils
             return;
         }
 
-        auto result = onItemUnequip(CLuaBaseEntity(PUser), CLuaItem(PItem));
+        auto result = onItemUnequip(PUser, PItem);
         if (!result.valid())
         {
             sol::error err = result;
@@ -2733,7 +2733,7 @@ namespace luautils
             return;
         }
 
-        auto result = checkForGearSet(CLuaBaseEntity(PTarget));
+        auto result = checkForGearSet(PTarget);
         if (!result.valid())
         {
             sol::error err = result;
@@ -2758,7 +2758,7 @@ namespace luautils
             return 0;
         }
 
-        auto result = onSpellCast(CLuaBaseEntity(PCaster), CLuaBaseEntity(PTarget), CLuaSpell(PSpell));
+        auto result = onSpellCast(PCaster, PTarget, PSpell);
         if (!result.valid())
         {
             sol::error err = result;
@@ -2786,7 +2786,7 @@ namespace luautils
             return;
         }
 
-        auto result = onSpellPrecast(CLuaBaseEntity(PCaster), CLuaSpell(PSpell));
+        auto result = onSpellPrecast(PCaster, PSpell);
         if (!result.valid())
         {
             sol::error err = result;
@@ -2816,7 +2816,7 @@ namespace luautils
             luaSpell = spell::GetSpell(startingSpellId.value());
         }
 
-        auto result = onMobMagicPrepare(CLuaBaseEntity(PCaster), CLuaBaseEntity(PTarget), luaSpell);
+        auto result = onMobMagicPrepare(PCaster, PTarget, luaSpell);
         if (!result.valid())
         {
             sol::error err = result;
@@ -2851,7 +2851,7 @@ namespace luautils
             return;
         }
 
-        auto result = onMagicHit(CLuaBaseEntity(PCaster), CLuaBaseEntity(PTarget), CLuaSpell(PSpell));
+        auto result = onMagicHit(PCaster, PTarget, PSpell);
         if (!result.valid())
         {
             sol::error err = result;
@@ -2871,7 +2871,7 @@ namespace luautils
             return;
         }
 
-        auto result = onWeaponskillHit(CLuaBaseEntity(PMob), CLuaBaseEntity(PAttacker), PWeaponskill);
+        auto result = onWeaponskillHit(PMob, PAttacker, PWeaponskill);
         if (!result.valid())
         {
             sol::error err = result;
@@ -2891,7 +2891,7 @@ namespace luautils
             return false;
         }
 
-        auto result = checkBattlefieldTrustCount(CLuaBaseEntity(PCaster));
+        auto result = checkBattlefieldTrustCount(PCaster);
         if (!result.valid())
         {
             sol::error err = result;
@@ -2912,7 +2912,7 @@ namespace luautils
             return;
         }
 
-        auto result = onMobInitialize(CLuaBaseEntity(PMob));
+        auto result = onMobInitialize(PMob);
         if (!result.valid())
         {
             sol::error err = result;
@@ -2962,7 +2962,7 @@ namespace luautils
         // get the parameter "mixinOptions" (optional)
         auto mixinOptions = lua["mixinOptions"];
 
-        auto result = applyMixins(CLuaBaseEntity(PMob), mixins, mixinOptions);
+        auto result = applyMixins(PMob, mixins, mixinOptions);
         if (!result.valid())
         {
             sol::error err = result;
@@ -3009,7 +3009,7 @@ namespace luautils
         // get the parameter "mixinOptions" (optional)
         auto mixinOptions = lua["mixinOptions"];
 
-        auto result = applyMixins(CLuaBaseEntity(PMob), mixins, mixinOptions);
+        auto result = applyMixins(PMob, mixins, mixinOptions);
         if (!result.valid())
         {
             sol::error err = result;
@@ -3032,7 +3032,7 @@ namespace luautils
             return;
         }
 
-        auto result = onPath(CLuaBaseEntity(PEntity));
+        auto result = onPath(PEntity);
         if (!result.valid())
         {
             sol::error err = result;
@@ -3055,7 +3055,7 @@ namespace luautils
             return;
         }
 
-        auto result = onPathPoint(CLuaBaseEntity(PEntity));
+        auto result = onPathPoint(PEntity);
         if (!result.valid())
         {
             sol::error err = result;
@@ -3078,7 +3078,7 @@ namespace luautils
             return;
         }
 
-        auto result = onPathComplete(CLuaBaseEntity(PEntity));
+        auto result = onPathComplete(PEntity);
         if (!result.valid())
         {
             sol::error err = result;
@@ -3104,9 +3104,7 @@ namespace luautils
             return MaxAreas;
         }
 
-        CLuaZone LuaZone(PZone);
-
-        auto result = onBattlefieldHandlerInitialize(CLuaZone(PZone));
+        auto result = onBattlefieldHandlerInitialize(PZone);
         if (!result.valid())
         {
             sol::error err = result;
@@ -3126,7 +3124,7 @@ namespace luautils
             return;
         }
 
-        invokeBattlefieldEvent(PBattlefield->GetID(), "onBattlefieldInitialize", CLuaBattlefield(PBattlefield));
+        invokeBattlefieldEvent(PBattlefield->GetID(), "onBattlefieldInitialize", PBattlefield);
     }
 
     void OnBattlefieldTick(CBattlefield* PBattlefield)
@@ -3141,7 +3139,7 @@ namespace luautils
         auto name    = PBattlefield->GetName();
         auto seconds = std::chrono::duration_cast<std::chrono::seconds>(PBattlefield->GetTimeInside()).count();
 
-        if (invokeBattlefieldEvent(PBattlefield->GetID(), "onBattlefieldTick", CLuaBattlefield(PBattlefield), seconds) == 0)
+        if (invokeBattlefieldEvent(PBattlefield->GetID(), "onBattlefieldTick", PBattlefield, seconds) == 0)
         {
             return;
         }
@@ -3158,7 +3156,7 @@ namespace luautils
             return;
         }
 
-        invokeBattlefieldEvent(PBattlefield->GetID(), "onBattlefieldStatusChange", CLuaBattlefield(PBattlefield), PBattlefield->GetStatus());
+        invokeBattlefieldEvent(PBattlefield->GetID(), "onBattlefieldStatusChange", PBattlefield, PBattlefield->GetStatus());
     }
 
     void OnMobEngage(CBaseEntity* PMob, CBaseEntity* PTarget)
@@ -3192,7 +3190,7 @@ namespace luautils
             return;
         }
 
-        auto result = onMobEngage(CLuaBaseEntity(PMob), CLuaBaseEntity(PTarget));
+        auto result = onMobEngage(PMob, PTarget);
         if (!result.valid())
         {
             sol::error err = result;
@@ -3217,7 +3215,7 @@ namespace luautils
 
         uint8 weather = PMob->loc.zone->GetWeather();
 
-        auto result = onMobDisengage(CLuaBaseEntity(PMob), weather);
+        auto result = onMobDisengage(PMob, weather);
         if (!result.valid())
         {
             sol::error err = result;
@@ -3239,7 +3237,7 @@ namespace luautils
             return;
         }
 
-        auto result = onMobFollow(CLuaBaseEntity(PMob), CLuaBaseEntity(PTarget));
+        auto result = onMobFollow(PMob, PTarget);
         if (!result.valid())
         {
             sol::error err = result;
@@ -3261,7 +3259,7 @@ namespace luautils
             return;
         }
 
-        auto result = onMobUnfollow(CLuaBaseEntity(PMob), CLuaBaseEntity(PTarget));
+        auto result = onMobUnfollow(PMob, PTarget);
         if (!result.valid())
         {
             sol::error err = result;
@@ -3284,7 +3282,7 @@ namespace luautils
             return;
         }
 
-        auto result = onMobFight(CLuaBaseEntity(PMob), CLuaBaseEntity(PTarget));
+        auto result = onMobFight(PMob, PTarget);
         if (!result.valid())
         {
             sol::error err = result;
@@ -3310,10 +3308,10 @@ namespace luautils
         std::optional<CLuaBaseEntity> optionalKiller = std::nullopt;
         if (PAttacker)
         {
-            optionalKiller = CLuaBaseEntity(PAttacker);
+            optionalKiller = PAttacker;
         }
 
-        auto result = onCriticalHit(CLuaBaseEntity(PMob), optionalKiller);
+        auto result = onCriticalHit(PMob, optionalKiller);
         if (!result.valid())
         {
             sol::error err = result;
@@ -3354,12 +3352,10 @@ namespace luautils
             {
                 if (PMember->getZone() == PChar->getZone())
                 {
-                    CLuaBaseEntity LuaMobEntity(PMob);
-                    CLuaBaseEntity LuaAllyEntity(PMember);
-                    bool           isKiller          = PMember == PChar;
-                    bool           isWeaponSkillKill = (PMob->GetLocalVar("weaponskillHit") & 0xFFFFFF) > 0;
+                    bool isKiller          = PMember == PChar;
+                    bool   isWeaponSkillKill = (PMob->GetLocalVar("weaponskillHit") & 0xFFFFFF) > 0;
 
-                    auto result = onMobDeathEx(LuaMobEntity, LuaAllyEntity, isKiller, isWeaponSkillKill);
+                    auto result = onMobDeathEx(PMob, PMember, isKiller, isWeaponSkillKill);
                     if (!result.valid())
                     {
                         sol::error err = result;
@@ -3380,15 +3376,14 @@ namespace luautils
                 CCharEntity* PMember = (CCharEntity*)PPartyMember;
                 if (PMember && PMember->getZone() == PChar->getZone())
                 {
-                    CLuaBaseEntity                LuaMobEntity(PMob);
-                    std::optional<CLuaBaseEntity> optLuaAllyEntity  = std::nullopt;
-                    uint32                        weaponskillVar    = PMob->GetLocalVar("weaponskillHit");
-                    uint16                        weaponskillUsed   = weaponskillVar >> 24;
-                    uint32                        weaponskillDamage = weaponskillVar & 0xFFFFFF;
+                    uint32 weaponskillVar    = PMob->GetLocalVar("weaponskillHit");
+                    uint16 weaponskillUsed   = weaponskillVar >> 24;
+                    uint32 weaponskillDamage = weaponskillVar & 0xFFFFFF;
 
+                    std::optional<CBaseEntity*> optAllyEntity = std::nullopt;
                     if (PMember)
                     {
-                        optLuaAllyEntity = CLuaBaseEntity(PMember);
+                        optAllyEntity = PMember;
                     }
 
                     optParams["isKiller"]          = PMember == PChar;
@@ -3401,7 +3396,7 @@ namespace luautils
                     PChar->eventPreparation->scriptFile   = filename;
 
                     // onMobDeath(mob, player, optParams)
-                    auto result = onMobDeathFramework(LuaMobEntity, optLuaAllyEntity, optParams, onMobDeath);
+                    auto result = onMobDeathFramework(PMob, optAllyEntity, optParams, onMobDeath);
 
                     // NOTE: result is only NOT valid if the function call fails. If it returns nil its still valid (this is expected)
                     if (!result.valid())
@@ -3410,7 +3405,7 @@ namespace luautils
                         ShowError("luautils::onMobDeath: %s", err.what());
                     }
 
-                    PChar->PAI->EventHandler.triggerListener("DEFEATED_MOB", LuaMobEntity, optLuaAllyEntity, optParams);
+                    PChar->PAI->EventHandler.triggerListener("DEFEATED_MOB", PMob, optAllyEntity, optParams);
                 }
             });
             // clang-format on
@@ -3421,7 +3416,7 @@ namespace luautils
             sol::function onMobDeath          = getEntityCachedFunction(PMob, "onMobDeath");
 
             // onMobDeath(mob, player, optParams)
-            auto result = onMobDeathFramework(CLuaBaseEntity(PMob), sol::lua_nil, optParams, onMobDeath);
+            auto result = onMobDeathFramework(PMob, sol::lua_nil, optParams, onMobDeath);
 
             // NOTE: result is only NOT valid if the function call fails. If it returns nil its still valid (this is expected)
             if (!result.valid())
@@ -3447,7 +3442,7 @@ namespace luautils
             return;
         }
 
-        auto result = onMobSpawn(CLuaBaseEntity(PMob));
+        auto result = onMobSpawn(PMob);
         if (!result.valid())
         {
             sol::error err = result;
@@ -3470,7 +3465,7 @@ namespace luautils
             return;
         }
 
-        auto result = onMobRoamAction(CLuaBaseEntity(PMob));
+        auto result = onMobRoamAction(PMob);
         if (!result.valid())
         {
             sol::error err = result;
@@ -3488,7 +3483,7 @@ namespace luautils
             return;
         }
 
-        auto result = onMobRoam(CLuaBaseEntity(PMob));
+        auto result = onMobRoam(PMob);
         if (!result.valid())
         {
             sol::error err = result;
@@ -3511,7 +3506,7 @@ namespace luautils
             return;
         }
 
-        auto result = onMobDespawn(CLuaBaseEntity(PMob));
+        auto result = onMobDespawn(PMob);
         if (!result.valid())
         {
             sol::error err = result;
@@ -3534,7 +3529,7 @@ namespace luautils
             return;
         }
 
-        auto result = onPlayerAbilityUse(CLuaBaseEntity(PMob), CLuaBaseEntity(PPlayer), CLuaAbility(PAbility));
+        auto result = onPlayerAbilityUse(PMob, PPlayer, PAbility);
         if (!result.valid())
         {
             sol::error err = result;
@@ -3557,7 +3552,7 @@ namespace luautils
             return;
         }
 
-        auto result = onPetLevelRestriction(CLuaBaseEntity(PMob));
+        auto result = onPetLevelRestriction(PMob);
         if (!result.valid())
         {
             sol::error err = result;
@@ -3597,7 +3592,7 @@ namespace luautils
             return;
         }
 
-        auto result = onGameHour(CLuaZone(PZone));
+        auto result = onGameHour(PZone);
         if (!result.valid())
         {
             sol::error err = result;
@@ -3616,20 +3611,7 @@ namespace luautils
             return;
         }
 
-        auto name = PZone->getName();
-
-        auto onZoneWeatherChange = lua["xi"]["zones"][name]["Zone"]["onZoneWeatherChange"];
-        if (!onZoneWeatherChange.valid())
-        {
-            return;
-        }
-
-        auto result = onZoneWeatherChange(weather);
-        if (!result.valid())
-        {
-            sol::error err = result;
-            ShowError("luautils::onZoneWeatherChange: %s", err.what());
-        }
+        callGlobal<void>(fmt::format("xi.zones.{}.Zone.onZoneWeatherChange", PZone->getName()), weather);
     }
 
     void OnTOTDChange(uint16 ZoneID, uint8 TOTD)
@@ -3672,13 +3654,13 @@ namespace luautils
             return std::tuple<int32, uint8, uint8>();
         }
 
-        std::optional<CLuaBaseEntity> optTrickAttackLuaChar = std::nullopt;
+        std::optional<CBaseEntity*> optTrickAttackChar = std::nullopt;
         if (taChar)
         {
-            optTrickAttackLuaChar = CLuaBaseEntity(taChar);
+            optTrickAttackChar = taChar;
         }
 
-        auto result = onUseWeaponSkill(CLuaBaseEntity(PChar), CLuaBaseEntity(PMob), wskill->getID(), tp, primary, CLuaAction(&action), optTrickAttackLuaChar);
+        auto result = onUseWeaponSkill(PChar, PMob, wskill->getID(), tp, primary, &action, optTrickAttackChar);
         if (!result.valid())
         {
             sol::error err = result;
@@ -3714,7 +3696,7 @@ namespace luautils
             return 0;
         }
 
-        auto result = onMobWeaponSkillPrepare(CLuaBaseEntity(PMob), CLuaBaseEntity(PTarget));
+        auto result = onMobWeaponSkillPrepare(PMob, PTarget);
         if (!result.valid())
         {
             sol::error err = result;
@@ -3743,7 +3725,7 @@ namespace luautils
             auto onMobWeaponSkill = lua["xi"]["zones"][zone]["mobs"][name]["onMobWeaponSkill"];
             if (onMobWeaponSkill.valid())
             {
-                auto result = onMobWeaponSkill(CLuaBaseEntity(PTarget), CLuaBaseEntity(PMob), CLuaMobSkill(PMobSkill), CLuaAction(action));
+                auto result = onMobWeaponSkill(PTarget, PMob, PMobSkill, action);
                 if (!result.valid())
                 {
                     sol::error err = result;
@@ -3762,7 +3744,7 @@ namespace luautils
             return 0;
         }
 
-        auto result = onMobWeaponSkill(CLuaBaseEntity(PTarget), CLuaBaseEntity(PMob), CLuaMobSkill(PMobSkill));
+        auto result = onMobWeaponSkill(PTarget, PMob, PMobSkill);
         if (!result.valid())
         {
             sol::error err = result;
@@ -3785,7 +3767,7 @@ namespace luautils
             return 1;
         }
 
-        auto result = onMobSkillCheck(CLuaBaseEntity(PTarget), CLuaBaseEntity(PMob), CLuaMobSkill(PMobSkill));
+        auto result = onMobSkillCheck(PTarget, PMob, PMobSkill);
         if (!result.valid())
         {
             sol::error err = result;
@@ -3809,7 +3791,7 @@ namespace luautils
             return PTarget;
         }
 
-        auto result = onMobSkillTarget(CLuaBaseEntity(static_cast<CBaseEntity*>(PTarget)), CLuaBaseEntity(PMob), CLuaMobSkill(PMobSkill));
+        auto result = onMobSkillTarget(PTarget, PMob, PMobSkill);
         if (!result.valid())
         {
             sol::error err = result;
@@ -3839,7 +3821,7 @@ namespace luautils
             return 1;
         }
 
-        auto result = onAutomatonAbilityCheck(CLuaBaseEntity(PTarget), CLuaBaseEntity(PAutomaton), CLuaMobSkill(PMobSkill));
+        auto result = onAutomatonAbilityCheck(PTarget, PAutomaton, PMobSkill);
         if (!result.valid())
         {
             sol::error err = result;
@@ -3860,7 +3842,7 @@ namespace luautils
             return 0;
         }
 
-        auto result = onAutomatonAbility(CLuaBaseEntity(PTarget), CLuaBaseEntity(PMob), CLuaMobSkill(PMobSkill), CLuaBaseEntity(PMobMaster), CLuaAction(action));
+        auto result = onAutomatonAbility(PTarget, PMob, PMobSkill, PMobMaster, action);
         if (!result.valid())
         {
             sol::error err = result;
@@ -4015,7 +3997,7 @@ namespace luautils
             return;
         }
 
-        auto result = onMonstrosityUpdate(CLuaBaseEntity(PChar), GetMonstrosityLuaTable(PChar));
+        auto result = onMonstrosityUpdate(PChar, GetMonstrosityLuaTable(PChar));
         if (!result.valid())
         {
             sol::error err = result;
@@ -4035,7 +4017,7 @@ namespace luautils
             return;
         }
 
-        auto result = onMonstrosityReturnToEntrance(CLuaBaseEntity(PChar));
+        auto result = onMonstrosityReturnToEntrance(PChar);
         if (!result.valid())
         {
             sol::error err = result;
@@ -4055,7 +4037,7 @@ namespace luautils
             return 47;
         }
 
-        auto result = onMagicCastingCheck(CLuaBaseEntity(PChar), CLuaBaseEntity(PTarget), CLuaSpell(PSpell));
+        auto result = onMagicCastingCheck(PChar, PTarget, PSpell);
         if (!result.valid())
         {
             sol::error err = result;
@@ -4094,7 +4076,7 @@ namespace luautils
             return 0;
         }
 
-        auto result = onAbilityCheck(CLuaBaseEntity(PChar), CLuaBaseEntity(PTarget), CLuaAbility(PAbility));
+        auto result = onAbilityCheck(PChar, PTarget, PAbility);
         if (!result.valid())
         {
             sol::error err = result;
@@ -4124,7 +4106,7 @@ namespace luautils
             return 0;
         }
 
-        auto result = onPetAbility(CLuaBaseEntity(PTarget), CLuaBaseEntity(PMob), CLuaMobSkill(PMobSkill), CLuaBaseEntity(PMobMaster), CLuaAction(action));
+        auto result = onPetAbility(PTarget, PMob, PMobSkill, PMobMaster, action);
         if (!result.valid())
         {
             sol::error err = result;
@@ -4162,7 +4144,7 @@ namespace luautils
             return 0;
         }
 
-        auto result = onPetAbility(CLuaBaseEntity(PTarget), CLuaBaseEntity(PPet), CLuaPetSkill(PPetSkill), CLuaBaseEntity(PMobMaster), CLuaAction(action));
+        auto result = onPetAbility(PTarget, PPet, PPetSkill, PMobMaster, action);
         if (!result.valid())
         {
             sol::error err = result;
@@ -4203,7 +4185,7 @@ namespace luautils
             return 0;
         }
 
-        auto result = onUseAbility(CLuaBaseEntity(PUser), CLuaBaseEntity(PTarget), CLuaAbility(PAbility), CLuaAction(action));
+        auto result = onUseAbility(PUser, PTarget, PAbility, action);
         if (!result.valid())
         {
             sol::error err = result;
@@ -4232,7 +4214,7 @@ namespace luautils
         auto onStealFramework = lua["InteractionGlobal"]["onSteal"];
         auto onSteal          = GetCacheEntryFromFilename(filename)["onSteal"];
 
-        auto result = onStealFramework(CLuaBaseEntity(PChar), CLuaBaseEntity(PMob), CLuaAbility(PAbility), CLuaAction(action), onSteal);
+        auto result = onStealFramework(PChar, PMob, PAbility, action, onSteal);
         if (!result.valid())
         {
             sol::error err = result;
@@ -4249,7 +4231,7 @@ namespace luautils
         return 0;
     }
 
-    bool OnCanUseSpell(CBattleEntity* PChar, CSpell* Spell) // triggers when CanUseSpell is invoked on spell.cpp for PCs only
+    bool OnCanUseSpell(CBattleEntity* PChar, CSpell* PSpell) // triggers when CanUseSpell is invoked on spell.cpp for PCs only
     {
         TracyZoneScoped;
 
@@ -4260,7 +4242,7 @@ namespace luautils
             return false;
         }
 
-        auto result = canUseSpellOverride(CLuaBaseEntity(PChar), CLuaSpell(Spell));
+        auto result = canUseSpellOverride(PChar, PSpell);
         if (!result.valid())
         {
             sol::error err = result;
@@ -4319,7 +4301,7 @@ namespace luautils
             return;
         }
 
-        auto result = onInstanceZoneIn(CLuaBaseEntity(PChar), CLuaInstance(PInstance));
+        auto result = onInstanceZoneIn(PChar, PInstance);
         if (!result.valid())
         {
             sol::error err = result;
@@ -4346,7 +4328,7 @@ namespace luautils
             return;
         }
 
-        auto result = afterInstanceRegister(CLuaBaseEntity(PChar));
+        auto result = afterInstanceRegister(PChar);
         if (!result.valid())
         {
             sol::error err = result;
@@ -4389,7 +4371,7 @@ namespace luautils
             return;
         }
 
-        auto result = onInstanceTimeUpdate(CLuaInstance(PInstance), time);
+        auto result = onInstanceTimeUpdate(PInstance, time);
         if (!result.valid())
         {
             sol::error err = result;
@@ -4409,7 +4391,7 @@ namespace luautils
             return;
         }
 
-        auto result = onInstanceFailure(CLuaInstance(PInstance));
+        auto result = onInstanceFailure(PInstance);
         if (!result.valid())
         {
             sol::error err = result;
@@ -4436,7 +4418,7 @@ namespace luautils
             return;
         }
 
-        auto result = onInstanceCreatedCallback(CLuaBaseEntity(PChar), CLuaInstance(PInstance));
+        auto result = onInstanceCreatedCallback(PChar, PInstance);
         if (!result.valid())
         {
             sol::error err = result;
@@ -4457,7 +4439,7 @@ namespace luautils
             return;
         }
 
-        auto result = onInstanceCreated(CLuaInstance(PInstance));
+        auto result = onInstanceCreated(PInstance);
         if (!result.valid())
         {
             sol::error err = result;
@@ -4478,7 +4460,7 @@ namespace luautils
             return;
         }
 
-        auto result = onInstanceProgressUpdate(CLuaInstance(PInstance), PInstance->GetProgress());
+        auto result = onInstanceProgressUpdate(PInstance, PInstance->GetProgress());
         if (!result.valid())
         {
             sol::error err = result;
@@ -4500,7 +4482,7 @@ namespace luautils
             return;
         }
 
-        auto result = onInstanceStageChange(CLuaInstance(PInstance), PInstance->GetStage());
+        auto result = onInstanceStageChange(PInstance, PInstance->GetStage());
         if (!result.valid())
         {
             sol::error err = result;
@@ -4521,7 +4503,7 @@ namespace luautils
             return;
         }
 
-        auto result = onInstanceComplete(CLuaInstance(PInstance));
+        auto result = onInstanceComplete(PInstance);
         if (!result.valid())
         {
             sol::error err = result;
@@ -4621,7 +4603,7 @@ namespace luautils
             return;
         }
 
-        auto result = onTransportEvent(CLuaBaseEntity(PChar), TransportID);
+        auto result = onTransportEvent(PChar, TransportID);
         if (!result.valid())
         {
             sol::error err = result;
@@ -4639,7 +4621,7 @@ namespace luautils
             return;
         }
 
-        auto result = onTimeTrigger(CLuaBaseEntity(PNpc), triggerID);
+        auto result = onTimeTrigger(PNpc, triggerID);
         if (!result.valid())
         {
             sol::error err = result;
@@ -4660,10 +4642,7 @@ namespace luautils
             return;
         }
 
-        CLuaZone LuaZone(PZone);
-
-        // xi.conquest.onConquestUpdate = function(zone, updatetype, influence, owner, ranking, isConquestAlliance)
-        auto result = onConquestUpdate(LuaZone, type, influence, owner, ranking, isConquestAlliance);
+        auto result = onConquestUpdate(PZone, type, influence, owner, ranking, isConquestAlliance);
         if (!result.valid())
         {
             sol::error err = result;
@@ -4675,40 +4654,14 @@ namespace luautils
     {
         TracyZoneScoped;
 
-        auto onServerStart = lua["xi"]["server"]["onServerStart"];
-        if (!onServerStart.valid())
-        {
-            ShowWarning("luautils::onServerStart");
-            return;
-        }
-
-        auto result = onServerStart();
-        if (!result.valid())
-        {
-            sol::error err = result;
-            ShowError("luautils::onServerStart: %s", err.what());
-            return;
-        }
+        callGlobal<void>("xi.server.onServerStart");
     }
 
     void OnJSTMidnight()
     {
         TracyZoneScoped;
 
-        auto onJSTMidnight = lua["xi"]["server"]["onJSTMidnight"];
-        if (!onJSTMidnight.valid())
-        {
-            ShowWarning("luautils::onJSTMidnight");
-            return;
-        }
-
-        auto result = onJSTMidnight();
-        if (!result.valid())
-        {
-            sol::error err = result;
-            ShowError("luautils::onJSTMidnight: %s", err.what());
-            return;
-        }
+        callGlobal<void>("xi.server.onJSTMidnight");
     }
 
     /************************************************************************
@@ -4721,20 +4674,7 @@ namespace luautils
     {
         TracyZoneScoped;
 
-        auto onTimeServerTick = lua["xi"]["server"]["onTimeServerTick"];
-        if (!onTimeServerTick.valid())
-        {
-            ShowWarning("luautils::onTimeServerTick");
-            return;
-        }
-
-        auto result = onTimeServerTick();
-        if (!result.valid())
-        {
-            sol::error err = result;
-            ShowError("luautils::onTimeServerTick: %s", err.what());
-            return;
-        }
+        callGlobal<void>("xi.server.onTimeServerTick");
     }
 
     /************************************************************************
@@ -4746,7 +4686,7 @@ namespace luautils
     {
         TracyZoneScoped;
 
-        invokeBattlefieldEvent(PBattlefield->GetID(), "onBattlefieldEnter", CLuaBaseEntity(PChar), CLuaBattlefield(PBattlefield));
+        invokeBattlefieldEvent(PBattlefield->GetID(), "onBattlefieldEnter", PChar, PBattlefield);
     }
 
     /************************************************************************
@@ -4765,7 +4705,7 @@ namespace luautils
     {
         TracyZoneScoped;
 
-        invokeBattlefieldEvent(PBattlefield->GetID(), "onBattlefieldLeave", CLuaBaseEntity(PChar), CLuaBattlefield(PBattlefield), LeaveCode);
+        invokeBattlefieldEvent(PBattlefield->GetID(), "onBattlefieldLeave", PChar, PBattlefield, LeaveCode);
     }
 
     void OnBattlefieldKick(CCharEntity* PChar)
@@ -4778,7 +4718,7 @@ namespace luautils
         {
             uint16 power = status->GetPower();
 
-            invokeBattlefieldEvent(power, "onBattlefieldKick", CLuaBaseEntity(PChar));
+            invokeBattlefieldEvent(power, "onBattlefieldKick", PChar);
         }
     }
 
@@ -4794,7 +4734,7 @@ namespace luautils
     {
         TracyZoneScoped;
 
-        invokeBattlefieldEvent(PBattlefield->GetID(), "onBattlefieldRegister", CLuaBaseEntity(PChar), CLuaBattlefield(PBattlefield));
+        invokeBattlefieldEvent(PBattlefield->GetID(), "onBattlefieldRegister", PChar, PBattlefield);
     }
 
     /************************************************************************
@@ -4806,7 +4746,7 @@ namespace luautils
     {
         TracyZoneScoped;
 
-        invokeBattlefieldEvent(PBattlefield->GetID(), "onBattlefieldDestroy", CLuaBattlefield(PBattlefield));
+        invokeBattlefieldEvent(PBattlefield->GetID(), "onBattlefieldDestroy", PBattlefield);
     }
 
     void DisallowRespawn(uint32 mobid, bool allowRespawn)
@@ -5036,7 +4976,7 @@ namespace luautils
             return;
         }
 
-        auto result = onPlayerDeath(CLuaBaseEntity(PChar));
+        auto result = onPlayerDeath(PChar);
         if (!result.valid())
         {
             sol::error err = result;
@@ -5057,7 +4997,7 @@ namespace luautils
             return;
         }
 
-        auto result = onPlayerLevelUp(CLuaBaseEntity(PChar));
+        auto result = onPlayerLevelUp(PChar);
         if (!result.valid())
         {
             sol::error err = result;
@@ -5078,7 +5018,7 @@ namespace luautils
             return;
         }
 
-        auto result = onPlayerLevelDown(CLuaBaseEntity(PChar));
+        auto result = onPlayerLevelDown(PChar);
         if (!result.valid())
         {
             sol::error err = result;
@@ -5099,7 +5039,7 @@ namespace luautils
             return;
         }
 
-        auto result = onPlayerMount(CLuaBaseEntity(PChar));
+        auto result = onPlayerMount(PChar);
         if (!result.valid())
         {
             sol::error err = result;
@@ -5120,7 +5060,7 @@ namespace luautils
             return;
         }
 
-        auto result = onPlayerEmote(CLuaBaseEntity(PChar), static_cast<uint8>(EmoteID));
+        auto result = onPlayerEmote(PChar, static_cast<uint8>(EmoteID));
         if (!result.valid())
         {
             sol::error err = result;
@@ -5141,7 +5081,7 @@ namespace luautils
             return;
         }
 
-        auto result = onPlayerVolunteer(CLuaBaseEntity(PChar), text);
+        auto result = onPlayerVolunteer(PChar, text);
         if (!result.valid())
         {
             sol::error err = result;
@@ -5165,7 +5105,7 @@ namespace luautils
         }
 
         // Run lua-side chocobo digging.
-        auto result = onChocoboDig(CLuaBaseEntity(PChar));
+        auto result = onChocoboDig(PChar);
         if (!result.valid())
         {
             sol::error err = result;
@@ -5243,7 +5183,7 @@ namespace luautils
             return;
         }
 
-        auto result = onFurniturePlaced(CLuaBaseEntity(PChar));
+        auto result = onFurniturePlaced(PChar);
         if (!result.valid())
         {
             sol::error err = result;
@@ -5265,7 +5205,7 @@ namespace luautils
             return;
         }
 
-        auto result = onFurnitureRemoved(CLuaBaseEntity(PChar));
+        auto result = onFurnitureRemoved(PChar);
         if (!result.valid())
         {
             sol::error err = result;
@@ -5289,7 +5229,7 @@ namespace luautils
         auto onStart = table["onStart"];
         if (onStart.valid())
         {
-            onStart(CLuaBaseEntity(PChar));
+            onStart(PChar);
         }
 
         auto escape = [](std::string const& s)
@@ -5402,7 +5342,7 @@ namespace luautils
             auto onCancelled = context["onCancelled"];
             if (onCancelled.valid())
             {
-                onCancelled(CLuaBaseEntity(PChar), wasCancelledEvent);
+                onCancelled(PChar, wasCancelledEvent);
             }
         }
         else
@@ -5431,7 +5371,7 @@ namespace luautils
 
                     if (result.compare(name) == 0)
                     {
-                        auto result = func(CLuaBaseEntity(PChar));
+                        auto result = func(PChar);
                         if (!result.valid())
                         {
                             sol::error err = result;
@@ -5447,7 +5387,7 @@ namespace luautils
         auto onEnd = context["onEnd"];
         if (onEnd.valid())
         {
-            onEnd(CLuaBaseEntity(PChar));
+            onEnd(PChar);
         }
 
         customMenuContext.erase(PChar->id);
@@ -5647,7 +5587,7 @@ namespace luautils
             if (mixins.valid())
             {
                 // Use the global function "applyMixins"
-                auto result = lua["applyMixins"](CLuaBaseEntity(PMob), mixins);
+                auto result = lua["applyMixins"](PMob, mixins);
                 if (!result.valid())
                 {
                     sol::error err = result;
@@ -5695,7 +5635,7 @@ namespace luautils
 
         PEntity->updatemask |= UPDATE_ALL_CHAR;
 
-        return CLuaBaseEntity(PEntity);
+        return PEntity;
     }
 
     // Fishing Contest utilities

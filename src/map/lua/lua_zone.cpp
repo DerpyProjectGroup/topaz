@@ -113,7 +113,7 @@ sol::table CLuaZone::getPlayers()
     // clang-format off
     m_pLuaZone->ForEachChar([&table](CCharEntity* PChar)
     {
-        table.add(CLuaBaseEntity(PChar));
+        table.add(PChar);
     });
     // clang-format on
     return table;

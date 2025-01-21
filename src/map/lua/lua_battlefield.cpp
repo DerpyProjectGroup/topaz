@@ -107,7 +107,7 @@ sol::table CLuaBattlefield::getPlayers()
     {
         if (PChar)
         {
-            table.add(CLuaBaseEntity(PChar));
+            table.add(PChar);
         }
     });
     // clang-format on
@@ -122,7 +122,7 @@ sol::table CLuaBattlefield::getPlayersAndTrusts()
     {
         if (PChar)
         {
-            table.add(CLuaBaseEntity(PChar));
+            table.add(PChar);
             for (auto const& PTrust : PChar->PTrusts)
             {
                 table.add(CLuaBaseEntity(PTrust));
