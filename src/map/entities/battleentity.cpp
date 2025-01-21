@@ -763,8 +763,8 @@ int32 CBattleEntity::takeDamage(int32 amount, CBattleEntity* attacker /* = nullp
                                 DAMAGE_TYPE damageType /* = DAMAGE_NONE*/, bool isSkillchainDamage /* = false */)
 {
     TracyZoneScoped;
-    PLastAttacker                             = attacker;
-    this->BattleHistory.lastHitTaken_atkType  = attackType;
+    PLastAttacker                            = attacker;
+    this->BattleHistory.lastHitTaken_atkType = attackType;
 
     PAI->EventHandler.triggerListener("TAKE_DAMAGE", this, amount, attacker, (uint16)attackType, (uint16)damageType);
 

@@ -1036,7 +1036,7 @@ void SmallPacket0x01A(map_session_data_t* const PSession, CCharEntity* const PCh
             }
 
             // Consume Gysahl Green and push animation on dig attempt.
-            if (luautils::OnChocoboDig(PChar))
+            if (luautils::callGlobal<bool>("xi.chocoboDig.start", PChar))
             {
                 charutils::UpdateItem(PChar, LOC_INVENTORY, slotID, -1);
                 PChar->pushPacket<CInventoryFinishPacket>();

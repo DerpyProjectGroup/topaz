@@ -114,30 +114,9 @@ namespace luautils
 {
     namespace detail
     {
-        inline auto findLuaFunction(const std::string& funcName) -> sol::function
-        {
-            // TODO: Cache the lookups between funcName and the underlying function object so
-            //     : we don't have to do this splitting and table lookup every time
-
-            const auto parts = split(funcName, ".");
-
-            sol::table table = lua["_G"];
-            for (const auto& part : parts)
-            {
-                if (part == parts.back())
-                {
-                    return table[part].get_or<sol::function>(sol::lua_nil);
-                }
-
-                table = table[part].get_or<sol::table>(sol::lua_nil);
-                if (table == sol::lua_nil)
-                {
-                    return sol::lua_nil;
-                }
-            }
-
-            return sol::lua_nil;
-        }
+        auto findCachedObject(const std::string& objName) -> sol::reference;
+        void cacheObject(const std::string& objName, sol::reference obj);
+        auto findGlobalLuaFunction(const std::string& funcName) -> sol::function;
     } // namespace detail
 
     void init();
@@ -159,7 +138,7 @@ namespace luautils
     template <typename T, typename... Targs>
     auto callGlobal(const std::string& funcName, Targs... args)
     {
-        auto func = detail::findLuaFunction(funcName);
+        auto func = detail::findGlobalLuaFunction(funcName);
         if (!func.valid())
         {
             ShowError("luautils::callGlobalFunction: %s: Function not found", funcName);
@@ -173,7 +152,7 @@ namespace luautils
             }
         }
 
-        const auto result = func(args...);
+        const auto result = func(std::forward<Targs>(args)...);
         if (!result.valid())
         {
             sol::error err = result;
@@ -194,10 +173,10 @@ namespace luautils
         }
         else
         {
-            auto returnObject = result.get<sol::object>();
-            if (returnObject.is<T>())
+            auto returnObject = result.template get<sol::object>();
+            if (returnObject.template is<T>())
             {
-                return returnObject.as<T>();
+                return returnObject.template as<T>();
             }
             else
             {
@@ -207,7 +186,7 @@ namespace luautils
         }
     }
 
-    void ReloadFilewatchList();
+    void TryReloadFilewatchList();
 
     auto GetContainerFilenamesList() -> std::vector<std::string>;
 
@@ -432,8 +411,6 @@ namespace luautils
     void OnPlayerMount(CCharEntity* PChar);
     void OnPlayerEmote(CCharEntity* PChar, Emote EmoteID);
     void OnPlayerVolunteer(CCharEntity* PChar, std::string const& text);
-
-    bool OnChocoboDig(CCharEntity* PChar); // chocobo digging
 
     // Utility method: checks for and loads a lua function for events
     auto LoadEventScript(CCharEntity* PChar, const char* functionName) -> sol::function;

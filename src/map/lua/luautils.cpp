@@ -140,9 +140,87 @@ void ReportErrorToPlayer(CBaseEntity* PEntity, std::string const& message = "") 
 
 namespace luautils
 {
-    std::unique_ptr<Filewatcher> filewatcher;
-
+    std::unique_ptr<Filewatcher>           filewatcher;
     std::unordered_map<uint32, sol::table> customMenuContext;
+
+    namespace detail
+    {
+        std::unordered_map<std::string, sol::reference> cachedObjects;
+
+        auto findCachedObject(const std::string& objName) -> sol::reference
+        {
+            if (auto it = cachedObjects.find(objName); it != cachedObjects.end())
+            {
+                return it->second;
+            }
+
+            return sol::lua_nil;
+        }
+
+        void cacheObject(const std::string& objName, sol::reference obj)
+        {
+            cachedObjects[objName] = obj;
+        }
+
+        // NOTE: Will crash if any intermediate keys look up nil tables
+        auto lookupByKeysFast(const std::vector<std::string>& keys) -> sol::object
+        {
+            // This looks ugly, but this consistantly outperforms the other methods
+            switch (keys.size())
+            {
+                case 1:
+                    return lua[keys[0]];
+                case 2:
+                    return lua[keys[0]][keys[1]];
+                case 3:
+                    return lua[keys[0]][keys[1]][keys[2]];
+                case 4:
+                    return lua[keys[0]][keys[1]][keys[2]][keys[3]];
+                case 5:
+                    return lua[keys[0]][keys[1]][keys[2]][keys[3]][keys[4]];
+                case 6:
+                    return lua[keys[0]][keys[1]][keys[2]][keys[3]][keys[4]][keys[5]];
+                case 7:
+                    return lua[keys[0]][keys[1]][keys[2]][keys[3]][keys[4]][keys[5]][keys[6]];
+                case 8:
+                    return lua[keys[0]][keys[1]][keys[2]][keys[3]][keys[4]][keys[5]][keys[6]][keys[7]];
+                default:
+                    throw;
+            }
+        };
+
+        // NOTE: Is safe to call on invalid tables, will ultimately return nil
+        auto lookupByKeysSafe(const std::vector<std::string>& keys) -> sol::object
+        {
+            sol::table table = lua["_G"];
+            for (const auto& part : keys)
+            {
+                if (part == keys.back())
+                {
+                    sol::object obj = table[part];
+                    return obj;
+                }
+
+                table = table[part].get_or<sol::table>(sol::lua_nil);
+                if (table == sol::lua_nil)
+                {
+                    return sol::lua_nil;
+                }
+            }
+
+            return sol::lua_nil;
+        };
+
+        auto findGlobalLuaFunction(const std::string& funcName) -> sol::function
+        {
+            if (const auto cachedFunc = findCachedObject(funcName))
+            {
+                return cachedFunc;
+            }
+
+            return lookupByKeysSafe(split(funcName, "."));
+        }
+    } // namespace detail
 
     /**
      * @brief Initialization of Lua user classes and global functions.
@@ -413,9 +491,20 @@ namespace luautils
         TracyReportLuaMemory(lua.lua_state());
     }
 
-    void ReloadFilewatchList()
+    void TryReloadFilewatchList()
     {
-        for (const auto& [filename, action] : filewatcher->getChangedLuaFiles())
+        const auto changedFiles = filewatcher->popChangedLuaFilesList();
+
+        if (changedFiles.empty())
+        {
+            return;
+        }
+
+        // For coherency between looking things up by filename and by Lua global
+        // name we need to nuke the whole lookup cache on any file changes.
+        detail::cachedObjects.clear();
+
+        for (const auto& [filename, action] : changedFiles)
         {
             const auto pathStr = filename.generic_string();
             if (action == Filewatcher::Action::Add || action == Filewatcher::Action::Modified)
@@ -476,39 +565,31 @@ namespace luautils
         {
             std::string zone_name = PEntity->loc.zone->getName();
             std::string npc_name  = PEntity->getName();
+            std::string cacheKey  = fmt::format("xi.zones.{}.npcs.{}.{}", zone_name, npc_name, funcName);
 
-            if (auto cached_func = lua["xi"]["zones"][zone_name]["npcs"][npc_name][funcName]; cached_func.valid())
-            {
-                return cached_func;
-            }
+            return detail::findGlobalLuaFunction(cacheKey);
         }
         else if (PEntity->objtype == TYPE_MOB)
         {
             std::string zone_name = PEntity->loc.zone->getName();
             std::string mob_name  = PEntity->getName();
+            std::string cacheKey  = fmt::format("xi.zones.{}.mobs.{}.{}", zone_name, mob_name, funcName);
 
-            if (auto cached_func = lua["xi"]["zones"][zone_name]["mobs"][mob_name][funcName]; cached_func.valid())
-            {
-                return cached_func;
-            }
+            return detail::findGlobalLuaFunction(cacheKey);
         }
         else if (PEntity->objtype == TYPE_PET)
         {
             std::string mob_name = static_cast<CPetEntity*>(PEntity)->GetScriptName();
+            std::string cacheKey = fmt::format("xi.pets.{}.{}", mob_name, funcName);
 
-            if (auto cached_func = lua["xi"]["pets"][mob_name][funcName]; cached_func.valid())
-            {
-                return cached_func;
-            }
+            return detail::findGlobalLuaFunction(cacheKey);
         }
         else if (PEntity->objtype == TYPE_TRUST)
         {
             std::string mob_name = PEntity->getName();
+            std::string cacheKey = fmt::format("xi.actions.spells.trust.{}.{}", mob_name, funcName);
 
-            if (auto cached_func = lua["xi"]["actions"]["spells"]["trust"][mob_name][funcName]; cached_func.valid())
-            {
-                return cached_func;
-            }
+            return detail::findGlobalLuaFunction(cacheKey);
         }
 
         // Didn't find it
@@ -573,13 +654,7 @@ namespace luautils
             break;
         }
 
-        if (auto cached_func = lua["xi"]["actions"]["spells"][switchKey][name][funcName]; cached_func.valid())
-        {
-            return cached_func;
-        }
-
-        // Didn't find it
-        return sol::lua_nil;
+        return detail::findGlobalLuaFunction(fmt::format("xi.actions.spells.{}.{}.{}", switchKey, name, funcName));
     }
 
     // Assumes filename in the form "./scripts/folder0/folder1/folder2/mob_name.lua
@@ -760,9 +835,9 @@ namespace luautils
         }
 
         // file_result should be good, cache it!
+        detail::cachedObjects[filename] = file_result;
 
-        auto        table   = lua["xi"].get_or_create<sol::table>();
-        std::string out_str = "xi";
+        auto table = lua["xi"].get_or_create<sol::table>();
         for (auto& part : parts)
         {
             if (part == parts.back())
@@ -780,7 +855,6 @@ namespace luautils
             {
                 table = table[part].get_or_create<sol::table>(lua.create_table());
             }
-            out_str += "." + part;
         }
 
         moduleutils::TryApplyLuaModules();
@@ -793,7 +867,12 @@ namespace luautils
 
         if (filename.empty())
         {
-            return lua.create_table();
+            return sol::lua_nil;
+        }
+
+        if (auto cached = detail::findCachedObject(filename); cached.valid())
+        {
+            return cached;
         }
 
         // Handle filename -> path conversion
@@ -821,6 +900,8 @@ namespace luautils
         {
             table = table[part].get_or_create<sol::table>();
         }
+
+        detail::cacheObject(filename, table);
 
         return table;
     }
@@ -4944,49 +5025,42 @@ namespace luautils
     {
         TracyZoneScoped;
 
-        callGlobal<void>("xi.server.onPlayerDeath", PChar);
+        callGlobal<void>("xi.player.onPlayerDeath", PChar);
     }
 
     void OnPlayerLevelUp(CCharEntity* PChar)
     {
         TracyZoneScoped;
 
-        callGlobal<void>("xi.server.onPlayerLevelUp", PChar);
+        callGlobal<void>("xi.player.onPlayerLevelUp", PChar);
     }
 
     void OnPlayerLevelDown(CCharEntity* PChar)
     {
         TracyZoneScoped;
 
-        callGlobal<void>("xi.server.onPlayerLevelDown", PChar);
+        callGlobal<void>("xi.player.onPlayerLevelDown", PChar);
     }
 
     void OnPlayerMount(CCharEntity* PChar)
     {
         TracyZoneScoped;
 
-        callGlobal<void>("xi.server.onPlayerMount", PChar);
+        callGlobal<void>("xi.player.onPlayerMount", PChar);
     }
 
     void OnPlayerEmote(CCharEntity* PChar, Emote EmoteID)
     {
         TracyZoneScoped;
 
-        callGlobal<void>("xi.server.onPlayerEmote", PChar, static_cast<uint8>(EmoteID));
+        callGlobal<void>("xi.player.onPlayerEmote", PChar, static_cast<uint8>(EmoteID));
     }
 
     void OnPlayerVolunteer(CCharEntity* PChar, std::string const& text)
     {
         TracyZoneScoped;
 
-        callGlobal<void>("xi.player.onPLayerVolunteer", PChar, text);
-    }
-
-    bool OnChocoboDig(CCharEntity* PChar)
-    {
-        TracyZoneScoped;
-
-        return callGlobal<bool>("xi.server.onChocoboDig", PChar);
+        callGlobal<void>("xi.player.onPlayerVolunteer", PChar, text);
     }
 
     // Loads a Lua function with a fallback hierarchy
