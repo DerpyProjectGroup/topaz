@@ -1,4 +1,4 @@
-﻿/*
+/*
 ===========================================================================
 
   Copyright (c) 2010-2015 Darkstar Dev Teams
@@ -34,16 +34,7 @@ extern sol::state lua;
 // SOL_ALL_SAFETIES_ON = 1
 // SOL_NO_CHECK_NUMBER_PRECISION = 1
 #include "sol/sol.hpp"
-
-// sol changes this behavior to return 0 rather than truncating
-// we rely on that, so change it back
-#undef lua_tointeger
-#define lua_tointeger(L, n) static_cast<lua_Integer>(std::floor(lua_tonumber(L, n)))
-
-#define SOL_USERTYPE(TypeName, BindingTypeName) \
-    std::string className = TypeName;           \
-    lua.new_usertype<BindingTypeName>(className)
-#define SOL_REGISTER(FuncName, Func) lua[className][FuncName] = &Func
+#include "sol_bindings.h"
 
 #include "items/item_equipment.h"
 #include "spell.h"
