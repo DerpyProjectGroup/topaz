@@ -1297,20 +1297,7 @@ namespace luautils
     {
         TracyZoneScoped;
 
-        auto setRegionalConquestOverseers = lua["xi"]["conquest"]["setRegionalConquestOverseers"];
-        if (!setRegionalConquestOverseers.valid())
-        {
-            sol::error err = setRegionalConquestOverseers;
-            ShowError("luautils::setRegionalConquestOverseers: %s", err.what());
-            return;
-        }
-
-        auto result = setRegionalConquestOverseers(regionID);
-        if (!result.valid())
-        {
-            sol::error err = result;
-            ShowError("luautils::setRegionalConquestOverseers: %s", err.what());
-        }
+        callGlobal<void>("xi.conquest.setRegionalConquestOverseers", regionID);
     }
 
     void SendLuaFuncStringToZone(uint16 zoneId, std::string const& str)
@@ -1321,24 +1308,28 @@ namespace luautils
     uint32 VanadielTime()
     {
         TracyZoneScoped;
+
         return CVanaTime::getInstance()->getVanaTime();
     }
 
     uint8 VanadielTOTD()
     {
         TracyZoneScoped;
+
         return static_cast<uint8>(CVanaTime::getInstance()->GetCurrentTOTD());
     }
 
     uint32 VanadielYear()
     {
         TracyZoneScoped;
+
         return CVanaTime::getInstance()->getYear();
     }
 
     uint32 VanadielMonth()
     {
         TracyZoneScoped;
+
         return CVanaTime::getInstance()->getMonth();
     }
 
@@ -1890,20 +1881,7 @@ namespace luautils
 
         ShowTraceFmt("luautils::OnGameIn: {}", PChar->getName());
 
-        auto onGameIn = lua["xi"]["player"]["onGameIn"];
-        if (!onGameIn.valid())
-        {
-            ShowError("luautils::onGameIn");
-            return;
-        }
-
-        auto result = onGameIn(PChar, PChar->GetPlayTime(false) == 0, zoning);
-        if (!result.valid())
-        {
-            sol::error err = result;
-            ShowError("luautils::onGameIn: %s", err.what());
-            ReportErrorToPlayer(PChar, err.what());
-        }
+        callGlobal<void>("xi.player.onGameIn", PChar, PChar->GetPlayTime(false) == 0, zoning);
     }
 
     void OnZoneIn(CCharEntity* PChar)
@@ -3611,7 +3589,20 @@ namespace luautils
             return;
         }
 
-        callGlobal<void>(fmt::format("xi.zones.{}.Zone.onZoneWeatherChange", PZone->getName()), weather);
+        auto name = PZone->getName();
+
+        auto onZoneWeatherChange = lua["xi"]["zones"][name]["Zone"]["onZoneWeatherChange"];
+        if (!onZoneWeatherChange.valid())
+        {
+            return;
+        }
+
+        auto result = onZoneWeatherChange(weather);
+        if (!result.valid())
+        {
+            sol::error err = result;
+            ShowError("luautils::onZoneWeatherChange: %s", err.what());
+        }
     }
 
     void OnTOTDChange(uint16 ZoneID, uint8 TOTD)
@@ -4868,23 +4859,7 @@ namespace luautils
     {
         TracyZoneScoped;
 
-        // xi.server.getServerMessage = function(language) ...
-        auto getServerMessage = lua["xi"]["server"]["getServerMessage"];
-        if (!getServerMessage.valid())
-        {
-            ShowWarning("luautils::getServerMessage");
-            return "";
-        }
-
-        auto result = getServerMessage(language);
-        if (!result.valid())
-        {
-            sol::error err = result;
-            ShowError("luautils::getServerMessage: %s", err.what());
-            return "";
-        }
-
-        return result.get_type() == sol::type::string ? result.get<std::string>() : "";
+        return callGlobal<std::string>("xi.server.getServerMessage", language);
     }
 
     /************************************************************************
@@ -4969,152 +4944,49 @@ namespace luautils
     {
         TracyZoneScoped;
 
-        auto onPlayerDeath = lua["xi"]["player"]["onPlayerDeath"];
-        if (!onPlayerDeath.valid())
-        {
-            ShowWarning("luautils::onPlayerDeath");
-            return;
-        }
-
-        auto result = onPlayerDeath(PChar);
-        if (!result.valid())
-        {
-            sol::error err = result;
-            ShowError("luautils::onPlayerDeath: %s", err.what());
-            ReportErrorToPlayer(PChar, err.what());
-            return;
-        }
+        callGlobal<void>("xi.server.onPlayerDeath", PChar);
     }
 
     void OnPlayerLevelUp(CCharEntity* PChar)
     {
         TracyZoneScoped;
 
-        auto onPlayerLevelUp = lua["xi"]["player"]["onPlayerLevelUp"];
-        if (!onPlayerLevelUp.valid())
-        {
-            ShowWarning("luautils::onPlayerLevelUp");
-            return;
-        }
-
-        auto result = onPlayerLevelUp(PChar);
-        if (!result.valid())
-        {
-            sol::error err = result;
-            ShowError("luautils::onPlayerLevelUp: %s", err.what());
-            ReportErrorToPlayer(PChar, err.what());
-            return;
-        }
+        callGlobal<void>("xi.server.onPlayerLevelUp", PChar);
     }
 
     void OnPlayerLevelDown(CCharEntity* PChar)
     {
         TracyZoneScoped;
 
-        auto onPlayerLevelDown = lua["xi"]["player"]["onPlayerLevelDown"];
-        if (!onPlayerLevelDown.valid())
-        {
-            ShowWarning("luautils::onPlayerLevelDown");
-            return;
-        }
-
-        auto result = onPlayerLevelDown(PChar);
-        if (!result.valid())
-        {
-            sol::error err = result;
-            ShowError("luautils::onPlayerLevelDown: %s", err.what());
-            ReportErrorToPlayer(PChar, err.what());
-            return;
-        }
+        callGlobal<void>("xi.server.onPlayerLevelDown", PChar);
     }
 
     void OnPlayerMount(CCharEntity* PChar)
     {
         TracyZoneScoped;
 
-        auto onPlayerMount = lua["xi"]["player"]["onPlayerMount"];
-        if (!onPlayerMount.valid())
-        {
-            ShowWarning("luautils::onPlayerMount");
-            return;
-        }
-
-        auto result = onPlayerMount(PChar);
-        if (!result.valid())
-        {
-            sol::error err = result;
-            ShowError("luautils::onPlayerMount: %s", err.what());
-            ReportErrorToPlayer(PChar, err.what());
-            return;
-        }
+        callGlobal<void>("xi.server.onPlayerMount", PChar);
     }
 
     void OnPlayerEmote(CCharEntity* PChar, Emote EmoteID)
     {
         TracyZoneScoped;
 
-        auto onPlayerEmote = lua["xi"]["player"]["onPlayerEmote"];
-        if (!onPlayerEmote.valid())
-        {
-            ShowWarning("luautils::onPlayerEmote");
-            return;
-        }
-
-        auto result = onPlayerEmote(PChar, static_cast<uint8>(EmoteID));
-        if (!result.valid())
-        {
-            sol::error err = result;
-            ShowError("luautils::onPlayerEmote: %s", err.what());
-            ReportErrorToPlayer(PChar, err.what());
-            return;
-        }
+        callGlobal<void>("xi.server.onPlayerEmote", PChar, static_cast<uint8>(EmoteID));
     }
 
     void OnPlayerVolunteer(CCharEntity* PChar, std::string const& text)
     {
         TracyZoneScoped;
 
-        auto onPlayerVolunteer = lua["xi"]["player"]["onPlayerVolunteer"];
-        if (!onPlayerVolunteer.valid())
-        {
-            ShowWarning("luautils::onPlayerVolunteer");
-            return;
-        }
-
-        auto result = onPlayerVolunteer(PChar, text);
-        if (!result.valid())
-        {
-            sol::error err = result;
-            ShowError("luautils::onPlayerVolunteer: %s", err.what());
-            ReportErrorToPlayer(PChar, err.what());
-            return;
-        }
+        callGlobal<void>("xi.player.onPLayerVolunteer", PChar, text);
     }
 
     bool OnChocoboDig(CCharEntity* PChar)
     {
         TracyZoneScoped;
 
-        auto onChocoboDig = lua["xi"]["chocoboDig"]["start"];
-
-        // Check that the function exists.
-        if (!onChocoboDig.valid())
-        {
-            ShowWarning("luautils::onChocoboDig");
-            return false;
-        }
-
-        // Run lua-side chocobo digging.
-        auto result = onChocoboDig(PChar);
-        if (!result.valid())
-        {
-            sol::error err = result;
-            ShowError("luautils::onChocoboDig: %s", err.what());
-            ReportErrorToPlayer(PChar, err.what());
-            return false;
-        }
-
-        return result.get_type(0) == sol::type::boolean ? result.get<bool>() : false;
+        return callGlobal<bool>("xi.server.onChocoboDig", PChar);
     }
 
     // Loads a Lua function with a fallback hierarchy

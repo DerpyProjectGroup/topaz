@@ -21,6 +21,7 @@
 
 #include "sol_bindings.h"
 
+// clang-format off
 #include "ability.h"
 #include "lua_ability.h"
 SOL_BIND_DEF(CLuaAbility, CAbility);
@@ -112,3 +113,4 @@ SOL_BIND_DEF(CLuaTriggerArea, CTriggerArea);
 #include "zone.h"
 #include "lua_zone.h"
 SOL_BIND_DEF(CLuaZone, CZone);
+// clang-format on

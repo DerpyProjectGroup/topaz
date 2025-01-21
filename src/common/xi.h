@@ -49,6 +49,10 @@ namespace xi
         : m_value(std::nullopt)
         {
         }
+        constexpr explicit optional(T&& value) noexcept
+        {
+            m_value = std::move(value);
+        }
         constexpr optional(const optional& other)                = default;
         constexpr optional(optional&& other) noexcept            = default;
         constexpr optional& operator=(const optional& other)     = default;
@@ -132,7 +136,7 @@ namespace xi
         }
 
     private:
-        std::optional<T> m_value;
+        std::optional<T> m_value = std::nullopt;
     };
 
     // TODO: A wrapper around std::variant to allow usage of:

@@ -1,4 +1,4 @@
-/*
+﻿/*
 ===========================================================================
 
   Copyright (c) 2010-2015 Darkstar Dev Teams
@@ -35,6 +35,8 @@ extern sol::state lua;
 // SOL_NO_CHECK_NUMBER_PRECISION = 1
 #include "sol/sol.hpp"
 #include "sol_bindings.h"
+
+#include "common/xi.h"
 
 #include "items/item_equipment.h"
 #include "spell.h"
@@ -110,10 +112,100 @@ enum class Emote : uint8;
 
 namespace luautils
 {
+    namespace detail
+    {
+        inline auto findLuaFunction(const std::string& funcName) -> sol::function
+        {
+            // TODO: Cache the lookups between funcName and the underlying function object so
+            //     : we don't have to do this splitting and table lookup every time
+
+            const auto parts = split(funcName, ".");
+
+            sol::table table = lua["_G"];
+            for (const auto& part : parts)
+            {
+                if (part == parts.back())
+                {
+                    return table[part].get_or<sol::function>(sol::lua_nil);
+                }
+
+                table = table[part].get_or<sol::table>(sol::lua_nil);
+                if (table == sol::lua_nil)
+                {
+                    return sol::lua_nil;
+                }
+            }
+
+            return sol::lua_nil;
+        }
+    } // namespace detail
+
     void init();
     void garbageCollectStep();
     void garbageCollectFull();
     void cleanup();
+
+    // Find and call a global function in Lua from C++.
+    //
+    // If the function is not found or an error occurs, an error message is printed to the console.
+    //
+    // Examples:
+    //
+    // ```cpp
+    // luautils::callGlobal<void>("xi.server.onTimeServerTick");
+    // luautils::callGlobal<void>("xi.player.onPlayerDeath", PChar);
+    // auto value = callGlobal<uint32>("xi.server.functionThatReturnsANumber");
+    // ```
+    template <typename T, typename... Targs>
+    auto callGlobal(const std::string& funcName, Targs... args)
+    {
+        auto func = detail::findLuaFunction(funcName);
+        if (!func.valid())
+        {
+            ShowError("luautils::callGlobalFunction: %s: Function not found", funcName);
+            if constexpr (std::is_void_v<T>)
+            {
+                return;
+            }
+            else
+            {
+                return T{};
+            }
+        }
+
+        const auto result = func(args...);
+        if (!result.valid())
+        {
+            sol::error err = result;
+            ShowError("luautils::callGlobalFunction: %s: %s", funcName, err.what());
+            if constexpr (std::is_void_v<T>)
+            {
+                return;
+            }
+            else
+            {
+                return T{};
+            }
+        }
+
+        if constexpr (std::is_void_v<T>)
+        {
+            return;
+        }
+        else
+        {
+            auto returnObject = result.get<sol::object>();
+            if (returnObject.is<T>())
+            {
+                return returnObject.as<T>();
+            }
+            else
+            {
+                ShowError("luautils::callGlobalFunction: %s: Invalid return type", funcName);
+                return T{};
+            }
+        }
+    }
 
     void ReloadFilewatchList();
 
