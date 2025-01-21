@@ -12,7 +12,7 @@ zoneObject.onInitialize = function(zone)
     -- A Chocobo Riding Game finish line
     zone:registerTriggerArea(1, -485.54, 5, -379.19, 0, 0, 0)
 
-    xi.conq.setRegionalConquestOverseers(zone:getRegionID())
+    xi.conquest.setRegionalConquestOverseers(zone:getRegionID())
 
     xi.helm.initZone(zone, xi.helmType.HARVESTING)
     xi.helm.initZone(zone, xi.helmType.LOGGING)
@@ -29,7 +29,7 @@ zoneObject.onGameDay = function()
 end
 
 zoneObject.onConquestUpdate = function(zone, updatetype, influence, owner, ranking, isConquestAlliance)
-    xi.conq.onConquestUpdate(zone, updatetype, influence, owner, ranking, isConquestAlliance)
+    xi.conquest.onConquestUpdate(zone, updatetype, influence, owner, ranking, isConquestAlliance)
 end
 
 zoneObject.onZoneIn = function(player, prevZone)

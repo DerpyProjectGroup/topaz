@@ -21,7 +21,7 @@ zoneObject.onInitialize = function(zone)
     UpdateNMSpawnPoint(ID.mob.BRIGHT_HANDED_KUNBERRY)
     GetMobByID(ID.mob.BRIGHT_HANDED_KUNBERRY):setRespawnTime(math.random(900, 10800))
 
-    xi.conq.setRegionalConquestOverseers(zone:getRegionID())
+    xi.conquest.setRegionalConquestOverseers(zone:getRegionID())
 
     xi.helm.initZone(zone, xi.helmType.HARVESTING)
     xi.helm.initZone(zone, xi.helmType.LOGGING)
@@ -35,7 +35,7 @@ zoneObject.onGameDay = function()
 end
 
 zoneObject.onConquestUpdate = function(zone, updatetype, influence, owner, ranking, isConquestAlliance)
-    xi.conq.onConquestUpdate(zone, updatetype, influence, owner, ranking, isConquestAlliance)
+    xi.conquest.onConquestUpdate(zone, updatetype, influence, owner, ranking, isConquestAlliance)
 end
 
 zoneObject.onZoneIn = function(player, prevZone)
