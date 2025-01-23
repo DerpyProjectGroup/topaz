@@ -338,7 +338,8 @@ void CZoneEntities::WeatherChange(WEATHER weather)
     {
         CMobEntity* PCurrentMob = (CMobEntity*)it->second;
 
-        PCurrentMob->PAI->EventHandler.triggerListener("WEATHER_CHANGE", CLuaBaseEntity(PCurrentMob), static_cast<int>(weather), element);
+        PCurrentMob->PAI->EventHandler.triggerListener("WEATHER_CHANGE", PCurrentMob, static_cast<int>(weather), element);
+
         // can't detect by scent in this weather
         if (PCurrentMob->getMobMod(MOBMOD_DETECTION) & DETECT_SCENT)
         {
@@ -380,7 +381,7 @@ void CZoneEntities::WeatherChange(WEATHER weather)
         CCharEntity* PChar = (CCharEntity*)it->second;
 
         PChar->PLatentEffectContainer->CheckLatentsWeather(weather);
-        PChar->PAI->EventHandler.triggerListener("WEATHER_CHANGE", CLuaBaseEntity(PChar), static_cast<int>(weather), element);
+        PChar->PAI->EventHandler.triggerListener("WEATHER_CHANGE", PChar, static_cast<int>(weather), element);
     }
 }
 

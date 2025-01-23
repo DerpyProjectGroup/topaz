@@ -34,16 +34,9 @@ extern sol::state lua;
 // SOL_ALL_SAFETIES_ON = 1
 // SOL_NO_CHECK_NUMBER_PRECISION = 1
 #include "sol/sol.hpp"
+#include "sol_bindings.h"
 
-// sol changes this behavior to return 0 rather than truncating
-// we rely on that, so change it back
-#undef lua_tointeger
-#define lua_tointeger(L, n) static_cast<lua_Integer>(std::floor(lua_tonumber(L, n)))
-
-#define SOL_USERTYPE(TypeName, BindingTypeName) \
-    std::string className = TypeName;           \
-    lua.new_usertype<BindingTypeName>(className)
-#define SOL_REGISTER(FuncName, Func) lua[className][FuncName] = &Func
+#include "common/xi.h"
 
 #include "items/item_equipment.h"
 #include "spell.h"
@@ -119,12 +112,81 @@ enum class Emote : uint8;
 
 namespace luautils
 {
+    namespace detail
+    {
+        auto findCachedObject(const std::string& objName) -> sol::reference;
+        void cacheObject(const std::string& objName, sol::reference obj);
+        auto findGlobalLuaFunction(const std::string& funcName) -> sol::function;
+    } // namespace detail
+
     void init();
     void garbageCollectStep();
     void garbageCollectFull();
     void cleanup();
 
-    void ReloadFilewatchList();
+    // Find and call a global function in Lua from C++.
+    //
+    // If the function is not found or an error occurs, an error message is printed to the console.
+    //
+    // Examples:
+    //
+    // ```cpp
+    // luautils::callGlobal<void>("xi.server.onTimeServerTick");
+    // luautils::callGlobal<void>("xi.player.onPlayerDeath", PChar);
+    // auto value = callGlobal<uint32>("xi.server.functionThatReturnsANumber");
+    // ```
+    template <typename T, typename... Targs>
+    auto callGlobal(const std::string& funcName, Targs... args)
+    {
+        auto func = detail::findGlobalLuaFunction(funcName);
+        if (!func.valid())
+        {
+            ShowError("luautils::callGlobalFunction: %s: Function not found", funcName);
+            if constexpr (std::is_void_v<T>)
+            {
+                return;
+            }
+            else
+            {
+                return T{};
+            }
+        }
+
+        const auto result = func(std::forward<Targs>(args)...);
+        if (!result.valid())
+        {
+            sol::error err = result;
+            ShowError("luautils::callGlobalFunction: %s: %s", funcName, err.what());
+            if constexpr (std::is_void_v<T>)
+            {
+                return;
+            }
+            else
+            {
+                return T{};
+            }
+        }
+
+        if constexpr (std::is_void_v<T>)
+        {
+            return;
+        }
+        else
+        {
+            auto returnObject = result.template get<sol::object>();
+            if (returnObject.template is<T>())
+            {
+                return returnObject.template as<T>();
+            }
+            else
+            {
+                ShowError("luautils::callGlobalFunction: %s: Invalid return type", funcName);
+                return T{};
+            }
+        }
+    }
+
+    void TryReloadFilewatchList();
 
     auto GetContainerFilenamesList() -> std::vector<std::string>;
 
@@ -349,8 +411,6 @@ namespace luautils
     void OnPlayerMount(CCharEntity* PChar);
     void OnPlayerEmote(CCharEntity* PChar, Emote EmoteID);
     void OnPlayerVolunteer(CCharEntity* PChar, std::string const& text);
-
-    bool OnChocoboDig(CCharEntity* PChar); // chocobo digging
 
     // Utility method: checks for and loads a lua function for events
     auto LoadEventScript(CCharEntity* PChar, const char* functionName) -> sol::function;
