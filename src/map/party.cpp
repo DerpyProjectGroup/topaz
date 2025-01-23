@@ -123,7 +123,8 @@ void CParty::DisbandParty(bool playerInitiated)
     if (m_PartyType == PARTY_PCS)
     {
         SetQuarterMaster("");
-        PushPacket(0, 0, new CPartyDefinePacket(nullptr));
+        auto partyDefinePacket = std::make_unique<CPartyDefinePacket>(nullptr);
+        PushPacket(0, 0, std::move(partyDefinePacket));
 
         for (auto& member : members)
         {
@@ -640,7 +641,7 @@ void CParty::AddMember(CBattleEntity* PEntity)
                 PChar->pushPacket<CMessageBasicPacket>(PChar, PChar, 0, m_PSyncTarget->GetMLevel(), MsgStd::LevelSyncActivated);
                 PChar->StatusEffectContainer->AddStatusEffect(new CStatusEffect(EFFECT_LEVEL_SYNC, EFFECT_LEVEL_SYNC, m_PSyncTarget->GetMLevel(), 0, 0), true);
                 PChar->StatusEffectContainer->DelStatusEffectsByFlag(EFFECTFLAG_DISPELABLE | EFFECTFLAG_ON_ZONE);
-                PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, new CCharSyncPacket(PChar));
+                PChar->loc.zone->PushPacket(PChar, CHAR_INRANGE, std::make_unique<CCharSyncPacket>(PChar));
             }
         }
 
@@ -1102,7 +1103,7 @@ void CParty::SetSyncTarget(const std::string& MemberName, MsgStd message)
                         member->pushPacket<CMessageStandardPacket>(PChar->GetMLevel(), 0, 0, 0, message);
                         member->StatusEffectContainer->AddStatusEffect(new CStatusEffect(EFFECT_LEVEL_SYNC, EFFECT_LEVEL_SYNC, PChar->GetMLevel(), 0, 0), true);
                         member->StatusEffectContainer->DelStatusEffectsByFlag(EFFECTFLAG_DISPELABLE | EFFECTFLAG_ON_ZONE);
-                        member->loc.zone->PushPacket(member, CHAR_INRANGE, new CCharSyncPacket(member));
+                        member->loc.zone->PushPacket(member, CHAR_INRANGE, std::make_unique<CCharSyncPacket>(member));
                     }
                 }
                 _sql->Query("UPDATE accounts_parties SET partyflag = partyflag & ~%d WHERE partyid = %u AND partyflag & %d", PARTY_SYNC, m_PartyID,
@@ -1161,7 +1162,7 @@ void CParty::SetQuarterMaster(const std::string& MemberName)
 // Send a packet to all members of the group if the zone is specified as 0
 // or to the party members in the specified zone.
 // Packet for PPartyMember is not sent in both cases
-void CParty::PushPacket(uint32 senderID, uint16 ZoneID, CBasicPacket* packet)
+void CParty::PushPacket(uint32 senderID, uint16 ZoneID, const std::unique_ptr<CBasicPacket>& packet)
 {
     for (auto& i : members)
     {
@@ -1176,11 +1177,10 @@ void CParty::PushPacket(uint32 senderID, uint16 ZoneID, CBasicPacket* packet)
         {
             if (ZoneID == 0 || member->getZone() == ZoneID)
             {
-                member->pushPacket<CBasicPacket>(*packet);
+                member->pushPacket(packet->copy());
             }
         }
     }
-    destroy(packet);
 }
 
 void CParty::PushEffectsPacket()
@@ -1204,7 +1204,7 @@ void CParty::PushEffectsPacket()
                     }
                 }
             }
-            PMemberChar->pushPacket(effects.release());
+            PMemberChar->pushPacket(std::move(effects));
         }
         m_EffectsChanged = false;
     }

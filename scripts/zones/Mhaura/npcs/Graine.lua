@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Mhaura
 --  NPC: Graine
--- Standard Merchant NPC
 -----------------------------------
 local ID = zones[xi.zone.MHAURA]
 -----------------------------------

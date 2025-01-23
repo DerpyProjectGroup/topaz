@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Bastok Mines
 --  NPC: Boytz
--- Standard Merchant NPC
 -----------------------------------
 local ID = zones[xi.zone.BASTOK_MINES]
 -----------------------------------

@@ -98,7 +98,7 @@ namespace moduleutils
         }
     }
 
-    void OnPushPacket(CCharEntity* PChar, CBasicPacket* packet)
+    void OnPushPacket(CCharEntity* PChar, const std::unique_ptr<CBasicPacket>& packet)
     {
         TracyZoneScoped;
         for (auto* module : cppModules())
@@ -172,6 +172,7 @@ namespace moduleutils
 
         // Load zone_settings information
         std::unordered_map<std::string, uint16> zoneSettingsPorts;
+
         auto rset = db::preparedStmt("SELECT name, zoneport FROM zone_settings");
         while (rset && rset->next())
         {

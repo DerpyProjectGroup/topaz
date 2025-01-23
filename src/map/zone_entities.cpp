@@ -976,26 +976,62 @@ void CZoneEntities::SpawnPCs(CCharEntity* PChar)
     }
 }
 
-void CZoneEntities::SpawnMoogle(CCharEntity* PChar)
+void CZoneEntities::SpawnConditionalNPCs(CCharEntity* PChar)
 {
     TracyZoneScoped;
 
-    // If on Moghouse2F; don't spawn the Moogle
-    if (PChar->profile.mhflag & 0x40)
+    // Player information
+    const bool inMogHouse       = PChar->m_moghouseID > 0;
+    const bool inMHinHomeNation = inMogHouse && [&]()
     {
-        return;
-    }
+        switch (zoneutils::GetCurrentRegion(PChar->getZone()))
+        {
+            case REGION_TYPE::SANDORIA:
+                return PChar->profile.nation == NATION_SANDORIA;
+            case REGION_TYPE::BASTOK:
+                return PChar->profile.nation == NATION_BASTOK;
+            case REGION_TYPE::WINDURST:
+                return PChar->profile.nation == NATION_WINDURST;
+            default:
+                return false;
+        }
+    }();
+    const bool onMH2F            = PChar->profile.mhflag & 0x40;
+    const bool orchestrionPlaced = charutils::isOrchestrionPlaced(PChar);
+
+    // NOTE: We're not changing the NPC's status to NORMAL here, because we don't want them to be visible to all players.
+    //     : We're sending updates AS IF they were visible, but only to this current player based on their conditions.
+    const auto toggleVisibilityForPlayer = [PChar](CNpcEntity* PNpc, bool visible)
+    {
+        if (visible)
+        {
+            PNpc->status = STATUS_TYPE::NORMAL;
+        }
+        else
+        {
+            PNpc->status = STATUS_TYPE::DISAPPEAR;
+        }
+
+        PChar->updateEntityPacket(PNpc, ENTITY_SPAWN, UPDATE_ALL_MOB);
+        PNpc->status = STATUS_TYPE::DISAPPEAR;
+    };
 
     for (EntityList_t::const_iterator it = m_npcList.begin(); it != m_npcList.end(); ++it)
     {
         CNpcEntity* PCurrentNpc = (CNpcEntity*)it->second;
 
-        if (PCurrentNpc->loc.p.z == 1.5 && PCurrentNpc->look.face == 0x52)
+        // TODO: Come up with a sane way to mark "You only" NPCs
+
+        if (PCurrentNpc->name == "Moogle" && PCurrentNpc->loc.p.z == 1.5 && PCurrentNpc->look.face == 0x52)
         {
-            PCurrentNpc->status = STATUS_TYPE::NORMAL;
-            PChar->updateEntityPacket(PCurrentNpc, ENTITY_SPAWN, UPDATE_ALL_MOB);
-            PCurrentNpc->status = STATUS_TYPE::DISAPPEAR;
-            return;
+            toggleVisibilityForPlayer(PCurrentNpc, inMogHouse && !onMH2F);
+            continue;
+        }
+
+        if (PCurrentNpc->name == "Symphonic_Curator")
+        {
+            toggleVisibilityForPlayer(PCurrentNpc, inMHinHomeNation && orchestrionPlaced);
+            continue;
         }
     }
 }
@@ -1271,7 +1307,7 @@ void CZoneEntities::UpdateEntityPacket(CBaseEntity* PEntity, ENTITYUPDATE type, 
     }
 }
 
-void CZoneEntities::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, CBasicPacket* packet)
+void CZoneEntities::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, const std::unique_ptr<CBasicPacket>& packet)
 {
     TracyZoneScoped;
     TracyZoneHex16(packet->getType());
@@ -1287,7 +1323,6 @@ void CZoneEntities::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message
         // Ensure this packet is not despawning us..
         if (packet->ref<uint8>(0x0A) != 0x20)
         {
-            destroy(packet);
             return;
         }
     }
@@ -1302,7 +1337,7 @@ void CZoneEntities::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message
                 TracyZoneCString("CHAR_INRANGE_SELF");
                 if (auto* PChar = dynamic_cast<CCharEntity*>(PEntity))
                 {
-                    PChar->pushPacket<CBasicPacket>(*packet);
+                    PChar->pushPacket(packet->copy());
                 }
             }
             [[fallthrough]];
@@ -1363,7 +1398,7 @@ void CZoneEntities::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message
                                     SpawnIDList_t::const_iterator iter = spawnlist.lower_bound(id);
                                     if (!(iter == spawnlist.end() || spawnlist.key_comp()(id, iter->first)))
                                     {
-                                        PCurrentChar->pushPacket<CBasicPacket>(*packet);
+                                        PCurrentChar->pushPacket(packet->copy());
                                     }
                                 };
 
@@ -1390,7 +1425,7 @@ void CZoneEntities::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message
                             }
                             else
                             {
-                                PCurrentChar->pushPacket<CBasicPacket>(*packet);
+                                PCurrentChar->pushPacket(packet->copy());
                             }
                         }
                     }
@@ -1408,7 +1443,7 @@ void CZoneEntities::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message
                         if (distance(PEntity->loc.p, PCurrentChar->loc.p) < 180 &&
                             ((PEntity->objtype != TYPE_PC) || (((CCharEntity*)PEntity)->m_moghouseID == PCurrentChar->m_moghouseID)))
                         {
-                            PCurrentChar->pushPacket<CBasicPacket>(*packet);
+                            PCurrentChar->pushPacket(packet->copy());
                         }
                     }
                 }
@@ -1425,7 +1460,7 @@ void CZoneEntities::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message
                     {
                         if (PEntity != PCurrentChar)
                         {
-                            PCurrentChar->pushPacket<CBasicPacket>(*packet);
+                            PCurrentChar->pushPacket(packet->copy());
                         }
                     }
                 }
@@ -1434,7 +1469,6 @@ void CZoneEntities::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message
         }
         // clang-format on
     }
-    destroy(packet);
 }
 
 void CZoneEntities::WideScan(CCharEntity* PChar, uint16 radius)

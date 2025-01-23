@@ -33,15 +33,16 @@ zones[xi.zone.DEN_OF_RANCOR] =
     },
     mob =
     {
-        CELESTE_EYED_TOZBERRY   = GetFirstID('Celeste-eyed_Tozberry'),
-        FRIAR_RUSH              = GetFirstID('Friar_Rush'),
+        AZRAEL                  = GetFirstID('Azrael'),
+        BISTRE_HEARTED_MALBERRY = GetFirstID('Bistre-hearted_Malberry'),
         CARMINE_TAILED_JANBERRY = GetFirstID('Carmine-tailed_Janberry'),
         TAWNY_FINGERED_MUGBERRY = GetFirstID('Tawny-fingered_Mugberry'),
-        BISTRE_HEARTED_MALBERRY = GetFirstID('Bistre-hearted_Malberry'),
-        OGAMA                   = GetFirstID('Ogama'),
-        MIMIC                   = GetFirstID('Mimic'),
+        CELESTE_EYED_TOZBERRY   = GetFirstID('Celeste-eyed_Tozberry'),
+        FRIAR_RUSH              = GetFirstID('Friar_Rush'),
         HAKUTAKU                = GetFirstID('Hakutaku'),
+        MIMIC                   = GetFirstID('Mimic'),
         MOKUMOKUREN             = GetFirstID('Mokumokuren'),
+        OGAMA                   = GetFirstID('Ogama'),
     },
     npc =
     {

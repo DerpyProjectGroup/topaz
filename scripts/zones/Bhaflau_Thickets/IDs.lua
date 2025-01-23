@@ -25,6 +25,7 @@ zones[xi.zone.BHAFLAU_THICKETS] =
         STAGING_GATE_MAMOOL           = 7324, -- Mamool Ja Staging Point.
         CANNOT_LEAVE                  = 7332, -- You cannot leave this area while in the possession of <keyitem>.
         RESPONSE                      = 7341, -- There is no response...
+        YOU_HAVE_A_BADGE              = 7354, -- You have a %? Let me have a closer look at that...
         HAND_OVER_TO_IMMORTAL         = 7554, -- You hand over the % to the Immortal.
         YOUR_IMPERIAL_STANDING        = 7555, -- Your Imperial Standing has increased!
         HARVESTING_IS_POSSIBLE_HERE   = 7573, -- Harvesting is possible here if you have <item>.

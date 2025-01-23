@@ -54,7 +54,7 @@ public:
     virtual void OnTimeServerTick() {};
     virtual void OnCharZoneIn(CCharEntity* PChar) {};
     virtual void OnCharZoneOut(CCharEntity* PChar) {};
-    virtual void OnPushPacket(CCharEntity* PChar, CBasicPacket* packet) {};
+    virtual void OnPushPacket(CCharEntity* PChar, const std::unique_ptr<CBasicPacket>& packet) {};
 
     template <typename T>
     static T* Register()
@@ -79,7 +79,7 @@ namespace moduleutils
     void OnTimeServerTick();
     void OnCharZoneIn(CCharEntity* PChar);
     void OnCharZoneOut(CCharEntity* PChar);
-    void OnPushPacket(CCharEntity* PChar, CBasicPacket* packet);
+    void OnPushPacket(CCharEntity* PChar, const std::unique_ptr<CBasicPacket>& packet);
 
     // The program has two "states":
     // - Load-time: As all data is being loaded and init'd

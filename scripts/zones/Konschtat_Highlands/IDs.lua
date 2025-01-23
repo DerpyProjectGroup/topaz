@@ -35,6 +35,7 @@ zones[xi.zone.KONSCHTAT_HIGHLANDS] =
         BLACKENED_MUST_BE_CLOSER      = 7456,  -- You have to be closer to place anything on the blackened spot.
         NOT_THE_TIME_FOR_THAT         = 7465,  -- This is not the time for that!
         TELEPOINT_HAS_BEEN_SHATTERED  = 7492,  -- The telepoint has been shattered into a thousand pieces...
+        TIME_ELAPSED                  = 7548,  -- Time Elapsed: / [hour/hours] (Vanadiel Time) / [minute/minutes] and [second/seconds] (Earth time)
         MEMORIES_SEALED_OFF           = 7605,  -- A portion of your memories has been sealed off.
         PLAYER_OBTAINS_ITEM           = 7610,  -- <name> obtains <item>!
         UNABLE_TO_OBTAIN_ITEM         = 7611,  -- You were unable to obtain the item.

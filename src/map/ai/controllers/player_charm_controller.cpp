@@ -81,7 +81,7 @@ void CPlayerCharmController::DoCombatTick(time_point tick)
             std::unique_ptr<CBasicPacket> err;
             if (!POwner->CanAttack(PTarget, err))
             {
-                if (POwner->speed > 0)
+                if (POwner->GetSpeed() > 0)
                 {
                     POwner->PAI->PathFind->PathAround(PTarget->loc.p, 2.0f, PATHFLAG_WALLHACK | PATHFLAG_RUN);
                     POwner->PAI->PathFind->FollowPath(m_Tick);
@@ -108,7 +108,7 @@ void CPlayerCharmController::DoRoamTick(time_point tick)
             {
                 POwner->PAI->PathFind->FollowPath(m_Tick);
             }
-            else if (POwner->speed > 0)
+            else if (POwner->GetSpeed() > 0)
             {
                 POwner->PAI->PathFind->WarpTo(POwner->PMaster->loc.p, RoamDistance);
             }

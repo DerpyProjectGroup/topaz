@@ -904,7 +904,7 @@ function utils.mobTeleport(mob, hideDuration, pos, disAnim, reapAnim)
     mob:setMagicCastingEnabled(false)
     mob:setMobAbilityEnabled(false)
     mob:setPos(pos, 0)
-    mob:setSpeed(0)
+    mob:setBaseSpeed(0)
 
     -- TODO: Temporary workaround
     ---@diagnostic enable: param-type-mismatch
@@ -916,7 +916,7 @@ function utils.mobTeleport(mob, hideDuration, pos, disAnim, reapAnim)
         mobArg:setAutoAttackEnabled(true)
         mobArg:setMagicCastingEnabled(true)
         mobArg:setMobAbilityEnabled(true)
-        mobArg:setSpeed(mobSpeed)
+        mobArg:setBaseSpeed(mobSpeed)
         mobArg:entityAnimationPacket(reapAnim)
 
         if mobArg:isDead() then

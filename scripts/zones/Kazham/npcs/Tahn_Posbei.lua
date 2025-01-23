@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Kazham
 --  NPC: Tahn Posbei
--- Standard Merchant NPC
 -----------------------------------
 local ID = zones[xi.zone.KAZHAM]
 -----------------------------------

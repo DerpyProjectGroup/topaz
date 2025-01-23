@@ -398,7 +398,7 @@ jobs:
           name: windows_modules_executables
           path: |
             xi_connect.exe
-            xi_map.exe
+            xi_map_tracy.exe
             xi_search.exe
             xi_world.exe
           
@@ -454,7 +454,7 @@ jobs:
     - name: Import SQL files
       shell: bash
       run: |
-        python3 ./tools/dbtool.py setup xidb
+        python3 ./tools/dbtool.py setup
     - name: Copy settings
       run: |
         cp settings/default/* settings/
@@ -623,7 +623,7 @@ jobs:
     - name: Import SQL files
       shell: bash
       run: |
-        python3 ./tools/dbtool.py setup xidb
+        python3 ./tools/dbtool.py setup
     - name: Assign odd zones a different port
       run: |
         mysql xidb -h 127.0.0.1 -uroot -proot -e "UPDATE xidb.zone_settings SET zoneport = 54231 WHERE zoneid % 2 = 0;"
@@ -690,7 +690,7 @@ jobs:
         path: .
     - uses: zach2good/setup-mariadb@v1
       with:
-          database: xidb
+        database: xidb
     - name: Copy settings
       run: |
         cp settings/default/* settings/
@@ -702,7 +702,7 @@ jobs:
     - name: Import SQL files
       shell: bash
       run: |
-        python3 ./tools/dbtool.py setup xidb
+        python3 ./tools/dbtool.py setup
     - name: Startup checks
       uses: nick-invision/retry@v3
       with:
@@ -726,7 +726,10 @@ jobs:
         path: .
     - uses: zach2good/setup-mariadb@v1
       with:
-          database: xidb
+        database: xidb
+    - name: Rename exe
+      run: |
+        mv xi_map_tracy.exe xi_map.exe
     - name: Copy settings
       run: |
         cp settings/default/* settings/
@@ -748,7 +751,7 @@ jobs:
     - name: Import SQL files
       shell: bash
       run: |
-        python3 ./tools/dbtool.py setup xidb
+        python3 ./tools/dbtool.py setup
     - name: Startup checks
       uses: nick-invision/retry@v3
       with:

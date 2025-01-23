@@ -116,6 +116,18 @@ uint8 CBaseEntity::GetRotPos() const
     return loc.p.rotation;
 }
 
+uint8 CBaseEntity::GetSpeed() const
+{
+    return speed;
+}
+
+uint8 CBaseEntity::UpdateSpeed(bool run)
+{
+    std::ignore = run;
+    speed       = baseSpeed;
+    return speed;
+}
+
 void CBaseEntity::HideName(bool hide)
 {
     if (hide)

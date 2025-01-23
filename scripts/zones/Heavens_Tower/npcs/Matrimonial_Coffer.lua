@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Heavens Tower
 --  NPC: Matrimonial Coffer
--- Type: NPC
 -- !pos -5.955 0.249 24.360 242
 -----------------------------------
 ---@type TNpcEntity

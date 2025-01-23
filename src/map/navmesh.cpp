@@ -177,7 +177,7 @@ bool CNavMesh::load(std::string const& filename)
         {
             break;
         }
-        memset(data, 0, tileHeader.dataSize);
+        std::memset(data, 0, tileHeader.dataSize);
         file.read(reinterpret_cast<char*>(data), tileHeader.dataSize);
 
         m_navMesh->addTile(data, tileHeader.dataSize, DT_TILE_FREE_DATA, tileHeader.tileRef, nullptr);

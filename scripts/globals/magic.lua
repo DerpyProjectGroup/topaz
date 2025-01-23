@@ -212,17 +212,17 @@ function applyResistanceEffect(actor, target, spell, params)
         end
     end
 
-    return xi.combat.magicHitRate.calculateResistRate(actor, target, spellFamily, skillType, element, statUsed, effectId, bonusMacc)
+    return xi.combat.magicHitRate.calculateResistRate(actor, target, spellFamily, skillType, 0, element, statUsed, effectId, bonusMacc)
 end
 
 -- Applies resistance for things that may not be spells - ie. Quick Draw
 function applyResistanceAbility(actor, target, element, skillType, bonusMacc)
-    return xi.combat.magicHitRate.calculateResistRate(actor, target, 0, skillType, element, 0, 0, bonusMacc)
+    return xi.combat.magicHitRate.calculateResistRate(actor, target, 0, skillType, 0, element, 0, 0, bonusMacc)
 end
 
 -- Applies resistance for additional effects
 function applyResistanceAddEffect(actor, target, element, bonusMacc)
-    return xi.combat.magicHitRate.calculateResistRate(actor, target, 0, xi.skill.NONE, element, 0, 0, bonusMacc)
+    return xi.combat.magicHitRate.calculateResistRate(actor, target, 0, xi.skill.NONE, 0, element, 0, 0, bonusMacc)
 end
 
 function finalMagicAdjustments(caster, target, spell, dmg)

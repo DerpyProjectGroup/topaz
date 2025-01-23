@@ -34,6 +34,7 @@ zones[xi.zone.AHT_URHGAN_WHITEGATE] =
         OBTAIN_SCYLDS                 = 1515,  -- You obtain <number> [scyld/scylds]! Current balance: <number> [scyld/scylds].
         HUNT_CANCELED                 = 1519,  -- Hunt canceled.
         RUNIC_PORTAL                  = 4601,  -- You cannot use the runic portal without the Empire's authorization.
+        IMPERIAL_AUTHORIZATION        = 4604,  -- Confirming Imperial authorization... You are authorized to use the runic portal.
         SUFFICIENT_IMPERIAL_STANDING  = 4609,  -- You do not possess sufficient Imperial Standing.
         CONFIRMING                    = 4610,  -- Confirming <assault>...
         RUNIC_DENIED_ASSAULT_OFFSET   = 4618,  -- You have not opened a path between the Chamber of Passage and the Azouph Isle staging point (Leujaoam Sanctum). Unable to use runic portal.

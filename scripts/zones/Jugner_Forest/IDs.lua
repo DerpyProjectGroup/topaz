@@ -29,6 +29,7 @@ zones[xi.zone.JUGNER_FOREST] =
         VOIDWALKER_OBTAIN_KI          = 7920,  -- Obtained key item: <keyitem>!
         CONQUEST                      = 8064,  -- You've earned conquest points!
         GARRISON_BASE                 = 8432,  -- Hm? What is this? %? How do I know this is not some [San d'Orian/Bastokan/Windurstian] trick?
+        TIME_ELAPSED                  = 8491,  -- Time Elapsed: / [hour/hours] (Vanadiel Time) / [minute/minutes] and [second/seconds] (Earth time)
         PLAYER_OBTAINS_ITEM           = 8655,  -- <name> obtains <item>!
         UNABLE_TO_OBTAIN_ITEM         = 8656,  -- You were unable to obtain the item.
         PLAYER_OBTAINS_TEMP_ITEM      = 8657,  -- <name> obtains the temporary item: <item>!

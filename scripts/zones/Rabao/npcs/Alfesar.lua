@@ -8,9 +8,6 @@ local ID = zones[xi.zone.RABAO]
 ---@type TNpcEntity
 local entity = {}
 
-entity.onTrade = function(player, npc, trade)
-end
-
 entity.onTrigger = function(player, npc)
     local theMissingPiece = player:getQuestStatus(xi.questLog.OUTLANDS, xi.quest.id.outlands.THE_MISSING_PIECE)
     local fame = player:getFameLevel(xi.fameArea.SELBINA_RABAO)
@@ -36,9 +33,6 @@ entity.onTrigger = function(player, npc)
         -- They got their Key items. tell them to goto sandy
         player:startEvent(9)
     end
-end
-
-entity.onEventUpdate = function(player, csid, option, npc)
 end
 
 entity.onEventFinish = function(player, csid, option, npc)

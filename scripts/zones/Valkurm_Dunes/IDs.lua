@@ -36,6 +36,7 @@ zones[xi.zone.VALKURM_DUNES] =
         WHAT_DO_YOU_THINK              = 7732,  -- What do you think you are doing!?
         AN_EMPTY_LIGHT_SWIRLS          = 7764,  -- An empty light swirls about the cave, eating away at the surroundings...
         GARRISON_BASE                  = 7766,  -- Hm? What is this? %? How do I know this is not some [San d'Orian/Bastokan/Windurstian] trick?
+        TIME_ELAPSED                   = 7813,  -- Time Elapsed: / [hour/hours] (Vanadiel Time) / [minute/minutes] and [second/seconds] (Earth time)
         MONSTERS_KILLED_ADVENTURERS    = 7840,  -- Long ago, monsters killed many adventurers and merchants just off the coast here. If you find any vestige of the victims and return it to the sea, perhaps it would appease the spirits of the dead.
         YOU_CANNOT_ENTER_DYNAMIS       = 7878,  -- You cannot enter Dynamis - [Dummy/San d'Oria/Bastok/Windurst/Jeuno/Beaucedine/Xarcabard/Valkurm/Buburimu/Qufim/Tavnazia] for <number> [day/days] (Vana'diel time).
         PLAYERS_HAVE_NOT_REACHED_LEVEL = 7880,  -- Players who have not reached level <number> are prohibited from entering Dynamis.

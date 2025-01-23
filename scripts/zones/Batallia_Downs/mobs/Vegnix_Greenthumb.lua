@@ -7,6 +7,10 @@ local ID = zones[xi.zone.BATALLIA_DOWNS]
 ---@type TMobEntity
 local entity = {}
 
+entity.onMobInitialize = function(mob)
+    mob:setMobMod(xi.mobMod.IDLE_DESPAWN, 180)
+end
+
 entity.onMobDeath = function(mob, player, optParams)
     if
         not player:hasKeyItem(xi.ki.SEEDSPALL_ROSEUM) and

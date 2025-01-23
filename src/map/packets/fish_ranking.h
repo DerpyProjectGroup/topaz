@@ -32,7 +32,7 @@ struct FishingContestEntry;
 class CFishRankingPacket : public CBasicPacket
 {
 public:
-    CFishRankingPacket(std::vector<FishingContestEntry> entries, int8 language, int32 timestamp, int32 message_offset, uint32 numEntries, uint8 msg_chunk);
+    CFishRankingPacket(const std::vector<FishingContestEntry>& entries, int8 language, int32 timestamp, int32 message_offset, uint32 numEntries, uint8 msg_chunk);
 };
 
 #endif

@@ -35,6 +35,7 @@ zones[xi.zone.SAUROMUGUE_CHAMPAIGN] =
         NO_COMBINATION                = 7521,  -- You were unable to enter a combination.
         VOIDWALKER_DESPAWN            = 7552,  -- The monster fades before your eyes, a look of disappointment on its face.
         UNITY_WANTED_BATTLE_INTERACT  = 7583,  -- Those who have accepted % must pay # Unity accolades to participate. The content for this Wanted battle is #. [Ready to begin?/You do not have the appropriate object set, so your rewards will be limited.]
+        TIME_ELAPSED                  = 7665,  -- Time Elapsed: / [hour/hours] (Vanadiel Time) / [minute/minutes] and [second/seconds] (Earth time)
         REGIME_REGISTERED             = 9822,  -- New training regime registered!
         VOIDWALKER_NO_MOB             = 10995, -- The <keyitem> quivers ever so slightly, but emits no light. There seem to be no monsters in the area.
         VOIDWALKER_MOB_TOO_FAR        = 10996, -- The <keyitem> quivers ever so slightly and emits a faint light. There seem to be no monsters in the immediate vicinity.

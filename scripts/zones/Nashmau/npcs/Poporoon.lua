@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Nashmau
 --  NPC: Poporoon
--- Standard Merchant NPC
 -----------------------------------
 local ID = zones[xi.zone.NASHMAU]
 -----------------------------------

@@ -31,7 +31,12 @@ end
 
 entity.onTrigger = function(player, npc)
     if player:getZPos() < 597 then
-        player:startEvent(120)
+        if player:hasKeyItem(xi.ki.CAPTAIN_WILDCAT_BADGE) then
+            player:messageSpecial(ID.text.YOU_HAVE_A_BADGE, xi.ki.CAPTAIN_WILDCAT_BADGE)
+            player:startEvent(121)
+        else
+            player:startEvent(120)
+        end
     else
         player:startEvent(122)
     end

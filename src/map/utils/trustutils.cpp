@@ -281,7 +281,7 @@ namespace trustutils
                 trust->packet_name.insert(0, (const char*)_sql->GetData(2));
 
                 uint16 sqlModelID[10];
-                memcpy(&sqlModelID, _sql->GetData(3), 20);
+                std::memcpy(&sqlModelID, _sql->GetData(3), 20);
                 trust->look = look_t(sqlModelID);
 
                 trust->m_Family       = (uint16)_sql->GetIntData(4);
@@ -437,12 +437,12 @@ namespace trustutils
         PTrust->HPscale        = trustData->HPscale;
         PTrust->MPscale        = trustData->MPscale;
         PTrust->baseSpeed      = trustData->baseSpeed;
-        PTrust->speed          = trustData->baseSpeed;
         PTrust->animationSpeed = trustData->animationSpeed;
-        PTrust->m_TrustID      = trustData->trustID;
-        PTrust->status         = STATUS_TYPE::NORMAL;
-        PTrust->m_ModelRadius  = trustData->radius;
-        PTrust->m_EcoSystem    = trustData->EcoSystem;
+        PTrust->UpdateSpeed();
+        PTrust->m_TrustID     = trustData->trustID;
+        PTrust->status        = STATUS_TYPE::NORMAL;
+        PTrust->m_ModelRadius = trustData->radius;
+        PTrust->m_EcoSystem   = trustData->EcoSystem;
 
         PTrust->SetMJob(trustData->mJob);
         PTrust->SetSJob(trustData->sJob);

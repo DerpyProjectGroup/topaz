@@ -8,9 +8,6 @@ local ID = zones[xi.zone.SEA_SERPENT_GROTTO]
 ---@type TNpcEntity
 local entity = {}
 
-entity.onTrade = function(player, npc, trade)
-end
-
 entity.onTrigger = function(player, npc)
     if
         player:getQuestStatus(xi.questLog.OUTLANDS, xi.quest.id.outlands.ITS_NOT_YOUR_VAULT) == xi.questStatus.QUEST_ACCEPTED and
@@ -19,12 +16,6 @@ entity.onTrigger = function(player, npc)
         player:addKeyItem(xi.ki.SEALED_IRON_BOX)
         player:messageSpecial(ID.text.KEYITEM_OBTAINED, xi.ki.SEALED_IRON_BOX)
     end
-end
-
-entity.onEventUpdate = function(player, csid, option, npc)
-end
-
-entity.onEventFinish = function(player, csid, option, npc)
 end
 
 return entity

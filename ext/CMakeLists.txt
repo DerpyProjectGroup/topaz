@@ -6,15 +6,6 @@
 add_subdirectory(concurrentqueue)
 add_subdirectory(sol)
 
-option(TRACY_ENABLE "Enable Tracy profiling." OFF)
-
-# Also handle close flags:
-if(ENABLE_TRACY OR TRACY_ENABLED OR TRACY)
-    set(TRACY_ENABLE ON)
-endif()
-
-message(STATUS "TRACY_ENABLE: ${TRACY_ENABLE}")
-
 # CPM Modules
 if(TRACY_ENABLE)
     # Tracy version tag, without the leading 'v'

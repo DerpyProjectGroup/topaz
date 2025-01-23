@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Maze of Shakhrami
 --  NPC: Goblin Footprint
--- Type: NPC
 -- !pos  -337.589 -12.248 -178.081 198
 -----------------------------------
 ---@type TNpcEntity

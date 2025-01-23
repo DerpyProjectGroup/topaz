@@ -167,9 +167,20 @@ void CEnmityContainer::UpdateEnmity(CBattleEntity* PEntity, int32 CE, int32 VE, 
     }
 
     // Apply TH only if this was a direct action
-    if (directAction && PEntity->getMod(Mod::TREASURE_HUNTER) > m_EnmityHolder->m_THLvl)
+    if (directAction)
     {
-        m_EnmityHolder->m_THLvl = PEntity->getMod(Mod::TREASURE_HUNTER);
+        int16 THlevel = std::min<int16>(8, PEntity->getMod(Mod::TREASURE_HUNTER));
+
+        // Enforce TH8 as max for THF main and TH4 as non-THF main
+        if (PEntity->GetMJob() != JOB_THF)
+        {
+            THlevel = std::min<int16>(4, PEntity->getMod(Mod::TREASURE_HUNTER));
+        }
+
+        if (m_EnmityHolder->m_THLvl < THlevel)
+        {
+            m_EnmityHolder->m_THLvl = THlevel;
+        }
     }
 
     auto enmity_obj = m_EnmityList.find(PEntity->id);

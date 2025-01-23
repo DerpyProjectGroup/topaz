@@ -367,7 +367,7 @@ CCharUpdatePacket::CCharUpdatePacket(CCharEntity* PChar)
     packet.Flags5 = flags5;
     packet.Flags6 = flags6;
 
-    std::memcpy(&data[0], &packet, sizeof(packet));
+    std::memcpy(&buffer_.data()[0], &packet, sizeof(packet));
 
     // Mog wardrobe enabled bits (apparently used by windower in get_bag_info(N).enabled):
     // 0x01 = Wardrobe 3

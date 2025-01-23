@@ -37,7 +37,7 @@ class AHPaginationModule : public CPPModule
 
         auto originalHandler = PacketParser[0x04E];
 
-        auto newHandler = [this, ITEMS_PER_PAGE, TOTAL_PAGES, originalHandler](map_session_data_t* const PSession, CCharEntity* const PChar, CBasicPacket& data) -> void
+        auto newHandler = [ITEMS_PER_PAGE, TOTAL_PAGES, originalHandler](map_session_data_t* const PSession, CCharEntity* const PChar, CBasicPacket& data) -> void
         {
             TracyZoneScoped;
 

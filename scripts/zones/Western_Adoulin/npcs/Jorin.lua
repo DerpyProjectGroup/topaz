@@ -9,9 +9,6 @@ local ID = zones[xi.zone.WESTERN_ADOULIN]
 ---@type TNpcEntity
 local entity = {}
 
-entity.onTrade = function(player, npc, trade)
-end
-
 entity.onTrigger = function(player, npc)
     local tomath = player:getQuestStatus(xi.questLog.ADOULIN, xi.quest.id.adoulin.THE_OLD_MAN_AND_THE_HARPOON)
 
@@ -27,9 +24,6 @@ entity.onTrigger = function(player, npc)
         -- Starts Quest: 'The Old Man and the Harpoon'
         player:startEvent(2540)
     end
-end
-
-entity.onEventUpdate = function(player, csid, option, npc)
 end
 
 entity.onEventFinish = function(player, csid, option, npc)

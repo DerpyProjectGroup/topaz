@@ -105,6 +105,10 @@ void CPetController::DoRoamTick(time_point tick)
                 return;
             }
         }
+        else if (PetEntity->m_PetID == PETID_LUOPAN) // Luopans do nothing
+        {
+            return;
+        }
     }
 
     float currentDistance = distance(PPet->loc.p, PPet->PMaster->loc.p);
@@ -123,7 +127,7 @@ void CPetController::DoRoamTick(time_point tick)
             }
             PPet->PAI->PathFind->FollowPath(m_Tick);
         }
-        else if (PPet->speed > 0)
+        else if (PPet->GetSpeed() > 0)
         {
             PPet->PAI->PathFind->WarpTo(PPet->PMaster->loc.p, PetRoamDistance);
         }

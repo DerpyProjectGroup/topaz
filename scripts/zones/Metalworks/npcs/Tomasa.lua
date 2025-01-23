@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Metalworks
 --  NPC: Tomasa
--- Standard Merchant NPC
 -----------------------------------
 local ID = zones[xi.zone.METALWORKS]
 -----------------------------------

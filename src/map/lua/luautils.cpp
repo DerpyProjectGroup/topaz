@@ -105,6 +105,7 @@
 #include "utils/moduleutils.h"
 #include "utils/serverutils.h"
 #include "utils/synergyutils.h"
+#include "utils/synthutils.h"
 #include "utils/zoneutils.h"
 
 void ReportErrorToPlayer(CBaseEntity* PEntity, std::string const& message = "") noexcept
@@ -238,6 +239,7 @@ namespace luautils
         lua.set_function("RoeParseTimed", &roeutils::ParseTimedSchedule);
         lua.set_function("GetSynergyRecipeByID", &luautils::GetSynergyRecipeByID);
         lua.set_function("GetSynergyRecipeByTrade", &luautils::GetSynergyRecipeByTrade);
+        lua.set_function("ReloadSynthRecipes", &synthutils::LoadSynthRecipes);
 
         // Fishing Contest Functions
         lua.set_function("GetFishingContest", &luautils::GetFishingContest);
@@ -1091,7 +1093,7 @@ namespace luautils
         TracyZoneScoped;
         if (CBaseEntity* PNpc = zoneutils::GetEntity(npcid, TYPE_NPC))
         {
-            PNpc->loc.zone->PushPacket(PNpc, CHAR_INRANGE, new CEntityVisualPacket(PNpc, command));
+            PNpc->loc.zone->PushPacket(PNpc, CHAR_INRANGE, std::make_unique<CEntityVisualPacket>(PNpc, command));
         }
     }
 

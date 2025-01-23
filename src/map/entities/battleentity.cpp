@@ -69,7 +69,7 @@ CBattleEntity::CBattleEntity()
     m_Weapons[SLOT_AMMO]   = nullptr;
     m_dualWield            = false;
 
-    memset(&health, 0, sizeof(health));
+    std::memset(&health, 0, sizeof(health));
     health.maxhp = 1;
 
     PPet          = nullptr;
@@ -306,96 +306,92 @@ uint8 CBattleEntity::UpdateSpeed(bool run)
     {
         outputSpeed = settings::get<uint8>("map.MOUNT_SPEED") / 2;
         outputSpeed *= (100 + getMod(Mod::MOUNT_MOVE)) / 100;
-        speed = std::clamp<uint8>(outputSpeed, std::numeric_limits<uint8>::min(), std::numeric_limits<uint8>::max());
-
-        return speed;
     }
-
-    // Gear penalties.
-    int8 additiveMods = static_cast<int8>(getMod(Mod::MOVE_SPEED_STACKABLE));
-
-    // Gravity and Curse. They seem additive to each other and the sum seems to be multiplicative.
-    float weightFactor = std::clamp<float>(1.0f - static_cast<float>(getMod(Mod::MOVE_SPEED_WEIGHT_PENALTY)) / 100.0f, 0.1f, 1.0f);
-
-    // Flee.
-    float fleeFactor = std::clamp<float>(1.0f + static_cast<float>(getMod(Mod::MOVE_SPEED_FLEE)) / 10000.0f, 1.0f, 2.0f);
-
-    // Cheer KI's
-    float cheerFactor = (99.0f + static_cast<float>(getMod(Mod::MOVE_SPEED_CHEER))) / 99.0f;
-
-    // Bolter's Roll. Additive
-    uint8 boltersRollEffect = static_cast<uint8>(getMod(Mod::MOVE_SPEED_BOLTERS_ROLL));
-
-    // Positive movement speed from gear and from Atmas. Only highest applies. Multiplicative to base speed.
-    float gearFactor = 1.0f;
-
-    if (objtype == TYPE_PC)
-    {
-        gearFactor = std::clamp<float>(1.0f + static_cast<float>(getMaxGearMod(Mod::MOVE_SPEED_GEAR_BONUS)) / 100.0f, 1.0f, 1.25f);
-    }
-
-    // Quickening and Mazurka. They share a cap. Additive.
-    uint8 mazurkaQuickeningEffect = std::clamp<uint8>(getMod(Mod::MOVE_SPEED_QUICKENING) + getMod(Mod::MOVE_SPEED_MAZURKA), 0, 10);
-
-    // We have all the modifiers needed. Calculate final speed.
-    // This MUST BE DONE IN THIS ORDER. Using int8 data type, we use that to floor.
-    outputSpeed = baseSpeed + additiveMods;
-    outputSpeed = outputSpeed * weightFactor;
-    outputSpeed = outputSpeed * fleeFactor;
-    outputSpeed = outputSpeed * cheerFactor;
-    outputSpeed = outputSpeed + boltersRollEffect;
-    outputSpeed = outputSpeed * gearFactor;
-    if (outputSpeed > 0)
-    {
-        outputSpeed = outputSpeed + mazurkaQuickeningEffect;
-    }
-
-    // Set cap if a PC (Default 80).
-    if (objtype == TYPE_PC)
-    {
-        outputSpeed = std::clamp<int16>(outputSpeed, 0, settings::get<uint8>("map.SPEED_LIMIT"));
-    }
-
-    if (run && outputSpeed > 0 && getMod(Mod::MOVE_SPEED_OVERRIDE) == 0)
-    {
-        float multiplier = settings::get<float>("map.MOB_RUN_SPEED_MULTIPLIER");
-        if (multiplier > 1.0f)
-        {
-            if (auto* mobEntity = dynamic_cast<CMobEntity*>(this))
-            {
-                // mob has a custom multiplier
-                if (mobEntity->getMobMod(MOBMOD_RUN_SPEED_MULT) > 0)
-                {
-                    multiplier = mobEntity->getMobMod(MOBMOD_RUN_SPEED_MULT) / 100.0f;
-                }
-
-                // if some weight penalty (like gravity) then cut the multiplier
-                // (for mobs with default boost of 2.5 then boost becomes 1.20)
-                if (mobEntity->getMod(Mod::MOVE_SPEED_WEIGHT_PENALTY) > 0)
-                {
-                    multiplier *= 0.48f;
-                }
-
-                // Ensure the multiplier is at least 1.0 so that multiplier never decreases speed
-                multiplier = std::max<float>(multiplier, 1.0f);
-
-                outputSpeed *= multiplier;
-            }
-        }
-    }
-
-    // Speed cap can be bypassed. Ex. Feast of swords. GM speed.
-    // TODO: Find exceptions. Add them here.
-
-    // GM speed bypass.
-
-    if (getMod(Mod::MOVE_SPEED_OVERRIDE) > 255)
+    else if (baseSpeed == 0 || getMod(Mod::MOVE_SPEED_OVERRIDE) < 0)
     {
         outputSpeed = 0;
     }
     else if (getMod(Mod::MOVE_SPEED_OVERRIDE) > 0)
     {
+        // GM speed bypass.
+        // Speed cap can be bypassed. Ex. Feast of swords. GM speed.
+        // TODO: Find exceptions. Add them here.
         outputSpeed = getMod(Mod::MOVE_SPEED_OVERRIDE);
+    }
+    else
+    {
+        // Gear penalties.
+        int8 additiveMods = static_cast<int8>(getMod(Mod::MOVE_SPEED_STACKABLE));
+
+        // Gravity and Curse. They seem additive to each other and the sum seems to be multiplicative.
+        float weightFactor = std::clamp<float>(1.0f - static_cast<float>(getMod(Mod::MOVE_SPEED_WEIGHT_PENALTY)) / 100.0f, 0.1f, 1.0f);
+
+        // Flee.
+        float fleeFactor = std::clamp<float>(1.0f + static_cast<float>(getMod(Mod::MOVE_SPEED_FLEE)) / 10000.0f, 1.0f, 2.0f);
+
+        // Cheer KI's
+        float cheerFactor = (99.0f + static_cast<float>(getMod(Mod::MOVE_SPEED_CHEER))) / 99.0f;
+
+        // Bolter's Roll. Additive
+        uint8 boltersRollEffect = static_cast<uint8>(getMod(Mod::MOVE_SPEED_BOLTERS_ROLL));
+
+        // Positive movement speed from gear and from Atmas. Only highest applies. Multiplicative to base speed.
+        float gearFactor = 1.0f;
+
+        if (objtype == TYPE_PC)
+        {
+            gearFactor = std::clamp<float>(1.0f + static_cast<float>(getMaxGearMod(Mod::MOVE_SPEED_GEAR_BONUS)) / 100.0f, 1.0f, 1.25f);
+        }
+
+        // Quickening and Mazurka. They share a cap. Additive.
+        uint8 mazurkaQuickeningEffect = std::clamp<uint8>(getMod(Mod::MOVE_SPEED_QUICKENING) + getMod(Mod::MOVE_SPEED_MAZURKA), 0, 10);
+
+        // We have all the modifiers needed. Calculate final speed.
+        // This MUST BE DONE IN THIS ORDER. Using int8 data type, we use that to floor.
+        outputSpeed = baseSpeed + additiveMods;
+        outputSpeed = outputSpeed * weightFactor;
+        outputSpeed = outputSpeed * fleeFactor;
+        outputSpeed = outputSpeed * cheerFactor;
+        outputSpeed = outputSpeed + boltersRollEffect;
+        outputSpeed = outputSpeed * gearFactor;
+        if (outputSpeed > 0)
+        {
+            outputSpeed = outputSpeed + mazurkaQuickeningEffect;
+        }
+
+        // Set cap if a PC (Default 80).
+        if (objtype == TYPE_PC)
+        {
+            outputSpeed = std::clamp<int16>(outputSpeed, 0, settings::get<uint8>("map.SPEED_LIMIT"));
+        }
+
+        if (run && outputSpeed > 0)
+        {
+            float multiplier = settings::get<float>("map.MOB_RUN_SPEED_MULTIPLIER");
+            if (multiplier > 1.0f)
+            {
+                if (auto* mobEntity = dynamic_cast<CMobEntity*>(this))
+                {
+                    // mob has a custom multiplier
+                    if (mobEntity->getMobMod(MOBMOD_RUN_SPEED_MULT) > 0)
+                    {
+                        multiplier = mobEntity->getMobMod(MOBMOD_RUN_SPEED_MULT) / 100.0f;
+                    }
+
+                    // if some weight penalty (like gravity) then cut the multiplier
+                    // (for mobs with default boost of 2.5 then boost becomes 1.20)
+                    if (mobEntity->getMod(Mod::MOVE_SPEED_WEIGHT_PENALTY) > 0)
+                    {
+                        multiplier *= 0.48f;
+                    }
+
+                    // Ensure the multiplier is at least 1.0 so that multiplier never decreases speed
+                    multiplier = std::max<float>(multiplier, 1.0f);
+
+                    outputSpeed *= multiplier;
+                }
+            }
+        }
     }
 
     speed = static_cast<uint8>(std::clamp<int16>(outputSpeed, std::numeric_limits<uint8>::min(), std::numeric_limits<uint8>::max()));
@@ -1053,7 +1049,21 @@ uint16 CBattleEntity::ACC(uint8 attackNumber, uint16 offsetAccuracy)
 
 uint16 CBattleEntity::DEF()
 {
-    int32 DEF = 8 + m_modStat[Mod::DEF] + std::floor(VIT() * 1.5f); // https://wiki.ffo.jp/html/313.html
+    // VIT * 1.5 for PCs / Alter egos / Fellows / Familiars / Wyverns / Avatars / Automatons / Luopans
+    // VIT * 0.5 for Enemy NPCs and pets controlled by Charm
+    // https://wiki.ffo.jp/html/313.html
+    // https://wiki.ffo.jp/html/35712.html
+    // https://forum.square-enix.com/ffxi/threads/51154-Aug.-3-2016-%28JST%29-Version-Update?p=583669&viewfull=1#post583669
+    int32 DEF       = 8 + m_modStat[Mod::DEF];
+    float vitFactor = 1.5f;
+
+    if (this->objtype == TYPE_MOB)
+    {
+        vitFactor = 0.5f;
+    }
+
+    DEF = DEF + std::floor(VIT() * vitFactor);
+
     if (this->StatusEffectContainer->HasStatusEffect(EFFECT_COUNTERSTANCE, 0))
     {
         return DEF / 2;
@@ -1717,6 +1727,7 @@ void CBattleEntity::OnCastFinished(CMagicState& state, action_t& action)
     }
 
     StatusEffectContainer->DelStatusEffectsByFlag(effectFlags);
+    StatusEffectContainer->DelStatusEffect(EFFECT_ILLUSION);
 
     PAI->TargetFind->reset();
 
@@ -1943,7 +1954,7 @@ void CBattleEntity::OnCastInterrupted(CMagicState& state, action_t& action, MSGB
         {
             actionTarget.reaction = REACTION::HIT;
             // For some reason, despite the system supporting interrupted message in the action packet (like auto attacks, JA), an 0x029 message is sent for spells.
-            loc.zone->PushPacket(this, CHAR_INRANGE_SELF, new CMessageBasicPacket(this, state.GetTarget() ? state.GetTarget() : this, 0, 0, msg));
+            loc.zone->PushPacket(this, CHAR_INRANGE_SELF, std::make_unique<CMessageBasicPacket>(this, state.GetTarget() ? state.GetTarget() : this, 0, 0, msg));
         }
     }
 }
@@ -2163,7 +2174,7 @@ void CBattleEntity::OnMobSkillFinished(CMobSkillState& state, action_t& action)
                 target.knockback = 0;
             }
 
-            if (first && (PSkill->getPrimarySkillchain() != 0))
+            if (first && PTargetFound->health.hp > 0 && PSkill->getPrimarySkillchain() != 0)
             {
                 SUBEFFECT effect = battleutils::GetSkillChainEffect(PTargetFound, PSkill->getPrimarySkillchain(), PSkill->getSecondarySkillchain(),
                                                                     PSkill->getTertiarySkillchain());
@@ -2468,8 +2479,14 @@ bool CBattleEntity::OnAttack(CAttackState& state, action_t& action)
                 // Apply Feint
                 if (CStatusEffect* PFeintEffect = StatusEffectContainer->GetStatusEffect(EFFECT_FEINT))
                 {
-                    PTarget->StatusEffectContainer->AddStatusEffect(
-                        new CStatusEffect(EFFECT_EVASION_DOWN, EFFECT_EVASION_DOWN, PFeintEffect->GetPower(), 3, 30));
+                    if (PTarget->StatusEffectContainer->AddStatusEffect(new CStatusEffect(EFFECT_EVASION_DOWN, EFFECT_EVASION_DOWN, PFeintEffect->GetPower(), 3, 30)))
+                    {
+                        auto PEffect = PTarget->StatusEffectContainer->GetStatusEffect(EFFECT_EVASION_DOWN);
+
+                        // When Feint's evasion down effect is on, the target can get "debuffed" with TREASURE_HUNTER_PROC +25% * level above first on Feint
+                        PEffect->addMod(Mod::TREASURE_HUNTER_PROC, PFeintEffect->GetSubPower());      // Remove TREASURE_HUNTER_PROC debuff on effect wearing off. This isnt added to the mob directly.
+                        PTarget->addModifier(Mod::TREASURE_HUNTER_PROC, PFeintEffect->GetSubPower()); // Add TREASURE_HUNTER_PROC debuff immediately to mob
+                    }
                     StatusEffectContainer->DelStatusEffect(EFFECT_FEINT);
                 }
 
@@ -2553,7 +2570,7 @@ bool CBattleEntity::OnAttack(CAttackState& state, action_t& action)
         if ((actionTarget.reaction & REACTION::MISS) == REACTION::NONE && attack.GetAttackType() != PHYSICAL_ATTACK_TYPE::DAKEN)
         {
             battleutils::HandleEnspell(this, PTarget, &actionTarget, attack.IsFirstSwing(), (CItemWeapon*)this->m_Weapons[attack.GetWeaponSlot()],
-                                       attack.GetDamage());
+                                       attack.GetDamage(), attack);
             battleutils::HandleSpikesDamage(this, PTarget, &actionTarget, attack.GetDamage());
         }
 
@@ -2689,4 +2706,33 @@ void CBattleEntity::PostTick()
 uint16 CBattleEntity::GetBattleTargetID() const
 {
     return m_battleTarget;
+}
+
+bool CBattleEntity::hasEnmityEXPENSIVE() const
+{
+    // TODO: This check seems to always fail for pets?
+    if (PNotorietyContainer->hasEnmity())
+    {
+        return true;
+    }
+
+    bool isTargeted = false;
+
+    // TODO: this is bad but because of how super tanking is implemented there's not much we can do without a larger refactor
+    if (loc.zone)
+    {
+        // clang-format off
+        loc.zone->ForEachMob([&](CMobEntity* PMob)
+        {
+            // Account for charmed mobs attacking normal mobs, etc
+            if (PMob->GetBattleTargetID() == targid && PMob->allegiance != allegiance)
+            {
+                isTargeted = true;
+                return;
+            }
+        });
+        // clang-format on
+    }
+
+    return isTargeted;
 }

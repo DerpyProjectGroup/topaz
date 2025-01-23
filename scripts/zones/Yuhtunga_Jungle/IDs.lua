@@ -44,6 +44,7 @@ zones[xi.zone.YUHTUNGA_JUNGLE] =
         SOMETHING_IS_BURIED_HERE      = 7763,  -- It looks like something is buried here. If you had <item> you could dig it up.
         GARRISON_BASE                 = 7790,  -- Hm? What is this? %? How do I know this is not some [San d'Orian/Bastokan/Windurstian] trick?
         SWARM_APPEARED                = 7836,  -- A swarm has appeared!
+        TIME_ELAPSED                  = 7855,  -- Time Elapsed: / [hour/hours] (Vanadiel Time) / [minute/minutes] and [second/seconds] (Earth time)
         PLAYER_OBTAINS_ITEM           = 7876,  -- <name> obtains <item>!
         UNABLE_TO_OBTAIN_ITEM         = 7877,  -- You were unable to obtain the item.
         PLAYER_OBTAINS_TEMP_ITEM      = 7878,  -- <name> obtains the temporary item: <item>!

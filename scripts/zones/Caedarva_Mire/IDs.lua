@@ -25,6 +25,7 @@ zones[xi.zone.CAEDARVA_MIRE] =
         STAGING_GATE_DVUCCA           = 7326, -- Dvucca Isle Staging Point.
         CANNOT_LEAVE                  = 7332, -- You cannot leave this area while in the possession of <keyitem>.
         RESPONSE                      = 7341, -- There is no response...
+        YOU_HAVE_A_BADGE              = 7354, -- You have a %? Let me have a closer look at that...
         LOGGING_IS_POSSIBLE_HERE      = 7355, -- Logging is possible here if you have <item>.
         HAND_OVER_TO_IMMORTAL         = 7436, -- You hand over the % to the Immortal.
         YOUR_IMPERIAL_STANDING        = 7437, -- Your Imperial Standing has increased!

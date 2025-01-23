@@ -44,6 +44,7 @@ zones[xi.zone.WEST_RONFAURE] =
         CONQUEST                      = 7546,  -- You've earned conquest points!
         SOMETHING_IS_AMISS            = 7898,  -- Something is amiss.
         GARRISON_BASE                 = 7928,  -- Hm? What is this? %? How do I know this is not some [San d'Orian/Bastokan/Windurstian] trick?
+        TIME_ELAPSED                  = 8058,  -- Time Elapsed: / [hour/hours] (Vanadiel Time) / [minute/minutes] and [second/seconds] (Earth time)
         PLAYER_OBTAINS_ITEM           = 8065,  -- <name> obtains <item>!
         UNABLE_TO_OBTAIN_ITEM         = 8066,  -- You were unable to obtain the item.
         PLAYER_OBTAINS_TEMP_ITEM      = 8067,  -- <name> obtains the temporary item: <item>!

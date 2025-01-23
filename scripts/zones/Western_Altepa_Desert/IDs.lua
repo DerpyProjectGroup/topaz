@@ -47,42 +47,21 @@ zones[xi.zone.WESTERN_ALTEPA_DESERT] =
     },
     mob =
     {
-        PICOLATON_PH =
-        {
-            [17289637] = 17289638,
-        },
-
-        CACTUAR_CANTAUTOR_PH =
-        {
-            [17289559] = 17289560, -- -458.944 0.018 -557.266
-            [17289578] = 17289560, -- -478.142 -0.457 -596.091
-        },
-        CELPHIE_PH           =
-        {
-            [17289473] = 17289453, -- 78.226 -0.497 69.745
-            [17289450] = 17289453, -- 57.256 0.116 13.972
-            [17289451] = 17289453, -- 70.263 0.130 -23.484
-            [17289452] = 17289453, -- 50.014 0.256 7.088
-            [17289407] = 17289453, -- 10.439 -0.280 -80.476
-            [17289406] = 17289453, -- 35.924 0.087 -98.228
-            [17289474] = 17289453, -- 118.575 -0.299 127.016
-            [17289277] = 17289453, -- 99.000 -0.030 116.000
-        },
-        CALCHAS_PH =
-        {
-            [17289545] = 17289547,
-            [17289546] = 17289547,
-        },
-        KING_VINEGARROON     = 17289575,
-        SABOTENDER_ENAMORADO = 17289653,
-        EASTERN_SPHINX       = 17289654,
-        WESTERN_SPHINX       = 17289655,
-        MAHARAJA             = 17289656,
+        CACTUAR_CANTAUTOR    = GetFirstID('Cactuar_Cantautor'),
+        CALCHAS              = GetFirstID('Calchas'),
+        CELPHIE              = GetFirstID('Celphie'),
+        DAHU                 = GetFirstID('Dahu'),
+        EASTERN_SPHINX       = GetFirstID('Eastern_Sphinx'),
+        KING_VINEGARROON     = GetFirstID('King_Vinegarroon'),
+        MAHARAJA             = GetFirstID('Maharaja'),
+        PICOLATON            = GetFirstID('Picolaton'),
+        SABOTENDER_ENAMORADO = GetFirstID('Sabotender_Enamorado'),
+        WESTERN_SPHINX       = GetFirstID('Western_Sphinx'),
     },
     npc =
     {
-        ALTEPA_GATE       = 17289748,
-        PEDDLESTOX        = 17289773,
+        ALTEPA_GATE              = GetFirstID('_3h0'),
+        PEDDLESTOX               = GetFirstID('Peddlestox'),
         BEASTMEN_TREASURE_OFFSET = GetFirstID('qm3'),
     },
 }

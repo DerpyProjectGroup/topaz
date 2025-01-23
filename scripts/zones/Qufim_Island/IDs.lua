@@ -51,6 +51,7 @@ zones[xi.zone.QUFIM_ISLAND] =
         SLIPPERY_SUCKER   = GetFirstID('Slippery_Sucker'),
         TRICKSTER_KINETIX = GetFirstID('Trickster_Kinetix'),
         OPHIOTAURUS       = GetFirstID('Ophiotaurus'),
+        KRAKEN_NM         = GetTableOfIDs('Kraken')[3],
     },
     npc =
     {

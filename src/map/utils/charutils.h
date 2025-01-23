@@ -283,6 +283,8 @@ namespace charutils
     void forceSynthCritFail(const std::string& sourceFunction, CCharEntity* PChar);
 
     void removeCharFromZone(CCharEntity* PChar);
+
+    bool isOrchestrionPlaced(CCharEntity* PChar);
 }; // namespace charutils
 
 #endif // _CHARUTILS_H

@@ -362,7 +362,7 @@ xi.mobskills.applyPlayerResistance = function(actor, effectId, target, diff, bon
         bonusMacc = bonusMacc + diff
     end
 
-    return xi.combat.magicHitRate.calculateResistRate(actor, target, 0, xi.skill.NONE, element, 0, effectId, bonusMacc)
+    return xi.combat.magicHitRate.calculateResistRate(actor, target, 0, xi.skill.NONE, 0, element, 0, effectId, bonusMacc)
 end
 
 xi.mobskills.mobAddBonuses = function(actor, target, damage, element, skill) -- used for SMN magical bloodpacts, despite the name.

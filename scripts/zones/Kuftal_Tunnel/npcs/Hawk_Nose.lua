@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Kuftal Tunnel
 --  NPC: Hawk Nose
--- Type: Quest NPC
 -- !pos .1 -1 .1 174
 -----------------------------------
 ---@type TNpcEntity

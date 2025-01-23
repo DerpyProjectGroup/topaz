@@ -44,8 +44,8 @@ public:
     void SpawnPETs(CCharEntity* PChar);
     void SpawnNPCs(CCharEntity* PChar);
     void SpawnTRUSTs(CCharEntity* PChar);
-    void SpawnMoogle(CCharEntity* PChar);    // display Moogle in MogHouse in zone
-    void SpawnTransport(CCharEntity* PChar); // display ship/boat in zone
+    void SpawnConditionalNPCs(CCharEntity* PChar); // display Moogle in MogHouse in zone
+    void SpawnTransport(CCharEntity* PChar);       // display ship/boat in zone
     void DespawnPC(CCharEntity* PChar);
     void SavePlayTime();
 
@@ -69,7 +69,7 @@ public:
     void WeatherChange(WEATHER weather);
     void MusicChange(uint16 BlockID, uint16 MusicTrackID);
 
-    void PushPacket(CBaseEntity*, GLOBAL_MESSAGE_TYPE, CBasicPacket*); // send a global package within the zone
+    void PushPacket(CBaseEntity*, GLOBAL_MESSAGE_TYPE, const std::unique_ptr<CBasicPacket>&); // send a global package within the zone
 
     void ZoneServer(time_point tick);
 

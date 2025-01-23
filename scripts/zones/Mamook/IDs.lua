@@ -21,6 +21,7 @@ zones[xi.zone.MAMOOK] =
         PARTY_MEMBERS_HAVE_FALLEN     = 7903, -- All party members have fallen in battle. Now leaving the battlefield.
         THE_PARTY_WILL_BE_REMOVED     = 7910, -- If all party members' HP are still zero after # minute[/s], the party will be removed from the battlefield.
         IMPENDING_BATTLE              = 8067, -- You feel the rush of impending battle!
+        PECULIAR_SENSATION            = 8125, -- % is overcome by a peculiar sensation.
         NUMEROUS_STRANDS              = 8665, -- Numerous strands of hair are scattered all over...
         SICKLY_SWEET                  = 8667, -- A sickly sweet fragrance pervades the air...
         DRAWS_NEAR                    = 8689, -- Something draws near!

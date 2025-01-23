@@ -41,6 +41,8 @@ namespace puppetutils
     void   LoadAutomatonStats(CCharEntity* PChar);
     void   CheckAttachmentsForManeuver(CCharEntity* PChar, EFFECT maneuver, bool gain);
     void   UpdateAttachments(CCharEntity* PChar);
+    void   PreLevelRestriction(CCharEntity* PChar);
+    void   PostLevelRestriction(CCharEntity* PChar);
 }; // namespace puppetutils
 
 #endif

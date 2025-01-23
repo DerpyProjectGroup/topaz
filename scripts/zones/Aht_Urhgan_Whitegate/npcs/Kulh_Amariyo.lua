@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: Aht Urhgan Whitegate
 --  NPC: Kulh Amariyo
--- Standard Merchant NPC
 -- TODO: Stock needs to be modified based on
 --       status of Astral Candescence
 -----------------------------------

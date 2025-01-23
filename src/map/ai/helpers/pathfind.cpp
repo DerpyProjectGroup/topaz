@@ -361,17 +361,12 @@ void CPathFind::FollowPath(time_point tick)
 void CPathFind::StepTo(const position_t& pos, bool run)
 {
     TracyZoneScoped;
-    bool speedChange = false;
-    if (auto* PBattleEntity = dynamic_cast<CBattleEntity*>(m_POwner))
-    {
-        speedChange = PBattleEntity->speed != PBattleEntity->UpdateSpeed(run);
-    }
-
-    float speed = m_POwner->speed;
+    bool  speedChange = m_POwner->GetSpeed() != m_POwner->UpdateSpeed(run);
+    float speed       = m_POwner->GetSpeed();
 
     if (const auto* PMobEntity = dynamic_cast<CMobEntity*>(m_POwner))
     {
-        if (PMobEntity->speed == 0 && (m_roamFlags & ROAMFLAG_WORM))
+        if (PMobEntity->GetSpeed() == 0 && (m_roamFlags & ROAMFLAG_WORM))
         {
             speed = 20;
         }

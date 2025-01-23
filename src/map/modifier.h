@@ -440,8 +440,8 @@ enum class Mod
     TRIPLE_ATTACK        = 302,  // Percent chance
     TRIPLE_ATTACK_DMG    = 1039, // Increases "Triple Attack" damage/"Triple Attack" damage + (in percents, e.g. +20 = +20% damage)
     TREASURE_HUNTER      = 303,  // Percent chance
-    TREASURE_HUNTER_PROC = 1048, // TODO: Increases Treasure Hunter proc rate (percent)
-    TREASURE_HUNTER_CAP  = 1049, // TODO: Increases the Treasure Hunter Cap (e.g. THF JP Gift)
+    TREASURE_HUNTER_PROC = 1048, // Increases Treasure Hunter proc rate (percent)
+    TREASURE_HUNTER_CAP  = 1049, // Increases the Treasure Hunter Cap (e.g. THF JP Gift)
     SNEAK_ATK_DEX        = 830,  // % DEX boost to Sneak Attack (if gear mod, needs to be equipped on hit)
     TRICK_ATK_AGI        = 520,  // % AGI boost to Trick Attack (if gear mod, needs to be equipped on hit)
     MUG_EFFECT           = 835,  // Mug effect as multiplier

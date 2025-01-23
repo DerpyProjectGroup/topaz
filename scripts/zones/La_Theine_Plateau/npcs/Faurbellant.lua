@@ -1,7 +1,6 @@
 -----------------------------------
 -- Area: La Theine Plateau
 --  NPC: Faurbellant
--- Type: Quest NPC
 -- Involved in Quest: Gates of Paradise
 -- !pos 484 24 -89 102
 -----------------------------------

@@ -140,7 +140,7 @@ void CTrustController::DoCombatTick(time_point tick)
 
     if (PTarget)
     {
-        if (POwner->PAI->CanFollowPath() && POwner->speed > 0)
+        if (POwner->PAI->CanFollowPath() && POwner->GetSpeed() > 0)
         {
             float currentDistanceToTarget = distance(POwner->loc.p, PTarget->loc.p);
             float currentDistanceToMaster = distance(POwner->loc.p, PMaster->loc.p);
@@ -171,7 +171,7 @@ void CTrustController::DoCombatTick(time_point tick)
                 case TRUST_MOVEMENT_TYPE::MELEE:
                 {
                     std::unique_ptr<CBasicPacket> err;
-                    if (!POwner->CanAttack(PTarget, err) && POwner->speed > 0)
+                    if (!POwner->CanAttack(PTarget, err) && POwner->GetSpeed() > 0)
                     {
                         if (currentDistanceToTarget > RoamDistance)
                         {
@@ -180,7 +180,7 @@ void CTrustController::DoCombatTick(time_point tick)
                             {
                                 POwner->PAI->PathFind->FollowPath(m_Tick);
                             }
-                            else if (POwner->speed > 0)
+                            else if (POwner->GetSpeed() > 0)
                             {
                                 POwner->PAI->PathFind->StepTo(PTarget->loc.p, true);
                             }
@@ -288,7 +288,7 @@ void CTrustController::DoRoamTick(time_point tick)
         {
             POwner->PAI->PathFind->FollowPath(m_Tick);
         }
-        else if (POwner->speed > 0)
+        else if (POwner->GetSpeed() > 0)
         {
             POwner->PAI->PathFind->StepTo(PFollowTarget->loc.p, true);
         }
