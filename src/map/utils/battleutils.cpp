@@ -1163,8 +1163,6 @@ namespace battleutils
                         // The player has job point gifts that apply this mod.
                         float procRateBonus = 1.f + (PChar->getMod(Mod::TREASURE_HUNTER_PROC) + PMob->getMod(Mod::TREASURE_HUNTER_PROC)) / 100.f;
 
-                        procRate *= procRateBonus;
-
                         // It's unlikely that SATA bonus is multiplicative SA * TA bonus -- the rate would be astronomically higher if it was
                         // Add the two together if they exist
                         float sneakAttackTrickAttackBonus = 0.f;
@@ -1186,6 +1184,8 @@ namespace battleutils
                         {
                             procRateBonus *= sneakAttackTrickAttackBonus;
                         }
+
+                        procRate *= procRateBonus;
 
                         if (xirand::GetRandomNumber<float>(0.f, 1.f) <= procRate)
                         {
