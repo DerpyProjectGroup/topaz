@@ -49,7 +49,7 @@ end
 
 zoneObject.onGameHour = function(zone)
     local vanadielHour = VanadielHour()
-    local playerOnQuestId = GetServerVariable('[JEUNO]CommService')
+    local playerOnQuestId = GetServerVariable('[JEUNO]CommServicePlayer')
 
     -- Community Service Quest
     -- 7AM: it's daytime. turn off all the lights
@@ -62,10 +62,11 @@ zoneObject.onGameHour = function(zone)
             end
         end
 
-    -- 8PM: make quest available
-    -- notify anyone in zone with membership card that zauko is recruiting
+        -- 6PM: make quest available
+        -- notify anyone in zone with membership card that zauko is recruiting
     elseif vanadielHour == 18 then
-        SetServerVariable('[JEUNO]CommService', 0)
+        -- I am concerned this could conflict with someone accepting the quest when the time was 18. Would the server var be 0 even though someone accepted the quest?
+        SetServerVariable('[JEUNO]CommServicePlayer', 0)
         local players = zone:getPlayers()
         for name, player in pairs(players) do
             if player:hasKeyItem(xi.ki.LAMP_LIGHTERS_MEMBERSHIP_CARD) then
@@ -73,16 +74,11 @@ zoneObject.onGameHour = function(zone)
             end
         end
 
-    -- 9PM: notify the person on the quest that they can begin lighting lamps
-    elseif vanadielHour == 21 then
-        local playerOnQuest = GetPlayerByID(GetServerVariable('[JEUNO]CommService'))
-        if playerOnQuest then
-            playerOnQuest:startEvent(114)
-        end
+        -- 1AM: if nobody has accepted the quest yet, NPC Vhana Ehgaklywha takes up the task
+        -- she starts near Zauko and paths all the way to the Rolanberry exit.
+        -- xi.path.flag.WALLHACK because she gets stuck on some terrain otherwise.
 
-    -- 1AM: if nobody has accepted the quest yet, NPC Vhana Ehgaklywha takes up the task
-    -- she starts near Zauko and paths all the way to the Rolanberry exit.
-    -- xi.path.flag.WALLHACK because she gets stuck on some terrain otherwise.
+        -- TODO: NPC Vhana Ehgaklywha needs to light the lamps as she walks around town
     elseif vanadielHour == 1 then
         if playerOnQuestId == 0 then
             local npc = GetNPCByID(ID.npc.VHANA_EHGAKLYWHA)
