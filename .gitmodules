@@ -1,6 +1,6 @@
 [submodule "navmeshes"]
 	path = navmeshes
-	url = https://github.com/LandSandBoat/xiNavmeshes.git
+	url = https://github.com/EdenServer/navmeshes.git
 [submodule "losmeshes"]
 	path = losmeshes
-	url = https://github.com/LandSandBoat/losmeshes.git
+	url = https://github.com/EdenServer/losmeshes.git
