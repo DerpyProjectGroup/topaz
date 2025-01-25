@@ -34,7 +34,7 @@ constexpr uint32_t general_size     = offsetof(GP_SERV_CHAR_PC, GrapIDTbl[0]);
 constexpr uint32_t model_size       = offsetof(GP_SERV_CHAR_PC, name[0]);
 constexpr uint32_t name_size        = offsetof(GP_SERV_CHAR_PC, name[0]);
 
-// This packet should only be constructed in CCharEntity::updateCharPacket()!
+// This packet should only be constructed in CCharEntity::updateEntityPacket()!
 CCharPacket::CCharPacket(CCharEntity* PChar, ENTITYUPDATE type, uint8 updatemask)
 : packet{}
 {

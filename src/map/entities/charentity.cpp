@@ -33,6 +33,7 @@
 #include "packets/char_recast.h"
 #include "packets/char_sync.h"
 #include "packets/char_update.h"
+#include "packets/entity_update.h"
 #include "packets/event.h"
 #include "packets/event_string.h"
 #include "packets/inventory_finish.h"
@@ -451,41 +452,39 @@ void CCharEntity::pushPacket(std::unique_ptr<CBasicPacket>&& packet)
     }
 }
 
-void CCharEntity::updateCharPacket(CCharEntity* PChar, ENTITYUPDATE type, uint8 updatemask)
-{
-    auto       itr              = PendingCharPackets.find(PChar->id);
-    const bool hasPendingPacket = itr != PendingCharPackets.end() && itr->second != nullptr;
-    if (hasPendingPacket)
-    {
-        // Found existing packet update for the given char, so we update it instead of pushing new
-        auto& packet = itr->second;
-        packet->updateWith(PChar, type, updatemask);
-    }
-    else
-    {
-        // No existing packet update for the given char, so we push new packet
-        auto packet                   = std::make_unique<CCharPacket>(PChar, type, updatemask);
-        PendingCharPackets[PChar->id] = packet.get();
-        PacketList.emplace_back(std::move(packet));
-    }
-}
-
 void CCharEntity::updateEntityPacket(CBaseEntity* PEntity, ENTITYUPDATE type, uint8 updatemask)
 {
     auto       itr              = PendingEntityPackets.find(PEntity->id);
     const bool hasPendingPacket = itr != PendingEntityPackets.end() && itr->second != nullptr;
+    auto*      PChar            = dynamic_cast<CCharEntity*>(PEntity);
     if (hasPendingPacket)
     {
         // Found existing packet update for the given entity, so we update it instead of pushing new
         auto& packet = itr->second;
-        packet->updateWith(PEntity, type, updatemask);
+        if (PChar)
+        {
+            static_cast<CCharPacket*>(packet)->updateWith(PChar, type, updatemask);
+        }
+        else
+        {
+            static_cast<CEntityUpdatePacket*>(packet)->updateWith(PEntity, type, updatemask);
+        }
     }
     else
     {
         // No existing packet update for the given entity, so we push new packet
-        auto packet                       = std::make_unique<CEntityUpdatePacket>(PEntity, type, updatemask);
-        PendingEntityPackets[PEntity->id] = packet.get();
-        PacketList.emplace_back(std::move(packet));
+        if (PChar)
+        {
+            auto packet                     = std::make_unique<CCharPacket>(PChar, type, updatemask);
+            PendingEntityPackets[PChar->id] = packet.get();
+            PacketList.emplace_back(std::move(packet));
+        }
+        else
+        {
+            auto packet                       = std::make_unique<CEntityUpdatePacket>(PEntity, type, updatemask);
+            PendingEntityPackets[PEntity->id] = packet.get();
+            PacketList.emplace_back(std::move(packet));
+        }
     }
 }
 
@@ -498,8 +497,7 @@ auto CCharEntity::popPacket() -> std::unique_ptr<CBasicPacket>
     switch (PPacket->getType())
     {
         case 0x0D: // Char update
-            PendingCharPackets.erase(PPacket->ref<uint32>(0x04));
-            break;
+            [[fallthrough]];
         case 0x0E: // Entity update
             PendingEntityPackets.erase(PPacket->ref<uint32>(0x04));
             break;
@@ -1034,12 +1032,12 @@ void CCharEntity::PostTick()
 
         if (loc.zone && !m_isGMHidden)
         {
-            loc.zone->UpdateCharPacket(this, ENTITY_UPDATE, updatemask);
+            loc.zone->UpdateEntityPacket(this, ENTITY_UPDATE, updatemask);
         }
 
         if (isCharmed)
         {
-            updateCharPacket(this, ENTITY_UPDATE, updatemask);
+            updateEntityPacket(this, ENTITY_UPDATE, updatemask);
         }
 
         if (updatemask & UPDATE_HP)

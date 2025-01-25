@@ -163,7 +163,7 @@ void CZoneEntities::TryAddToNearbySpawnLists(CBaseEntity* PEntity)
                 case TYPE_PC:
                 {
                     PCurrentChar->SpawnPCList[PEntity->id] = PEntity;
-                    PCurrentChar->updateCharPacket(static_cast<CCharEntity*>(PEntity), ENTITY_SPAWN, UPDATE_ALL_CHAR);
+                    PCurrentChar->updateEntityPacket(PEntity, ENTITY_SPAWN, UPDATE_ALL_CHAR);
                     break;
                 }
                 case TYPE_NPC:
@@ -730,7 +730,7 @@ void CZoneEntities::DespawnPC(CCharEntity* PChar)
         if (isInSpawnList)
         {
             PCurrentChar->SpawnPCList.erase(itr);
-            PCurrentChar->updateCharPacket(PChar, ENTITY_DESPAWN, UPDATE_NONE);
+            PCurrentChar->updateEntityPacket(PChar, ENTITY_DESPAWN, UPDATE_NONE);
         }
     }
 }
@@ -1061,7 +1061,7 @@ void CZoneEntities::SpawnPCs(CCharEntity* PChar)
 
     for (const auto& removeChar : toRemove)
     {
-        PChar->updateCharPacket(removeChar, ENTITY_DESPAWN, UPDATE_NONE);
+        PChar->updateEntityPacket(removeChar, ENTITY_DESPAWN, UPDATE_NONE);
         PChar->SpawnPCList.erase(removeChar->id);
     }
 
@@ -1141,7 +1141,7 @@ void CZoneEntities::SpawnPCs(CCharEntity* PChar)
                 {
                     CCharEntity* spawnedChar = spawnedCharacters.top().second;
                     PChar->SpawnPCList.erase(spawnedChar->id);
-                    PChar->updateCharPacket(spawnedChar, ENTITY_DESPAWN, UPDATE_NONE);
+                    PChar->updateEntityPacket(spawnedChar, ENTITY_DESPAWN, UPDATE_NONE);
                     spawnedCharacters.pop();
                     ++swapCount;
                 }
@@ -1155,7 +1155,7 @@ void CZoneEntities::SpawnPCs(CCharEntity* PChar)
 
             // Spawn best candidate character
             PChar->SpawnPCList[candidateChar->id] = candidateChar;
-            PChar->updateCharPacket(candidateChar, ENTITY_SPAWN, UPDATE_ALL_CHAR);
+            PChar->updateEntityPacket(candidateChar, ENTITY_SPAWN, UPDATE_ALL_CHAR);
             PChar->pushPacket<CCharSyncPacket>(candidateChar);
         }
     }
@@ -1442,36 +1442,26 @@ CCharEntity* CZoneEntities::GetCharByID(uint32 id)
     return nullptr;
 }
 
-void CZoneEntities::UpdateCharPacket(CCharEntity* PChar, ENTITYUPDATE type, uint8 updatemask)
-{
-    TracyZoneScoped;
-
-    // Do not send packets that are updates of a hidden GM
-    if (PChar->m_isGMHidden && type != ENTITY_DESPAWN)
-    {
-        return;
-    }
-
-    FOR_EACH_PAIR_CAST_SECOND(CCharEntity*, PCurrentChar, m_charList)
-    {
-        if (PCurrentChar == PChar)
-        {
-            continue;
-        }
-
-        if (type == ENTITY_SPAWN || type == ENTITY_DESPAWN || PCurrentChar->SpawnPCList.find(PChar->id) != PCurrentChar->SpawnPCList.end())
-        {
-            PCurrentChar->updateCharPacket(PChar, type, updatemask);
-        }
-    }
-}
-
 void CZoneEntities::UpdateEntityPacket(CBaseEntity* PEntity, ENTITYUPDATE type, uint8 updatemask, bool alwaysInclude)
 {
     TracyZoneScoped;
 
+    // Do not send packets that are updates of a hidden GM
+    if (auto* PChar = dynamic_cast<CCharEntity*>(PEntity))
+    {
+        if (PChar->m_isGMHidden && type != ENTITY_DESPAWN)
+        {
+            return;
+        }
+    }
+
     FOR_EACH_PAIR_CAST_SECOND(CCharEntity*, PCurrentChar, m_charList)
     {
+        if (PCurrentChar == PEntity)
+        {
+            continue;
+        }
+
         if (alwaysInclude || type == ENTITY_SPAWN || type == ENTITY_DESPAWN || charutils::hasEntitySpawned(PCurrentChar, PEntity))
         {
             PCurrentChar->updateEntityPacket(PEntity, type, updatemask);

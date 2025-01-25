@@ -25,8 +25,6 @@
 #include "event_info.h"
 #include "item_container.h"
 #include "monstrosity.h"
-#include "packets/char.h"
-#include "packets/entity_update.h"
 
 #include "common/cbasetypes.h"
 #include "common/mmo.h"
@@ -427,7 +425,6 @@ public:
     }
 
     void   pushPacket(std::unique_ptr<CBasicPacket>&&);                                   // Push packet to packet list
-    void   updateCharPacket(CCharEntity* PChar, ENTITYUPDATE type, uint8 updatemask);     // Push or update a char packet
     void   updateEntityPacket(CBaseEntity* PEntity, ENTITYUPDATE type, uint8 updatemask); // Push or update an entity update packet
     bool   isPacketListEmpty();
     auto   popPacket() -> std::unique_ptr<CBasicPacket>; // Get first packet from PacketList
@@ -665,8 +662,7 @@ private:
     // TODO: Don't use raw ptrs for this, but don't duplicate whole packets with unique_ptr either.
     std::deque<std::unique_ptr<CBasicPacket>>        PacketList; // The list of packets to be sent to the character during the next network cycle
     CBasicPacket*                                    PendingPositionPacket = nullptr;
-    std::unordered_map<uint32, CCharPacket*>         PendingCharPackets;   // Keep track of which char packets are queued up for this char, such that they can be updated
-    std::unordered_map<uint32, CEntityUpdatePacket*> PendingEntityPackets; // Keep track of which entity update packets are queued up for this char, such that they can be updated
+    std::unordered_map<uint32, CBasicPacket*> PendingEntityPackets; // Keep track of which entity update packets are queued up for this char, such that they can be updated
 };
 
 #endif
