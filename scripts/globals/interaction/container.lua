@@ -196,6 +196,23 @@ end
 
 ---@param player CBaseEntity
 ---@param name string
+---@return integer
+function Container:countSetVarBits(player, name)
+    local currentValue = player:getVar(self.varPrefix .. name)
+    local count = 0
+    while currentValue > 0 do
+        if bit.band(currentValue, 1) == 1 then
+            count = count + 1
+        end
+
+        currentValue = bit.rshift(currentValue, 1)
+    end
+
+    return count
+end
+
+---@param player CBaseEntity
+---@param name string
 ---@param bitNum integer
 ---@return nil
 function Container:setVarBit(player, name, bitNum)
