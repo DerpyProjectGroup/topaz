@@ -763,7 +763,9 @@ namespace petutils
         }
         else if (PMaster->GetSJob() == JOB_SMN)
         {
-            PPet->SetMLevel(PMaster->GetSLevel());
+            mLvl = PMaster->GetSLevel();
+
+            PPet->SetMLevel(mLvl);
         }
         else
         { // should never happen

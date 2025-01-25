@@ -9,9 +9,6 @@ local ID = zones[xi.zone.CRAWLERS_NEST_S]
 ---@type TNpcEntity
 local entity = {}
 
-entity.onTrade = function(player, npc, trade)
-end
-
 entity.onTrigger = function(player, npc)
     if player:getCampaignAllegiance() > 0 then
         if player:getCampaignAllegiance() == 2 then
@@ -25,9 +22,6 @@ entity.onTrigger = function(player, npc)
     elseif not player:hasKeyItem(xi.ki.GREEN_RECOMMENDATION_LETTER) then
         player:startEvent(1)
     end
-end
-
-entity.onEventUpdate = function(player, csid, option, npc)
 end
 
 entity.onEventFinish = function(player, csid, option, npc)

@@ -7,9 +7,6 @@
 ---@type TNpcEntity
 local entity = {}
 
-entity.onTrade = function(player, npc, trade)
-end
-
 entity.onTrigger = function(player, npc)
     local sandyQuests = xi.quest.id.sandoria
     local whmAf1 = player:getQuestStatus(xi.questLog.SANDORIA, sandyQuests.MESSENGER_FROM_BEYOND)
@@ -44,9 +41,6 @@ entity.onTrigger = function(player, npc)
     else
         player:startEvent(523)
     end
-end
-
-entity.onEventUpdate = function(player, csid, option, npc)
 end
 
 entity.onEventFinish = function(player, csid, option, npc)

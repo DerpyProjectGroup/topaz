@@ -1835,9 +1835,6 @@ local function scenarioArmor(player, option, giveToPlayer)
     end
 end
 
-entity.onTrade = function(player, npc, trade)
-end
-
 local argumentKeyItems =
 {
     [1] =

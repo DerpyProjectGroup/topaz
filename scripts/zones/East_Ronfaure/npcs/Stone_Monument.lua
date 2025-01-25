@@ -9,10 +9,6 @@ local ID = zones[xi.zone.EAST_RONFAURE]
 ---@type TNpcEntity
 local entity = {}
 
-entity.onTrigger = function(player, npc)
-    player:startEvent(900)
-end
-
 entity.onTrade = function(player, npc, trade)
     if
         trade:getItemCount() == 1 and
@@ -23,12 +19,6 @@ entity.onTrade = function(player, npc, trade)
         player:messageSpecial(ID.text.ITEM_OBTAINED, xi.item.CLAY_TABLET)
         player:setCharVar('anExplorer-CurrentTablet', 0x00002)
     end
-end
-
-entity.onEventUpdate = function(player, csid, option, npc)
-end
-
-entity.onEventFinish = function(player, csid, option, npc)
 end
 
 return entity

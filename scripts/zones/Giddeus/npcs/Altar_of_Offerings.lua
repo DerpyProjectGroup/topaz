@@ -9,9 +9,6 @@ local ID = zones[xi.zone.GIDDEUS]
 ---@type TNpcEntity
 local entity = {}
 
-entity.onTrade = function(player, npc, trade)
-end
-
 entity.onTrigger = function(player, npc)
     local crisisstatus = player:getQuestStatus(xi.questLog.WINDURST, xi.quest.id.windurst.A_CRISIS_IN_THE_MAKING)
     if crisisstatus >= 1 and player:getCharVar('QuestCrisisMaking_var') == 1 then
@@ -19,9 +16,6 @@ entity.onTrigger = function(player, npc)
     else
         player:startEvent(60) -- Standard Message
     end
-end
-
-entity.onEventUpdate = function(player, csid, option, npc)
 end
 
 entity.onEventFinish = function(player, csid, option, npc)

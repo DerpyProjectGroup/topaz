@@ -9,9 +9,6 @@ local ID = zones[xi.zone.LOWER_JEUNO]
 ---@type TNpcEntity
 local entity = {}
 
-entity.onTrade = function(player, npc, trade)
-end
-
 entity.onTrigger = function(player, npc)
     local cooksPride     = player:getQuestStatus(xi.questLog.JEUNO, xi.quest.id.jeuno.COOK_S_PRIDE)
     local theKindCardian = player:getQuestStatus(xi.questLog.JEUNO, xi.quest.id.jeuno.THE_KIND_CARDIAN)
@@ -57,9 +54,6 @@ entity.onTrigger = function(player, npc)
     else
         player:startEvent(98) -- Standard dialog
     end
-end
-
-entity.onEventUpdate = function(player, csid, option, npc)
 end
 
 entity.onEventFinish = function(player, csid, option, npc)

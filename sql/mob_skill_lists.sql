@@ -2306,7 +2306,13 @@ INSERT INTO `mob_skill_lists` VALUES ('Gerjis',497,271); -- razor_fang
 INSERT INTO `mob_skill_lists` VALUES ('Gerjis',497,273); -- claw_cyclone
 INSERT INTO `mob_skill_lists` VALUES ('Gerjis',497,1322); -- gerjis_grip
 -- INSERT INTO `mob_skill_lists` VALUES ('Gerjis',497,1681); -- crossthrash
--- 498: Cyranuce_M_Cutauleon
+INSERT INTO `mob_skill_lists` VALUES ('Cyranuce_M_Cutauleon',498,813); -- Dispelling Wind
+INSERT INTO `mob_skill_lists` VALUES ('Cyranuce_M_Cutauleon',498,814); -- Deadly Drive
+INSERT INTO `mob_skill_lists` VALUES ('Cyranuce_M_Cutauleon',498,815); -- Wind Wall
+INSERT INTO `mob_skill_lists` VALUES ('Cyranuce_M_Cutauleon',498,816); -- Fang Rush
+INSERT INTO `mob_skill_lists` VALUES ('Cyranuce_M_Cutauleon',498,817); -- Dread Shriek
+INSERT INTO `mob_skill_lists` VALUES ('Cyranuce_M_Cutauleon',498,818); -- Tail Crush
+INSERT INTO `mob_skill_lists` VALUES ('Cyranuce_M_Cutauleon',498,822); -- Chaos Breath
 -- 499 to 699: free
 INSERT INTO `mob_skill_lists` VALUES ('Mammet',503,347);
 INSERT INTO `mob_skill_lists` VALUES ('Mammet',503,419);

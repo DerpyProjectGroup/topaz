@@ -7,9 +7,6 @@
 ---@type TNpcEntity
 local entity = {}
 
-entity.onTrade = function(player, npc, trade)
-end
-
 entity.onTrigger = function(player, npc)
     local theKindCardian = player:getQuestStatus(xi.questLog.JEUNO, xi.quest.id.jeuno.THE_KIND_CARDIAN)
 
@@ -33,9 +30,6 @@ entity.onTrigger = function(player, npc)
     elseif theKindCardian == xi.questStatus.QUEST_COMPLETED then
         player:startEvent(67) -- New standard dialog after "The kind cardian"
     end
-end
-
-entity.onEventUpdate = function(player, csid, option, npc)
 end
 
 entity.onEventFinish = function(player, csid, option, npc)

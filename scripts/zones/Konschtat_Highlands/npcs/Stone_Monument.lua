@@ -7,10 +7,6 @@
 ---@type TNpcEntity
 local entity = {}
 
-entity.onTrigger = function(player, npc)
-    player:startEvent(900)
-end
-
 entity.onTrade = function(player, npc, trade)
     if
         npcUtil.tradeHas(trade, xi.item.LUMP_OF_SELBINA_CLAY) and
@@ -19,12 +15,6 @@ entity.onTrade = function(player, npc, trade)
         player:confirmTrade()
         player:setCharVar('anExplorer-CurrentTablet', 0x00080)
     end
-end
-
-entity.onEventUpdate = function(player, csid, option, npc)
-end
-
-entity.onEventFinish = function(player, csid, option, npc)
 end
 
 return entity

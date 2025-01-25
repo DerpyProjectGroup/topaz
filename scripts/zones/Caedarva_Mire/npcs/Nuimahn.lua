@@ -32,9 +32,6 @@ entity.onTrigger = function(player, npc)
     end
 end
 
-entity.onEventUpdate = function(player, csid, option, npc)
-end
-
 entity.onEventFinish = function(player, csid, option, npc)
     if csid == 203 then
         player:setPos(-515, -6.5, 740, 0, 72)

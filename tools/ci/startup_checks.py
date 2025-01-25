@@ -8,14 +8,19 @@ import threading
 from queue import Queue, Empty
 
 TEN_MINUTES_IN_SECONDS = 600
-CHECK_INTERVAL_SECONDS = 5
+CHECK_INTERVAL_SECONDS = 2.5
+
+
+def kill(process):
+    """Send SIGTERM to a running process."""
+    if process.poll() is None:  # still running
+        process.send_signal(signal.SIGTERM)
 
 
 def kill_all(processes):
     """Send SIGTERM to all running processes."""
     for proc in processes:
-        if proc.poll() is None:  # still running
-            proc.send_signal(signal.SIGTERM)
+        kill(proc)
 
 
 def reader_thread(proc, output_queue):
@@ -128,12 +133,11 @@ def main():
                 if "ready to work" in lower_line:
                     print(f"==> {proc.args[0]} is ready!")
                     ready_status[proc] = True
+                    kill(proc)
 
         # Check if all processes are marked ready
         if all(ready_status.values()):
-            print(
-                "All processes reached 'ready to work'! Killing them and exiting successfully."
-            )
+            print("All processes reached 'ready to work'! Exiting successfully.")
             kill_all(processes)
             exit(0)
 

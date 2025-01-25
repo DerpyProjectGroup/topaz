@@ -10,7 +10,7 @@ entity.onTrade = function(player, npc, trade)
 end
 
 entity.onTrigger = function(player, npc)
-    xi.transport.onDockTimekeeperTrigger(player, xi.transport.routes.OPEN_SEA, 232)
+    xi.transport.onDockTimekeeperTrigger(player, npc)
 end
 
 entity.onEventUpdate = function(player, csid, option, npc)

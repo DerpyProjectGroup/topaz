@@ -9,9 +9,6 @@ local ID = zones[xi.zone.LA_THEINE_PLATEAU]
 ---@type TNpcEntity
 local entity = {}
 
-entity.onTrade = function(player, npc, trade)
-end
-
 entity.onTrigger = function(player, npc)
     local gates = player:getQuestStatus(xi.questLog.SANDORIA, xi.quest.id.sandoria.GATES_TO_PARADISE)
     if gates == xi.questStatus.QUEST_COMPLETED then
@@ -28,12 +25,6 @@ entity.onTrigger = function(player, npc)
     else
         player:showText(npc, ID.text.FAURBELLANT_1)
     end
-end
-
-entity.onEventUpdate = function(player, csid, option, npc)
-end
-
-entity.onEventFinish = function(player, csid, option, npc)
 end
 
 return entity

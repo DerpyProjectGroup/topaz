@@ -104,7 +104,7 @@ namespace PacketGuard
     {
         // Count packets in queue
         std::map<std::string, uint32> packetCounterMap;
-        for (auto& entry : PChar->getPacketListCopy())
+        for (auto& entry : PChar->getPacketList())
         {
             auto packetStr = fmt::format("0x{:4X}", entry->getType());
             packetCounterMap[packetStr]++;

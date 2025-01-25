@@ -9,9 +9,6 @@ local ID = zones[xi.zone.KAZHAM]
 ---@type TNpcEntity
 local entity = {}
 
-entity.onTrade = function(player, npc, trade)
-end
-
 entity.onTrigger = function(player, npc)
     local trialByFire = player:getQuestStatus(xi.questLog.OUTLANDS, xi.quest.id.outlands.TRIAL_BY_FIRE)
     local hasWhisperOfFlames = player:hasKeyItem(xi.ki.WHISPER_OF_FLAMES)
@@ -56,9 +53,6 @@ entity.onTrigger = function(player, npc)
     else
         player:startEvent(274) -- Standard dialog
     end
-end
-
-entity.onEventUpdate = function(player, csid, option, npc)
 end
 
 entity.onEventFinish = function(player, csid, option, npc)

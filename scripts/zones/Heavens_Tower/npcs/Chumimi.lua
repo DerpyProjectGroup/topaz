@@ -90,9 +90,6 @@ entity.onTrigger = function(player, npc)
     end
 end
 
-entity.onEventUpdate = function(player, csid, option, npc)
-end
-
 entity.onEventFinish = function(player, csid, option, npc)
     if csid == 260 then
         -- option 3: Koru-Moru -- option 2: Shantotto -- option 1: Yoran-Oran
