@@ -23,7 +23,7 @@
 
 #include <cstring>
 
-#include "char.h"
+#include "char_update.h"
 
 #include "entities/charentity.h"
 #include "status_effect_container.h"
@@ -35,14 +35,14 @@ constexpr uint32_t model_size       = offsetof(GP_SERV_CHAR_PC, name[0]);
 constexpr uint32_t name_size        = offsetof(GP_SERV_CHAR_PC, name[0]);
 
 // This packet should only be constructed in CCharEntity::updateEntityPacket()!
-CCharPacket::CCharPacket(CCharEntity* PChar, ENTITYUPDATE type, uint8 updatemask)
+CCharUpdatePacket::CCharUpdatePacket(CCharEntity* PChar, ENTITYUPDATE type, uint8 updatemask)
 : packet{}
 {
     ref<uint32>(0x04) = PChar->id;
     updateWith(PChar, type, updatemask);
 }
 
-void CCharPacket::updateWith(CCharEntity* PChar, ENTITYUPDATE type, uint8 updatemask)
+void CCharUpdatePacket::updateWith(CCharEntity* PChar, ENTITYUPDATE type, uint8 updatemask)
 {
     uint32 currentId = ref<uint32>(0x04); // TODO: replace with a class variable?
     if (currentId != PChar->id)
@@ -74,13 +74,13 @@ void CCharPacket::updateWith(CCharEntity* PChar, ENTITYUPDATE type, uint8 update
     {
         // static_cast doesn't set the bits the way we need it to, so do some std::memcpy
         uint8 tempSendFlg = {};
-        std::memcpy(&tempSendFlg, &packet.SendFlg, sizeof(charflags::sendflags_t));
+        std::memcpy(&tempSendFlg, &packet.SendFlg, sizeof(charUpdateFlags::sendflags_t));
 
         // OR the update mask with the previously-calculated mask...
         tempSendFlg |= updatemask;
 
         // set the flags back
-        std::memcpy(&packet.SendFlg, &tempSendFlg, sizeof(charflags::sendflags_t));
+        std::memcpy(&packet.SendFlg, &tempSendFlg, sizeof(charUpdateFlags::sendflags_t));
     }
 
     if (packet.SendFlg.Position)

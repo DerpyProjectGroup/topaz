@@ -19,8 +19,8 @@
 ===========================================================================
 */
 
-#ifndef _CCHARPACKET_H
-#define _CCHARPACKET_H
+#ifndef _CCHARUPDATEPACKET_H
+#define _CCHARUPDATEPACKET_H
 
 #include "common/cbasetypes.h"
 
@@ -29,7 +29,7 @@
 class CCharEntity;
 
 // Namespace to avoid compilation units using the same structs twice with different definitions
-namespace charflags
+namespace charUpdateFlags
 {
     // PS2: (Non-defined bitfield type.)
     struct sendflags_t
@@ -157,7 +157,7 @@ namespace charflags
         uint32_t MountIndex : 8;   // PS2: (New; did not exist.)
         uint32_t unknown_1_3 : 20; // PS2: (New; did not exist.)
     };
-} // namespace charflags
+} // namespace charUpdateFlags
 
 // PS2: GP_SERV_CHAR_PC
 struct GP_SERV_CHAR_PC
@@ -167,43 +167,43 @@ struct GP_SERV_CHAR_PC
     uint16_t sync;
 
     // PS2: GP_SERV_POS_HEAD
-    uint32_t               UniqueNo;      // PS2: UniqueNo
-    uint16_t               ActIndex;      // PS2: ActIndex
-    charflags::sendflags_t SendFlg;       // PS2: SendFlg
-    uint8_t                dir;           // PS2: dir
-    float                  x;             // PS2: x
-    float                  z;             // PS2: z
-    float                  y;             // PS2: y
-    charflags::flags0_t    Flags0;        // PS2: <bits> (Nameless bitfield.)
-    uint8_t                Speed;         // PS2: Speed
-    uint8_t                SpeedBase;     // PS2: SpeedBase
-    uint8_t                Hpp;           // PS2: HpMax
-    uint8_t                server_status; // PS2: server_status
-    charflags::flags1_t    Flags1;        // PS2: <bits> (Nameless bitfield.)
-    charflags::flags2_t    Flags2;        // PS2: <bits> (Nameless bitfield.)
-    charflags::flags3_t    Flags3;        // PS2: <bits> (Nameless bitfield.)
-    uint32_t               BtTargetID;    // PS2: BtTargetID
+    uint32_t                     UniqueNo;      // PS2: UniqueNo
+    uint16_t                     ActIndex;      // PS2: ActIndex
+    charUpdateFlags::sendflags_t SendFlg;       // PS2: SendFlg
+    uint8_t                      dir;           // PS2: dir
+    float                        x;             // PS2: x
+    float                        z;             // PS2: z
+    float                        y;             // PS2: y
+    charUpdateFlags::flags0_t    Flags0;        // PS2: <bits> (Nameless bitfield.)
+    uint8_t                      Speed;         // PS2: Speed
+    uint8_t                      SpeedBase;     // PS2: SpeedBase
+    uint8_t                      Hpp;           // PS2: HpMax
+    uint8_t                      server_status; // PS2: server_status
+    charUpdateFlags::flags1_t    Flags1;        // PS2: <bits> (Nameless bitfield.)
+    charUpdateFlags::flags2_t    Flags2;        // PS2: <bits> (Nameless bitfield.)
+    charUpdateFlags::flags3_t    Flags3;        // PS2: <bits> (Nameless bitfield.)
+    uint32_t                     BtTargetID;    // PS2: BtTargetID
 
     // PS2: GP_SERV_CHAR_PC remaining fields.
-    uint16_t            CostumeId;           // PS2: (New; did not exist.)
-    uint8_t             BallistaInfo;        // PS2: (New; did not exist.)
-    charflags::flags4_t Flags4;              // PS2: (New; did not exist.)
-    uint32_t            CustomProperties[2]; // PS2: (New; did not exist.)
-    uint16_t            PetActIndex;         // PS2: (New; did not exist.)
-    uint16_t            MonstrosityFlags;    // PS2: (New; did not exist.)
-    uint8_t             MonstrosityNameId1;  // PS2: (New; did not exist.)
-    uint8_t             MonstrosityNameId2;  // PS2: (New; did not exist.)
-    charflags::flags5_t Flags5;              // PS2: (New; did not exist.)
-    uint8_t             ModelHitboxSize;     // PS2: (New; did not exist.)
-    charflags::flags6_t Flags6;              // PS2: (New; did not exist.)
-    uint16_t            GrapIDTbl[9];        // PS2: GrapIDTbl
-    uint8_t             name[16];            // PS2: name
+    uint16_t                  CostumeId;           // PS2: (New; did not exist.)
+    uint8_t                   BallistaInfo;        // PS2: (New; did not exist.)
+    charUpdateFlags::flags4_t Flags4;              // PS2: (New; did not exist.)
+    uint32_t                  CustomProperties[2]; // PS2: (New; did not exist.)
+    uint16_t                  PetActIndex;         // PS2: (New; did not exist.)
+    uint16_t                  MonstrosityFlags;    // PS2: (New; did not exist.)
+    uint8_t                   MonstrosityNameId1;  // PS2: (New; did not exist.)
+    uint8_t                   MonstrosityNameId2;  // PS2: (New; did not exist.)
+    charUpdateFlags::flags5_t Flags5;              // PS2: (New; did not exist.)
+    uint8_t                   ModelHitboxSize;     // PS2: (New; did not exist.)
+    charUpdateFlags::flags6_t Flags6;              // PS2: (New; did not exist.)
+    uint16_t                  GrapIDTbl[9];        // PS2: GrapIDTbl
+    uint8_t                   name[16];            // PS2: name
 };
 
-class CCharPacket : public CBasicPacket
+class CCharUpdatePacket : public CBasicPacket
 {
 public:
-    CCharPacket(CCharEntity* PChar, ENTITYUPDATE type, uint8 updatemask);
+    CCharUpdatePacket(CCharEntity* PChar, ENTITYUPDATE type, uint8 updatemask);
     void updateWith(CCharEntity* PChar, ENTITYUPDATE type, uint8 updatemask);
 
 private:

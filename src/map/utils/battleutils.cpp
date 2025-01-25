@@ -1,4 +1,4 @@
-/*
+﻿/*
 ===========================================================================
 
   Copyright (c) 2010-2015 Darkstar Dev Teams
@@ -28,10 +28,8 @@
 #include <cstring>
 #include <unordered_map>
 
-#include "packets/char.h"
 #include "packets/char_health.h"
 #include "packets/char_status.h"
-#include "packets/entity_update.h"
 #include "packets/inventory_finish.h"
 #include "packets/message_basic.h"
 

@@ -39,7 +39,6 @@
 #include "entities/trustentity.h"
 
 #include "packets/change_music.h"
-#include "packets/char.h"
 #include "packets/char_sync.h"
 #include "packets/entity_set_name.h"
 #include "packets/entity_update.h"

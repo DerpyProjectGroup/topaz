@@ -1,4 +1,4 @@
-/*
+﻿/*
 ===========================================================================
 
   Copyright (c) 2010-2015 Darkstar Dev Teams
@@ -27,12 +27,12 @@
 
 #include "packets/action.h"
 #include "packets/basic.h"
-#include "packets/char.h"
 #include "packets/char_appearance.h"
 #include "packets/char_health.h"
 #include "packets/char_recast.h"
 #include "packets/char_status.h"
 #include "packets/char_sync.h"
+#include "packets/char_update.h"
 #include "packets/entity_update.h"
 #include "packets/event.h"
 #include "packets/event_string.h"
@@ -463,7 +463,7 @@ void CCharEntity::updateEntityPacket(CBaseEntity* PEntity, ENTITYUPDATE type, ui
         auto& packet = itr->second;
         if (PChar)
         {
-            static_cast<CCharPacket*>(packet)->updateWith(PChar, type, updatemask);
+            static_cast<CCharUpdatePacket*>(packet)->updateWith(PChar, type, updatemask);
         }
         else
         {
@@ -475,7 +475,7 @@ void CCharEntity::updateEntityPacket(CBaseEntity* PEntity, ENTITYUPDATE type, ui
         // No existing packet update for the given entity, so we push new packet
         if (PChar)
         {
-            auto packet                     = std::make_unique<CCharPacket>(PChar, type, updatemask);
+            auto packet                     = std::make_unique<CCharUpdatePacket>(PChar, type, updatemask);
             PendingEntityPackets[PChar->id] = packet.get();
             PacketList.emplace_back(std::move(packet));
         }

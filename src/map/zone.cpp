@@ -56,7 +56,6 @@
 #include "lua/luautils.h"
 
 #include "packets/action.h"
-#include "packets/char.h"
 #include "packets/char_sync.h"
 #include "packets/char_update.h"
 #include "packets/entity_update.h"

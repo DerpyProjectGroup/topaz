@@ -26,8 +26,6 @@ set(PACKET_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/caught_monster.h
     ${CMAKE_CURRENT_SOURCE_DIR}/change_music.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/change_music.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/char.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/char.h
     ${CMAKE_CURRENT_SOURCE_DIR}/char_abilities.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/char_abilities.h
     ${CMAKE_CURRENT_SOURCE_DIR}/char_appearance.cpp
@@ -62,6 +60,8 @@ set(PACKET_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/char_status.h
     ${CMAKE_CURRENT_SOURCE_DIR}/char_sync.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/char_sync.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/char_update.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/char_update.h
     ${CMAKE_CURRENT_SOURCE_DIR}/chat_message.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/chat_message.h
     ${CMAKE_CURRENT_SOURCE_DIR}/chocobo_digging.cpp
