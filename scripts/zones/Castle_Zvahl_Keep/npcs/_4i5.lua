@@ -27,9 +27,6 @@ entity.onTrigger = function(player, npc)
     player:startEvent(9)
 end
 
-entity.onEventUpdate = function(player, csid, option, npc)
-end
-
 entity.onEventFinish = function(player, csid, option, npc)
     if csid == 8 then
         player:tradeComplete()
