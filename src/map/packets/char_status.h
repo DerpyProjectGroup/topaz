@@ -19,8 +19,8 @@
 ===========================================================================
 */
 
-#ifndef _CCHARUPDATEPACKET_H
-#define _CCHARUPDATEPACKET_H
+#ifndef _CCHARSTATUSPACKET_H
+#define _CCHARSTATUSPACKET_H
 
 #include "common/cbasetypes.h"
 
@@ -28,10 +28,10 @@
 
 class CCharEntity;
 
-class CCharUpdatePacket : public CBasicPacket
+class CCharStatusPacket : public CBasicPacket
 {
 public:
-    CCharUpdatePacket(CCharEntity* PChar);
+    CCharStatusPacket(CCharEntity* PChar);
 };
 
 #endif

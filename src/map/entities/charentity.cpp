@@ -1,4 +1,4 @@
-﻿/*
+/*
 ===========================================================================
 
   Copyright (c) 2010-2015 Darkstar Dev Teams
@@ -31,8 +31,8 @@
 #include "packets/char_appearance.h"
 #include "packets/char_health.h"
 #include "packets/char_recast.h"
+#include "packets/char_status.h"
 #include "packets/char_sync.h"
-#include "packets/char_update.h"
 #include "packets/entity_update.h"
 #include "packets/event.h"
 #include "packets/event_string.h"
@@ -1012,7 +1012,7 @@ void CCharEntity::PostTick()
 
     if (m_EffectsChanged)
     {
-        pushPacket<CCharUpdatePacket>(this);
+        pushPacket<CCharStatusPacket>(this);
         pushPacket<CCharSyncPacket>(this);
         pushPacket<CCharJobExtraPacket>(this, true);
         pushPacket<CCharJobExtraPacket>(this, false);
@@ -1052,7 +1052,7 @@ void CCharEntity::PostTick()
         // Do not send an update packet when only the position has change
         if (updatemask ^ UPDATE_POS)
         {
-            pushPacket<CCharUpdatePacket>(this);
+            pushPacket<CCharStatusPacket>(this);
         }
         updatemask = 0;
     }

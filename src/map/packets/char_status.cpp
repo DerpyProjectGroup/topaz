@@ -19,7 +19,7 @@
 ===========================================================================
 */
 
-#include "char_update.h"
+#include "char_status.h"
 
 #include "common/logging.h"
 #include "common/socket.h"
@@ -37,7 +37,7 @@
 // https://github.com/atom0s/XiPackets/tree/main/world/server/0x0037
 
 // Namespace to avoid compilation units using the same structs twice with different definitions
-namespace charUpateFlags
+namespace charStatusFlags
 {
     struct flags0_t
     {
@@ -130,7 +130,7 @@ namespace charUpateFlags
         uint32_t unknown_0_6 : 1;
         uint32_t unknown_0_7 : 25;
     };
-} // namespace charUpateFlags
+} // namespace charStatusFlags
 
 struct status_bits_t
 {
@@ -171,38 +171,38 @@ struct status_bits_t
 // PS2: GP_SERV_SERVERSTATUS
 struct GP_SERV_SERVERSTATUS
 {
-    uint16_t                 id : 9;
-    uint16_t                 size : 7;
-    uint16_t                 sync;
-    uint8_t                  BufStatus[32];        // PS2: BufStatus
-    uint32_t                 UniqueNo;             // PS2: UniqueNo
-    charUpateFlags::flags0_t Flags0;               // PS2: <bits> (Nameless bitfield.)
-    charUpateFlags::flags1_t Flags1;               // PS2: <bits> (Nameless bitfield.)
-    uint8_t                  server_status;        // PS2: server_status
-    uint8_t                  r;                    // PS2: r
-    uint8_t                  g;                    // PS2: g
-    uint8_t                  b;                    // PS2: b
-    charUpateFlags::flags2_t Flags2;               // PS2: <bits> (Nameless bitfield.)
-    charUpateFlags::flags3_t Flags3;               // PS2: <bits> (New; did not exist.)
-    uint32_t                 dead_counter1;        // PS2: (New; did not exist.)
-    uint32_t                 dead_counter2;        // PS2: (New; did not exist.)
-    uint16_t                 costume_id;           // PS2: (New; did not exist.)
-    uint16_t                 warp_target_index;    // PS2: (New; did not exist.)
-    uint16_t                 fellow_target_index;  // PS2: (New; did not exist.)
-    uint8_t                  fishing_timer;        // PS2: (New; did not exist.)
-    uint8_t                  padding00;            // PS2: (New; did not exist.)
-    status_bits_t            BufStatusBits;        // PS2: (New; did not exist.)
-    uint16_t                 monstrosity_info;     // PS2: (New; did not exist.)
-    uint8_t                  monstrosity_name_id1; // PS2: (New; did not exist.)
-    uint8_t                  monstrosity_name_id2; // PS2: (New; did not exist.)
-    charUpateFlags::flags4_t Flags4;               // PS2: (New; did not exist.)
-    uint8_t                  model_hitbox_size;    // PS2: (New; did not exist.)
-    charUpateFlags::flags5_t Flags5;               // PS2: (New; did not exist.)
-    uint8_t                  mount_id;             // PS2: (New; did not exist.)
-    charUpateFlags::flags6_t Flags6;               // PS2: (New; did not exist.)
+    uint16_t                  id : 9;
+    uint16_t                  size : 7;
+    uint16_t                  sync;
+    uint8_t                   BufStatus[32];        // PS2: BufStatus
+    uint32_t                  UniqueNo;             // PS2: UniqueNo
+    charStatusFlags::flags0_t Flags0;               // PS2: <bits> (Nameless bitfield.)
+    charStatusFlags::flags1_t Flags1;               // PS2: <bits> (Nameless bitfield.)
+    uint8_t                   server_status;        // PS2: server_status
+    uint8_t                   r;                    // PS2: r
+    uint8_t                   g;                    // PS2: g
+    uint8_t                   b;                    // PS2: b
+    charStatusFlags::flags2_t Flags2;               // PS2: <bits> (Nameless bitfield.)
+    charStatusFlags::flags3_t Flags3;               // PS2: <bits> (New; did not exist.)
+    uint32_t                  dead_counter1;        // PS2: (New; did not exist.)
+    uint32_t                  dead_counter2;        // PS2: (New; did not exist.)
+    uint16_t                  costume_id;           // PS2: (New; did not exist.)
+    uint16_t                  warp_target_index;    // PS2: (New; did not exist.)
+    uint16_t                  fellow_target_index;  // PS2: (New; did not exist.)
+    uint8_t                   fishing_timer;        // PS2: (New; did not exist.)
+    uint8_t                   padding00;            // PS2: (New; did not exist.)
+    status_bits_t             BufStatusBits;        // PS2: (New; did not exist.)
+    uint16_t                  monstrosity_info;     // PS2: (New; did not exist.)
+    uint8_t                   monstrosity_name_id1; // PS2: (New; did not exist.)
+    uint8_t                   monstrosity_name_id2; // PS2: (New; did not exist.)
+    charStatusFlags::flags4_t Flags4;               // PS2: (New; did not exist.)
+    uint8_t                   model_hitbox_size;    // PS2: (New; did not exist.)
+    charStatusFlags::flags5_t Flags5;               // PS2: (New; did not exist.)
+    uint8_t                   mount_id;             // PS2: (New; did not exist.)
+    charStatusFlags::flags6_t Flags6;               // PS2: (New; did not exist.)
 };
 
-CCharUpdatePacket::CCharUpdatePacket(CCharEntity* PChar)
+CCharStatusPacket::CCharStatusPacket(CCharEntity* PChar)
 {
     this->setType(0x37);
     this->setSize(0x60);
@@ -243,7 +243,7 @@ CCharUpdatePacket::CCharUpdatePacket(CCharEntity* PChar)
     }
 
     // flags 0 starts at 0x28
-    charUpateFlags::flags0_t flags0 = {};
+    charStatusFlags::flags0_t flags0 = {};
 
     flags0.HideFlag        = false; // This hides your UI. Probably used for the Live Vanadiel streams.
     flags0.SleepFlag       = false; // Hides the player, probably also used for Live Vanadiel
@@ -273,7 +273,7 @@ CCharUpdatePacket::CCharUpdatePacket(CCharEntity* PChar)
     }
 
     // flags 1 starts at 0x2C
-    charUpateFlags::flags1_t flags1 = {};
+    charStatusFlags::flags1_t flags1 = {};
 
     flags1.Speed        = PChar->UpdateSpeed();
     flags1.Hackmove     = PChar->wallhackEnabled; // GM wallhack, walk through walls
@@ -287,7 +287,7 @@ CCharUpdatePacket::CCharUpdatePacket(CCharEntity* PChar)
     flags1.CharmFlag    = PChar->isCharmed;
     flags1.GmIconFlag   = false; // If set, allows other icon flags to be shown in addition to the GM red/pink text for the name.
 
-    charUpateFlags::flags2_t flags2 = {};
+    charStatusFlags::flags2_t flags2 = {};
 
     flags2.NamedFlag       = false; // disable "The"
     flags2.SingleFlag      = false; // singular entity
@@ -303,7 +303,7 @@ CCharUpdatePacket::CCharUpdatePacket(CCharEntity* PChar)
     }
 
     // Flags3 starts at 0x38
-    charUpateFlags::flags3_t flags3 = {};
+    charStatusFlags::flags3_t flags3 = {};
 
     flags3.LfgMasterFlag    = false; // /inv icon WITH mastery star. Not currently implemented, this is set with the "Request" button in the Party menu.
     flags3.TrialFlag        = false; // Trial account icon flag
@@ -317,7 +317,7 @@ CCharUpdatePacket::CCharUpdatePacket(CCharEntity* PChar)
     flags3.unknown_2_16     = 0;                                       // Unused
 
     // Flags4 starts at 0x058
-    charUpateFlags::flags4_t flags4 = {};
+    charStatusFlags::flags4_t flags4 = {};
 
     flags4.GeoIndiElement = 0;
     flags4.GeoIndiSize    = 1;
@@ -339,10 +339,10 @@ CCharUpdatePacket::CCharUpdatePacket(CCharEntity* PChar)
     }
 
     // flags5 starts at 0x5A
-    charUpateFlags::flags5_t flags5 = {}; // All unknown, see https://github.com/atom0s/XiPackets/tree/main/world/server/0x0037
+    charStatusFlags::flags5_t flags5 = {}; // All unknown, see https://github.com/atom0s/XiPackets/tree/main/world/server/0x0037
 
     // flags6 starts at 0x5C
-    charUpateFlags::flags6_t flags6 = {}; // All unknown, see https://github.com/atom0s/XiPackets/tree/main/world/server/0x0037
+    charStatusFlags::flags6_t flags6 = {}; // All unknown, see https://github.com/atom0s/XiPackets/tree/main/world/server/0x0037
 
     if (PChar->m_PMonstrosity != nullptr)
     {

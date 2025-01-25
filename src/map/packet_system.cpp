@@ -1,4 +1,4 @@
-﻿/*
+/*
 ===========================================================================
 
   Copyright (c) 2010-2015 Darkstar Dev Teams
@@ -99,8 +99,8 @@
 #include "packets/char_skills.h"
 #include "packets/char_spells.h"
 #include "packets/char_stats.h"
+#include "packets/char_status.h"
 #include "packets/char_sync.h"
-#include "packets/char_update.h"
 #include "packets/chat_message.h"
 #include "packets/chocobo_digging.h"
 #include "packets/conquest_map.h"
@@ -629,7 +629,7 @@ void SmallPacket0x016(map_session_data_t* const PSession, CCharEntity* const PCh
     if (targid == PChar->targid)
     {
         PChar->updateEntityPacket(PChar, ENTITY_SPAWN, UPDATE_ALL_CHAR);
-        PChar->pushPacket<CCharUpdatePacket>(PChar);
+        PChar->pushPacket<CCharStatusPacket>(PChar);
     }
     else
     {
@@ -4205,7 +4205,7 @@ void SmallPacket0x060(map_session_data_t* const PSession, CCharEntity* const PCh
 void SmallPacket0x061(map_session_data_t* const PSession, CCharEntity* const PChar, CBasicPacket& data)
 {
     TracyZoneScoped;
-    PChar->pushPacket<CCharUpdatePacket>(PChar);
+    PChar->pushPacket<CCharStatusPacket>(PChar);
     PChar->pushPacket<CCharHealthPacket>(PChar);
     PChar->pushPacket<CCharStatsPacket>(PChar);
     PChar->pushPacket<CCharSkillsPacket>(PChar);
@@ -5910,7 +5910,7 @@ void SmallPacket0x0BE(map_session_data_t* const PSession, CCharEntity* const PCh
                     PChar->UpdateHealth();
                     PChar->addHP(PChar->GetMaxHP());
                     PChar->addMP(PChar->GetMaxMP());
-                    PChar->pushPacket<CCharUpdatePacket>(PChar);
+                    PChar->pushPacket<CCharStatusPacket>(PChar);
                     PChar->pushPacket<CCharStatsPacket>(PChar);
                     PChar->pushPacket<CCharSkillsPacket>(PChar);
                     PChar->pushPacket<CCharRecastPacket>(PChar);
@@ -6145,7 +6145,7 @@ void SmallPacket0x0C4(map_session_data_t* const PSession, CCharEntity* const PCh
             PChar->pushPacket<CInventoryItemPacket>(PItemLinkshell, LocationID, SlotID);
         }
         PChar->pushPacket<CInventoryFinishPacket>();
-        PChar->pushPacket<CCharUpdatePacket>(PChar);
+        PChar->pushPacket<CCharStatusPacket>(PChar);
     }
 }
 
@@ -6429,7 +6429,7 @@ void SmallPacket0x0DC(map_session_data_t* const PSession, CCharEntity* const PCh
         charutils::SaveCharStats(PChar);
         charutils::SavePlayerSettings(PChar);
         PChar->pushPacket<CMenuConfigPacket>(PChar);
-        PChar->pushPacket<CCharUpdatePacket>(PChar);
+        PChar->pushPacket<CCharStatusPacket>(PChar);
         PChar->pushPacket<CCharSyncPacket>(PChar);
     }
 }
@@ -7679,7 +7679,7 @@ void SmallPacket0x100(map_session_data_t* const PSession, CCharEntity* const PCh
         charutils::SaveCharStats(PChar);
 
         PChar->pushPacket<CCharJobsPacket>(PChar);
-        PChar->pushPacket<CCharUpdatePacket>(PChar);
+        PChar->pushPacket<CCharStatusPacket>(PChar);
         PChar->pushPacket<CCharStatsPacket>(PChar);
         PChar->pushPacket<CCharSkillsPacket>(PChar);
         PChar->pushPacket<CCharRecastPacket>(PChar);
@@ -8438,7 +8438,7 @@ void SmallPacket0x11B(map_session_data_t* const PSession, CCharEntity* const PCh
     PChar->m_jobMasterDisplay = data.ref<uint8>(0x04) > 0;
 
     charutils::SaveJobMasterDisplay(PChar);
-    PChar->pushPacket<CCharUpdatePacket>(PChar);
+    PChar->pushPacket<CCharStatusPacket>(PChar);
 }
 
 /************************************************************************

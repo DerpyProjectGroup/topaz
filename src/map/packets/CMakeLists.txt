@@ -58,10 +58,10 @@ set(PACKET_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/char_spells.h
     ${CMAKE_CURRENT_SOURCE_DIR}/char_stats.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/char_stats.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/char_status.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/char_status.h
     ${CMAKE_CURRENT_SOURCE_DIR}/char_sync.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/char_sync.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/char_update.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/char_update.h
     ${CMAKE_CURRENT_SOURCE_DIR}/chat_message.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/chat_message.h
     ${CMAKE_CURRENT_SOURCE_DIR}/chocobo_digging.cpp

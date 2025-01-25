@@ -1,4 +1,4 @@
-﻿/*
+/*
 ===========================================================================
 
   Copyright (c) 2010-2015 Darkstar Dev Teams
@@ -30,7 +30,7 @@
 
 #include "packets/char.h"
 #include "packets/char_health.h"
-#include "packets/char_update.h"
+#include "packets/char_status.h"
 #include "packets/entity_update.h"
 #include "packets/inventory_finish.h"
 #include "packets/message_basic.h"
@@ -4706,7 +4706,7 @@ namespace battleutils
                 charutils::BuildingCharAbilityTable(PChar);
                 std::memset(&PChar->m_PetCommands, 0, sizeof(PChar->m_PetCommands));
                 PChar->pushPacket<CCharAbilitiesPacket>(PChar);
-                PChar->pushPacket<CCharUpdatePacket>(PChar);
+                PChar->pushPacket<CCharStatusPacket>(PChar);
                 PChar->pushPacket<CPetSyncPacket>(PChar);
             }
             // clang-format off
