@@ -14,9 +14,6 @@ entity.onTrigger = function(player, npc)
     xi.goblinfootprint.rewatch(player, true)
 end
 
-entity.onEventUpdate = function(player, csid, option, npc)
-end
-
 entity.onEventFinish = function(player, csid, option, npc)
     xi.goblinfootprint.startEvent(player, csid, option, npc)
 end

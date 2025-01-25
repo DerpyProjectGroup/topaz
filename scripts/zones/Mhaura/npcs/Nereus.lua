@@ -6,13 +6,6 @@
 ---@type TNpcEntity
 local entity = {}
 
---    player:startEvent(110) -- standar dialog
---    player:startEvent(115) -- i have enough for now, come later
---    player:startEvent(114) -- get me x as soon as you can
---    player:startEvent(111) -- start quest A Potter's Preference
---    player:startEvent(113) -- quest done!
---    player:startEvent(112) -- repeat quest
-
 entity.onTrade = function(player, npc, trade)
     if
         player:getQuestStatus(xi.questLog.OTHER_AREAS, xi.quest.id.otherAreas.A_POTTER_S_PREFERENCE) == xi.questStatus.QUEST_ACCEPTED or
@@ -45,9 +38,6 @@ entity.onTrigger = function(player, npc)
     else
         player:startEvent(110) --standar dialog
     end
-end
-
-entity.onEventUpdate = function(player, csid, option, npc)
 end
 
 entity.onEventFinish = function(player, csid, option, npc)

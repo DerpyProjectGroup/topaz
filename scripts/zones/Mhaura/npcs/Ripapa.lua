@@ -9,9 +9,6 @@ local ID = zones[xi.zone.MHAURA]
 ---@type TNpcEntity
 local entity = {}
 
-entity.onTrade = function(player, npc, trade)
-end
-
 entity.onTrigger = function(player, npc)
     local trialByLightning = player:getQuestStatus(xi.questLog.OTHER_AREAS, xi.quest.id.otherAreas.TRIAL_BY_LIGHTNING)
     local hasWhisperOfStorms = player:hasKeyItem(xi.ki.WHISPER_OF_STORMS)
@@ -79,9 +76,6 @@ entity.onTrigger = function(player, npc)
     else
         player:startEvent(10020) -- Standard dialog
     end
-end
-
-entity.onEventUpdate = function(player, csid, option, npc)
 end
 
 entity.onEventFinish = function(player, csid, option, npc)

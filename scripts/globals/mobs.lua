@@ -31,6 +31,21 @@ local function lotteryPrimed(phList)
     return false
 end
 
+xi.mob.updateNMSpawnPoint = function(mob, spawnPoints)
+    -- This function is used to replace UpdateNMSpawnPoints() inside the Zone.lua files and the NM despawn scripts
+    -- Once UpdateNMSpawnPoints() is no longer used, this note can be removed
+    -- Spawnpoints is a table of {x = , y = , z = }
+    if spawnPoints ~= nil and #spawnPoints > 0 then
+        local chosenSpawn    = utils.randomEntry(spawnPoints)
+        local randomRotation = math.random(0, 255) -- rotation does not matter
+
+        -- Updates the mob's spawn point
+        mob:setSpawn(chosenSpawn.x, chosenSpawn.y, chosenSpawn.z, randomRotation)
+    else
+        printf('No spawn points defined for mob %s (%u) in spawnPoints.', mob:getName(), mob:getID())
+    end
+end
+
 -- potential lottery placeholder was killed
 xi.mob.phOnDespawn = function(ph, phList, chance, cooldown, params)
     params = params or {}
@@ -38,6 +53,7 @@ xi.mob.phOnDespawn = function(ph, phList, chance, cooldown, params)
         params.immediate   = true    pop NM without waiting for next PH pop time
         params.nightOnly   = true    spawn NM only at night time
         params.noPosUpdate = true    do not run UpdateNMSpawnPoint()
+        params.spawnPoints = {x = , y = , z = } table of spawn points to choose from
     ]]
 
     if type(params.immediate) ~= 'boolean' then
@@ -94,8 +110,14 @@ xi.mob.phOnDespawn = function(ph, phList, chance, cooldown, params)
                 DisallowRespawn(phId, true)
                 DisallowRespawn(nmId, false)
 
+                -- This is a temporary solution until all NMs have been updated to use params.spawnPoints and moved out of sql
+                if params.spawnPoints then
+                    xi.mob.updateNMSpawnPoint(nm, params.spawnPoints)
+                    params.noPosUpdate = true -- If we have a table of spawn points, we don't need to run UpdateNMSpawnPoint()
+                end
+
                 if not params.noPosUpdate then
-                    UpdateNMSpawnPoint(nmId)
+                    UpdateNMSpawnPoint(nmId) -- This needs to stay here until all NMs have been updated to use params.spawnPoints and moved out of sql
                 end
 
                 -- if params.immediate is true, spawn the nm params.immediately (1ms) else use placeholder's timer

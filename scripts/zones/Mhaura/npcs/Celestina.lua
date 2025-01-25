@@ -9,19 +9,10 @@
 ---@type TNpcEntity
 local entity = {}
 
-entity.onTrade = function(player, npc, trade)
-end
-
 entity.onTrigger = function(player, npc)
     local guildSkillId = xi.skill.GOLDSMITHING
     local stock = xi.shop.generalGuildStock[guildSkillId]
     xi.shop.generalGuild(player, stock, guildSkillId)
-end
-
-entity.onEventUpdate = function(player, csid, option, npc)
-end
-
-entity.onEventFinish = function(player, csid, option, npc)
 end
 
 return entity

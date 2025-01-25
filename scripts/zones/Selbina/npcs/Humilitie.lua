@@ -30,7 +30,7 @@ entity.onTimeTrigger = function(npc, triggerID)
 end
 
 entity.onTrigger = function(player, npc)
-    xi.transport.onDockTimekeeperTrigger(player, xi.transport.routes.SELBINA_MHAURA, 231)
+    xi.transport.onDockTimekeeperTrigger(player, npc)
 end
 
 return entity

@@ -685,6 +685,11 @@ namespace zoneutils
                 else
                 {
                     PMob->PAI->Internal_Respawn(std::chrono::milliseconds(PMob->m_RespawnTime));
+                    // If the mob is a scripted spawn and it has a respawn time defined when the mob initializes then allow it to respawn
+                    if (PMob->m_SpawnType == SPAWNTYPE_SCRIPTED && PMob->m_RespawnTime > 0)
+                    {
+                        PMob->m_AllowRespawn = true;
+                    }
                 }
             });
         });

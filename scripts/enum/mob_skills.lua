@@ -38,6 +38,17 @@ xi.mobSkill =
 
     RANGED_ATTACK_2   =  412,
 
+    DISPELLING_WIND   =  813,
+    DEADLY_DRIVE      =  814,
+    WIND_WALL         =  815,
+    FANG_RUSH         =  816,
+    DREAD_SHRIEK      =  817,
+    TAIL_CRUSH        =  818,
+    BLIZZARD_BREATH   =  819,
+    THUNDER_BREATH    =  820,
+    RADIANT_BREATH    =  821,
+    CHAOS_BREATH      =  822,
+
     LIGHT_BLADE_1     =  830,
 
     HOWLING_MOON_1    =  838, -- Unknown usage.

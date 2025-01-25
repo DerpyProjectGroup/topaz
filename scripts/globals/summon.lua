@@ -242,7 +242,7 @@ xi.summon.avatarPhysicalMove = function(avatar, target, skill, numberofhits, acc
         end
 
         -- apply ftp bonus
-        if tpeffect == xi.mobskills.magicalTpBonus.DMG_BONUS then
+        if tpeffect == xi.mobskills.physicalTpBonus.DMG_VARIES then
             finaldmg = finaldmg * avatarFTP(avatar:getTP(), mtp100, mtp200, mtp300)
         end
     end

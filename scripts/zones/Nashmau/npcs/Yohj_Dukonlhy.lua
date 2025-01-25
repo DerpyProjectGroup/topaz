@@ -7,7 +7,7 @@
 local entity = {}
 
 entity.onTrigger = function(player, npc)
-    xi.transport.onDockTimekeeperTrigger(player, xi.transport.routes.SILVER_SEA, 231)
+    xi.transport.onDockTimekeeperTrigger(player, npc)
 end
 
 return entity
