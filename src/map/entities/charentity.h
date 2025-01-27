@@ -432,6 +432,8 @@ public:
     void   erasePackets(uint8 num); // Erase num elements from front of packet list
     bool   isPacketFiltered(std::unique_ptr<CBasicPacket>& packet);
 
+    bool pendingPositionUpdate;
+
     virtual void HandleErrorMessage(std::unique_ptr<CBasicPacket>&) override;
 
     CLinkshell*    PLinkshell1;
@@ -660,9 +662,8 @@ private:
     time_point nextDataPersistTime;
 
     // TODO: Don't use raw ptrs for this, but don't duplicate whole packets with unique_ptr either.
-    std::deque<std::unique_ptr<CBasicPacket>> PacketList; // The list of packets to be sent to the character during the next network cycle
-    CBasicPacket*                             PendingPositionPacket = nullptr;
-    std::unordered_map<uint32, CBasicPacket*> PendingEntityPackets; // Keep track of which entity update packets are queued up for this char, such that they can be updated
+    std::deque<std::unique_ptr<CBasicPacket>> PacketList;          // The list of packets to be sent to the character during the next network cycle
+    std::unordered_map<uint32, CBasicPacket*> EntityUpdatePackets; // Keep track of entity update packets by ID, such that they can be updated
 };
 
 #endif

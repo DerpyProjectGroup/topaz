@@ -25,6 +25,7 @@
 #include "common/cbasetypes.h"
 #include "luautils.h"
 #include "packets/message_standard.h"
+#include "packets/position.h"
 
 class CBaseEntity;
 class CCharEntity;
@@ -204,6 +205,7 @@ public:
     uint8 getRotPos();
     void  setRotation(uint8 rotation);
 
+    void positionSpecial(std::map<std::string, float> pos, POSMODE mode);
     void setPos(sol::variadic_args va);
     void warp();
     void teleport(std::map<std::string, float> pos, sol::object const& arg1); // Set Entity position (without entity despawn/spawn packets)

@@ -269,6 +269,7 @@ CCharEntity::CCharEntity()
     wallhackEnabled       = false;
     isSettingBazaarPrices = false;
     isLinkDead            = false;
+    pendingPositionUpdate = false;
 }
 
 CCharEntity::~CCharEntity()
@@ -436,26 +437,19 @@ void CCharEntity::pushPacket(std::unique_ptr<CBasicPacket>&& packet)
 
     if (packet->getType() == 0x5B)
     {
-        if (PendingPositionPacket)
+        if (packet->ref<uint32>(0x10) == this->id)
         {
-            PendingPositionPacket = packet.get();
-        }
-        else
-        {
-            PendingPositionPacket = packet.get();
-            PacketList.emplace_back(std::move(packet));
+            pendingPositionUpdate = true;
         }
     }
-    else
-    {
-        PacketList.emplace_back(std::move(packet));
-    }
+
+    PacketList.emplace_back(std::move(packet));
 }
 
 void CCharEntity::updateEntityPacket(CBaseEntity* PEntity, ENTITYUPDATE type, uint8 updatemask)
 {
-    auto       itr              = PendingEntityPackets.find(PEntity->id);
-    const bool hasPendingPacket = itr != PendingEntityPackets.end() && itr->second != nullptr;
+    auto       itr              = EntityUpdatePackets.find(PEntity->id);
+    const bool hasPendingPacket = itr != EntityUpdatePackets.end() && itr->second != nullptr;
     auto*      PChar            = dynamic_cast<CCharEntity*>(PEntity);
     if (hasPendingPacket)
     {
@@ -475,14 +469,14 @@ void CCharEntity::updateEntityPacket(CBaseEntity* PEntity, ENTITYUPDATE type, ui
         // No existing packet update for the given entity, so we push new packet
         if (PChar)
         {
-            auto packet                     = std::make_unique<CCharUpdatePacket>(PChar, type, updatemask);
-            PendingEntityPackets[PChar->id] = packet.get();
+            auto packet                    = std::make_unique<CCharUpdatePacket>(PChar, type, updatemask);
+            EntityUpdatePackets[PChar->id] = packet.get();
             PacketList.emplace_back(std::move(packet));
         }
         else
         {
-            auto packet                       = std::make_unique<CEntityUpdatePacket>(PEntity, type, updatemask);
-            PendingEntityPackets[PEntity->id] = packet.get();
+            auto packet                      = std::make_unique<CEntityUpdatePacket>(PEntity, type, updatemask);
+            EntityUpdatePackets[PEntity->id] = packet.get();
             PacketList.emplace_back(std::move(packet));
         }
     }
@@ -493,16 +487,19 @@ auto CCharEntity::popPacket() -> std::unique_ptr<CBasicPacket>
     auto PPacket = std::move(PacketList.front());
     PacketList.pop_front();
 
-    // Clean up pending maps
+    // Clean up pending
     switch (PPacket->getType())
     {
         case 0x0D: // Char update
             [[fallthrough]];
         case 0x0E: // Entity update
-            PendingEntityPackets.erase(PPacket->ref<uint32>(0x04));
+            EntityUpdatePackets.erase(PPacket->ref<uint32>(0x04));
             break;
         case 0x5B: // Position update
-            PendingPositionPacket = nullptr;
+            if (PPacket->ref<uint32>(0x10) == this->id)
+            {
+                pendingPositionUpdate = false;
+            }
             break;
         default:
             break;

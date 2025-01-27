@@ -542,7 +542,7 @@ void SmallPacket0x015(map_session_data_t* const PSession, CCharEntity* const PCh
     TracyZoneScoped;
     TracyZoneCString("Player Sync");
 
-    if (PChar->status != STATUS_TYPE::SHUTDOWN && PChar->status != STATUS_TYPE::DISAPPEAR)
+    if (PChar->status != STATUS_TYPE::SHUTDOWN && PChar->status != STATUS_TYPE::DISAPPEAR && !PChar->pendingPositionUpdate)
     {
         float  newX        = data.ref<float>(0x04);
         float  newY        = data.ref<float>(0x08);
@@ -3873,14 +3873,16 @@ void SmallPacket0x05C(map_session_data_t* const PSession, CCharEntity* const PCh
 
         if (updatePosition)
         {
-            PChar->loc.p.x        = data.ref<float>(0x04);
-            PChar->loc.p.y        = data.ref<float>(0x08);
-            PChar->loc.p.z        = data.ref<float>(0x0C);
-            PChar->loc.p.rotation = data.ref<uint8>(0x1F);
+            position_t newPos = {
+                data.ref<float>(0x04),
+                data.ref<float>(0x08),
+                data.ref<float>(0x0C),
+                0,
+                data.ref<uint8>(0x1F),
+            };
+            PChar->pushPacket<CPositionPacket>(PChar, newPos, POSMODE::EVENT);
+            // PChar->pushPacket<CCSPositionPacket>(PChar); // Same as CPositionPacket? When is this one sent?
         }
-
-        PChar->pushPacket<CCSPositionPacket>(PChar);
-        PChar->pushPacket<CPositionPacket>(PChar);
     }
     PChar->pushPacket<CReleasePacket>(PChar, RELEASE_TYPE::EVENT);
 }

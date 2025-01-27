@@ -145,7 +145,6 @@
 #include "packets/monipulator1.h"
 #include "packets/monipulator2.h"
 #include "packets/objective_utility.h"
-#include "packets/position.h"
 #include "packets/quest_mission_log.h"
 #include "packets/release.h"
 #include "packets/roe_questlog.h"
@@ -2987,6 +2986,27 @@ void CLuaBaseEntity::setRotation(uint8 rotation)
 }
 
 /************************************************************************
+ *  Function: positionSpecial()
+ *  Purpose : Sends a Position packet
+ *  Example : player:positionSpecial(player:getPos(), 0)
+ *  Notes   : Sets position depending on mode. Not all modes set position.
+ *          : See position.h for mode details.
+ ************************************************************************/
+
+void CLuaBaseEntity::positionSpecial(std::map<std::string, float> pos, POSMODE mode)
+{
+    position_t newPos = {
+        pos["x"],
+        pos["y"],
+        pos["z"],
+        0,
+        static_cast<uint8>(pos["rot"]),
+    };
+
+    m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE_SELF, std::make_unique<CPositionPacket>(m_PBaseEntity, newPos, mode));
+}
+
+/************************************************************************
  *  Function: setPos()
  *  Purpose : Sends a PC to a new position
  *  Example : player:setPos(x,y,z,rot,zone) -- zone value is optional
@@ -3080,7 +3100,7 @@ void CLuaBaseEntity::setPos(sol::variadic_args va)
         }
         else if (PChar->status != STATUS_TYPE::DISAPPEAR)
         {
-            PChar->pushPacket<CPositionPacket>(PChar);
+            PChar->pushPacket<CPositionPacket>(PChar, PChar->loc.p);
         }
     }
     m_PBaseEntity->updatemask |= UPDATE_POS;
@@ -3115,21 +3135,25 @@ void CLuaBaseEntity::warp()
 
 void CLuaBaseEntity::teleport(std::map<std::string, float> pos, sol::object const& arg1)
 {
-    m_PBaseEntity->loc.p.x = pos["x"];
-    m_PBaseEntity->loc.p.y = pos["y"];
-    m_PBaseEntity->loc.p.z = pos["z"];
+    position_t newPos = {
+        pos["x"],
+        pos["y"],
+        pos["z"],
+        0,
+        0,
+    };
 
     if (arg1.is<int>())
     {
-        m_PBaseEntity->loc.p.rotation = arg1.as<uint8>();
+        newPos.rotation = arg1.as<uint8>();
     }
     else if (arg1.is<CLuaBaseEntity*>())
     {
         CLuaBaseEntity* PLuaBaseEntity = arg1.as<CLuaBaseEntity*>();
-        m_PBaseEntity->loc.p.rotation  = worldAngle(m_PBaseEntity->loc.p, PLuaBaseEntity->GetBaseEntity()->loc.p);
+        newPos.rotation                = worldAngle(m_PBaseEntity->loc.p, PLuaBaseEntity->GetBaseEntity()->loc.p);
     }
 
-    m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE, std::make_unique<CPositionPacket>(m_PBaseEntity));
+    m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE_SELF, std::make_unique<CPositionPacket>(m_PBaseEntity, newPos));
     m_PBaseEntity->updatemask |= UPDATE_POS;
 }
 
@@ -18777,6 +18801,7 @@ void CLuaBaseEntity::Register()
 
     SOL_REGISTER("warp", CLuaBaseEntity::warp);
     SOL_REGISTER("teleport", CLuaBaseEntity::teleport);
+    SOL_REGISTER("positionSpecial", CLuaBaseEntity::positionSpecial);
     SOL_REGISTER("addTeleport", CLuaBaseEntity::addTeleport);
     SOL_REGISTER("getTeleport", CLuaBaseEntity::getTeleport);
     SOL_REGISTER("getTeleportTable", CLuaBaseEntity::getTeleportTable);
