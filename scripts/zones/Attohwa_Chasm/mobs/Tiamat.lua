@@ -5,7 +5,7 @@
 ---@type TMobEntity
 local entity = {}
 
-local spawnPointTable =
+local spawnPoints =
 {
     { x = -509.612, y = -7.883,  z = -57.162 },
     { x = -511.114, y = -8.854,  z = -61.300 },
@@ -70,7 +70,7 @@ end
 entity.onMobInitialize = function(mob)
     mob:setCarefulPathing(true) -- Used for drawin
 
-    xi.mob.updateNMSpawnPoint(mob, spawnPointTable)
+    xi.mob.updateNMSpawnPoint(mob, spawnPoints)
     mob:setRespawnTime(math.random(86400, 259200)) -- When server restarts, reset timer
 end
 
@@ -173,8 +173,8 @@ entity.onMobDeath = function(mob, player, optParams)
 end
 
 entity.onMobDespawn = function(mob)
+    xi.mob.updateNMSpawnPoint(mob, spawnPoints)
     mob:setRespawnTime(math.random(259200, 432000)) -- 3 to 5 days
-    xi.mob.updateNMSpawnPoint(mob, spawnPointTable)
 end
 
 return entity
