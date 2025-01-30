@@ -1871,7 +1871,16 @@ local argumentKeyItems =
     },
 }
 
+local isTenshodoCoffer = function(player)
+    local distance = player:checkDistance(41.169, 3.899, -51.005)
+    return distance < 6.0
+end
+
 entity.onTrigger = function(player, npc)
+    if not isTenshodoCoffer(player) then
+        return
+    end
+
     -- determines if server/player is eligible to receive a nexus cape
     local eligibleNexusCape = xi.settings.main.ENABLE_ACP == 1 and
                             xi.settings.main.ENABLE_AMK == 1 and
