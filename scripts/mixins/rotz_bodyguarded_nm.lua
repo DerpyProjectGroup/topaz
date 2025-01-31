@@ -11,13 +11,11 @@ g_mixins.bodyguard = function(bodyguardedNM)
     -- function for bodyguard roaming logic
     local bodyGuardRoam = function(mob)
         -- if bodyguarded NM is missing or dead then despawn the bodyguard
-        if not bodyguardedNM or (bodyguardedNM and bodyguardedNM:isDead()) then
-            DespawnMob(mob:getID())
-        -- else if bodyguard not following then follow NM
-        elseif
-            not mob:hasFollowTarget() and bodyguardedNM
+        if
+            not bodyguardedNM or
+            (bodyguardedNM and bodyguardedNM:isDead())
         then
-            mob:follow(bodyguardedNM, xi.followType.ROAM)
+            DespawnMob(mob:getID())
         end
     end
 
@@ -47,13 +45,16 @@ g_mixins.bodyguard = function(bodyguardedNM)
 
                     guard:setSpawn(nmSpawnPos.x - spawnPosOffset[index], nmSpawnPos.y, nmSpawnPos.z)
                     guard:spawn()
-                    guard:follow(mob, xi.followType.ROAM)
                     guard:addListener('ROAM_TICK', 'ROTZ_BODYGUARD_ROAM', bodyGuardRoam)
                     guard:addListener('DESPAWN', 'ROTZ_BODYGUARD_DESPAWN', bodyGuardDespawn)
                     guard:setMobMod(xi.mobMod.NO_DESPAWN, 1)
                 end
             end
         end
+    end)
+
+    bodyguardedNM:addListener('ROAM_TICK', 'ROTZ_NM_ROAM_TICK', function(mob)
+        xi.follow.followLine(mob, 2)
     end)
 end
 
