@@ -11,6 +11,7 @@
 #include "status_effect_container.h"
 
 #include <set>
+#include <utility>
 
 namespace gambits
 {
@@ -28,6 +29,12 @@ namespace gambits
         CURILLA     = 9, // Special case for Rainemard
         PARTY_DEAD  = 10,
         PARTY_MULTI = 11,
+    };
+
+    enum class G_LOGIC : uint16
+    {
+        AND = 0,
+        OR  = 1,
     };
 
     enum class G_CONDITION : uint16
@@ -97,7 +104,6 @@ namespace gambits
 
     struct Predicate_t
     {
-        G_TARGET    target;
         G_CONDITION condition;
         uint32      condition_arg;
 
@@ -106,20 +112,15 @@ namespace gambits
         {
         }
 
-        Predicate_t(G_TARGET _target, G_CONDITION _condition, uint32 _condition_arg)
-        : target(_target)
-        , condition(_condition)
+        Predicate_t(G_CONDITION _condition, uint32 _condition_arg)
+        : condition(_condition)
         , condition_arg(_condition_arg)
         {
         }
 
         bool parseInput(std::string const& key, uint32 value)
         {
-            if (key.compare("target") == 0)
-            {
-                target = static_cast<G_TARGET>(value);
-            }
-            else if (key.compare("condition") == 0)
+            if (key.compare("condition") == 0)
             {
                 condition = static_cast<G_CONDITION>(value);
             }
@@ -133,6 +134,18 @@ namespace gambits
                 return false;
             }
             return true;
+        }
+    };
+
+    struct PredicateGroup_t
+    {
+        G_LOGIC                  logic;
+        std::vector<Predicate_t> predicates;
+
+        PredicateGroup_t(G_LOGIC _logic, std::vector<Predicate_t> _predicates)
+        : logic(_logic)
+        , predicates(std::move(_predicates))
+        {
         }
     };
 
@@ -174,11 +187,12 @@ namespace gambits
 
     struct Gambit_t
     {
-        std::vector<Predicate_t> predicates;
-        std::vector<Action_t>    actions;
-        uint16                   retry_delay;
-        time_point               last_used;
-        std::string              identifier;
+        std::vector<PredicateGroup_t> predicate_groups;
+        std::vector<Action_t>         actions;
+        G_TARGET                      target_selector;
+        uint16                        retry_delay;
+        time_point                    last_used;
+        std::string                   identifier;
 
         Gambit_t()
         : retry_delay(0)
@@ -234,6 +248,7 @@ namespace gambits
         }
         ~CGambitsContainer() = default;
 
+        auto NewGambitIdentifier(Gambit_t const& gambit) const -> std::string;
         auto AddGambit(Gambit_t const& gambit) -> std::string;
         void RemoveGambit(std::string const& id);
         void RemoveAllGambits();
@@ -246,7 +261,7 @@ namespace gambits
         uint16                    tp_value;
 
     private:
-        bool CheckTrigger(CBattleEntity* trigger_target, Predicate_t& predicate);
+        bool CheckTrigger(const CBattleEntity* triggerTarget, PredicateGroup_t& predicateGroup);
         bool TryTrustSkill();
         bool PartyHasHealer();
         bool PartyHasTank();

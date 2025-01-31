@@ -752,9 +752,9 @@ public:
     void   clearTrusts();
     uint32 getTrustID();
     void   trustPartyMessage(uint32 message_id);
-    auto   addSimpleGambit(uint16 targ, uint16 cond, uint32 condition_arg, uint16 react, uint16 select, uint32 selector_arg, sol::object const& retry) -> std::string;
-    void   removeSimpleGambit(std::string const& id);
-    void   removeAllSimpleGambits();
+    auto   addGambit(uint16 targ, sol::table const& predicates, sol::table const& reactions, sol::object const& retry) -> std::string;
+    void   removeGambit(std::string const& id);
+    void   removeAllGambits();
     void   setTrustTPSkillSettings(uint16 trigger, uint16 select, sol::object const& value);
 
     bool hasValidJugPetItem();
