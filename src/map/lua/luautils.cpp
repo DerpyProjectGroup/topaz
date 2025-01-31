@@ -5484,43 +5484,34 @@ namespace luautils
         // limit the quantity to the stack size of the item
         quantity = std::clamp<uint32>(quantity, 1, stackSize);
 
-        bool isAutoCommitOn = _sql->GetAutoCommit();
+        // clang-format off
+        if (!db::transaction([&]() {
+            const auto query = "INSERT INTO delivery_box (charid, box, itemid, quantity, senderid, sender) VALUES ("
+                               "?, "   // Player ID
+                               "1, "   // Box ID == 1
+                               "?, "   // Item ID
+                               "?, "   // Quantity
+                               "?, "   // Sender ID ( =Player ID )
+                               "?); "; // Sender Text
+            if (!db::preparedStmt(query, playerID, itemId, quantity, playerID, senderText))
+            {
+                return db::TransactionResult::Rollback;
+            }
 
-        if (_sql->SetAutoCommit(false) && _sql->TransactionStart())
+            return db::TransactionResult::Commit;
+        }))
         {
-            const char* Query = "INSERT INTO delivery_box (charid, box, itemid, quantity, senderid, sender) VALUES ("
-                                "%u, "     // Player ID
-                                "1, "      // Box ID == 1
-                                "%u, "     // Item ID
-                                "%u, "     // Quantity
-                                "%u, "     // Sender ID ( =Player ID )
-                                "'%s'); "; // Sender Text
-            int32 ret = _sql->Query(Query, playerID, itemId, quantity, playerID, senderText);
+            return SendToDBoxReturnCode::QUERY_ERROR;
+        }
+        // clang-format on
 
-            if (ret == SQL_ERROR)
-            {
-                _sql->TransactionRollback();
-                _sql->SetAutoCommit(isAutoCommitOn);
-                return SendToDBoxReturnCode::QUERY_ERROR;
-            }
-            else
-            {
-                _sql->TransactionCommit();
-                _sql->SetAutoCommit(isAutoCommitOn);
-            }
-
-            if (quantityMoreThanStackSize)
-            {
-                return SendToDBoxReturnCode::SUCCESS_LIMITED_TO_STACK_SIZE;
-            }
-            else
-            {
-                return SendToDBoxReturnCode::SUCCESS;
-            }
+        if (quantityMoreThanStackSize)
+        {
+            return SendToDBoxReturnCode::SUCCESS_LIMITED_TO_STACK_SIZE;
         }
         else
         {
-            return SendToDBoxReturnCode::QUERY_ERROR;
+            return SendToDBoxReturnCode::SUCCESS;
         }
     }
 

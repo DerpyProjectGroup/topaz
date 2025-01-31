@@ -287,68 +287,103 @@ void db::checkCharset()
     }
 }
 
-bool db::setAutoCommit(bool value)
+//
+// Transactions
+//
+
+bool setAutoCommit(bool value)
 {
     TracyZoneScoped;
 
-    if (!query("SET @@autocommit = %u", (value) ? 1 : 0))
+    if (!db::preparedStmt("SET @@autocommit = ?", (value) ? 1 : 0))
     {
-        // TODO: Logging
+        ShowError("Failed to set autocommit status to %d", value);
         return false;
     }
 
     return true;
 }
 
-bool db::getAutoCommit()
+bool getAutoCommit()
 {
     TracyZoneScoped;
 
-    auto rset = query("SELECT @@autocommit");
+    const auto rset = db::preparedStmt("SELECT @@autocommit");
     if (rset && rset->rowsCount() && rset->next())
     {
         return rset->get<uint32>(0) == 1;
     }
 
-    // TODO: Logging
+    ShowError("Failed to get autocommit status");
     return false;
 }
 
-bool db::transactionStart()
+bool transactionStart()
 {
     TracyZoneScoped;
 
-    if (!query("START TRANSACTION"))
+    if (!db::preparedStmt("START TRANSACTION"))
     {
-        // TODO: Logging
+        ShowError("Failed to start transaction");
         return false;
     }
 
     return true;
 }
 
-bool db::transactionCommit()
+bool transactionCommit()
 {
     TracyZoneScoped;
 
-    if (!query("COMMIT"))
+    if (!db::preparedStmt("COMMIT"))
     {
-        // TODO: Logging
+        ShowError("Failed to commit transaction");
         return false;
     }
 
     return true;
 }
 
-bool db::transactionRollback()
+bool transactionRollback()
 {
     TracyZoneScoped;
 
-    if (!query("ROLLBACK"))
+    if (!db::preparedStmt("ROLLBACK"))
     {
-        // TODO: Logging
+        ShowError("Failed to rollback transaction");
         return false;
     }
 
     return true;
+}
+
+bool db::transaction(std::function<TransactionResult()> transactionFn)
+{
+    TracyZoneScoped;
+
+    setAutoCommit(false);
+    const auto guard = xi::finally([&]
+    {
+        setAutoCommit(true);
+    });
+
+    TransactionResult result = TransactionResult::Rollback;
+    try
+    {
+        transactionStart();
+        result = transactionFn();
+        if (result == TransactionResult::Rollback)
+        {
+            // TODO: Bubble up more information about the failure
+            throw std::runtime_error("Transaction failed internally");
+        }
+        transactionCommit();
+    }
+    catch (const std::exception& e)
+    {
+        ShowError("Transaction failed: %s", e.what());
+        transactionRollback();
+    }
+
+    return result == TransactionResult::Commit;
 }

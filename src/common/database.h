@@ -706,10 +706,11 @@ namespace db
 
     void checkCharset();
 
-    bool setAutoCommit(bool value);
-    bool getAutoCommit();
+    enum class TransactionResult
+    {
+        Commit,
+        Rollback,
+    };
 
-    bool transactionStart();
-    bool transactionCommit();
-    bool transactionRollback();
+    bool transaction(std::function<TransactionResult()> transactionFn);
 } // namespace db
