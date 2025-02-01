@@ -687,7 +687,7 @@ xi.quest.id =
         PROMOTION_SERGEANT               = 94, -- + Converted
         PROMOTION_SERGEANT_MAJOR         = 95, -- + Converted
         PROMOTION_CHIEF_SERGEANT         = 96,
-        PROMOTION_SECOND_LIEUTENANT      = 97,
+        PROMOTION_SECOND_LIEUTENANT      = 97, -- + Converted
         PROMOTION_FIRST_LIEUTENANT       = 98,
         PROMOTION_CAPTAIN                = 99,
         -- JP ENTRIES OR INVALID
