@@ -79,7 +79,6 @@
 #include "monstrosity.h"
 #include "packets/action.h"
 #include "packets/char_emotion.h"
-#include "packets/char_update.h"
 #include "packets/chat_message.h"
 #include "packets/entity_update.h"
 #include "packets/entity_visual.h"

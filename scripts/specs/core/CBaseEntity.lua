@@ -822,6 +822,12 @@ end
 function CBaseEntity:addTeleport(teleType, bitval, setval)
 end
 
+---@param pos table
+---@param mode integer
+---@return nil
+function CBaseEntity:positionSpecial(pos, mode)
+end
+
 ---@nodiscard
 ---@param type integer
 ---@param abysseaRegionObj integer?

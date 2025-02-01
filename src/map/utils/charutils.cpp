@@ -48,8 +48,8 @@
 #include "packets/char_recast.h"
 #include "packets/char_skills.h"
 #include "packets/char_stats.h"
+#include "packets/char_status.h"
 #include "packets/char_sync.h"
-#include "packets/char_update.h"
 #include "packets/chat_message.h"
 #include "packets/conquest_map.h"
 #include "packets/delivery_box.h"
@@ -1420,7 +1420,7 @@ namespace charutils
         PChar->pushPacket<CCharSkillsPacket>(PChar);
         PChar->pushPacket<CCharRecastPacket>(PChar);
         PChar->pushPacket<CCharAbilitiesPacket>(PChar);
-        PChar->pushPacket<CCharUpdatePacket>(PChar);
+        PChar->pushPacket<CCharStatusPacket>(PChar);
         PChar->pushPacket<CMenuMeritPacket>(PChar);
         PChar->pushPacket<CMonipulatorPacket1>(PChar);
         PChar->pushPacket<CMonipulatorPacket2>(PChar);
@@ -4872,7 +4872,7 @@ namespace charutils
                 BuildingCharWeaponSkills(PChar);
 
                 PChar->pushPacket<CCharJobsPacket>(PChar);
-                PChar->pushPacket<CCharUpdatePacket>(PChar);
+                PChar->pushPacket<CCharStatusPacket>(PChar);
                 PChar->pushPacket<CCharSkillsPacket>(PChar);
                 PChar->pushPacket<CCharRecastPacket>(PChar);
                 PChar->pushPacket<CCharAbilitiesPacket>(PChar);
@@ -5111,7 +5111,7 @@ namespace charutils
                 SaveCharExp(PChar, PChar->GetMJob());
 
                 PChar->pushPacket<CCharJobsPacket>(PChar);
-                PChar->pushPacket<CCharUpdatePacket>(PChar);
+                PChar->pushPacket<CCharStatusPacket>(PChar);
                 PChar->pushPacket<CCharSkillsPacket>(PChar);
                 PChar->pushPacket<CCharRecastPacket>(PChar);
                 PChar->pushPacket<CCharAbilitiesPacket>(PChar);

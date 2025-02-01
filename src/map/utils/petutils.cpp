@@ -53,8 +53,8 @@
 
 #include "mob_modifier.h"
 #include "packets/char_abilities.h"
+#include "packets/char_status.h"
 #include "packets/char_sync.h"
-#include "packets/char_update.h"
 #include "packets/entity_update.h"
 #include "packets/message_standard.h"
 #include "packets/pet_sync.h"
@@ -1084,7 +1084,7 @@ namespace petutils
             charutils::BuildingCharAbilityTable(PMasterChar);
             charutils::BuildingCharPetAbilityTable(PMasterChar, PPet, PPet->m_PetID);
 
-            PMasterChar->pushPacket<CCharUpdatePacket>(PMasterChar);
+            PMasterChar->pushPacket<CCharStatusPacket>(PMasterChar);
             PMasterChar->pushPacket<CPetSyncPacket>(PMasterChar);
 
             // check latents affected by pets
@@ -1364,7 +1364,7 @@ namespace petutils
 
         charutils::BuildingCharAbilityTable(PChar);
         PChar->PPet = nullptr;
-        PChar->pushPacket<CCharUpdatePacket>(PChar);
+        PChar->pushPacket<CCharStatusPacket>(PChar);
         PChar->pushPacket<CCharAbilitiesPacket>(PChar);
         PChar->pushPacket<CPetSyncPacket>(PChar);
     }

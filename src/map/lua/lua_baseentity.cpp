@@ -96,7 +96,6 @@
 #include "packets/action.h"
 #include "packets/auction_house.h"
 #include "packets/change_music.h"
-#include "packets/char.h"
 #include "packets/char_abilities.h"
 #include "packets/char_appearance.h"
 #include "packets/char_emotion.h"
@@ -109,8 +108,8 @@
 #include "packets/char_skills.h"
 #include "packets/char_spells.h"
 #include "packets/char_stats.h"
+#include "packets/char_status.h"
 #include "packets/char_sync.h"
-#include "packets/char_update.h"
 #include "packets/chat_message.h"
 #include "packets/conquest_map.h"
 #include "packets/entity_animation.h"
@@ -146,7 +145,6 @@
 #include "packets/monipulator1.h"
 #include "packets/monipulator2.h"
 #include "packets/objective_utility.h"
-#include "packets/position.h"
 #include "packets/quest_mission_log.h"
 #include "packets/release.h"
 #include "packets/roe_questlog.h"
@@ -2991,6 +2989,27 @@ void CLuaBaseEntity::setRotation(uint8 rotation)
 }
 
 /************************************************************************
+ *  Function: positionSpecial()
+ *  Purpose : Sends a Position packet
+ *  Example : player:positionSpecial(player:getPos(), 0)
+ *  Notes   : Sets position depending on mode. Not all modes set position.
+ *          : See position.h for mode details.
+ ************************************************************************/
+
+void CLuaBaseEntity::positionSpecial(std::map<std::string, float> pos, POSMODE mode)
+{
+    position_t newPos = {
+        pos["x"],
+        pos["y"],
+        pos["z"],
+        0,
+        static_cast<uint8>(pos["rot"]),
+    };
+
+    m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE_SELF, std::make_unique<CPositionPacket>(m_PBaseEntity, newPos, mode));
+}
+
+/************************************************************************
  *  Function: setPos()
  *  Purpose : Sends a PC to a new position
  *  Example : player:setPos(x,y,z,rot,zone) -- zone value is optional
@@ -3084,7 +3103,7 @@ void CLuaBaseEntity::setPos(sol::variadic_args va)
         }
         else if (PChar->status != STATUS_TYPE::DISAPPEAR)
         {
-            PChar->pushPacket<CPositionPacket>(PChar);
+            PChar->pushPacket<CPositionPacket>(PChar, PChar->loc.p);
         }
     }
     m_PBaseEntity->updatemask |= UPDATE_POS;
@@ -3119,21 +3138,25 @@ void CLuaBaseEntity::warp()
 
 void CLuaBaseEntity::teleport(std::map<std::string, float> pos, sol::object const& arg1)
 {
-    m_PBaseEntity->loc.p.x = pos["x"];
-    m_PBaseEntity->loc.p.y = pos["y"];
-    m_PBaseEntity->loc.p.z = pos["z"];
+    position_t newPos = {
+        pos["x"],
+        pos["y"],
+        pos["z"],
+        0,
+        0,
+    };
 
     if (arg1.is<int>())
     {
-        m_PBaseEntity->loc.p.rotation = arg1.as<uint8>();
+        newPos.rotation = arg1.as<uint8>();
     }
     else if (arg1.is<CLuaBaseEntity*>())
     {
         CLuaBaseEntity* PLuaBaseEntity = arg1.as<CLuaBaseEntity*>();
-        m_PBaseEntity->loc.p.rotation  = worldAngle(m_PBaseEntity->loc.p, PLuaBaseEntity->GetBaseEntity()->loc.p);
+        newPos.rotation                = worldAngle(m_PBaseEntity->loc.p, PLuaBaseEntity->GetBaseEntity()->loc.p);
     }
 
-    m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE, std::make_unique<CPositionPacket>(m_PBaseEntity));
+    m_PBaseEntity->loc.zone->PushPacket(m_PBaseEntity, CHAR_INRANGE_SELF, std::make_unique<CPositionPacket>(m_PBaseEntity, newPos));
     m_PBaseEntity->updatemask |= UPDATE_POS;
 }
 
@@ -5460,7 +5483,7 @@ void CLuaBaseEntity::setCostume(uint16 costume)
     {
         PChar->m_Costume = costume;
         PChar->updatemask |= UPDATE_LOOK;
-        PChar->pushPacket<CCharUpdatePacket>(PChar);
+        PChar->pushPacket<CCharStatusPacket>(PChar);
     }
 }
 
@@ -5565,7 +5588,7 @@ void CLuaBaseEntity::setAnimationSub(uint8 animationsub, sol::object const& send
             auto* PChar = static_cast<CCharEntity*>(m_PBaseEntity);
             if (sendPacket)
             {
-                PChar->pushPacket<CCharUpdatePacket>(PChar);
+                PChar->pushPacket<CCharStatusPacket>(PChar);
             }
         }
         else if (sendPacket)
@@ -5967,11 +5990,11 @@ void CLuaBaseEntity::setGMHidden(bool isHidden)
     {
         if (PChar->m_isGMHidden)
         {
-            PChar->loc.zone->UpdateCharPacket(PChar, ENTITY_DESPAWN, UPDATE_NONE);
+            PChar->loc.zone->UpdateEntityPacket(PChar, ENTITY_DESPAWN, UPDATE_NONE);
         }
         else
         {
-            PChar->loc.zone->UpdateCharPacket(PChar, ENTITY_SPAWN, UPDATE_NONE);
+            PChar->loc.zone->UpdateEntityPacket(PChar, ENTITY_SPAWN, UPDATE_NONE);
         }
     }
 }
@@ -6108,7 +6131,7 @@ void CLuaBaseEntity::setBaseSpeed(uint8 speedVal)
         if (m_PBaseEntity->objtype == TYPE_PC)
         {
             auto* PChar = static_cast<CCharEntity*>(m_PBaseEntity);
-            PChar->pushPacket<CCharUpdatePacket>(PChar);
+            PChar->pushPacket<CCharStatusPacket>(PChar);
         }
         else
         {
@@ -6135,7 +6158,7 @@ void CLuaBaseEntity::setAnimationSpeed(uint8 speedVal)
         if (m_PBaseEntity->objtype == TYPE_PC)
         {
             auto* PChar = static_cast<CCharEntity*>(m_PBaseEntity);
-            PChar->pushPacket<CCharUpdatePacket>(PChar);
+            PChar->pushPacket<CCharStatusPacket>(PChar);
         }
         else
         {
@@ -6283,7 +6306,7 @@ void CLuaBaseEntity::changeJob(uint8 newJob)
         PChar->pushPacket<CCharSkillsPacket>(PChar);
         PChar->pushPacket<CCharRecastPacket>(PChar);
         PChar->pushPacket<CCharAbilitiesPacket>(PChar);
-        PChar->pushPacket<CCharUpdatePacket>(PChar);
+        PChar->pushPacket<CCharStatusPacket>(PChar);
         PChar->pushPacket<CMenuMeritPacket>(PChar);
         PChar->pushPacket<CMonipulatorPacket1>(PChar);
         PChar->pushPacket<CMonipulatorPacket2>(PChar);
@@ -6562,7 +6585,7 @@ void CLuaBaseEntity::setLevel(uint8 level)
         PChar->pushPacket<CCharSkillsPacket>(PChar);
         PChar->pushPacket<CCharRecastPacket>(PChar);
         PChar->pushPacket<CCharAbilitiesPacket>(PChar);
-        PChar->pushPacket<CCharUpdatePacket>(PChar);
+        PChar->pushPacket<CCharStatusPacket>(PChar);
         PChar->pushPacket<CMenuMeritPacket>(PChar);
         PChar->pushPacket<CMonipulatorPacket1>(PChar);
         PChar->pushPacket<CMonipulatorPacket2>(PChar);
@@ -6619,7 +6642,7 @@ void CLuaBaseEntity::setsLevel(uint8 slevel)
     PChar->pushPacket<CCharSkillsPacket>(PChar);
     PChar->pushPacket<CCharRecastPacket>(PChar);
     PChar->pushPacket<CCharAbilitiesPacket>(PChar);
-    PChar->pushPacket<CCharUpdatePacket>(PChar);
+    PChar->pushPacket<CCharStatusPacket>(PChar);
     PChar->pushPacket<CMenuMeritPacket>(PChar);
     PChar->pushPacket<CMonipulatorPacket1>(PChar);
     PChar->pushPacket<CMonipulatorPacket2>(PChar);
@@ -6735,7 +6758,7 @@ uint8 CLuaBaseEntity::levelRestriction(sol::object const& level)
                 PChar->pushPacket<CCharRecastPacket>(PChar);
                 PChar->pushPacket<CCharAbilitiesPacket>(PChar);
                 PChar->pushPacket<CCharSpellsPacket>(PChar);
-                PChar->pushPacket<CCharUpdatePacket>(PChar);
+                PChar->pushPacket<CCharStatusPacket>(PChar);
                 PChar->pushPacket<CCharSyncPacket>(PChar);
             }
 
@@ -12404,7 +12427,7 @@ void CLuaBaseEntity::recalculateStats()
         PChar->pushPacket<CCharSkillsPacket>(PChar);
         PChar->pushPacket<CCharRecastPacket>(PChar);
         PChar->pushPacket<CCharAbilitiesPacket>(PChar);
-        PChar->pushPacket<CCharUpdatePacket>(PChar);
+        PChar->pushPacket<CCharStatusPacket>(PChar);
         PChar->pushPacket<CMenuMeritPacket>(PChar);
         PChar->pushPacket<CMonipulatorPacket1>(PChar);
         PChar->pushPacket<CMonipulatorPacket2>(PChar);
@@ -18957,6 +18980,7 @@ void CLuaBaseEntity::Register()
 
     SOL_REGISTER("warp", CLuaBaseEntity::warp);
     SOL_REGISTER("teleport", CLuaBaseEntity::teleport);
+    SOL_REGISTER("positionSpecial", CLuaBaseEntity::positionSpecial);
     SOL_REGISTER("addTeleport", CLuaBaseEntity::addTeleport);
     SOL_REGISTER("getTeleport", CLuaBaseEntity::getTeleport);
     SOL_REGISTER("getTeleportTable", CLuaBaseEntity::getTeleportTable);

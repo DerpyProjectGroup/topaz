@@ -28,10 +28,8 @@
 #include <cstring>
 #include <unordered_map>
 
-#include "packets/char.h"
 #include "packets/char_health.h"
-#include "packets/char_update.h"
-#include "packets/entity_update.h"
+#include "packets/char_status.h"
 #include "packets/inventory_finish.h"
 #include "packets/message_basic.h"
 
@@ -4706,7 +4704,7 @@ namespace battleutils
                 charutils::BuildingCharAbilityTable(PChar);
                 std::memset(&PChar->m_PetCommands, 0, sizeof(PChar->m_PetCommands));
                 PChar->pushPacket<CCharAbilitiesPacket>(PChar);
-                PChar->pushPacket<CCharUpdatePacket>(PChar);
+                PChar->pushPacket<CCharStatusPacket>(PChar);
                 PChar->pushPacket<CPetSyncPacket>(PChar);
             }
             // clang-format off
@@ -5702,21 +5700,8 @@ namespace battleutils
             else
             {
                 // draw in!
-                PTarget->loc.p.x = nearEntity.x;
-                PTarget->loc.p.y = nearEntity.y;
-                PTarget->loc.p.z = nearEntity.z;
-
-                if (PTarget->objtype == TYPE_PC)
-                {
-                    CCharEntity* PChar = static_cast<CCharEntity*>(PTarget);
-                    PChar->pushPacket<CPositionPacket>(PChar);
-                }
-                else
-                {
-                    PTarget->loc.zone->UpdateEntityPacket(PTarget, ENTITY_UPDATE, UPDATE_POS);
-                }
-
-                PTarget->loc.zone->PushPacket(PTarget, CHAR_INRANGE, std::make_unique<CMessageBasicPacket>(PTarget, PTarget, 0, 0, 232));
+                PTarget->loc.zone->PushPacket(PTarget, CHAR_INRANGE_SELF, std::make_unique<CPositionPacket>(PTarget, nearEntity));
+                PTarget->loc.zone->PushPacket(PTarget, CHAR_INRANGE_SELF, std::make_unique<CMessageBasicPacket>(PTarget, PTarget, 0, 0, 232));
             }
         }
 

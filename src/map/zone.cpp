@@ -56,7 +56,6 @@
 #include "lua/luautils.h"
 
 #include "packets/action.h"
-#include "packets/char.h"
 #include "packets/char_sync.h"
 #include "packets/char_update.h"
 #include "packets/entity_update.h"
@@ -876,12 +875,6 @@ void CZone::PushPacket(CBaseEntity* PEntity, GLOBAL_MESSAGE_TYPE message_type, c
 {
     TracyZoneScoped;
     m_zoneEntities->PushPacket(PEntity, message_type, packet);
-}
-
-void CZone::UpdateCharPacket(CCharEntity* PChar, ENTITYUPDATE type, uint8 updatemask)
-{
-    TracyZoneScoped;
-    m_zoneEntities->UpdateCharPacket(PChar, type, updatemask);
 }
 
 void CZone::UpdateEntityPacket(CBaseEntity* PEntity, ENTITYUPDATE type, uint8 updatemask, bool alwaysInclude)

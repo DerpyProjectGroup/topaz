@@ -82,7 +82,6 @@
 #include "packets/blacklist_edit_response.h"
 #include "packets/campaign_map.h"
 #include "packets/change_music.h"
-#include "packets/char.h"
 #include "packets/char_abilities.h"
 #include "packets/char_appearance.h"
 #include "packets/char_check.h"
@@ -98,8 +97,8 @@
 #include "packets/char_skills.h"
 #include "packets/char_spells.h"
 #include "packets/char_stats.h"
+#include "packets/char_status.h"
 #include "packets/char_sync.h"
-#include "packets/char_update.h"
 #include "packets/chat_message.h"
 #include "packets/chocobo_digging.h"
 #include "packets/conquest_map.h"
@@ -552,7 +551,7 @@ void SmallPacket0x015(map_session_data_t* const PSession, CCharEntity* const PCh
     TracyZoneScoped;
     TracyZoneCString("Player Sync");
 
-    if (PChar->status != STATUS_TYPE::SHUTDOWN && PChar->status != STATUS_TYPE::DISAPPEAR)
+    if (PChar->status != STATUS_TYPE::SHUTDOWN && PChar->status != STATUS_TYPE::DISAPPEAR && !PChar->pendingPositionUpdate)
     {
         float  newX        = data.ref<float>(0x04);
         float  newY        = data.ref<float>(0x08);
@@ -637,8 +636,8 @@ void SmallPacket0x016(map_session_data_t* const PSession, CCharEntity* const PCh
 
     if (targid == PChar->targid)
     {
-        PChar->updateCharPacket(PChar, ENTITY_SPAWN, UPDATE_ALL_CHAR);
-        PChar->pushPacket<CCharUpdatePacket>(PChar);
+        PChar->updateEntityPacket(PChar, ENTITY_SPAWN, UPDATE_ALL_CHAR);
+        PChar->pushPacket<CCharStatusPacket>(PChar);
     }
     else
     {
@@ -652,7 +651,7 @@ void SmallPacket0x016(map_session_data_t* const PSession, CCharEntity* const PCh
             {
                 if (!PCharEntity->m_isGMHidden)
                 {
-                    PChar->updateCharPacket(PCharEntity, ENTITY_SPAWN, UPDATE_ALL_CHAR);
+                    PChar->updateEntityPacket(PCharEntity, ENTITY_SPAWN, UPDATE_ALL_CHAR);
                 }
                 else
                 {
@@ -1064,7 +1063,7 @@ void SmallPacket0x01A(map_session_data_t* const PSession, CCharEntity* const PCh
             PChar->updatemask |= UPDATE_HP;
             PChar->StatusEffectContainer->DelStatusEffectSilent(EFFECT_MOUNTED);
             // Workaround for a bug where dismounting out of update range would cause the character to stop rendering.
-            PChar->loc.zone->UpdateCharPacket(PChar, ENTITY_UPDATE, UPDATE_HP);
+            PChar->loc.zone->UpdateEntityPacket(PChar, ENTITY_UPDATE, UPDATE_HP);
         }
         break;
         case 0x13: // tractor menu
@@ -2811,14 +2810,16 @@ void SmallPacket0x05C(map_session_data_t* const PSession, CCharEntity* const PCh
 
         if (updatePosition)
         {
-            PChar->loc.p.x        = data.ref<float>(0x04);
-            PChar->loc.p.y        = data.ref<float>(0x08);
-            PChar->loc.p.z        = data.ref<float>(0x0C);
-            PChar->loc.p.rotation = data.ref<uint8>(0x1F);
+            position_t newPos = {
+                data.ref<float>(0x04),
+                data.ref<float>(0x08),
+                data.ref<float>(0x0C),
+                0,
+                data.ref<uint8>(0x1F),
+            };
+            PChar->pushPacket<CPositionPacket>(PChar, newPos, POSMODE::EVENT);
+            // PChar->pushPacket<CCSPositionPacket>(PChar); // Same as CPositionPacket? When is this one sent?
         }
-
-        PChar->pushPacket<CCSPositionPacket>(PChar);
-        PChar->pushPacket<CPositionPacket>(PChar);
     }
     PChar->pushPacket<CReleasePacket>(PChar, RELEASE_TYPE::EVENT);
 }
@@ -3143,7 +3144,7 @@ void SmallPacket0x060(map_session_data_t* const PSession, CCharEntity* const PCh
 void SmallPacket0x061(map_session_data_t* const PSession, CCharEntity* const PChar, CBasicPacket& data)
 {
     TracyZoneScoped;
-    PChar->pushPacket<CCharUpdatePacket>(PChar);
+    PChar->pushPacket<CCharStatusPacket>(PChar);
     PChar->pushPacket<CCharHealthPacket>(PChar);
     PChar->pushPacket<CCharStatsPacket>(PChar);
     PChar->pushPacket<CCharSkillsPacket>(PChar);
@@ -4862,7 +4863,7 @@ void SmallPacket0x0BE(map_session_data_t* const PSession, CCharEntity* const PCh
                     PChar->UpdateHealth();
                     PChar->addHP(PChar->GetMaxHP());
                     PChar->addMP(PChar->GetMaxMP());
-                    PChar->pushPacket<CCharUpdatePacket>(PChar);
+                    PChar->pushPacket<CCharStatusPacket>(PChar);
                     PChar->pushPacket<CCharStatsPacket>(PChar);
                     PChar->pushPacket<CCharSkillsPacket>(PChar);
                     PChar->pushPacket<CCharRecastPacket>(PChar);
@@ -5103,7 +5104,7 @@ void SmallPacket0x0C4(map_session_data_t* const PSession, CCharEntity* const PCh
             PChar->pushPacket<CInventoryItemPacket>(PItemLinkshell, LocationID, SlotID);
         }
         PChar->pushPacket<CInventoryFinishPacket>();
-        PChar->pushPacket<CCharUpdatePacket>(PChar);
+        PChar->pushPacket<CCharStatusPacket>(PChar);
     }
 }
 
@@ -5387,7 +5388,7 @@ void SmallPacket0x0DC(map_session_data_t* const PSession, CCharEntity* const PCh
         charutils::SaveCharStats(PChar);
         charutils::SavePlayerSettings(PChar);
         PChar->pushPacket<CMenuConfigPacket>(PChar);
-        PChar->pushPacket<CCharUpdatePacket>(PChar);
+        PChar->pushPacket<CCharStatusPacket>(PChar);
         PChar->pushPacket<CCharSyncPacket>(PChar);
     }
 }
@@ -6636,7 +6637,7 @@ void SmallPacket0x100(map_session_data_t* const PSession, CCharEntity* const PCh
         charutils::SaveCharStats(PChar);
 
         PChar->pushPacket<CCharJobsPacket>(PChar);
-        PChar->pushPacket<CCharUpdatePacket>(PChar);
+        PChar->pushPacket<CCharStatusPacket>(PChar);
         PChar->pushPacket<CCharStatsPacket>(PChar);
         PChar->pushPacket<CCharSkillsPacket>(PChar);
         PChar->pushPacket<CCharRecastPacket>(PChar);
@@ -7395,7 +7396,7 @@ void SmallPacket0x11B(map_session_data_t* const PSession, CCharEntity* const PCh
     PChar->m_jobMasterDisplay = data.ref<uint8>(0x04) > 0;
 
     charutils::SaveJobMasterDisplay(PChar);
-    PChar->pushPacket<CCharUpdatePacket>(PChar);
+    PChar->pushPacket<CCharStatusPacket>(PChar);
 }
 
 /************************************************************************
