@@ -47,6 +47,7 @@ zones[xi.zone.AHT_URHGAN_WHITEGATE] =
         YOU_CAN_BECOME_PUP            = 5850,  -- You can now become a puppetmaster!
         PROMOTION_SERGEANT_MAJOR      = 6174, -- <name> has been promoted to Sergeant Major!
         NYZUL_FAIL                    = 6191,  -- Your mission was not successful. I regret to inform you that the Imperial Army does not officially recognize your efforts within this Assault area.
+        LANCE_CORPORAL                = 6681,  -- ≺Player≻ has been promoted to Lance Corporal!
         BESIEGED_OFFSET               = 6832,  -- Your Imperial Standing has increased!
         PROMOTION_SERGEANT            = 7740,  -- <player> has been promoted to Sergeant!
         PAY_DIVINATION                = 8784,  -- ou pay 1000 gil for the divination.
