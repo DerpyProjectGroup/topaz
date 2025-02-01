@@ -27,7 +27,7 @@ Watchdog::Watchdog(duration timeout, std::function<void()> callback)
 , m_lastUpdate(server_clock::now())
 , m_running(true)
 {
-    m_watchdog = nonstd::jthread(&Watchdog::_innerFunc, this);
+    m_workerThread = nonstd::jthread(&Watchdog::_innerFunc, this);
 }
 
 Watchdog::~Watchdog()
@@ -48,18 +48,63 @@ void Watchdog::update()
     m_lastUpdate = server_clock::now();
 }
 
-void Watchdog::_innerFunc()
+server_clock::time_point Watchdog::_calculateDeadline() const
 {
+    TracyZoneScoped;
+
+    return m_lastUpdate.load() + m_timeout;
+}
+
+bool Watchdog::_checkTimeout(const server_clock::time_point& deadline) const
+{
+    TracyZoneScoped;
+
+    return !m_running || (server_clock::now() - m_lastUpdate.load()) >= m_timeout;
+}
+
+bool Watchdog::_waitForTimeout(const server_clock::time_point& deadline)
+{
+    TracyZoneScoped;
+
     std::unique_lock<std::mutex> lock(m_bottleneck);
 
-    while ((server_clock::now() - m_lastUpdate) < m_timeout)
+    // clang-format off
+    return m_stopCondition.wait_until(lock, deadline,
+    [this, &deadline]
     {
-        m_stopCondition.wait_for(lock, m_timeout);
-    }
+        return _checkTimeout(deadline);
+    });
+    // clang-format on
+}
 
-    if (m_running)
+void Watchdog::_handleTimeout()
+{
+    TracyZoneScoped;
+
+    m_running = false;
+    m_callback();
+}
+
+void Watchdog::_innerFunc()
+{
+    TracySetThreadName("Tick Watchdog");
+
+    while (m_running)
     {
-        m_running = false;
-        m_callback();
+        const auto deadline = _calculateDeadline();
+
+        if (_waitForTimeout(deadline))
+        {
+            if (!m_running)
+            {
+                break;
+            }
+        }
+
+        if (m_running && _checkTimeout(deadline))
+        {
+            _handleTimeout();
+            break;
+        }
     }
 }
