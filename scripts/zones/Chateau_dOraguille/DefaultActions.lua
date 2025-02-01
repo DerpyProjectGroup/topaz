@@ -9,6 +9,7 @@ return {
     ['Atoranne']    = { event = 519 },
     ['Chaloutte']   = { event = 557 },
     ['Chaphoire']   = { event = 512 },
+    ['Chalvatot']   = { event = 531 },
     ['Chupaile']    = { event = 514 },
     ['Cotelle']     = { event = 520 },
     ['Doumina']     = { event = 521 },
