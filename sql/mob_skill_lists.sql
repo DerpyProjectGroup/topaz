@@ -3956,7 +3956,13 @@ INSERT INTO `mob_skill_lists` VALUES ('Unfettered_Twitherym',2017,2952); -- blac
 
 INSERT INTO `mob_skill_lists` VALUES ('Unfettered_Twitherym_low_50',2018,2953); -- smouldering_swarm
 
--- Next available ID: 2019
+INSERT INTO `mob_skill_lists` VALUES ('Bomb_TOAU',2019,510); -- Self-destruct
+INSERT INTO `mob_skill_lists` VALUES ('Bomb_TOAU',2019,593); -- Berserk
+INSERT INTO `mob_skill_lists` VALUES ('Bomb_TOAU',2019,594); -- Vulcanian Impact
+INSERT INTO `mob_skill_lists` VALUES ('Bomb_TOAU',2019,595); -- Heat Wave
+INSERT INTO `mob_skill_lists` VALUES ('Bomb_TOAU',2019,596); -- Hellstorm
+
+-- Next available ID: 2020
 
 -- ------------------------------------------------------------
 -- Start of Ambuscade section

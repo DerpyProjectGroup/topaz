@@ -1,13 +1,17 @@
 -----------------------------------
 -- Hellstorm
+-- Notes: This ability is used by both Big Bomb and bombs in the area
+--  That drop the item to spawn Big Bomb
+--
+--  Hellstorm is observed to only be used when the bomb has grown at least once.
 -----------------------------------
 ---@type TMobSkill
 local mobskillObject = {}
 
 mobskillObject.onMobSkillCheck = function(target, mob, skill)
-    local mobSkin = mob:getModelId()
+    local anim = (mob:getAnimationSub() + 1) % 4
 
-    if mobSkin == 281 then
+    if anim == 0 or anim >= 2 then
         return 0
     else
         return 1
