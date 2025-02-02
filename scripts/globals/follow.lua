@@ -99,3 +99,34 @@ xi.follow.assignLeaderMod = function(mob, leaders, maxDistance)
         end
     end
 end
+
+-- This function causes the followers to organize in a column, and not
+-- stack upon one another. Must be called in leading mob's onMobRoam in
+-- order to maintain continuity of mob ordering in the line.
+--
+-- @param Original mob that leads the line of followers
+-- @param The amount of followers (assumed to be adjacent to origin mob's ID)
+-----------------------------------
+xi.follow.followLine = function(mob, numFollowers)
+    local mobID = mob:getID()
+
+    if
+        mob and
+        mob:isAlive()
+    then
+        for indexFollower = mobID + numFollowers, mobID + 1, -1 do
+            local follower = GetMobByID(indexFollower)
+
+            if follower and follower:isAlive() then
+                for indexLeader = indexFollower - 1, mobID, -1 do
+                    local newLeader = GetMobByID(indexLeader)
+
+                    if newLeader and newLeader:isAlive() then
+                        xi.follow.follow(follower, newLeader)
+                        break
+                    end
+                end
+            end
+        end
+    end
+end
