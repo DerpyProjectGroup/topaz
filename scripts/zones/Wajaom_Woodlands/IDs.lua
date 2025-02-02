@@ -50,6 +50,7 @@ zones[xi.zone.WAJAOM_WOODLANDS] =
     npc =
     {
         HARVESTING = GetTableOfIDs('Harvesting_Point'),
+        HOOFPRINT  = GetFirstID('Warhorse_Hoofprint'),
     },
 }
 
