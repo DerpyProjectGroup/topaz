@@ -800,6 +800,8 @@ namespace zoneutils
         }
         // clang-format on
 
+        TestProblematicNavmeshFeatures();
+
         // IDs attached to xi.zone[name] need to be populated before NPCs and Mobs are loaded
         luautils::PopulateIDLookupsByZone();
 
@@ -1235,4 +1237,86 @@ namespace zoneutils
         return region >= REGION_TYPE::SANDORIA && region <= REGION_TYPE::LIMBUS;
     }
 
-}; // namespace zoneutils
+    // A sufficiently bad navmesh can cause detour to get caught in an infinite loop moving between the same two poly refs.
+    // If we discover watchdog crashes where navmesh/detour was trying to find a path or raycast, then
+    // we've found a problematic navmesh feature. They should be added here so they can never come back after the underlying
+    // navmesh is fixed.
+    void TestProblematicNavmeshFeatures()
+    {
+        auto done        = false;
+        auto currentZone = "None";
+
+        // clang-format off
+        nonstd::jthread watchdog([&]()
+        {
+            std::this_thread::sleep_for(250ms);
+
+            if (done)
+            {
+                return;
+            }
+
+            ShowCritical("zoneutils::TestProblematicNavmeshFeatures: Found problematic navmesh features in zone: %s.", currentZone);
+            ShowCritical("zoneutils::TestProblematicNavmeshFeatures: You should ensure your navmesh submodule is up-to-date.");
+            ShowCritical("zoneutils::TestProblematicNavmeshFeatures: Terminating server.");
+
+            std::this_thread::sleep_for(250ms);
+
+            std::terminate();
+        });
+        // clang-format on
+
+        // If the underlying navmesh is broken, the raycast will loop forever and block logic.
+        // Or, the watchdog will quite rightly take the server down.
+
+        {
+            currentZone = "The Boyahda Tree";
+
+            const auto start = position_t(
+                336.228271f,
+                8.112130f,
+                -63.041084f,
+                0,
+                0);
+
+            const auto end = position_t(
+                421.453186f,
+                8.392014f,
+                -67.302483f,
+                0,
+                0);
+
+            if (auto* PZone = zoneutils::GetZone(ZONEID::ZONE_THE_BOYAHDA_TREE))
+            {
+                ShowDebug("zoneutils::TestProblematicNavmeshFeatures: Testing problematic raycast in zone: %s", PZone->getName());
+                std::ignore = PZone->m_navMesh->raycast(start, end);
+            }
+        }
+
+        {
+            currentZone = "Garlaige Citadel";
+
+            const auto start = position_t(
+                -257.618896f,
+                19.403801f,
+                276.281647f,
+                0,
+                0);
+
+            const auto end = position_t(
+                -240.055725f,
+                19.500000f,
+                265.800507f,
+                0,
+                0);
+
+            if (auto* PZone = zoneutils::GetZone(ZONEID::ZONE_GARLAIGE_CITADEL))
+            {
+                ShowDebug("zoneutils::TestProblematicNavmeshFeatures: Testing problematic raycast in zone: %s", PZone->getName());
+                std::ignore = PZone->m_navMesh->raycast(start, end);
+            }
+        }
+
+        done = true;
+    }
+} // namespace zoneutils
