@@ -38,16 +38,23 @@ public:
     void update();
 
 private:
+    // Functions for the worker thread
+    auto _calculateDeadline() const -> server_clock::time_point;
+    auto _checkTimeout(const server_clock::time_point& deadline) const -> bool;
+    auto _waitForTimeout(const server_clock::time_point& deadline) -> bool;
+    void _handleTimeout();
     void _innerFunc();
 
     using voidFunc_t = std::function<void()>;
 
-    duration   m_timeout;
-    voidFunc_t m_callback;
-    time_point m_lastUpdate;
+    duration m_timeout;
 
-    nonstd::jthread         m_watchdog;
-    std::atomic_bool        m_running;
+    std::atomic<bool>       m_running;
+    std::atomic<time_point> m_lastUpdate;
     std::mutex              m_bottleneck;
     std::condition_variable m_stopCondition;
+
+    std::function<void()> m_callback;
+
+    nonstd::jthread m_workerThread;
 };
