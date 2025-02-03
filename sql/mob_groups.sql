@@ -2765,7 +2765,7 @@ INSERT INTO `mob_groups` VALUES (73,5203,54,'Ephramadian_Shade_mnk',960,0,786,0,
 INSERT INTO `mob_groups` VALUES (74,5202,54,'Ephramadian_Shade_rdm',960,0,786,0,0,68,70,0);
 INSERT INTO `mob_groups` VALUES (75,5204,54,'Ephramadian_Shade_rng',960,0,786,0,0,68,70,0);
 INSERT INTO `mob_groups` VALUES (76,5205,54,'Ephramadian_Shade_cor',960,0,786,0,0,68,70,0);
-INSERT INTO `mob_groups` VALUES (77,573,54,'Bukki',0,128,0,0,0,70,70,0);
+INSERT INTO `mob_groups` VALUES (77,573,54,'Bukki',0,128,0,7500,0,72,72,0);
 INSERT INTO `mob_groups` VALUES (78,2339,54,'Lamia_No11',0,128,0,0,0,80,85,0);
 INSERT INTO `mob_groups` VALUES (79,2348,54,'Lamia_No24',0,128,0,0,0,80,80,0);
 INSERT INTO `mob_groups` VALUES (80,2344,54,'Lamia_No18',0,128,0,0,0,80,85,0);
